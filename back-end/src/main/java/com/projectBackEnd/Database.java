@@ -6,7 +6,7 @@ public interface Database {
     public String[] queryDatabase(String query);
     public String createDiseaseQuery(String tableName);
 
-    public String updateDisease(String tableName, String attributeToChange, String newValue, String id);
+    public String updateDisease(String tableName, String attributeToChange, String newValue, String toUpdateID);
     public String updateDiseaseTupleXCoordQuery(String tableName, String toUpdateID, String newXCoord);
     public String updateDiseaseTupleYCoordQuery(String tableName, String toUpdateID, String newXCoord);
     public String updateDiseaseTupleContentQuery(String tableName, String toUpdateID, String newXCoord);

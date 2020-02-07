@@ -37,13 +37,13 @@ public class SQLDatabase implements Database { // Consider static
     @Override
     public String createDiseaseQuery(String tableName) {
         String query = "CREATE TABLE " + safeString(tableName) + " ("; // With auto assigning ID?
-        query += ATTRIBUTENAMEID + " INTEGER NOT NULL AUTO_INCREMENT," +
-            ATTRIBUTENAMECONTENT + " TEXT," +
-            ATTRIBUTENAMEXCOORD + " INTEGER NOT NULL," +
-            ATTRIBUTENAMEYCOORD + " INTEGER NOT NULL," +
-            ATTRIBUTENAMETYPE + " VARCHAR(3) NOT NULL," + // e.g. IMG, VID, TXT, HDR
-            ATTRIBUTENAMEPAGE + " INTEGER NOT NULL," +
-            "PRIMARY KEY (" + ATTRIBUTENAMEID +
+        query += safeString(ATTRIBUTENAMEID) + " INTEGER NOT NULL AUTO_INCREMENT," +
+            safeString(ATTRIBUTENAMECONTENT) + " TEXT," +
+            safeString(ATTRIBUTENAMEXCOORD) + " INTEGER NOT NULL," +
+            safeString(ATTRIBUTENAMEYCOORD) + " INTEGER NOT NULL," +
+            safeString(ATTRIBUTENAMETYPE) + " VARCHAR(3) NOT NULL," + // e.g. IMG, VID, TXT, HDR
+            safeString(ATTRIBUTENAMEPAGE) + " INTEGER NOT NULL," +
+            "PRIMARY KEY (" + safeString(ATTRIBUTENAMEID) +
             ")" +
             ");";
         return query;
@@ -52,7 +52,7 @@ public class SQLDatabase implements Database { // Consider static
     @Override
     public String updateDisease(String tableName, String toUpdateID, String newValue, String attributeToChange) {
         return "UPDATE " + safeString(tableName) + " SET " + safeString(attributeToChange) +
-                " = '" + safeString(newValue) + "' WHERE " +  ATTRIBUTENAMEID + " = '" + safeString(toUpdateID) + "';";
+                " = '" + safeString(newValue) + "' WHERE " +  safeString(ATTRIBUTENAMEID) + " = '" + safeString(toUpdateID) + "';";
     }
 
     // Methods the front end can actually call so that they don't need to
@@ -63,28 +63,28 @@ public class SQLDatabase implements Database { // Consider static
         return updateDisease(tableName, ATTRIBUTENAMEXCOORD, newXCoord, toUpdateID);
     }
     @Override
-    public String updateDiseaseTupleYCoordQuery(String tableName, String toUpdateID, String newXCoord) {
-        return updateDisease(tableName, ATTRIBUTENAMEYCOORD, newXCoord, toUpdateID);
+    public String updateDiseaseTupleYCoordQuery(String tableName, String toUpdateID, String newYCoord) {
+        return updateDisease(tableName, ATTRIBUTENAMEYCOORD, newYCoord, toUpdateID);
     }
     @Override
-    public String updateDiseaseTupleContentQuery(String tableName, String toUpdateID, String newXCoord) {
-        return updateDisease(tableName, ATTRIBUTENAMECONTENT, newXCoord, toUpdateID);
+    public String updateDiseaseTupleContentQuery(String tableName, String toUpdateID, String newContent) {
+        return updateDisease(tableName, ATTRIBUTENAMECONTENT, newContent, toUpdateID);
     }
 
 
     @Override
     public String deleteDiseaseTupleQuery(String tableName, String toDeleteID) {
-        return "DELETE FROM " + safeString(tableName) + " WHERE " + ATTRIBUTENAMEID + " = '" + safeString(toDeleteID) + "';";
+        return "DELETE FROM " + safeString(tableName) + " WHERE " + safeString(ATTRIBUTENAMEID) + " = '" + safeString(toDeleteID) + "';";
     }
 
     @Override
     public String addDiseaseTupleQuery(String tableName, String content, int XCoord, int YCoord, String type, int page) {
         String query = "INSERT INTO "; // Should have auto assigning ID? Deal with this !
-        query += safeString(tableName) + "(" + ATTRIBUTENAMECONTENT + ", " +
-                ATTRIBUTENAMEXCOORD + ", " +
-                ATTRIBUTENAMEYCOORD + ", " +
-                ATTRIBUTENAMETYPE + ", " +
-                ATTRIBUTENAMEPAGE + ", " + ") VALUES (" +
+        query += safeString(tableName) + "(" + safeString(ATTRIBUTENAMECONTENT) + ", " +
+                safeString(ATTRIBUTENAMEXCOORD)+ ", " +
+                safeString(ATTRIBUTENAMEYCOORD) + ", " +
+                safeString(ATTRIBUTENAMETYPE) + ", " +
+                safeString(ATTRIBUTENAMEPAGE) + ", " + ") VALUES (" +
                 "'" + safeString(content) + "'," + //These need to be safe right
                 "'" + safeString(XCoord + "") + "'," +
                 "'" + safeString(YCoord + "") + "'," +
@@ -111,7 +111,7 @@ public class SQLDatabase implements Database { // Consider static
 
     @Override
     public String allDiseaseInfoQuery(String diseaseID) {
-        return "SELECT * FROM " + diseaseID + ";";
+        return "SELECT * FROM " + safeString(diseaseID) + ";";
     }
 
     @Override
