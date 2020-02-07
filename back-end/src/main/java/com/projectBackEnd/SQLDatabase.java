@@ -21,7 +21,11 @@ public class SQLDatabase implements Database { // Consider static
 
     @Override
     public String createDiseaseQuery(String tableName) {
-        String query = "CREATE TABLE ..." + safeString(tableName); // With auto assigning ID?
+        String query = "CREATE TABLE " + safeString(tableName) + " ("; // With auto assigning ID?
+        query += "id INTEGER NOT NULL AUTO_INCREMENT," +
+            "content TEXT," +
+            "PRIMARY KEY (id)" +
+            ");";
         return query;
     }
 
