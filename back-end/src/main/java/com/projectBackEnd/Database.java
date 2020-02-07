@@ -5,9 +5,14 @@ public interface Database {
     public void disconnectFromDatabase(); // Needed each time?
     public String[] queryDatabase(String query);
     public String createDiseaseQuery(String tableName);
-    public String updateDiseaseInformationQuery(String tableName, int toUpdateID, String newText);
-    public String deleteDiseaseInformationQuery(String tableName, int toDeleteID);
-    public String createDiseaseInformationQuery(String tableName, int toCreate);
+
+    public String updateDisease(String tableName, String attributeToChange, String newValue, String id);
+    public String updateDiseaseTupleXCoordQuery(String tableName, String toUpdateID, String newXCoord);
+    public String updateDiseaseTupleYCoordQuery(String tableName, String toUpdateID, String newXCoord);
+    public String updateDiseaseTupleContentQuery(String tableName, String toUpdateID, String newXCoord);
+
+    public String deleteDiseaseTupleQuery(String tableName, String toDeleteID);
+    public String addDiseaseTupleQuery(String tableName, String content, int XCoord, int YCoord, String type, int page);
     public String deleteDiseaseQuery(String tableName);
 
     public String safeString(String toConvert); //MYSQLi Escape etc.
