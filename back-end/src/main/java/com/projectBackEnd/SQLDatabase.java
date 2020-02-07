@@ -1,5 +1,8 @@
 package main.java.com.projectBackEnd;
 
+/**
+ * MYSQL Specific Database with multiple tables per information.
+ */
 public class SQLDatabase implements Database { // Consider static
     //Database object = ...; Something we can continue querying on.
 
@@ -93,6 +96,22 @@ public class SQLDatabase implements Database { // Consider static
     @Override
     public String deleteDiseaseQuery(String tableName) {
         return "DROP TABLE " + safeString(tableName) + ";";
+    }
+
+    @Override
+    public String allDiseaseNamesQuery() { // Needs to get all of the table names, and disregard Medicine Table (perhaps)
+        return "SELECT TABLE_NAME " +
+            "FROM INFORMATION_SCHEMA.TABLES " + " WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='dbName';";
+        /*
+            SELECT *
+            FROM sys.Tables idk, might have to have a primary key before them after all, as medicine filter will exist.
+            select table_name from YOUR_DATABASE.INFORMATION_SCHEMA.TABLES where TABLE_TYPE = 'BASE TABLE'
+        */
+    }
+
+    @Override
+    public String allDiseaseInfoQuery(String diseaseID) {
+        return "SELECT * FROM " + diseaseID + ";";
     }
 
     @Override

@@ -15,5 +15,8 @@ public interface Database {
     public String addDiseaseTupleQuery(String tableName, String content, int XCoord, int YCoord, String type, int page);
     public String deleteDiseaseQuery(String tableName);
 
+    public String allDiseaseNamesQuery();
+    public String allDiseaseInfoQuery(String diseaseID);
+
     public String safeString(String toConvert); //MYSQLi Escape etc.
 }
