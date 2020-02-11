@@ -11,7 +11,7 @@ public class BackEndUnitTesting {
     String randomTableName;
 
     @BeforeClass
-    public void completeDatabaseConnection() {
+    public static void completeDatabaseConnection() {
         // try connect to Database. Maybe move this into its own test.
 
         // Generate random database table string name for testing
@@ -19,7 +19,7 @@ public class BackEndUnitTesting {
     }
 
     @AfterClass
-    public void disconnectFromDatabase() {
+    public static void disconnectFromDatabase() {
         // Disconnect from Database.
 
         // Drop random database table string name from before.
