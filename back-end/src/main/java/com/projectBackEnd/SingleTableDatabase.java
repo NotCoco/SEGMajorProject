@@ -1,6 +1,6 @@
 package main.java.com.projectBackEnd;
 
-public class SingleTableDatabase implements Database {
+public class SingleTableDatabase {
     public final static String DISEASESTABLENAME = "DISEASES";
     public final static String BLOCKSTABLENAME = "BLOCKS";
     private static final String ATTRIBUTENAMECONTENT = "content";
