@@ -6,15 +6,15 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "MEDICINE")
+@Table(name = Medicine.TABLENAME)
 
 public class Medicine {
 
     // Table columns
-    public static final String TABLENAME = "Medicine";
+    public static final String TABLENAME = "Medicines";
     private static final String ID = "ID";
     private static final String NAME = "Name";
-    private static final String TYPE = "Content";
+    private static final String TYPE = "Type";
 
     @Id
     @Column(name = ID)
@@ -36,19 +36,17 @@ public class Medicine {
         this.type = new SQLSafeString(type).toString();
     }
 
+    // Unsure if it should stay
     public Medicine(Integer id, String name, String type) {
         this.id = id;
         this.name = new SQLSafeString(name).toString();
         this.type = new SQLSafeString(type).toString();
     }
 
+    // Getters and setters; ID cannot be changed
 
     public  Integer getId() {
         return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getName() {

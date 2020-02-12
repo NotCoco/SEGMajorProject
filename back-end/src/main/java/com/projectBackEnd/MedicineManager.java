@@ -23,7 +23,7 @@ public class MedicineManager implements MedicineManagerInterface {
     @Override
     public Medicine findByID(Integer id) {
         Session session = getSessionFactory().openSession();
-        Medicine medicine = (Medicine) session.load(Medicine.class, id);
+        Medicine medicine = session.load(Medicine.class, id);
         session.close();
         return medicine;
     }
