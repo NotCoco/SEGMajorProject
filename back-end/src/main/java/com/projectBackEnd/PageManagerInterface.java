@@ -21,5 +21,5 @@ public interface PageManagerInterface extends PageRestInterface {
     public Page findBySlug(String slug);
     public void deleteAll();
     public void insertTuple(Page page);
-    public void getAllPagesByTitle(String title);
+    public List<Page> getAllPagesByTitle(String title);
 } //TODO Order this so it looks good.
