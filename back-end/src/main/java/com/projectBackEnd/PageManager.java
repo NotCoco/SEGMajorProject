@@ -1,7 +1,9 @@
 package main.java.com.projectBackEnd;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -18,20 +20,22 @@ public class PageManager implements PageManagerInterface {
      * Creates a page object
      * @param slug The slug of the new page
      * @param index The index of the new page
+     * @param title The title of the new page
      * @param content The content of the new page.
      */
-    public Page createPage(String slug, Integer index, String content) {
-        return new Page(slug, index, content);
+    public Page createPage(String slug, Integer index, String title, String content) {
+        return new Page(slug, index, title, content);
     }
 
     /**
      * Creates a page and adds it to the database table
      * @param slug The slug of the new page
      * @param index The index of the new page
+     * @param title The title of the new page
      * @param content The content of the new page.
      */
-    public void createAndSavePage(String slug, Integer index, String content) {
-        insertTuple(createPage(slug, index, content));
+    public void createAndSavePage(String slug, Integer index, String title, String content) {
+        insertTuple(createPage(slug, index, title, content));
     }
 
     /**
@@ -45,6 +49,7 @@ public class PageManager implements PageManagerInterface {
         Page pageFromDatabase = (Page) session.load(Page.class, page.getSlug());
         pageFromDatabase.setContent(page.getContent());
         pageFromDatabase.setIndex(page.getIndex());
+        pageFromDatabase.setTitle(page.getTitle());
         session.getTransaction().commit();
         session.close();
     }
@@ -61,6 +66,22 @@ public class PageManager implements PageManagerInterface {
 
         Page pageFromDatabase = (Page) session.load(Page.class, slug);
         pageFromDatabase.setContent(new SQLSafeString(newContent).toString());
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    /**
+     * Update a page's title by it's SLUG
+     * @param slug The page's slug
+     * @param newTitle The new title it will receive.
+     */
+    public void updateTitleBySlug(String slug, String newTitle) {
+        Session session = getSessionFactory().openSession();
+        session.beginTransaction();
+        slug = new SQLSafeString(slug).toString();
+
+        Page pageFromDatabase = (Page) session.load(Page.class, slug);
+        pageFromDatabase.setTitle(new SQLSafeString(newTitle).toString());
         session.getTransaction().commit();
         session.close();
     }
@@ -158,5 +179,30 @@ public class PageManager implements PageManagerInterface {
         session.getTransaction().commit();
         session.close();
     }
+
+    /**
+     * Get all the pages with a given title
+     * @return
+     */
+    /*public List<Page> getAllPagesByTitle(String title) {
+        Session session = getSessionFactory().openSession();
+        String sql = "SELECT * FROM " + Page.TABLENAME + " WHERE " + Page.TITLE + " = '" + title + "';";
+        SQLQuery query = session.createSQLQuery(sql);
+        query.addEntity(Page.class);
+        List results = query.list();
+        session.close();
+        return results;
+    }*/ //TODO Ask whether this way, direct hard coded SQL onto the database to only get what's needed is better than:
+
+    /**
+     * Functional implementation of the above method.
+     * @param title
+     * @return
+     */
+    public List<Page> getAllPagesByTitle(String title) {
+        return getAll().stream().filter(p -> p.getTitle().equals(title)).collect(Collectors.toList());
+    } //TODO Run this by in testing too! Fix documentation, ask L2
+
+    //TODO Convert the outputs into jsons instead of file returns somewhere. Perhaps a class that takes Entity objects.
 
 }
