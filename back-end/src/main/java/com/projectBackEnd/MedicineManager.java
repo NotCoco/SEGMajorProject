@@ -69,7 +69,7 @@ public class MedicineManager implements MedicineManagerInterface {
 
 
     @Override
-    public void deleteByPrimaryKey(Integer id) {
+    public void deleteByID(Integer id) {
         Session session = getSessionFactory().openSession();
         session.beginTransaction();
         Medicine medicine = findByID(id);

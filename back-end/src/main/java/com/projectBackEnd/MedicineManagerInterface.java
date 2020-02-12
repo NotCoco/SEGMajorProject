@@ -11,7 +11,7 @@ public interface MedicineManagerInterface {
     void updateMedicine(Medicine medicine);
     void updateNameByID(Integer id, String name);
     void updateTypeByID(Integer id, String type);
-    void deleteByPrimaryKey(Integer id);
+    void deleteByID(Integer id);
     SessionFactory getSessionFactory();
     List<Medicine> getAll();
     void deleteAll();
