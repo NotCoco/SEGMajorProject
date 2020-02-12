@@ -8,8 +8,16 @@ dependencies {
     compile group: 'org.hibernate', name: 'hibernate-annotations', version: '3.5.6-Final'
     compile group: 'org.hibernate', name: 'hibernate-commons-annotations', version: '3.2.0.Final'
     compile group: 'javax.persistence', name: 'ejb3-persistence', version: '1.0'
-
 }
 repositories {
     mavenCentral()
 }
+/* As required for Hibernate from XML.
+<groupId>org.hibernate</groupId>
+<artifactId>hibernate-core</artifactId>
+<version>4.3.6.Final</version>
+</dependency>
+-<dependency>
+<groupId>mysql</groupId>
+<artifactId>mysql-connector-java</artifactId>
+<version>5.1.6</version>*/

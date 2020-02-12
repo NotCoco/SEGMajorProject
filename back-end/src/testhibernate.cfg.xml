@@ -6,9 +6,8 @@
    <session-factory>
    <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
    <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-      <!-- RENAMEE THE FOLLOWING FOR YOUR REAL DATABASE (I called mine test) -->
-      <!-- Please check yours over oommits! Or we decide as a team on a single name -->
-   <property name="hibernate.connection.url">jdbc:mysql://127.0.0.1:3306/test</property>
+      <!-- RENAMEE THE FOLLOWING FOR YOUR TEST DATABASE -->
+   <property name="hibernate.connection.url">jdbc:mysql://127.0.0.1:3306/testunittest</property>
    <property name="hibernate.connection.username">root</property>
    <property name="hibernate.connection.password"></property>
    <property name="hibernate.hbm2ddl.auto">update</property>
