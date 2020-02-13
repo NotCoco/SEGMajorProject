@@ -63,16 +63,21 @@ public class MedicineManager implements MedicineManagerInterface {
         Session session = factory.openSession();
         Transaction transaction = null;
         try {
-            transaction = session.beginTransaction();
-            Medicine medicine = findByID(id);
-            session.delete(medicine);
-            transaction.commit();
+            transaction = getDeleteTransaction(id, session);
         } catch(HibernateException ex) {
-            if(transaction != null) transaction.rollback();
+            if (transaction != null) transaction.rollback();
             ex.printStackTrace();
         } finally {
             session.close();
         }
+    }
+
+    private Transaction getDeleteTransaction(int id, Session session) throws HibernateException {
+        Transaction transaction = session.beginTransaction();
+        Medicine medicine = findByID(id);
+        session.delete(medicine);
+        transaction.commit();
+        return transaction;
     }
     
 
