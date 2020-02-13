@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Table(name = User.TABLENAME)
 public class User{
 
-	public static final String TABLENAME = "user";
+	public static final String TABLENAME = "Users";
 	public User(){}
 	public User(String username, String password){
 		this.username = username;
