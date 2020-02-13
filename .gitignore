@@ -148,3 +148,8 @@ temp/
 .idea
 *.iml
 out
+
+### Gradle ###
+.gradle
+build/
+build/*
