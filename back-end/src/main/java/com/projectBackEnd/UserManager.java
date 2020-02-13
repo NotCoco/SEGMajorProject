@@ -58,7 +58,9 @@ public class UserManager implements UserManagerInterface{
 		return l.size() > 0;
 	}
 
+	public void changePassword(String username,String newPassword){
 
+	}
 	private String hash(String toHash){
 
 		return toHash;
