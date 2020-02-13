@@ -8,7 +8,7 @@ import java.util.List;
  * All Page related functions for querying the database that won't be recognised by REST
  * //TODO Filter the interfaces!
  */
-public interface PageManagerInterface extends PageRestInterface {
+public interface PageManagerInterface {
     public Page createPage(String slug, Integer index, String title, String content);
     public void createAndSavePage(String slug, Integer index, String title, String content);
     public void update(Page page);
