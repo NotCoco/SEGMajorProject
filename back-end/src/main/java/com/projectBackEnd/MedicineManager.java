@@ -1,28 +1,40 @@
 package main.java.com.projectBackEnd;
 import java.util.List;
 
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
 
 
 public class MedicineManager implements MedicineManagerInterface {
 
-    @Override
-    public Medicine createMedicine(String name, String type) {
-        return new Medicine(name,type);
+    private static SessionFactory factory;
+
+    public MedicineManager() {
+        Configuration config = new Configuration();
+        config.configure();
+        config.addAnnotatedClass(Medicine.class);
+        factory = config.buildSessionFactory();
+    }
+
+    public void addMedicine(String name, String type) {
+        Session session = factory.openSession();
+        Transaction transaction = null;
+        try {
+            transaction = session.beginTransaction();
+            Medicine med = new Medicine(name, type);
+            session.save(med);
+            transaction.commit();
+        } catch(HibernateException ex) {
+            if(transaction != null) transaction.rollback();
+            ex.printStackTrace();
+        } finally {
+            session.close();
+        }
     }
 
     @Override
-    public void createAndSaveMedicine(String name, String type) {
-        insertTuple(createMedicine(name, type));
-    }
-
-    @Override
-    public Medicine findByID(Integer id) {
-        Session session = getSessionFactory().openSession();
+    public Medicine findByID(int id) {
+        Session session = factory.openSession();
         Medicine medicine = session.load(Medicine.class, id);
         session.close();
         return medicine;
@@ -30,66 +42,43 @@ public class MedicineManager implements MedicineManagerInterface {
 
     @Override
     public void updateMedicine(Medicine medicine) {
-        Session session = getSessionFactory().openSession();
-        session.beginTransaction();
-
-        Medicine medicineFromDatabase = session.load(Medicine.class, medicine.getId());
-        medicineFromDatabase.setName(medicine.getName());
-        medicineFromDatabase.setType(medicine.getType());
-
-        session.getTransaction().commit();
-        session.close();
+        Session session = factory.openSession();
+        Transaction transaction = null;
+        try {
+            transaction = session.beginTransaction();
+            Medicine medicineFromDatabase = session.load(Medicine.class, medicine.getId());
+            medicineFromDatabase.setName(medicine.getName());
+            medicineFromDatabase.setType(medicine.getType());
+            transaction.commit();
+        } catch(HibernateException ex) {
+            if(transaction != null) transaction.rollback();
+            ex.printStackTrace();
+        } finally {
+            session.close();
+        }
     }
 
     @Override
-    public void updateNameByID(Integer id, String newName) {
-        updateByID(id, newName, "type");
+    public void deleteByID(int id) {
+        Session session = factory.openSession();
+        Transaction transaction = null;
+        try {
+            transaction = session.beginTransaction();
+            Medicine medicine = findByID(id);
+            session.delete(medicine);
+            transaction.commit();
+        } catch(HibernateException ex) {
+            if(transaction != null) transaction.rollback();
+            ex.printStackTrace();
+        } finally {
+            session.close();
+        }
     }
-
-    @Override
-    public void updateTypeByID(Integer id, String newType) {
-        updateByID(id, newType, "type");
-    }
-
-
-    public void updateByID(Integer id, String value, String attribute) {
-
-        Session session = getSessionFactory().openSession();
-        session.beginTransaction();
-
-        Medicine medicineFromDatabase = session.load(Medicine.class, id);
-
-        if (attribute.equals("name")) medicineFromDatabase.setName(new SQLSafeString(value).toString());
-        else if (attribute.equals("type")) medicineFromDatabase.setType(new SQLSafeString(value).toString());
-        else; //error
-
-        session.getTransaction().commit();
-        session.close();
-    }
-
-
-    @Override
-    public void deleteByID(Integer id) {
-        Session session = getSessionFactory().openSession();
-        session.beginTransaction();
-        Medicine medicine = findByID(id);
-        session.delete(medicine);
-        session.getTransaction().commit();
-        session.close();
-    }
-
-    @Override
-    public SessionFactory getSessionFactory() {
-        Configuration configuration = new Configuration().addAnnotatedClass(Medicine.class).configure();
-        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
-                .applySettings(configuration.getProperties());
-        SessionFactory sessionFactory = configuration.buildSessionFactory(builder.build());
-        return sessionFactory;
-    }
+    
 
     @Override
     public List<Medicine> getAll() {
-        Session session = getSessionFactory().openSession();
+        Session session = factory.openSession();
         String hqlQuery = "FROM " + new SQLSafeString(Page.TABLENAME);
         @SuppressWarnings("Unchecked")
         List<Medicine> medicines = session.createQuery(hqlQuery).list();
@@ -97,22 +86,6 @@ public class MedicineManager implements MedicineManagerInterface {
         return medicines;
     }
 
-    @Override
-    public void deleteAll() {
-        Session session = getSessionFactory().openSession();
-        session.beginTransaction();
-        Query query = session.createQuery("DELETE FROM " + new SQLSafeString(Page.TABLENAME) + " ");
-        query.executeUpdate();
-        session.getTransaction().commit();
-        session.close();
-    }
+    //Delete all ?
 
-    @Override
-    public void insertTuple(Medicine medicine) {
-        Session session = getSessionFactory().openSession();
-        session.beginTransaction();
-        session.save(medicine);
-        session.getTransaction().commit();
-        session.close();
-    }
 }

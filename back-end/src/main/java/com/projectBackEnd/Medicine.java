@@ -1,9 +1,6 @@
 package main.java.com.projectBackEnd;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = Medicine.TABLENAME)
@@ -16,17 +13,16 @@ public class Medicine {
     private static final String NAME = "Name";
     private static final String TYPE = "Type";
 
-    @Id
-    @Column(name = ID)
-    private Integer id;     // Unique ID
+    @Id @GeneratedValue
+    @Column(name="ID", unique = true)
+    private int id;
 
-    @Column(name = NAME)
+    @Column(name="NAME", nullable = false)
     private String name;
 
-    @Column(name = TYPE)
     // Liquid, Tablet, Capsule, Injection, Topical, Suppositories, Drops, Inhalers
+    @Column(name="TYPE",nullable = false)
     private String type;
-
 
     /**
      * Constructors
@@ -65,21 +61,10 @@ public class Medicine {
         this.type = new SQLSafeString(type).toString();
     }
 
-
     @Override
     public String toString() {
         return "Medicine: " + this.id + ", " + this.name + ", " + this.type;
     }
 
-    public static String getCreateQuery() {
-        String createQuery = "CREATE TABLE " + new SQLSafeString(TABLENAME) + " (";
-        createQuery += new SQLSafeString(ID) + " INTEGER NOT NULL AUTO-INCREMENT, ";
-        createQuery += new SQLSafeString(NAME) + " VARCHAR(255) NOT NULL, ";
-        createQuery += new SQLSafeString(TYPE) + " VARCHAR(255), ";
-        createQuery += "PRIMARY KEY (" + new SQLSafeString(ID) + ")";
-        createQuery += ");";
-        System.out.println(createQuery);
-        return createQuery;
-    }
 }
 
