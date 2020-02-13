@@ -1,5 +1,7 @@
 package test.java;
 
+import main.java.com.projectBackEnd.Util.HibernateUtil;
+
 import main.java.com.projectBackEnd.Page;
 import main.java.com.projectBackEnd.PageManager;
 import org.hibernate.Session;
@@ -12,17 +14,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 public class PageTest extends PageManager {
-   @Override
-    public SessionFactory getSessionFactory() {
-        Configuration configuration = new Configuration().
-                addAnnotatedClass(Page.class)
-                .configure("testhibernate.cfg.xml");
-        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
-                .applySettings(configuration.getProperties());
-        SessionFactory sessionFactory = configuration
-                .buildSessionFactory(builder.build());
-        return sessionFactory;
-    }
+
+// Just use Session session = HibernateUtil.buildSessionFactory(Page.class) to create session
 
     @Test
     public void testCorrectTableCreated() {
