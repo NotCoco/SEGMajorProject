@@ -1,8 +1,8 @@
-package hibernate.test;
+package main.java.com.projectBackEnd;
 
 import java.io.File;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.AnnotationConfiguration;
+import org.hibernate.cfg.Configuration;
  
 public class HibernateUtil 
 {
@@ -11,8 +11,7 @@ public class HibernateUtil
     private static SessionFactory buildSessionFactory() 
     {
         try {
-            return new Configuration().configure(
-                    new File("hibernate.cgf.xml")).buildSessionFactory();
+            return new Configuration().configure().buildSessionFactory();
  
         } catch (Throwable ex) {
             System.err.println("SF creation failure." + ex);
@@ -20,11 +19,10 @@ public class HibernateUtil
         }
     }
 
-    private static SessionFactory buildSessionFactory(Class annotatedClass) 
+    public static SessionFactory buildSessionFactory(Class annotatedClass) 
     {
         try {
-            return new Configuration().addAnnotatedClass(annotatedClass).configure(
-                    new File("hibernate.cgf.xml")).buildSessionFactory();
+            return new Configuration().addAnnotatedClass(annotatedClass).configure().buildSessionFactory();
  
         } catch (Throwable ex) {
             System.err.println("SF creation failure." + ex);
@@ -41,4 +39,5 @@ public class HibernateUtil
     }
 
     //TODO Allow dynamic controlling location of DB and class
+
 }

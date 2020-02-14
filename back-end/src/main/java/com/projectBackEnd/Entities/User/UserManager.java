@@ -1,6 +1,6 @@
 package main.java.com.projectBackEnd;
 
-import main.java.com.projectBackEnd.Util.HibernateUtil;
+
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;

@@ -3,8 +3,6 @@ package main.java.com.projectBackEnd;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import main.java.com.projectBackEnd.HibernateUtil;
-import main.java.com.projectBackEnd;
 
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
