@@ -16,7 +16,6 @@ public interface PageManagerInterface {
     public void updateTitleBySlug(String slug, String newTitle);
     public void deleteByPrimaryKey(String slug);
     public void updateIndexBySlug(String slug, Integer newIndex);
-    public SessionFactory getSessionFactory();
     public List<Page> getAll();
     public Page findBySlug(String slug);
     public void deleteAll();

@@ -1,6 +1,10 @@
 package main.java.com.projectBackEnd;
+
 import java.util.List;
 import java.util.stream.Collectors;
+
+import main.java.com.projectBackEnd.HibernateUtil;
+import main.java.com.projectBackEnd;
 
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
@@ -44,7 +48,7 @@ public class PageManager implements PageManagerInterface {
      * @param page The page that will be updated
      */
     public void update(Page page) { //TODO Session to become instance variable, for cleaner code
-        Session session = getSessionFactory().openSession();
+        Session session = HibernateUtil.buildSessionFactory(Page.class).openSession();
         session.beginTransaction();
         Page pageFromDatabase = (Page) session.load(Page.class, page.getSlug());
         pageFromDatabase.setContent(page.getContent());
@@ -60,7 +64,7 @@ public class PageManager implements PageManagerInterface {
      * @param newContent The new content it will receive.
      */
     public void updateContentBySlug(String slug, String newContent) {
-        Session session = getSessionFactory().openSession();
+        Session session = HibernateUtil.buildSessionFactory(Page.class).openSession();
         session.beginTransaction();
         slug = new SQLSafeString(slug).toString();
 
@@ -76,7 +80,7 @@ public class PageManager implements PageManagerInterface {
      * @param newTitle The new title it will receive.
      */
     public void updateTitleBySlug(String slug, String newTitle) {
-        Session session = getSessionFactory().openSession();
+        Session session = HibernateUtil.buildSessionFactory(Page.class).openSession();
         session.beginTransaction();
         slug = new SQLSafeString(slug).toString();
 
@@ -91,7 +95,7 @@ public class PageManager implements PageManagerInterface {
      * @param slug The slug of the page to be deleted
      */
     public void deleteByPrimaryKey(String slug) {
-        Session session = getSessionFactory().openSession();
+        Session session = HibernateUtil.buildSessionFactory(Page.class).openSession();
         session.beginTransaction();
         slug = new SQLSafeString(slug).toString();
         Page page = findBySlug(slug);
@@ -106,7 +110,7 @@ public class PageManager implements PageManagerInterface {
      * @param newIndex The new index
      */
     public void updateIndexBySlug(String slug, Integer newIndex) {
-        Session session = getSessionFactory().openSession();
+        Session session = HibernateUtil.buildSessionFactory(Page.class).openSession();
         session.beginTransaction();
         slug = new SQLSafeString(slug).toString();
         Page pageFromDatabase = (Page) session.load(Page.class, slug);
@@ -116,26 +120,11 @@ public class PageManager implements PageManagerInterface {
     }
 
     /**
-     * Gets the session factory created in this case specifically for the Page class
-     * @return The session factory.
-     */
-    public SessionFactory getSessionFactory() {
-        Configuration configuration = new Configuration().
-                addAnnotatedClass(Page.class)
-                .configure(); //TODO These two lines need to be dynamic, controlling location of DB and class
-        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
-                .applySettings(configuration.getProperties());
-        SessionFactory sessionFactory = configuration
-                .buildSessionFactory(builder.build());
-        return sessionFactory;
-    }
-
-    /**
      * Gets a list of all the pages
      * @return A list of all the pages
      */
     public List<Page> getAll() {
-        Session session = getSessionFactory().openSession();
+        Session session = HibernateUtil.buildSessionFactory(Page.class).openSession();
         String hqlQuery = "FROM " + new SQLSafeString(Page.TABLENAME);
         @SuppressWarnings("Unchecked")
         List<Page> pages = session.createQuery(hqlQuery).list();
@@ -149,7 +138,7 @@ public class PageManager implements PageManagerInterface {
      * @return The page we find
      */
     public Page findBySlug(String slug) {
-        Session session = getSessionFactory().openSession();
+        Session session = HibernateUtil.buildSessionFactory(Page.class).openSession();
         slug = new SQLSafeString(slug).toString();
         Page page = (Page) session.load(Page.class, slug);
         session.close();
@@ -160,7 +149,7 @@ public class PageManager implements PageManagerInterface {
      * Deletes all the pages in the page table.
      */
     public void deleteAll() { //TODO Move up with parameter? Perhaps.
-        Session session = getSessionFactory().openSession();
+        Session session = HibernateUtil.buildSessionFactory(Page.class).openSession();
         session.beginTransaction();
         Query query = session.createQuery("DELETE FROM " + new SQLSafeString(Page.TABLENAME) + " ");
         query.executeUpdate();
@@ -173,7 +162,7 @@ public class PageManager implements PageManagerInterface {
      * @param page The page to be added to the database
      */
     public void insertTuple(Page page) {
-        Session session = getSessionFactory().openSession();
+        Session session = HibernateUtil.buildSessionFactory(Page.class).openSession();
         session.beginTransaction();
         session.save(page);
         session.getTransaction().commit();
@@ -185,7 +174,7 @@ public class PageManager implements PageManagerInterface {
      * @return
      */
     /*public List<Page> getAllPagesByTitle(String title) {
-        Session session = getSessionFactory().openSession();
+        Session session = HibernateUtil.buildSessionFactory(Page.class).openSession();
         String sql = "SELECT * FROM " + Page.TABLENAME + " WHERE " + Page.TITLE + " = '" + title + "';";
         SQLQuery query = session.createSQLQuery(sql);
         query.addEntity(Page.class);

@@ -1,6 +1,8 @@
 package main.java.com.projectBackEnd;
 import java.util.List;
 
+import main.java.com.projectBackEnd.Util.HibernateUtil;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -22,7 +24,7 @@ public class MedicineManager implements MedicineManagerInterface {
 
     @Override
     public Medicine findByID(Integer id) {
-        Session session = getSessionFactory().openSession();
+        Session session = HibernateUtil.buildSessionFactory(Medicine.class).openSession();
         Medicine medicine = session.load(Medicine.class, id);
         session.close();
         return medicine;
@@ -30,7 +32,7 @@ public class MedicineManager implements MedicineManagerInterface {
 
     @Override
     public void updateMedicine(Medicine medicine) {
-        Session session = getSessionFactory().openSession();
+        Session session = HibernateUtil.buildSessionFactory(Medicine.class).openSession();
         session.beginTransaction();
 
         Medicine medicineFromDatabase = session.load(Medicine.class, medicine.getId());
@@ -54,7 +56,7 @@ public class MedicineManager implements MedicineManagerInterface {
 
     public void updateByID(Integer id, String value, String attribute) {
 
-        Session session = getSessionFactory().openSession();
+        Session session = HibernateUtil.buildSessionFactory(Medicine.class).openSession();
         session.beginTransaction();
 
         Medicine medicineFromDatabase = session.load(Medicine.class, id);
@@ -70,7 +72,7 @@ public class MedicineManager implements MedicineManagerInterface {
 
     @Override
     public void deleteByID(Integer id) {
-        Session session = getSessionFactory().openSession();
+        Session session = HibernateUtil.buildSessionFactory(Medicine.class).openSession();
         session.beginTransaction();
         Medicine medicine = findByID(id);
         session.delete(medicine);
@@ -79,17 +81,8 @@ public class MedicineManager implements MedicineManagerInterface {
     }
 
     @Override
-    public SessionFactory getSessionFactory() {
-        Configuration configuration = new Configuration().addAnnotatedClass(Medicine.class).configure();
-        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
-                .applySettings(configuration.getProperties());
-        SessionFactory sessionFactory = configuration.buildSessionFactory(builder.build());
-        return sessionFactory;
-    }
-
-    @Override
     public List<Medicine> getAll() {
-        Session session = getSessionFactory().openSession();
+        Session session = HibernateUtil.buildSessionFactory(Medicine.class).openSession();
         String hqlQuery = "FROM " + new SQLSafeString(Page.TABLENAME);
         @SuppressWarnings("Unchecked")
         List<Medicine> medicines = session.createQuery(hqlQuery).list();
@@ -99,7 +92,7 @@ public class MedicineManager implements MedicineManagerInterface {
 
     @Override
     public void deleteAll() {
-        Session session = getSessionFactory().openSession();
+        Session session = HibernateUtil.buildSessionFactory(Medicine.class).openSession();
         session.beginTransaction();
         Query query = session.createQuery("DELETE FROM " + new SQLSafeString(Page.TABLENAME) + " ");
         query.executeUpdate();
@@ -109,7 +102,7 @@ public class MedicineManager implements MedicineManagerInterface {
 
     @Override
     public void insertTuple(Medicine medicine) {
-        Session session = getSessionFactory().openSession();
+        Session session = HibernateUtil.buildSessionFactory(Medicine.class).openSession();
         session.beginTransaction();
         session.save(medicine);
         session.getTransaction().commit();

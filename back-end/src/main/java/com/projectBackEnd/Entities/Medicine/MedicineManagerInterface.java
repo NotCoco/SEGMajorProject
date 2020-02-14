@@ -12,7 +12,6 @@ public interface MedicineManagerInterface {
     void updateNameByID(Integer id, String name);
     void updateTypeByID(Integer id, String type);
     void deleteByID(Integer id);
-    SessionFactory getSessionFactory();
     List<Medicine> getAll();
     void deleteAll();
     void insertTuple(Medicine medicine);

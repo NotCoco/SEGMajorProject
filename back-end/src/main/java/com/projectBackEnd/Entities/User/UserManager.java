@@ -1,5 +1,7 @@
 package main.java.com.projectBackEnd;
 
+import main.java.com.projectBackEnd.Util.HibernateUtil;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -20,15 +22,9 @@ import java.util.List;
 	* write hashing
 	*/
 public class UserManager implements UserManagerInterface{
-	private static SessionFactory factory;
-	public UserManager(){
-		Configuration config = new Configuration();
-        	config.configure();
-        	config.addAnnotatedClass(User.class);
-        	factory = config.buildSessionFactory();
-	}
+
 	private void createUser(String username, String password){
-		Session session = factory.openSession();
+		Session session = HibernateUtil.buildSessionFactory(User.class).openSession();
         	Transaction tx = null;
         	try {
             		tx = session.beginTransaction();
@@ -50,7 +46,7 @@ public class UserManager implements UserManagerInterface{
 		return checkUser(username,hash(password));
 	}
 	private boolean checkUser(String username, String password){
-		Session session = factory.openSession();
+		Session session = HibernateUtil.buildSessionFactory(User.class).openSession();
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("username", username));
 		criteria.add(Restrictions.eq("password", password));
