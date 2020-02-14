@@ -1,7 +1,6 @@
 package main.java.com.projectBackEnd;
 import java.util.List;
 
-import main.java.com.projectBackEnd.Util.HibernateUtil;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
