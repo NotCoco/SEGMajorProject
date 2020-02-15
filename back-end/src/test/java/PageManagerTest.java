@@ -103,6 +103,17 @@ public class PageManagerTest extends PageManager {
     }
 
     @Test
+    public void testIdenticalPages() {
+        Page page = createPage("biliary_atresia", 0, "Biliary Atresia", "" +
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
+                "");
+        Page page2 = createPage("biliary_atresia", 0, "Biliary Atresia", "" +
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
+                "");
+        assertTrue(page.equals(page2));
+    }
+
+    @Test
     public void testDeleteAll() {
         for (Page p : getListOfPages()) {
             insertTuple(p);
@@ -148,7 +159,7 @@ public class PageManagerTest extends PageManager {
         for (Page p : getListOfPages()) {
             insertTuple(p);
         }
-        assertEquals(findBySlug("Slug2").getTitle(), "Title2");
+        assertTrue(findBySlug("Slug2").equals(getListOfPages().get(1)));
     }
 
     private static ArrayList<Page> getListOfPages() {
@@ -159,5 +170,47 @@ public class PageManagerTest extends PageManager {
         listOfPages.add(new Page("Slug4", 5, "Title4", "Content4"));
         listOfPages.add(new Page("Slug5", 4, "Title5", "Content5"));
         return listOfPages;
+    }
+
+    @Test
+    public void getAllHQLTimeTest() { //
+        for (Page p : getListOfPages()) {
+            insertTuple(p);
+        }
+        assertEquals(getAll().size(), 5);
+    }
+
+    @Test
+    public void hibernateGetAll() {
+        for (Page p : getListOfPages()) {
+            insertTuple(p);
+        }
+        assertEquals(hibernateGetAllCriteria().size(), 5);
+    }
+
+    @Test
+    public void findBySlugWithHibernate() {
+        for (Page p : getListOfPages()) {
+            insertTuple(p);
+        }
+        assertEquals(findBySlugUsingHibernateGetAll("Slug3"), (getListOfPages().get(2)));
+    }
+
+    @Test
+    public void findBySlugWithHQLCode() {
+        for (Page p : getListOfPages()) {
+            insertTuple(p);
+        }
+        //assertEquals(findBySlug("Slug3"), (getListOfPages().get(2)));
+        //assertThat(findBySlug("Slug3")).isEqualToComparingFieldByField(getListOfPages().get(2));
+        //assertTrue();
+    }
+
+    @Test
+    public void entirelyHibernateQuery() {
+        for (Page p : getListOfPages()) {
+            insertTuple(p);
+        }
+        assertTrue(getBySlug("Slug3").equals(getListOfPages().get(2)));
     }
 }

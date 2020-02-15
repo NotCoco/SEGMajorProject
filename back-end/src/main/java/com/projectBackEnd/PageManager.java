@@ -104,11 +104,14 @@ public class PageManager implements PageManagerInterface {
         return pages;
     }
 
-    public List<Page> getAllQuery() { //Hibernate get all, no HQL
+    public List<Page> hibernateGetAllCriteria() { //Hibernate get all, no HQL
         Session session = getSessionFactory().openSession();
         CriteriaBuilder cb = session.getCriteriaBuilder();
         CriteriaQuery<Page> query = cb.createQuery(Page.class);
-        return session.createQuery(query).getResultList();
+        Root<Page> root = query.from(Page.class);
+        query.select(root).where();
+        return session.createQuery(cb.createQuery(Page.class)).getResultList();
+        //return session.createQuery(query).getResultList();
     }
 
     public Page findBySlug(String slug) { //External java processing
@@ -117,19 +120,19 @@ public class PageManager implements PageManagerInterface {
         else return found.get(0);
     }
 
-    public Page findBySlugQuery(String slug) { //External java processing
-        List<Page> found = getAllQuery().stream().filter(p -> p.getSlug().equals(slug)).collect(Collectors.toList());
+    public Page findBySlugUsingHibernateGetAll(String slug) { //External java processing
+        List<Page> found = hibernateGetAllCriteria().stream().filter(p -> p.getSlug().equals(slug)).collect(Collectors.toList());
         if (found.size() == 0) return null;
         else return found.get(0);
     }
 
-    private Page getBySlug(String slug){ //Queries hibernate internally
+    public Page getBySlug(String slug){ //Queries hibernate internally
         Session session = getSessionFactory().openSession();
         CriteriaBuilder cb = session.getCriteriaBuilder();
         CriteriaQuery<Page> query = cb.createQuery(Page.class);
         Root<Page> root = query.from(Page.class);
         query.select(root).where(
-                cb.equal(root.get(Page.SLUG), slug));
+                cb.equal(root.get("Slug"), slug));
         return session.createQuery(query).getResultList().get(0);
     }
     /**
