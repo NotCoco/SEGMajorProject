@@ -17,7 +17,10 @@ import javax.persistence.criteria.Root;
  * Inspiration:
  * //https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
-public class PageManager implements PageManagerInterface {
+public class PageManager extends EntityManager {
+    public PageManager() {
+        setSubclass(Page.class);
+    }
 
     /**
      * Creates a page object
@@ -75,22 +78,6 @@ public class PageManager implements PageManagerInterface {
         session.getTransaction().commit();
         session.close();
     }
-
-    /**
-     * Gets the session factory created in this case specifically for the Page class
-     * @return The session factory.
-     */
-    public SessionFactory getSessionFactory() {
-        Configuration configuration = new Configuration().
-                addAnnotatedClass(Page.class)
-                .configure(); //TODO These two lines need to be dynamic, controlling location of DB and class
-        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
-                .applySettings(configuration.getProperties());
-        SessionFactory sessionFactory = configuration
-                .buildSessionFactory(builder.build());
-        return sessionFactory;
-    }
-
 
     public List<Page> getAll() { //Hibernate get all, no HQL
         //https://stackoverflow.com/questions/43037814/how-to-get-all-data-in-the-table-with-hibernate/43067399
