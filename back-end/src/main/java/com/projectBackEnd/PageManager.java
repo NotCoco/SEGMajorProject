@@ -4,20 +4,16 @@ import java.util.stream.Collectors;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 /**
  * PageManager class that deals with interacting with the database itself with respect to Pages.
  * Inspiration:
  * //https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
-public class PageManager implements PageManagerInterface {
+public class PageManager {
 
     /**
      * Creates a page object
@@ -52,7 +48,7 @@ public class PageManager implements PageManagerInterface {
      * @return The updated version
      */
     public Page update(Page page) { //TODO Session to become instance variable, for cleaner code
-        Session session = getSessionFactory().openSession();
+        Session session = HibernateUtility.getSessionFactory(Page.class).openSession();
         session.beginTransaction();
         Page pageFromDatabase = (Page) session.load(Page.class, page.getSlug());
         pageFromDatabase.setContent(page.getContent());
@@ -68,7 +64,7 @@ public class PageManager implements PageManagerInterface {
      * @param page The slug to whom the page belongs (if slug cannot be sent by frontend explicitly).
      */
     public void delete(Page page) {
-        Session session = getSessionFactory().openSession();
+        Session session = HibernateUtility.getSessionFactory(Page.class).openSession();
         session.beginTransaction();
         Page pageFromDatabase = findBySlug(page.getSlug());
         session.delete(pageFromDatabase);
@@ -76,26 +72,13 @@ public class PageManager implements PageManagerInterface {
         session.close();
     }
 
-    /**
-     * Gets the session factory created in this case specifically for the Page class
-     * @return The session factory.
-     */
-    public SessionFactory getSessionFactory() {
-        Configuration configuration = new Configuration().
-                addAnnotatedClass(Page.class)
-                .configure(); //TODO These two lines need to be dynamic, controlling location of DB and class
-        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
-                .applySettings(configuration.getProperties());
-        SessionFactory sessionFactory = configuration
-                .buildSessionFactory(builder.build());
-        return sessionFactory;
-    }
+
 
 
     public List<Page> getAll() { //Hibernate get all, no HQL
         //https://stackoverflow.com/questions/43037814/how-to-get-all-data-in-the-table-with-hibernate/43067399
         //Use <T> as per link
-        Session session = getSessionFactory().openSession();
+        Session session = HibernateUtility.getSessionFactory(Page.class).openSession();
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<Page> criteria = builder.createQuery(Page.class);
         criteria.from(Page.class);
@@ -112,7 +95,7 @@ public class PageManager implements PageManagerInterface {
      * Deletes all the pages in the page table.
      */
     public void deleteAll() { //TODO Move up with parameter? Perhaps.
-        Session session = getSessionFactory().openSession();
+        Session session = HibernateUtility.getSessionFactory(Page.class).openSession();
         session.beginTransaction();
         Query query = session.createQuery("DELETE FROM " + (Page.TABLENAME) + " ");
         query.executeUpdate();
@@ -130,7 +113,7 @@ public class PageManager implements PageManagerInterface {
      * @param page The page to be added to the database
      */
     public void insertTuple(Page page) {
-        Session session = getSessionFactory().openSession();
+        Session session = HibernateUtility.getSessionFactory(Page.class).openSession();
         session.beginTransaction();
         session.save(page);
         session.getTransaction().commit();

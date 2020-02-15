@@ -1,33 +1,23 @@
 package test.java;
 
 import main.java.com.projectBackEnd.DatabaseInitialiser;
+import main.java.com.projectBackEnd.HibernateUtility;
 import main.java.com.projectBackEnd.Page;
 import main.java.com.projectBackEnd.PageManager;
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.exception.ConstraintViolationException;
 import org.junit.*;
 
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.*;
 
 
 public class PageManagerTest extends PageManager {
-   @Override
-    public SessionFactory getSessionFactory() {
-        Configuration configuration = new Configuration().
-                addAnnotatedClass(Page.class)
-                .configure("testhibernate.cfg.xml");
-        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
-                .applySettings(configuration.getProperties());
-        SessionFactory sessionFactory = configuration
-                .buildSessionFactory(builder.build());
-        return sessionFactory;
+    @BeforeClass
+    public static void setUpDatabase() {
+        HibernateUtility.setLocation("testhibernate.cfg.xml");
     }
+
     @Before
     public void setUp() { //For this run it will use the same DatabaseInitialiser object, right? Won't interfere
                             // With existing running ones if I were to run it with a different DB / change the object?
