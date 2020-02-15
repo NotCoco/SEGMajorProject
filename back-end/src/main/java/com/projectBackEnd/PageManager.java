@@ -13,7 +13,11 @@ import javax.persistence.criteria.CriteriaQuery;
  * Inspiration:
  * //https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
-public class PageManager {
+
+public class PageManager extends EntityManager {
+    public PageManager() {
+        setSubclass(Page.class);
+    }
 
     /**
      * Creates a page object
@@ -72,52 +76,11 @@ public class PageManager {
         session.close();
     }
 
-
-
-
-    public List<Page> getAll() { //Hibernate get all, no HQL
-        //https://stackoverflow.com/questions/43037814/how-to-get-all-data-in-the-table-with-hibernate/43067399
-        //Use <T> as per link
-        Session session = HibernateUtility.getSessionFactory(Page.class).openSession();
-        CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<Page> criteria = builder.createQuery(Page.class);
-        criteria.from(Page.class);
-        return session.createQuery(criteria).getResultList();
-    }
-
     public Page findBySlug(String slug) { //External java processing
-        List<Page> found = getAll().stream().filter(p -> p.getSlug().equals(slug)).collect(Collectors.toList());
+        List<Page> cast = (List<Page>) getAll();
+        List<Page> found = cast.stream().filter(p -> p.getSlug().equals(slug)).collect(Collectors.toList());
         if (found.size() == 0) return null;
         else return found.get(0);
-    }
-
-    /**
-     * Deletes all the pages in the page table.
-     */
-    public void deleteAll() { //TODO Move up with parameter? Perhaps.
-        Session session = HibernateUtility.getSessionFactory(Page.class).openSession();
-        session.beginTransaction();
-        Query query = session.createQuery("DELETE FROM " + (Page.TABLENAME) + " ");
-        query.executeUpdate();
-        session.getTransaction().commit();
-        session.close();
-    }
-    public void deleteAllCascade() { //TODO Move up with parameter? Perhaps.
-        for (Page p : getAll()) {
-            delete(p);
-        }
-    }
-
-    /**
-     * Insert a new page to be added to the database
-     * @param page The page to be added to the database
-     */
-    public void insertTuple(Page page) {
-        Session session = HibernateUtility.getSessionFactory(Page.class).openSession();
-        session.beginTransaction();
-        session.save(page);
-        session.getTransaction().commit();
-        session.close();
     }
 }
 
@@ -247,4 +210,20 @@ public List<Page> getAll() { //<-- HQL get all
                 cb.equal(root.get(Page.SLUG.toLowerCase()), slug));
 
         return session.createQuery(query).getResultList().get(0);
+    }*/
+/**
+ * Deletes all the pages in the page table.
+ */
+    /*public void deleteAll() { //TODO Move up with parameter? Perhaps.
+        Session session = getSessionFactory().openSession();
+        session.beginTransaction();
+        Query query = session.createQuery("DELETE FROM " + (Page.TABLENAME) + " ");
+        query.executeUpdate();
+        session.getTransaction().commit();
+        session.close();
+    }
+    public void deleteAllCascade() { //TODO Move up with parameter? Perhaps.
+        for (Page p : (List<Page>) getAll()) {
+            delete(p);
+        }
     }*/
