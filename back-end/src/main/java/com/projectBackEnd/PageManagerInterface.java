@@ -10,8 +10,8 @@ import java.util.List;
  */
 public interface PageManagerInterface extends PageRestInterface {
     public Page createPage(String slug, Integer index, String title, String content);
-    public void createAndSavePage(String slug, Integer index, String title, String content);
-    public void update(Page page);
+    public Page createAndSavePage(String slug, Integer index, String title, String content);
+    public Page update(Page page);
     public void delete(Page page);
     //public void updateContentBySlug(String slug, String newContent);
     //public void updateTitleBySlug(String slug, String newTitle);

@@ -22,6 +22,7 @@ public class PageManager implements PageManagerInterface {
      * @param index The index of the new page
      * @param title The title of the new page
      * @param content The content of the new page.
+     * @return the created page
      */
     public Page createPage(String slug, Integer index, String title, String content) {
         return new Page(slug, index, title, content);
@@ -33,17 +34,21 @@ public class PageManager implements PageManagerInterface {
      * @param index The index of the new page
      * @param title The title of the new page
      * @param content The content of the new page.
+     * @return the created page
      */
-    public void createAndSavePage(String slug, Integer index, String title, String content) {
-        insertTuple(createPage(slug, index, title, content));
+    public Page createAndSavePage(String slug, Integer index, String title, String content) {
+        Page newPage = (createPage(slug, index, title, content));
+        insertTuple(newPage);
+        return newPage;
     }
 
     /**
      * A page is provided with new attributes, it replaces the page with the same ID
      * in the database.
      * @param page The page that will be updated
+     * @return The updated version
      */
-    public void update(Page page) { //TODO Session to become instance variable, for cleaner code
+    public Page update(Page page) { //TODO Session to become instance variable, for cleaner code
         Session session = getSessionFactory().openSession();
         session.beginTransaction();
         Page pageFromDatabase = (Page) session.load(Page.class, page.getSlug());
@@ -52,6 +57,7 @@ public class PageManager implements PageManagerInterface {
         pageFromDatabase.setTitle(page.getTitle());
         session.getTransaction().commit();
         session.close();
+        return pageFromDatabase;
     }
 
     /**

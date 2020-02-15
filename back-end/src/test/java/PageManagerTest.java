@@ -1,0 +1,153 @@
+package test.java;
+
+import main.java.com.projectBackEnd.DatabaseInitialiser;
+import main.java.com.projectBackEnd.Page;
+import main.java.com.projectBackEnd.PageManager;
+import org.hibernate.SessionFactory;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.cfg.Configuration;
+import org.junit.*;
+
+import java.util.ArrayList;
+import static org.junit.Assert.*;
+
+
+public class PageManagerTest extends PageManager {
+   @Override
+    public SessionFactory getSessionFactory() {
+        Configuration configuration = new Configuration().
+                addAnnotatedClass(Page.class)
+                .configure("testhibernate.cfg.xml");
+        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
+                .applySettings(configuration.getProperties());
+        SessionFactory sessionFactory = configuration
+                .buildSessionFactory(builder.build());
+        return sessionFactory;
+    }
+    @Before
+    public void setUp() { //For this run it will use the same DatabaseInitialiser object, right? Won't interfere
+                            // With existing running ones if I were to run it with a different DB / change the object?
+        String[] databaseInfo = {}; //Size 0 since it will use the default from the DBInitialiser class.
+        DatabaseInitialiser.main(databaseInfo);
+    }
+    @After
+    public void tearDown() {
+       DatabaseInitialiser.dropAllTables();
+    }
+
+    @Test
+    public void testCreatePage() {
+       Page page = createPage("biliary_atresia", 0, "Biliary Atresia", "" +
+               "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
+               "");
+       assertEquals(page.getTitle(), "Biliary Atresia"); //TODO Hamcrest these.
+    }
+
+    @Test
+    public void testCreateAndSavePage() {
+       Page page = createAndSavePage("biliary_atresia", 0, "Biliary Atresia", "" +
+               "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
+               "");
+       assertEquals(getAll().size(), 1);
+    }
+
+    @Test
+    public void testSavedPage() {
+        Page page = createPage("biliary_atresia", 0, "Biliary Atresia", "" +
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
+                "");
+        insertTuple(page);
+        Page pageFromDatabase = findBySlug("biliary_atresia");
+        assertEquals(pageFromDatabase.getContent(), page.getContent());
+    }
+
+    @Test
+    public void testSafeNames() {
+       Page page = createAndSavePage(";DROP TABLE Pages", 2, "';'''", "sdafds");
+    }
+
+    @Test
+    public void testEmptyContent() {
+       Page page = createAndSavePage("biliary_atresia", 0, "", "");
+       assertEquals(getAll().size(), 1);
+    }
+
+    @Test
+    public void testEmptyIndex() {
+       Page page = createAndSavePage("biliary", null, "2", "1"); //Should throw something?
+       assertEquals(getAll(), 0);
+    }
+
+    @Test
+    public void testDuplicatePrimaryKey() {
+       Page page = createAndSavePage("biliary_atresia", 0, "Random Title", "Content");
+       Page page2 = createAndSavePage("biliary_atresia", 1, "Random Title 2", "Content");
+    }
+
+    @Test
+    public void testGetAll() {
+       for (Page p : getListOfPages()) {
+           insertTuple(p);
+       }
+       assertEquals(getAll().size(), getListOfPages().size());
+    }
+
+    @Test
+    public void testDeleteAll() {
+        for (Page p : getListOfPages()) {
+            insertTuple(p);
+        }
+        deleteAll();
+        assertEquals(getAll().size(), 0);
+    }
+
+    @Test
+    public void testDelete() {
+        for (Page p : getListOfPages()) {
+            insertTuple(p);
+        }
+        delete(getListOfPages().get(1));
+        assertEquals(getAll().size(), getListOfPages().size()-1);
+    }
+
+    @Test
+    public void testWhichDeleted() {
+        for (Page p : getListOfPages()) {
+            insertTuple(p);
+        }
+        delete(getListOfPages().get(1));
+        assertNull(findBySlug(getListOfPages().get(1).getSlug()));
+    }
+
+    @Test
+    public void testUpdatePage() {
+        Page replacementPage = createPage("Slug3", 10, "Title3", "New content!");
+
+        for (Page p : getListOfPages()) {
+            insertTuple(p);
+        }
+        update(replacementPage);
+        Page foundPage = findBySlug("Slug3");
+
+        assertEquals(foundPage.getContent(), replacementPage.getContent());
+    }
+
+    @Test
+    public void testFindBySlug() {
+
+        for (Page p : getListOfPages()) {
+            insertTuple(p);
+        }
+        assertEquals(findBySlug("Slug2").getTitle(), "Title2");
+    }
+
+    private static ArrayList<Page> getListOfPages() {
+        ArrayList<Page> listOfPages = new ArrayList<>();
+        listOfPages.add(new Page("Slug1", 0, "Title1", "Content1"));
+        listOfPages.add(new Page("Slug2", 8, "Title2", "Content2"));
+        listOfPages.add(new Page("Slug3", 7, "Title3", "Content3"));
+        listOfPages.add(new Page("Slug4", 5, "Title4", "Content4"));
+        listOfPages.add(new Page("Slug5", 4, "Title5", "Content5"));
+        return listOfPages;
+    }
+}
