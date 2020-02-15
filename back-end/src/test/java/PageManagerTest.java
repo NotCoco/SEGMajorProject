@@ -69,6 +69,7 @@ public class PageManagerTest extends PageManager {
     public void testSafeNames() {
        Page page = createAndSavePage(";DROP TABLE Pages", 2, "';'''", "sdafds");
        assertEquals(getAll().size(), 1);
+       System.out.println(getAll().get(0));
     }
 
     @Test
@@ -158,46 +159,5 @@ public class PageManagerTest extends PageManager {
         listOfPages.add(new Page("Slug4", 5, "Title4", "Content4"));
         listOfPages.add(new Page("Slug5", 4, "Title5", "Content5"));
         return listOfPages;
-    }
-
-    @Test
-    public void theirTest() {
-
-        Page em1 = new Page("Mary Smith", 25, "t1", "c1");
-        Page em2 = new Page("John Aces", 32, "t1", "c1");
-        Page em3 = new Page("Ian Young", 29, "t1", "c1");
-
-        System.out.println(" =======CREATE =======");
-        insertTuple(em1);
-        insertTuple(em2);
-        insertTuple(em3);
-        System.out.println(" =======READ =======");
-        List<Page> ems1 = getAll();
-        for(Page e: ems1) {
-            System.out.println(e.toString());
-        }
-        System.out.println(" =======UPDATE =======");
-        em1.setIndex(44);
-        em1.setContent("Mary Rose");
-        update(em1);
-        System.out.println(" =======READ =======");
-        List<Page> ems2 = getAll();
-        for(Page e: ems2) {
-            System.out.println(e.toString());
-        }
-        System.out.println(" =======DELETE ======= ");
-        delete(em2);
-        System.out.println(" =======READ =======");
-        List<Page> ems3 = getAll();
-        for(Page e: ems3) {
-            System.out.println(e.toString());
-        }
-        System.out.println(" =======DELETE ALL ======= ");
-        deleteAll();
-        System.out.println(" =======READ =======");
-        List<Page> ems4 = getAll();
-        for(Page e: ems4) {
-            System.out.println(e.toString());
-        }
     }
 }
