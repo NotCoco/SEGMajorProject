@@ -53,4 +53,22 @@ public abstract class EntityManager <T extends TableEntity> { //TODO Try with st
         criteria.from(subclass);
         return session.createQuery(criteria).getResultList();
     }
+    public void deleteAll() {
+        Session session = getSessionFactory().openSession();
+        session.beginTransaction();
+        for (Object tuple : getAll()) {
+        session.delete(tuple); }
+        session.getTransaction().commit();
+        session.close();
+    }
 }
+/*public static void removeAllInstances(final Class<?> clazz) {
+    SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+    Session session = sessionFactory.getCurrentSession();
+    session.beginTransaction();
+    final List<?> instances = session.createCriteria(clazz).list();
+    for (Object obj : instances) {
+        session.delete(obj);
+    }
+    session.getTransaction().commit();
+}*/ //https://stackoverflow.com/questions/25097385/query-to-delete-all-rows-in-a-table-hibernate/25097482

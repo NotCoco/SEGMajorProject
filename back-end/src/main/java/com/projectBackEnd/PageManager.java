@@ -90,7 +90,7 @@ public class PageManager extends EntityManager {
     /**
      * Deletes all the pages in the page table.
      */
-    public void deleteAll() { //TODO Move up with parameter? Perhaps.
+    /*public void deleteAll() { //TODO Move up with parameter? Perhaps.
         Session session = getSessionFactory().openSession();
         session.beginTransaction();
         Query query = session.createQuery("DELETE FROM " + (Page.TABLENAME) + " ");
@@ -102,7 +102,7 @@ public class PageManager extends EntityManager {
         for (Page p : (List<Page>) getAll()) {
             delete(p);
         }
-    }
+    }*/
 
     /**
      * Insert a new page to be added to the database
