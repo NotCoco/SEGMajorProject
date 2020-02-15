@@ -2,11 +2,8 @@ package main.java.com.projectBackEnd;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.hibernate.Query;
 import org.hibernate.Session;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 
 /**
  * PageManager class that deals with interacting with the database itself with respect to Pages.
