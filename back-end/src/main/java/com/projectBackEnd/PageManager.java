@@ -159,7 +159,7 @@ public class PageManager implements PageManagerInterface {
      */
     public List<Page> getAll() {
         Session session = getSessionFactory().openSession();
-        String hqlQuery = "FROM " + new SQLSafeString(Page.TABLENAME);
+        String hqlQuery = "FROM " + (Page.TABLENAME);
         @SuppressWarnings("Unchecked")
         List<Page> pages = session.createQuery(hqlQuery).list();
         session.close();
@@ -191,7 +191,7 @@ public class PageManager implements PageManagerInterface {
     public void deleteAll() { //TODO Move up with parameter? Perhaps.
         Session session = getSessionFactory().openSession();
         session.beginTransaction();
-        Query query = session.createQuery("DELETE FROM " + new SQLSafeString(Page.TABLENAME) + " ");
+        Query query = session.createQuery("DELETE FROM " + (Page.TABLENAME) + " ");
         query.executeUpdate();
         session.getTransaction().commit();
         session.close();

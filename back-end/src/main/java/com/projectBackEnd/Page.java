@@ -1,8 +1,6 @@
 package main.java.com.projectBackEnd;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -44,10 +42,10 @@ public class Page { //TODO extends Entity, for easier Json conversion for fronte
     }
 
     public Page(String slug, Integer index, String title, String content) {
-        this.slug = new SQLSafeString(slug).toString();
+        this.slug = slug;
         this.index = index;
         this.title = title;
-        this.content = new SQLSafeString(content).toString();
+        this.content = content;
     }
 
     //GETTERS AND SETTERS:
@@ -57,7 +55,7 @@ public class Page { //TODO extends Entity, for easier Json conversion for fronte
     }
 
     public void setSlug(String slug) {
-        this.slug = new SQLSafeString(slug).toString();
+        this.slug = slug;
     }
 
     public Integer getIndex() {
@@ -78,7 +76,7 @@ public class Page { //TODO extends Entity, for easier Json conversion for fronte
     }
 
     public void setContent(String content) {
-        this.content = new SQLSafeString(content).toString();
+        this.content = content;
     }
 
     @Override
@@ -87,12 +85,12 @@ public class Page { //TODO extends Entity, for easier Json conversion for fronte
     }
 
     public static String getCreateQuery() {
-        String createQuery = "CREATE TABLE " + new SQLSafeString(TABLENAME) + " (";
-        createQuery += new SQLSafeString(SLUG) + " VARCHAR(255) NOT NULL, "; //Maybe static.makeSafe? No interface...
-        createQuery += new SQLSafeString(INDEX) + " INTEGER NOT NULL, ";
-        createQuery += new SQLSafeString(TITLE) + " TEXT, ";
-        createQuery += new SQLSafeString(CONTENT) + " TEXT, ";
-        createQuery += "PRIMARY KEY (" + new SQLSafeString(SLUG) + ")";
+        String createQuery = "CREATE TABLE " + TABLENAME + " (";
+        createQuery += SLUG + " VARCHAR(255) NOT NULL, "; //Maybe static.makeSafe? No interface...
+        createQuery += INDEX + " INTEGER NOT NULL, ";
+        createQuery += TITLE + " TEXT, ";
+        createQuery += CONTENT + " TEXT, ";
+        createQuery += "PRIMARY KEY (" + SLUG + ")";
         createQuery += ");";
         System.out.println(createQuery);
         return createQuery;

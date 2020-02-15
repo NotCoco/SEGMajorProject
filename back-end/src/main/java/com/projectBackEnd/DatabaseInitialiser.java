@@ -55,7 +55,7 @@ public class DatabaseInitialiser { //https://www.tutorialspoint.com/jdbc/jdbc-cr
     private static HashSet<String> getAllCreateQueries() {
         HashSet<String> allCreateQueries = new HashSet<>();
         allCreateQueries.add(
-            new SQLSafeString(Page.getCreateQuery()).toString()
+            (Page.getCreateQuery())
         );
         /*allCreateQueries.add(
             new SQLSafeString(Medicine.getCreateQuery()).toString()
@@ -69,7 +69,7 @@ public class DatabaseInitialiser { //https://www.tutorialspoint.com/jdbc/jdbc-cr
     private static HashSet<String> getAllDropQueries() {
         HashSet<String> allDropQueries = new HashSet<>();
         allDropQueries.add(
-                new SQLSafeString("DROP TABLE " + Page.TABLENAME).toString()
+                ("DROP TABLE " + Page.TABLENAME)
         );
 
         return allDropQueries;
