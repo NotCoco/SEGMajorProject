@@ -145,7 +145,7 @@ public class PageManager implements PageManagerInterface {
     public SessionFactory getSessionFactory() {
         Configuration configuration = new Configuration().
                 addAnnotatedClass(Page.class)
-                .configure(); //TODO These two lines need to be dynamic, controlling location of DB and class
+                .configure("testhibernate.cfg.xml"); //TODO These two lines need to be dynamic, controlling location of DB and class
         StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties());
         SessionFactory sessionFactory = configuration
@@ -171,14 +171,20 @@ public class PageManager implements PageManagerInterface {
      * @param slug The slug of the page we're looking for
      * @return The page we find
      */
-    public Page findBySlug(String slug) {
+    /*public Page findBySlug(String slug) {
         Session session = getSessionFactory().openSession();
         slug = new SQLSafeString(slug).toString();
         Page page = (Page) session.load(Page.class, slug);
         session.close();
         return page;
-    }
+    } //Might need to do getAll and find from that
+    */
 
+    public Page findBySlug(String slug) {
+        List<Page> found = getAll().stream().filter(p -> p.getSlug().equals(slug)).collect(Collectors.toList());
+        if (found.size() == 0) return null;
+        else return found.get(0);
+    }
     /**
      * Deletes all the pages in the page table.
      */
