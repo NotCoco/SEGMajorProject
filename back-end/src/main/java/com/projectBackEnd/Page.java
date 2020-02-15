@@ -97,4 +97,9 @@ public class Page { //TODO extends Entity, for easier Json conversion for fronte
         System.out.println(createQuery);
         return createQuery;
     }
+
+    public boolean equals(Page otherPage) {
+        return getSlug().equals(otherPage.getSlug()) && (getIndex() == otherPage.getIndex()) && getTitle().equals(otherPage.getTitle()) &&
+                getContent().equals(otherPage.getTitle());
+    }
 }

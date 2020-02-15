@@ -55,10 +55,24 @@ public class PageManager implements PageManagerInterface {
     }
 
     /**
+     * Deletes a page object from the database based on its slug.
+     * @param page The slug to whom the page belongs (if slug cannot be sent by frontend explicitly).
+     */
+    public void delete(Page page) {
+        Session session = getSessionFactory().openSession();
+        session.beginTransaction();
+        Page pageFromDatabase = findBySlug(page.getSlug());
+        session.delete(pageFromDatabase);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    /**
      * Update a page's content by it's SLUG
      * @param slug The page's slug
      * @param newContent The new content it will receive.
      */
+    /*
     public void updateContentBySlug(String slug, String newContent) {
         Session session = getSessionFactory().openSession();
         session.beginTransaction();
@@ -68,13 +82,14 @@ public class PageManager implements PageManagerInterface {
         pageFromDatabase.setContent(new SQLSafeString(newContent).toString());
         session.getTransaction().commit();
         session.close();
-    }
+    }*/
 
     /**
      * Update a page's title by it's SLUG
      * @param slug The page's slug
      * @param newTitle The new title it will receive.
      */
+    /*
     public void updateTitleBySlug(String slug, String newTitle) {
         Session session = getSessionFactory().openSession();
         session.beginTransaction();
@@ -84,12 +99,12 @@ public class PageManager implements PageManagerInterface {
         pageFromDatabase.setTitle(new SQLSafeString(newTitle).toString());
         session.getTransaction().commit();
         session.close();
-    }
+    }*/
 
     /**
      * Deletes a page by its primary key
      * @param slug The slug of the page to be deleted
-     */
+     */ /*
     public void deleteByPrimaryKey(String slug) {
         Session session = getSessionFactory().openSession();
         session.beginTransaction();
@@ -98,14 +113,15 @@ public class PageManager implements PageManagerInterface {
         session.delete(page);
         session.getTransaction().commit();
         session.close();
-    }
+    }*/ //TODO: Delete these, frontend are unlikely to send specific primary keys.
+
 
     /**
      * Updates a page's index depending on its slug
      * @param slug The slug of the page
      * @param newIndex The new index
      */
-    public void updateIndexBySlug(String slug, Integer newIndex) {
+    /* public void updateIndexBySlug(String slug, Integer newIndex) {
         Session session = getSessionFactory().openSession();
         session.beginTransaction();
         slug = new SQLSafeString(slug).toString();
@@ -113,7 +129,8 @@ public class PageManager implements PageManagerInterface {
         pageFromDatabase.setIndex(newIndex);
         session.getTransaction().commit();
         session.close();
-    }
+    }*/ //TODO Frontend will probably not be using this method, instead only using update(...) with jsons as
+    // they'll be sending .json objects not strings.
 
     /**
      * Gets the session factory created in this case specifically for the Page class
@@ -194,15 +211,12 @@ public class PageManager implements PageManagerInterface {
         return results;
     }*/ //TODO Ask whether this way, direct hard coded SQL onto the database to only get what's needed is better than:
 
-    /**
-     * Functional implementation of the above method.
-     * @param title
-     * @return
-     */
+    /*
     public List<Page> getAllPagesByTitle(String title) {
         return getAll().stream().filter(p -> p.getTitle().equals(title)).collect(Collectors.toList());
     } //TODO Run this by in testing too! Fix documentation, ask L2
 
     //TODO Convert the outputs into jsons instead of file returns somewhere. Perhaps a class that takes Entity objects.
-
+    //TODO Remove this unnecessary method as the frontend do not require it, currently staying for exemplar purpose.
+    */
 }

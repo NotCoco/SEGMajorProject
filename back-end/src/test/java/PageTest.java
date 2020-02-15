@@ -24,8 +24,4 @@ public class PageTest extends PageManager {
         return sessionFactory;
     }
 
-    @Test
-    public void testCorrectTableCreated() {
-        // assertThat(Database . getTableName, equalTo("randomTableName) );
-    }
 }

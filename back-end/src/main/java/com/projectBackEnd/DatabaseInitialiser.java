@@ -7,10 +7,10 @@ import java.util.HashSet;
  * will initialise the classes
  */
 public class DatabaseInitialiser { //https://www.tutorialspoint.com/jdbc/jdbc-create-tables.htm
-    private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    private static final String DB_URL = "jdbc:mysql://localhost/testunittest"; //TODO OPEN TO CHANGE, make user friendly
-    private static final String USER = "root";
-    private static final String PASS = "";
+    private static String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+    private static String DB_URL = "jdbc:mysql://localhost/testunittest"; //TODO OPEN TO CHANGE, make user friendly
+    private static String USER = "root";
+    private static String PASS = "";
 
     /**
      * Main method will connect and run SQL CreateQueries from all the different types of table
@@ -19,6 +19,8 @@ public class DatabaseInitialiser { //https://www.tutorialspoint.com/jdbc/jdbc-cr
      * @param args
      */
     public static void main(String[] args) {
+        if (args.length != 0) resetDatabaseDetails(args);
+
         Connection connection = null;
         Statement statement = null;
         try {
@@ -38,7 +40,7 @@ public class DatabaseInitialiser { //https://www.tutorialspoint.com/jdbc/jdbc-cr
                     connection.close();
                 }
             } catch (SQLException e) {
-                System.out.println(e);
+                e.printStackTrace();
             }
         }
     }
@@ -59,6 +61,17 @@ public class DatabaseInitialiser { //https://www.tutorialspoint.com/jdbc/jdbc-cr
             new SQLSafeString(Login.getCreateQuery()).toString()
         );*/
         return allCreateQueries;
+    }
+
+    private static void resetDatabaseDetails(String[] args) {
+        if (args.length > 0) {
+            System.out.println("Main method takes arguments such as 'localhost/testdatabase', then user/pass.");
+            DB_URL = "jdbc:mysql://" + args[0];
+        }
+        if (args.length == 3) {
+            USER = args[1];
+            PASS = args[2];
+        }
     }
 }
 
