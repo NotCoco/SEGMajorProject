@@ -105,13 +105,14 @@ public class PageManager implements PageManagerInterface {
     }
 
     public List<Page> hibernateGetAllCriteria() { //Hibernate get all, no HQL
+        //https://stackoverflow.com/questions/43037814/how-to-get-all-data-in-the-table-with-hibernate/43067399
+        //Use <T>
         Session session = getSessionFactory().openSession();
-        CriteriaBuilder cb = session.getCriteriaBuilder();
-        CriteriaQuery<Page> query = cb.createQuery(Page.class);
-        Root<Page> root = query.from(Page.class);
-        query.select(root).where();
-        return session.createQuery(cb.createQuery(Page.class)).getResultList();
-        //return session.createQuery(query).getResultList();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<Page> criteria = builder.createQuery(Page.class);
+        criteria.from(Page.class);
+        List<Page> data = session.createQuery(criteria).getResultList();
+        return data;
     }
 
     public Page findBySlug(String slug) { //External java processing
@@ -132,13 +133,14 @@ public class PageManager implements PageManagerInterface {
         CriteriaQuery<Page> query = cb.createQuery(Page.class);
         Root<Page> root = query.from(Page.class);
         query.select(root).where(
-                cb.equal(root.get("Slug"), slug));
+                cb.equal(root.get(Page.SLUG.toLowerCase()), slug));
+
         return session.createQuery(query).getResultList().get(0);
     }
     /**
      * Deletes all the pages in the page table.
      */
-    public void deleteAll() { //TODO Move up with parameter? Perhaps.
+    public void deleteAll() { //TODO Move up with parameter? Perhaps. Should become for-each delete for cascade
         Session session = getSessionFactory().openSession();
         session.beginTransaction();
         Query query = session.createQuery("DELETE FROM " + (Page.TABLENAME) + " ");

@@ -39,7 +39,7 @@ public class PageManagerTest extends PageManager {
        DatabaseInitialiser.dropAllTables();
     }
 
-    @Test
+    /*@Test
     public void testCreatePage() {
        Page page = createPage("biliary_atresia", 0, "Biliary Atresia", "" +
                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
@@ -152,7 +152,7 @@ public class PageManagerTest extends PageManager {
 
         assertEquals(foundPage.getContent(), replacementPage.getContent());
     }
-
+*/
     @Test
     public void testFindBySlug() {
 
@@ -173,7 +173,7 @@ public class PageManagerTest extends PageManager {
     }
 
     @Test
-    public void getAllHQLTimeTest() { //
+    public void testGetAll() { //
         for (Page p : getListOfPages()) {
             insertTuple(p);
         }
@@ -193,17 +193,7 @@ public class PageManagerTest extends PageManager {
         for (Page p : getListOfPages()) {
             insertTuple(p);
         }
-        assertEquals(findBySlugUsingHibernateGetAll("Slug3"), (getListOfPages().get(2)));
-    }
-
-    @Test
-    public void findBySlugWithHQLCode() {
-        for (Page p : getListOfPages()) {
-            insertTuple(p);
-        }
-        //assertEquals(findBySlug("Slug3"), (getListOfPages().get(2)));
-        //assertThat(findBySlug("Slug3")).isEqualToComparingFieldByField(getListOfPages().get(2));
-        //assertTrue();
+        assertTrue(findBySlugUsingHibernateGetAll("Slug3").equals( (getListOfPages().get(2))));
     }
 
     @Test
