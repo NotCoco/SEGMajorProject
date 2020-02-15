@@ -145,7 +145,7 @@ public class PageManager implements PageManagerInterface {
     public SessionFactory getSessionFactory() {
         Configuration configuration = new Configuration().
                 addAnnotatedClass(Page.class)
-                .configure("testhibernate.cfg.xml"); //TODO These two lines need to be dynamic, controlling location of DB and class
+                .configure(); //TODO These two lines need to be dynamic, controlling location of DB and class
         StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties());
         SessionFactory sessionFactory = configuration

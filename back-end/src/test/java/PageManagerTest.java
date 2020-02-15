@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 
 
 public class PageManagerTest extends PageManager {
-   /*@Override
+   @Override
     public SessionFactory getSessionFactory() {
         Configuration configuration = new Configuration().
                 addAnnotatedClass(Page.class)
@@ -27,7 +27,7 @@ public class PageManagerTest extends PageManager {
         SessionFactory sessionFactory = configuration
                 .buildSessionFactory(builder.build());
         return sessionFactory;
-    }*/
+    }
     @Before
     public void setUp() { //For this run it will use the same DatabaseInitialiser object, right? Won't interfere
                             // With existing running ones if I were to run it with a different DB / change the object?
