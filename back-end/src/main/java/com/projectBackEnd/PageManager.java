@@ -79,18 +79,10 @@ public class PageManager extends EntityManager {
         session.close();
     }
 
-    public List<Page> getAll() { //Hibernate get all, no HQL
-        //https://stackoverflow.com/questions/43037814/how-to-get-all-data-in-the-table-with-hibernate/43067399
-        //Use <T> as per link
-        Session session = getSessionFactory().openSession();
-        CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<Page> criteria = builder.createQuery(Page.class);
-        criteria.from(Page.class);
-        return session.createQuery(criteria).getResultList();
-    }
 
     public Page findBySlug(String slug) { //External java processing
-        List<Page> found = getAll().stream().filter(p -> p.getSlug().equals(slug)).collect(Collectors.toList());
+        List<Page> cast = (List<Page>) getAll();
+        List<Page> found = cast.stream().filter(p -> p.getSlug().equals(slug)).collect(Collectors.toList());
         if (found.size() == 0) return null;
         else return found.get(0);
     }
@@ -107,7 +99,7 @@ public class PageManager extends EntityManager {
         session.close();
     }
     public void deleteAllCascade() { //TODO Move up with parameter? Perhaps.
-        for (Page p : getAll()) {
+        for (Page p : (List<Page>) getAll()) {
             delete(p);
         }
     }
