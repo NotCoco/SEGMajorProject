@@ -8,6 +8,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 /**
  * PageManager class that deals with interacting with the database itself with respect to Pages.
  * Inspiration:
@@ -91,7 +95,7 @@ public class PageManager implements PageManagerInterface {
      * Gets a list of all the pages
      * @return A list of all the pages
      */
-    public List<Page> getAll() { //<-- Rewrite to remove HQL from this class.
+    public List<Page> getAll() { //<-- HQL get all
         Session session = getSessionFactory().openSession();
         String hqlQuery = "FROM " + (Page.TABLENAME);
         @SuppressWarnings("Unchecked")
@@ -100,10 +104,33 @@ public class PageManager implements PageManagerInterface {
         return pages;
     }
 
-    public Page findBySlug(String slug) {
+    public List<Page> getAllQuery() { //Hibernate get all, no HQL
+        Session session = getSessionFactory().openSession();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Page> query = cb.createQuery(Page.class);
+        return session.createQuery(query).getResultList();
+    }
+
+    public Page findBySlug(String slug) { //External java processing
         List<Page> found = getAll().stream().filter(p -> p.getSlug().equals(slug)).collect(Collectors.toList());
         if (found.size() == 0) return null;
         else return found.get(0);
+    }
+
+    public Page findBySlugQuery(String slug) { //External java processing
+        List<Page> found = getAllQuery().stream().filter(p -> p.getSlug().equals(slug)).collect(Collectors.toList());
+        if (found.size() == 0) return null;
+        else return found.get(0);
+    }
+
+    private Page getBySlug(String slug){ //Queries hibernate internally
+        Session session = getSessionFactory().openSession();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Page> query = cb.createQuery(Page.class);
+        Root<Page> root = query.from(Page.class);
+        query.select(root).where(
+                cb.equal(root.get(Page.SLUG), slug));
+        return session.createQuery(query).getResultList().get(0);
     }
     /**
      * Deletes all the pages in the page table.
