@@ -1,5 +1,6 @@
 package main.java.com.projectBackEnd;
 import java.sql.*;
+import java.util.Collection;
 import java.util.HashSet;
 
 /**
@@ -20,7 +21,10 @@ public class DatabaseInitialiser { //https://www.tutorialspoint.com/jdbc/jdbc-cr
      */
     public static void main(String[] args) {
         if (args.length != 0) resetDatabaseDetails(args);
+        runCollectionOfQueries(getAllCreateQueries());
+    }
 
+    private static void runCollectionOfQueries(Collection<String> queries) {
         Connection connection = null;
         Statement statement = null;
         try {
@@ -28,7 +32,7 @@ public class DatabaseInitialiser { //https://www.tutorialspoint.com/jdbc/jdbc-cr
             connection = DriverManager.getConnection(DB_URL, USER, PASS);
             statement = connection.createStatement();
 
-            for (String createQuery : getAllCreateQueries()) {
+            for (String createQuery : queries) {
                 statement.execute(createQuery);
             }
 
@@ -44,7 +48,6 @@ public class DatabaseInitialiser { //https://www.tutorialspoint.com/jdbc/jdbc-cr
             }
         }
     }
-
     /**
      * Creates a hash set of strings of Create Queries for DB initialisation.
      * @return Set of queries strings from each Table entity.
@@ -59,8 +62,21 @@ public class DatabaseInitialiser { //https://www.tutorialspoint.com/jdbc/jdbc-cr
         );*/
         /*allCreateQueries.add(
             new SQLSafeString(Login.getCreateQuery()).toString()
-        );*/
+        );*/ //TODO Fill this in with all the other entity create queries.
         return allCreateQueries;
+    }
+
+    private static HashSet<String> getAllDropQueries() {
+        HashSet<String> allDropQueries = new HashSet<>();
+        allDropQueries.add(
+                new SQLSafeString("DROP TABLE " + Page.TABLENAME).toString()
+        );
+
+        return allDropQueries;
+    }
+
+    public static void dropAllTables() {
+        runCollectionOfQueries(getAllDropQueries());
     }
 
     private static void resetDatabaseDetails(String[] args) {
