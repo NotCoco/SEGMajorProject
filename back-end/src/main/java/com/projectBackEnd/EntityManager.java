@@ -56,8 +56,21 @@ public abstract class EntityManager <T extends TableEntity> { //TODO Try with st
     public void deleteAll() {
         Session session = getSessionFactory().openSession();
         session.beginTransaction();
-        for (Object tuple : getAll()) {
+        for (Object tuple : getAll()) { //Deleting one by one is recommended to deal with cascading.
         session.delete(tuple); }
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    /**
+     * Insert a new page to be added to the database
+     * @param newObject The page to be added to the database
+     */
+    //public <U> void insertTyple(U newObject) Basically the same :\ U extends T doesn't work.
+    public void insertTuple(Object newObject) {
+        Session session = getSessionFactory().openSession();
+        session.beginTransaction();
+        session.save(newObject);
         session.getTransaction().commit();
         session.close();
     }

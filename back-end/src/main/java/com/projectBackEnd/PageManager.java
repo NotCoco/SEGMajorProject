@@ -87,34 +87,6 @@ public class PageManager extends EntityManager {
         else return found.get(0);
     }
 
-    /**
-     * Deletes all the pages in the page table.
-     */
-    /*public void deleteAll() { //TODO Move up with parameter? Perhaps.
-        Session session = getSessionFactory().openSession();
-        session.beginTransaction();
-        Query query = session.createQuery("DELETE FROM " + (Page.TABLENAME) + " ");
-        query.executeUpdate();
-        session.getTransaction().commit();
-        session.close();
-    }
-    public void deleteAllCascade() { //TODO Move up with parameter? Perhaps.
-        for (Page p : (List<Page>) getAll()) {
-            delete(p);
-        }
-    }*/
-
-    /**
-     * Insert a new page to be added to the database
-     * @param page The page to be added to the database
-     */
-    public void insertTuple(Page page) {
-        Session session = getSessionFactory().openSession();
-        session.beginTransaction();
-        session.save(page);
-        session.getTransaction().commit();
-        session.close();
-    }
 }
 
 /**
@@ -243,4 +215,20 @@ public List<Page> getAll() { //<-- HQL get all
                 cb.equal(root.get(Page.SLUG.toLowerCase()), slug));
 
         return session.createQuery(query).getResultList().get(0);
+    }*/
+/**
+ * Deletes all the pages in the page table.
+ */
+    /*public void deleteAll() { //TODO Move up with parameter? Perhaps.
+        Session session = getSessionFactory().openSession();
+        session.beginTransaction();
+        Query query = session.createQuery("DELETE FROM " + (Page.TABLENAME) + " ");
+        query.executeUpdate();
+        session.getTransaction().commit();
+        session.close();
+    }
+    public void deleteAllCascade() { //TODO Move up with parameter? Perhaps.
+        for (Page p : (List<Page>) getAll()) {
+            delete(p);
+        }
     }*/
