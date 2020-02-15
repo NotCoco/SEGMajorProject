@@ -91,7 +91,7 @@ public class PageManager implements PageManagerInterface {
      * Gets a list of all the pages
      * @return A list of all the pages
      */
-    public List<Page> getAll() {
+    public List<Page> getAll() { //<-- Rewrite to remove HQL from this class.
         Session session = getSessionFactory().openSession();
         String hqlQuery = "FROM " + (Page.TABLENAME);
         @SuppressWarnings("Unchecked")
