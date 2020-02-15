@@ -4,19 +4,16 @@ import java.util.stream.Collectors;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 
 /**
  * PageManager class that deals with interacting with the database itself with respect to Pages.
  * Inspiration:
  * //https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
+
 public class PageManager extends EntityManager {
     public PageManager() {
         setSubclass(Page.class);
@@ -55,7 +52,7 @@ public class PageManager extends EntityManager {
      * @return The updated version
      */
     public Page update(Page page) { //TODO Session to become instance variable, for cleaner code
-        Session session = getSessionFactory().openSession();
+        Session session = HibernateUtility.getSessionFactory(Page.class).openSession();
         session.beginTransaction();
         Page pageFromDatabase = (Page) session.load(Page.class, page.getSlug());
         pageFromDatabase.setContent(page.getContent());
@@ -71,7 +68,7 @@ public class PageManager extends EntityManager {
      * @param page The slug to whom the page belongs (if slug cannot be sent by frontend explicitly).
      */
     public void delete(Page page) {
-        Session session = getSessionFactory().openSession();
+        Session session = HibernateUtility.getSessionFactory(Page.class).openSession();
         session.beginTransaction();
         Page pageFromDatabase = findBySlug(page.getSlug());
         session.delete(pageFromDatabase);
@@ -79,14 +76,12 @@ public class PageManager extends EntityManager {
         session.close();
     }
 
-
     public Page findBySlug(String slug) { //External java processing
         List<Page> cast = (List<Page>) getAll();
         List<Page> found = cast.stream().filter(p -> p.getSlug().equals(slug)).collect(Collectors.toList());
         if (found.size() == 0) return null;
         else return found.get(0);
     }
-
 }
 
 /**
