@@ -121,7 +121,14 @@ public class PageManagerTest extends PageManager {
         deleteAll();
         assertEquals(getAll().size(), 0);
     }
-
+    @Test
+    public void testDeleteAllCascade() {
+        for (Page p : getListOfPages()) {
+            insertTuple(p);
+        }
+        deleteAllCascade();
+        assertEquals(getAll().size(), 0);
+    }
     @Test
     public void testDelete() {
         for (Page p : getListOfPages()) {
@@ -169,6 +176,10 @@ public class PageManagerTest extends PageManager {
         listOfPages.add(new Page("Slug3", 7, "Title3", "Content3"));
         listOfPages.add(new Page("Slug4", 5, "Title4", "Content4"));
         listOfPages.add(new Page("Slug5", 4, "Title5", "Content5"));
+        listOfPages.add(new Page("Slug8", 4, "Title5", "Content5"));
+        listOfPages.add(new Page("Slug9", 4, "Title5", "Content5"));
+        listOfPages.add(new Page("Slug12", 4, "Title5", "Content5"));
+        listOfPages.add(new Page("Slug17", 4, "Title5", "Content5"));
         return listOfPages;
     }
 

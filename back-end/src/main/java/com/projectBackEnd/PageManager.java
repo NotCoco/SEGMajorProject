@@ -111,13 +111,18 @@ public class PageManager implements PageManagerInterface {
     /**
      * Deletes all the pages in the page table.
      */
-    public void deleteAll() { //TODO Move up with parameter? Perhaps. Should become for-each delete for cascade
+    public void deleteAll() { //TODO Move up with parameter? Perhaps.
         Session session = getSessionFactory().openSession();
         session.beginTransaction();
         Query query = session.createQuery("DELETE FROM " + (Page.TABLENAME) + " ");
         query.executeUpdate();
         session.getTransaction().commit();
         session.close();
+    }
+    public void deleteAllCascade() { //TODO Move up with parameter? Perhaps.
+        for (Page p : getAll()) {
+            delete(p);
+        }
     }
 
     /**
