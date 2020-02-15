@@ -6,8 +6,10 @@ import main.java.com.projectBackEnd.PageManager;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.*;
 
+import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import static org.junit.Assert.*;
 
@@ -64,6 +66,7 @@ public class PageManagerTest extends PageManager {
     @Test
     public void testSafeNames() {
        Page page = createAndSavePage(";DROP TABLE Pages", 2, "';'''", "sdafds");
+       assertEquals(getAll().size(), 0);
     }
 
     @Test
@@ -72,15 +75,19 @@ public class PageManagerTest extends PageManager {
        assertEquals(getAll().size(), 1);
     }
 
-    @Test
-    public void testEmptyIndex() {
+    //@Test(expected = ConstraintViolationException.class)
+    //public void testEmptyIndex() throws ConstraintViolationException {
+    @Test(expected = PersistenceException.class)
+    public void testEmptyIndex() throws PersistenceException {
        Page page = createAndSavePage("biliary", null, "2", "1"); //Should throw something?
-       assertEquals(getAll(), 0);
+       assertEquals(getAll().size(), 0);
     }
 
-    @Test
-    public void testDuplicatePrimaryKey() {
-       Page page = createAndSavePage("biliary_atresia", 0, "Random Title", "Content");
+    //@Test(expected = ConstraintViolationException.class)
+    //public void testDuplicatePrimaryKey() throws ConstraintViolationException {
+    @Test(expected = PersistenceException.class)
+    public void testDuplicatePrimaryKey() throws PersistenceException {
+        Page page = createAndSavePage("biliary_atresia", 0, "Random Title", "Content");
        Page page2 = createAndSavePage("biliary_atresia", 1, "Random Title 2", "Content");
     }
 
