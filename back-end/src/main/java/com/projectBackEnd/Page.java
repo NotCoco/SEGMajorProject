@@ -15,7 +15,7 @@ public class Page { //TODO extends Entity, for easier Json conversion for fronte
 
     // Table Headers stored as public static final Strings
     public static final String TABLENAME = "Page"; //Hibernate requires this to be the same as class name
-    private static final String SLUG = "Slug";
+    public static final String SLUG = "Slug";
     private static final String INDEX = "`Index`";
     private static final String TITLE = "Title";
     private static final String CONTENT = "Content";
@@ -98,6 +98,6 @@ public class Page { //TODO extends Entity, for easier Json conversion for fronte
 
     public boolean equals(Page otherPage) {
         return getSlug().equals(otherPage.getSlug()) && (getIndex() == otherPage.getIndex()) && getTitle().equals(otherPage.getTitle()) &&
-                getContent().equals(otherPage.getTitle());
+                getContent().equals(otherPage.getContent());
     }
 }

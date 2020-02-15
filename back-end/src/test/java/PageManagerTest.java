@@ -67,14 +67,14 @@ public class PageManagerTest extends PageManager {
 
     @Test
     public void testSafeNames() {
-       Page page = createAndSavePage(";DROP TABLE Pages", 2, "';'''", "sdafds");
+       createAndSavePage(";DROP TABLE Pages", 2, "';'''", "sdafds");
        assertEquals(getAll().size(), 1);
        System.out.println(getAll().get(0));
     }
 
     @Test
     public void testEmptyContent() {
-       Page page = createAndSavePage("biliary_atresia", 0, "", "");
+       createAndSavePage("biliary_atresia", 0, "", "");
        assertEquals(getAll().size(), 1);
     }
 
@@ -82,7 +82,7 @@ public class PageManagerTest extends PageManager {
     //public void testEmptyIndex() throws ConstraintViolationException {
     @Test(expected = PersistenceException.class)
     public void testEmptyIndex() throws PersistenceException {
-       Page page = createAndSavePage("biliary", null, "2", "1"); //Should throw something?
+       createAndSavePage("biliary", null, "2", "1"); //Should throw something?
        assertEquals(getAll().size(), 0);
     }
 
@@ -90,8 +90,8 @@ public class PageManagerTest extends PageManager {
     //public void testDuplicatePrimaryKey() throws ConstraintViolationException {
     @Test(expected = PersistenceException.class)
     public void testDuplicatePrimaryKey() throws PersistenceException {
-        Page page = createAndSavePage("biliary_atresia", 0, "Random Title", "Content");
-        Page page2 = createAndSavePage("biliary_atresia", 1, "Random Title 2", "Content");
+        createAndSavePage("biliary_atresia", 0, "Random Title", "Content");
+        createAndSavePage("biliary_atresia", 1, "Random Title 2", "Content");
     }
 
     @Test
@@ -103,6 +103,17 @@ public class PageManagerTest extends PageManager {
     }
 
     @Test
+    public void testIdenticalPages() {
+        Page page = createPage("biliary_atresia", 0, "Biliary Atresia", "" +
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
+                "");
+        Page page2 = createPage("biliary_atresia", 0, "Biliary Atresia", "" +
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
+                "");
+        assertTrue(page.equals(page2));
+    }
+
+    @Test
     public void testDeleteAll() {
         for (Page p : getListOfPages()) {
             insertTuple(p);
@@ -110,7 +121,14 @@ public class PageManagerTest extends PageManager {
         deleteAll();
         assertEquals(getAll().size(), 0);
     }
-
+    @Test
+    public void testDeleteAllCascade() {
+        for (Page p : getListOfPages()) {
+            insertTuple(p);
+        }
+        deleteAllCascade();
+        assertEquals(getAll().size(), 0);
+    }
     @Test
     public void testDelete() {
         for (Page p : getListOfPages()) {
@@ -130,7 +148,7 @@ public class PageManagerTest extends PageManager {
     }
 
     @Test
-    public void testUpdatePage() {
+    public void testAUpdatePage() {
         Page replacementPage = createPage("Slug3", 10, "Title3", "New content!");
 
         for (Page p : getListOfPages()) {
@@ -148,7 +166,7 @@ public class PageManagerTest extends PageManager {
         for (Page p : getListOfPages()) {
             insertTuple(p);
         }
-        assertEquals(findBySlug("Slug2").getTitle(), "Title2");
+        assertTrue(findBySlug("Slug2").equals(getListOfPages().get(1)));
     }
 
     private static ArrayList<Page> getListOfPages() {
@@ -158,6 +176,11 @@ public class PageManagerTest extends PageManager {
         listOfPages.add(new Page("Slug3", 7, "Title3", "Content3"));
         listOfPages.add(new Page("Slug4", 5, "Title4", "Content4"));
         listOfPages.add(new Page("Slug5", 4, "Title5", "Content5"));
+        listOfPages.add(new Page("Slug8", 4, "Title5", "Content5"));
+        listOfPages.add(new Page("Slug9", 4, "Title5", "Content5"));
+        listOfPages.add(new Page("Slug12", 4, "Title5", "Content5"));
+        listOfPages.add(new Page("Slug17", 4, "Title5", "Content5"));
         return listOfPages;
     }
+
 }
