@@ -39,7 +39,7 @@ public class PageManagerTest extends PageManager {
        DatabaseInitialiser.dropAllTables();
     }
 
-    /*@Test
+    @Test
     public void testCreatePage() {
        Page page = createPage("biliary_atresia", 0, "Biliary Atresia", "" +
                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
@@ -67,14 +67,14 @@ public class PageManagerTest extends PageManager {
 
     @Test
     public void testSafeNames() {
-       Page page = createAndSavePage(";DROP TABLE Pages", 2, "';'''", "sdafds");
+       createAndSavePage(";DROP TABLE Pages", 2, "';'''", "sdafds");
        assertEquals(getAll().size(), 1);
        System.out.println(getAll().get(0));
     }
 
     @Test
     public void testEmptyContent() {
-       Page page = createAndSavePage("biliary_atresia", 0, "", "");
+       createAndSavePage("biliary_atresia", 0, "", "");
        assertEquals(getAll().size(), 1);
     }
 
@@ -82,7 +82,7 @@ public class PageManagerTest extends PageManager {
     //public void testEmptyIndex() throws ConstraintViolationException {
     @Test(expected = PersistenceException.class)
     public void testEmptyIndex() throws PersistenceException {
-       Page page = createAndSavePage("biliary", null, "2", "1"); //Should throw something?
+       createAndSavePage("biliary", null, "2", "1"); //Should throw something?
        assertEquals(getAll().size(), 0);
     }
 
@@ -90,8 +90,8 @@ public class PageManagerTest extends PageManager {
     //public void testDuplicatePrimaryKey() throws ConstraintViolationException {
     @Test(expected = PersistenceException.class)
     public void testDuplicatePrimaryKey() throws PersistenceException {
-        Page page = createAndSavePage("biliary_atresia", 0, "Random Title", "Content");
-        Page page2 = createAndSavePage("biliary_atresia", 1, "Random Title 2", "Content");
+        createAndSavePage("biliary_atresia", 0, "Random Title", "Content");
+        createAndSavePage("biliary_atresia", 1, "Random Title 2", "Content");
     }
 
     @Test
@@ -141,7 +141,7 @@ public class PageManagerTest extends PageManager {
     }
 
     @Test
-    public void testUpdatePage() {
+    public void testAUpdatePage() {
         Page replacementPage = createPage("Slug3", 10, "Title3", "New content!");
 
         for (Page p : getListOfPages()) {
@@ -152,7 +152,7 @@ public class PageManagerTest extends PageManager {
 
         assertEquals(foundPage.getContent(), replacementPage.getContent());
     }
-*/
+
     @Test
     public void testFindBySlug() {
 
@@ -172,35 +172,4 @@ public class PageManagerTest extends PageManager {
         return listOfPages;
     }
 
-    @Test
-    public void testGetAll() { //
-        for (Page p : getListOfPages()) {
-            insertTuple(p);
-        }
-        assertEquals(getAll().size(), 5);
-    }
-
-    @Test
-    public void hibernateGetAll() {
-        for (Page p : getListOfPages()) {
-            insertTuple(p);
-        }
-        assertEquals(hibernateGetAllCriteria().size(), 5);
-    }
-
-    @Test
-    public void findBySlugWithHibernate() {
-        for (Page p : getListOfPages()) {
-            insertTuple(p);
-        }
-        assertTrue(findBySlugUsingHibernateGetAll("Slug3").equals( (getListOfPages().get(2))));
-    }
-
-    @Test
-    public void entirelyHibernateQuery() {
-        for (Page p : getListOfPages()) {
-            insertTuple(p);
-        }
-        assertTrue(getBySlug("Slug3").equals(getListOfPages().get(2)));
-    }
 }

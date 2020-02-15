@@ -91,28 +91,15 @@ public class PageManager implements PageManagerInterface {
         return sessionFactory;
     }
 
-    /**
-     * Gets a list of all the pages
-     * @return A list of all the pages
-     */
-    public List<Page> getAll() { //<-- HQL get all
-        Session session = getSessionFactory().openSession();
-        String hqlQuery = "FROM " + (Page.TABLENAME);
-        @SuppressWarnings("Unchecked")
-        List<Page> pages = session.createQuery(hqlQuery).list();
-        session.close();
-        return pages;
-    }
 
-    public List<Page> hibernateGetAllCriteria() { //Hibernate get all, no HQL
+    public List<Page> getAll() { //Hibernate get all, no HQL
         //https://stackoverflow.com/questions/43037814/how-to-get-all-data-in-the-table-with-hibernate/43067399
-        //Use <T>
+        //Use <T> as per link
         Session session = getSessionFactory().openSession();
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<Page> criteria = builder.createQuery(Page.class);
         criteria.from(Page.class);
-        List<Page> data = session.createQuery(criteria).getResultList();
-        return data;
+        return session.createQuery(criteria).getResultList();
     }
 
     public Page findBySlug(String slug) { //External java processing
@@ -121,22 +108,6 @@ public class PageManager implements PageManagerInterface {
         else return found.get(0);
     }
 
-    public Page findBySlugUsingHibernateGetAll(String slug) { //External java processing
-        List<Page> found = hibernateGetAllCriteria().stream().filter(p -> p.getSlug().equals(slug)).collect(Collectors.toList());
-        if (found.size() == 0) return null;
-        else return found.get(0);
-    }
-
-    public Page getBySlug(String slug){ //Queries hibernate internally
-        Session session = getSessionFactory().openSession();
-        CriteriaBuilder cb = session.getCriteriaBuilder();
-        CriteriaQuery<Page> query = cb.createQuery(Page.class);
-        Root<Page> root = query.from(Page.class);
-        query.select(root).where(
-                cb.equal(root.get(Page.SLUG.toLowerCase()), slug));
-
-        return session.createQuery(query).getResultList().get(0);
-    }
     /**
      * Deletes all the pages in the page table.
      */
@@ -261,3 +232,31 @@ public class PageManager implements PageManagerInterface {
     //TODO Convert the outputs into jsons instead of file returns somewhere. Perhaps a class that takes Entity objects.
     //TODO Remove this unnecessary method as the frontend do not require it, currently staying for exemplar purpose.
     */
+        /**
+     * Gets a list of all the pages
+     * @return A list of all the pages
+     */
+        /*
+public List<Page> getAll() { //<-- HQL get all
+    Session session = getSessionFactory().openSession();
+    String hqlQuery = "FROM " + (Page.TABLENAME);
+    @SuppressWarnings("Unchecked")
+    List<Page> pages = session.createQuery(hqlQuery).list();
+    session.close();
+    return pages;
+}*/
+/**
+ * Queries inside hibernate entirely.
+ * @param slug
+ * @return
+ *//*
+    public Page getBySlug(String slug){ //Queries hibernate internally
+        Session session = getSessionFactory().openSession();
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Page> query = cb.createQuery(Page.class);
+        Root<Page> root = query.from(Page.class);
+        query.select(root).where(
+                cb.equal(root.get(Page.SLUG.toLowerCase()), slug));
+
+        return session.createQuery(query).getResultList().get(0);
+    }*/
