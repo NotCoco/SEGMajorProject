@@ -10,8 +10,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 
 public abstract class EntityManager <T extends TableEntity> { //TODO Try with statics to see which is cleaner
-    private Class<T> subclass;
-
+    private Class<T> subclass; //TODO Now it knows of its class without parameters ;\
     public void setSubclass(Class<T> subclass) {
         this.subclass = subclass;
     }
@@ -41,7 +40,7 @@ public abstract class EntityManager <T extends TableEntity> { //TODO Try with st
      */
     //public <U> void insertTyple(U newObject) Basically the same :\ U extends T doesn't work.
     public void insertTuple(Object newObject) {
-        assert TableEntity.class.isAssignableFrom(newObject.getClass());
+        //assert TableEntity.class.isAssignableFrom(newObject.getClass());
         Session session = HibernateUtility.getSessionFactory().openSession();
         session.beginTransaction();
         session.save(newObject);
