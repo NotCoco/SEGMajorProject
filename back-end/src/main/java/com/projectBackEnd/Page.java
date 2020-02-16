@@ -25,7 +25,7 @@ public class Page extends TableEntity { //TODO extends Entity, for easier Json c
     @Column(name = SLUG)
     private String slug;
 
-    @Column(name = INDEX)
+    @Column(name = INDEX, nullable=false)
     private Integer index;
 
     @Column(name = TITLE)
@@ -83,7 +83,7 @@ public class Page extends TableEntity { //TODO extends Entity, for easier Json c
     public String toString() {
         return "Page: " + this.slug + ", " + this.index + ", " + this.title + ", " + this.content;
     }
-
+    //TODO Below method unnecessary hibernate does it for you.
     public static String getCreateQuery() {
         String createQuery = "CREATE TABLE " + TABLENAME + " (";
         createQuery += SLUG + " VARCHAR(255) NOT NULL, "; //Maybe static.makeSafe? No interface...

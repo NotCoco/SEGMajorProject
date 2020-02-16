@@ -2,7 +2,7 @@ package main.java.com.projectBackEnd;
 import java.sql.*;
 import java.util.Collection;
 import java.util.HashSet;
-
+//TODO DELETE THIS UNNECESSARY HIBERNATE DOES IT FOR YOU
 /**
  * An initialiser class for a database. Running this with the correct database credentials
  * will initialise the classes

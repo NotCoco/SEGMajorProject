@@ -23,7 +23,7 @@ public class PageManagerTest extends PageManager {
     public void setUp() { //For this run it will use the same DatabaseInitialiser object, right? Won't interfere
                             // With existing running ones if I were to run it with a different DB / change the object?
         String[] databaseInfo = {}; //Size 0 since it will use the default from the DBInitialiser class.
-        DatabaseInitialiser.main(databaseInfo);
+        //DatabaseInitialiser.main(databaseInfo);
     }
     @After
     public void tearDown() {
