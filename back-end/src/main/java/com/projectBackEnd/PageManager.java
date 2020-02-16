@@ -11,11 +11,7 @@ import org.hibernate.Session;
  * //https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
 
-public class PageManager extends EntityManager {
-    public PageManager() {
-        setSubclass(Page.class);
-        HibernateUtility.setEntityClass(Page.class);
-    }
+public class PageManager {
 
     /**
      * Creates a page object
@@ -25,7 +21,7 @@ public class PageManager extends EntityManager {
      * @param content The content of the new page.
      * @return the created page
      */
-    public Page createPage(String slug, Integer index, String title, String content) {
+    public static Page createPage(String slug, Integer index, String title, String content) {
         return new Page(slug, index, title, content);
     }
 
@@ -37,9 +33,9 @@ public class PageManager extends EntityManager {
      * @param content The content of the new page.
      * @return the created page
      */
-    public Page createAndSavePage(String slug, Integer index, String title, String content) {
+    public static Page createAndSavePage(String slug, Integer index, String title, String content) {
         Page newPage = (createPage(slug, index, title, content));
-        insertTuple(newPage);
+        EntityManager.insertTuple(newPage);
         return newPage;
     }
 
@@ -49,8 +45,8 @@ public class PageManager extends EntityManager {
      * @param page The page that will be updated
      * @return The updated version
      */
-    public Page update(Page page) { //TODO Session to become instance variable, for cleaner code
-        Session session = HibernateUtility.getSessionFactory().openSession();
+    public static Page update(Page page) { //TODO Session to become instance variable, for cleaner code
+        Session session = HibernateUtility.getSessionFactory(page.getClass()).openSession();
         session.beginTransaction();
         Page pageFromDatabase = (Page) session.load(page.getClass(), page.getSlug());
         pageFromDatabase.setContent(page.getContent());
@@ -65,8 +61,8 @@ public class PageManager extends EntityManager {
      * Deletes a page object from the database based on its slug.
      * @param page The slug to whom the page belongs (if slug cannot be sent by frontend explicitly).
      */
-    public void delete(Page page) {
-        Session session = HibernateUtility.getSessionFactory().openSession();
+    public static void delete(Page page) {
+        Session session = HibernateUtility.getSessionFactory(page.getClass()).openSession();
         session.beginTransaction();
         Page pageFromDatabase = findBySlug(page.getSlug());
         session.delete(pageFromDatabase);
@@ -74,11 +70,23 @@ public class PageManager extends EntityManager {
         session.close();
     }
 
-    public Page findBySlug(String slug) { //External java processing
-        List<Page> cast = (List<Page>) getAll();
+    public static Page findBySlug(String slug) { //External java processing
+        List<Page> cast = EntityManager.getAll(Page.class);
         List<Page> found = cast.stream().filter(p -> p.getSlug().equals(slug)).collect(Collectors.toList());
         if (found.size() == 0) return null;
         else return found.get(0);
+    }
+    //TODO Make these inherited or abstract class/interface for others.
+    public static void deleteAll() {
+        EntityManager.deleteAll(Page.class);
+    }
+
+    public static List<Page> getAll() {
+        return EntityManager.getAll(Page.class);
+    }
+
+    public static void insertTuple(Page p) {
+        EntityManager.insertTuple(p);
     }
 }
 
