@@ -14,30 +14,30 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.Criterion;
 
 import java.util.List;
-	/**
-	* TODO:
-	* remove possiblity of adding 2 users with the same username
-	* add reset password
-	* change to javax.persistence.criteria.CriteriaQuery from org.hibernate.Criteria;
-	* write hashing
-	*/
+/**
+ * TODO:
+ * remove possiblity of adding 2 users with the same username
+ * add reset password
+ * change to javax.persistence.criteria.CriteriaQuery from org.hibernate.Criteria;
+ * write hashing
+ */
 public class UserManager implements UserManagerInterface{
 
 	private void createUser(String username, String password){
 		Session session = HibernateUtil.buildSessionFactory(User.class).openSession();
-        	Transaction tx = null;
-        	try {
-            		tx = session.beginTransaction();
-            		User u = new User(username, password);
-            		session.save(u);
-            		tx.commit();
-        	} catch(HibernateException ex) {
-            		if(tx != null)
-                		tx.rollback();
-            		ex.printStackTrace();
-        	} finally {
-            		session.close();
-        	}
+		Transaction tx = null;
+		try {
+			tx = session.beginTransaction();
+			User u = new User(username, password);
+			session.save(u);
+			tx.commit();
+		} catch(HibernateException ex) {
+			if(tx != null)
+				tx.rollback();
+			ex.printStackTrace();
+		} finally {
+			session.close();
+		}
 	}
 	public void addUser(String username, String password){
 		createUser(username, hash(password));
