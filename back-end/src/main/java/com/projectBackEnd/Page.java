@@ -11,7 +11,7 @@ import javax.persistence.Table;
  * in the database for Hibernate and JavaX to identify for database management.
  * https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
-public class Page { //TODO extends Entity, for easier Json conversion for frontend management
+public class Page extends TableEntity { //TODO extends Entity, for easier Json conversion for frontend management
 
     // Table Headers stored as public static final Strings
     public static final String TABLENAME = "Page"; //Hibernate requires this to be the same as class name

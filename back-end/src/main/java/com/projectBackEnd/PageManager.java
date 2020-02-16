@@ -14,6 +14,7 @@ import org.hibernate.Session;
 public class PageManager extends EntityManager {
     public PageManager() {
         setSubclass(Page.class);
+        HibernateUtility.setEntityClass(Page.class);
     }
 
     /**
@@ -49,9 +50,9 @@ public class PageManager extends EntityManager {
      * @return The updated version
      */
     public Page update(Page page) { //TODO Session to become instance variable, for cleaner code
-        Session session = HibernateUtility.getSessionFactory(Page.class).openSession();
+        Session session = HibernateUtility.getSessionFactory().openSession();
         session.beginTransaction();
-        Page pageFromDatabase = (Page) session.load(Page.class, page.getSlug());
+        Page pageFromDatabase = (Page) session.load(page.getClass(), page.getSlug());
         pageFromDatabase.setContent(page.getContent());
         pageFromDatabase.setIndex(page.getIndex());
         pageFromDatabase.setTitle(page.getTitle());
@@ -65,7 +66,7 @@ public class PageManager extends EntityManager {
      * @param page The slug to whom the page belongs (if slug cannot be sent by frontend explicitly).
      */
     public void delete(Page page) {
-        Session session = HibernateUtility.getSessionFactory(Page.class).openSession();
+        Session session = HibernateUtility.getSessionFactory().openSession();
         session.beginTransaction();
         Page pageFromDatabase = findBySlug(page.getSlug());
         session.delete(pageFromDatabase);
