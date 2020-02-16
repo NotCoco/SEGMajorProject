@@ -1,6 +1,5 @@
 package test.java;
 
-import main.java.com.projectBackEnd.DatabaseInitialiser;
 import main.java.com.projectBackEnd.HibernateUtility;
 import main.java.com.projectBackEnd.Page;
 import main.java.com.projectBackEnd.PageManager;
@@ -22,12 +21,14 @@ public class PageManagerTest extends PageManager {
     @Before
     public void setUp() { //For this run it will use the same DatabaseInitialiser object, right? Won't interfere
                             // With existing running ones if I were to run it with a different DB / change the object?
-        String[] databaseInfo = {}; //Size 0 since it will use the default from the DBInitialiser class.
+        //String[] databaseInfo = {}; //Size 0 since it will use the default from the DBInitialiser class.
         //DatabaseInitialiser.main(databaseInfo);
+        //TODO : Now unnecessary, delete.
     }
     @After
     public void tearDown() {
-       DatabaseInitialiser.dropAllTables();
+       //DatabaseInitialiser.dropAllTables();
+       deleteAll();
     }
 
     @Test
@@ -139,7 +140,7 @@ public class PageManagerTest extends PageManager {
     }
 
     @Test
-    public void testAUpdatePage() {
+    public void testUpdatePage() {
         Page replacementPage = createPage("Slug3", 10, "Title3", "New content!");
 
         for (Page p : getListOfPages()) {

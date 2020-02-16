@@ -6,7 +6,7 @@ import java.util.HashSet;
 /**
  * An initialiser class for a database. Running this with the correct database credentials
  * will initialise the classes
- */
+ */ //Unused class
 public class DatabaseInitialiser { //https://www.tutorialspoint.com/jdbc/jdbc-create-tables.htm
     private static String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     private static String DB_URL = "jdbc:mysql://localhost/testunittest"; //TODO OPEN TO CHANGE, make user friendly
