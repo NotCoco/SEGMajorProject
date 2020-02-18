@@ -2,7 +2,9 @@ package main.java.com.projectBackEnd;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 
 /**
@@ -47,13 +49,22 @@ public class PageManager {
      */
     public static Page update(Page page) { //TODO Session to become instance variable, for cleaner code
         Session session = HibernateUtility.getSessionFactory(page.getClass()).openSession();
-        session.beginTransaction();
-        Page pageFromDatabase = (Page) session.load(page.getClass(), page.getSlug());
-        pageFromDatabase.setContent(page.getContent());
-        pageFromDatabase.setIndex(page.getIndex());
-        pageFromDatabase.setTitle(page.getTitle());
-        session.getTransaction().commit();
-        session.close();
+        Transaction transaction = null;
+        Page pageFromDatabase = null;
+        try {
+            transaction = session.beginTransaction();
+            pageFromDatabase = (Page) session.load(page.getClass(), page.getSlug());
+            pageFromDatabase.setContent(page.getContent());
+            pageFromDatabase.setIndex(page.getIndex());
+            pageFromDatabase.setTitle(page.getTitle());
+            session.getTransaction().commit();
+        } catch(HibernateException ex) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
+            session.close();
+        }
         return pageFromDatabase;
     }
 
@@ -63,11 +74,19 @@ public class PageManager {
      */
     public static void delete(Page page) {
         Session session = HibernateUtility.getSessionFactory(page.getClass()).openSession();
-        session.beginTransaction();
-        Page pageFromDatabase = findBySlug(page.getSlug());
-        session.delete(pageFromDatabase);
-        session.getTransaction().commit();
-        session.close();
+        Transaction transaction = null;
+        try {
+            transaction = session.beginTransaction();
+            Page pageFromDatabase = findBySlug(page.getSlug());
+            session.delete(pageFromDatabase);
+            session.getTransaction().commit();
+        } catch(HibernateException ex) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
+            session.close();
+        }
     }
 
     public static Page findBySlug(String slug) { //External java processing

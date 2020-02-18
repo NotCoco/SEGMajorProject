@@ -1,7 +1,9 @@
 package main.java.com.projectBackEnd;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
@@ -23,11 +25,20 @@ public class EntityManager { //TODO Try with statics to see which is cleaner
     }
     public static void deleteAll(Class subclass) {
         Session session = HibernateUtility.getSessionFactory(subclass).openSession();
-        session.beginTransaction();
-        for (Object tuple : getAll(subclass)) { //Deleting one by one is recommended to deal with cascading.
-        session.delete(tuple); }
-        session.getTransaction().commit();
-        session.close();
+        Transaction transaction = null;
+        try {
+            transaction = session.beginTransaction();
+            for (Object tuple : getAll(subclass)) { //Deleting one by one is recommended to deal with cascading.
+                session.delete(tuple);
+            }
+            session.getTransaction().commit();
+        } catch(HibernateException ex) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
+            session.close();
+        }
     }
 
     /**
@@ -38,10 +49,18 @@ public class EntityManager { //TODO Try with statics to see which is cleaner
     public static Object insertTuple(Object newObject) {
         //assert TableEntity.class.isAssignableFrom(newObject.getClass());
         Session session = HibernateUtility.getSessionFactory(newObject.getClass()).openSession();
-        session.beginTransaction();
-        session.save(newObject);
-        session.getTransaction().commit();
-        session.close();
+        Transaction transaction = null;
+        try {
+            transaction = session.beginTransaction();
+            session.save(newObject);
+            transaction.commit();
+        } catch(HibernateException ex) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+        } finally {
+            session.close();
+        }
         return newObject;
     }
 }
