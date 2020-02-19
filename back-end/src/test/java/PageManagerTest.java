@@ -54,15 +54,16 @@ public class PageManagerTest extends PageManager {
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
                 "");
         insertTuple(page);
+        fillDatabase();
         Page pageFromDatabase = findBySlug("biliary_atresia");
-        assertEquals(pageFromDatabase.getContent(), page.getContent());
+        //assertEquals(pageFromDatabase.getContent(), page.getContent());
+        assertTrue(pageFromDatabase.equals(page));
     }
 
     @Test
     public void testSafeNames() {
        createAndSavePage(";DROP TABLE Pages", 2, "';'''", "sdafds");
        assertEquals(getAll().size(), 1);
-       System.out.println(getAll().get(0));
     }
 
     @Test
@@ -90,9 +91,7 @@ public class PageManagerTest extends PageManager {
 
     @Test
     public void testGetAll() {
-       for (Page p : getListOfPages()) {
-           insertTuple(p);
-       }
+       fillDatabase();
        assertEquals(getAll().size(), getListOfPages().size());
     }
 
@@ -109,34 +108,21 @@ public class PageManagerTest extends PageManager {
 
     @Test
     public void testDeleteAll() {
-        for (Page p : getListOfPages()) {
-            insertTuple(p);
-        }
+        fillDatabase();
         deleteAll();
         assertEquals(getAll().size(), 0);
     }
-    /*@Test
-    public void testDeleteAllCascade() {
-        for (Page p : getListOfPages()) {
-            insertTuple(p);
-        }
-        deleteAllCascade();
-        assertEquals(getAll().size(), 0);
-    }*/
+
     @Test
     public void testDelete() {
-        for (Page p : getListOfPages()) {
-            insertTuple(p);
-        }
+        fillDatabase();
         delete(getListOfPages().get(1));
         assertEquals(getAll().size(), getListOfPages().size()-1);
     }
 
     @Test
     public void testWhichDeleted() {
-        for (Page p : getListOfPages()) {
-            insertTuple(p);
-        }
+        fillDatabase();
         delete(getListOfPages().get(1));
         assertNull(findBySlug(getListOfPages().get(1).getSlug()));
     }
@@ -145,9 +131,7 @@ public class PageManagerTest extends PageManager {
     public void testUpdatePage() {
         Page replacementPage = createPage("Slug3", 10, "Title3", "New content!");
 
-        for (Page p : getListOfPages()) {
-            insertTuple(p);
-        }
+        fillDatabase();
         update(replacementPage);
         Page foundPage = findBySlug("Slug3");
 
@@ -156,10 +140,7 @@ public class PageManagerTest extends PageManager {
 
     @Test
     public void testFindBySlug() {
-
-        for (Page p : getListOfPages()) {
-            insertTuple(p);
-        }
+        fillDatabase();
         assertTrue(findBySlug("Slug2").equals(getListOfPages().get(1)));
     }
 
@@ -175,6 +156,11 @@ public class PageManagerTest extends PageManager {
         listOfPages.add(new Page("Slug12", 4, "Title5", "Content5"));
         listOfPages.add(new Page("Slug17", 4, "Title5", "Content5"));
         return listOfPages;
+    }
+    private static void fillDatabase() {
+        for (Page p : getListOfPages()) {
+            insertTuple(p);
+        }
     }
 
 }
