@@ -43,7 +43,7 @@ public class EntityManager { //TODO Try with statics to see which is cleaner
             sf.close();
         }
     }
-    private static void deleteAllTransaction(Class subclass, Session session) {
+    private static void deleteAllTransaction(Class subclass, Session session) throws  HibernateException {
         session.beginTransaction();
         for (Object tuple : getAll(subclass)) { //Deleting one by one is recommended to deal with cascading.
             session.delete(tuple);
@@ -67,7 +67,7 @@ public class EntityManager { //TODO Try with statics to see which is cleaner
         return newObject;
     }
     //TODO (Wasif, delete all mass commented out code)
-    private static void insertTupleTransaction(TableEntity newObject, Session session) {
+    private static void insertTupleTransaction(TableEntity newObject, Session session) throws HibernateException {
         session.beginTransaction();
         session.save(newObject);
         session.getTransaction().commit();
@@ -88,7 +88,7 @@ public class EntityManager { //TODO Try with statics to see which is cleaner
         }
         return found;
     }
-    private static TableEntity findByPrimaryKeyTransaction(Class subclass, Serializable pk, Session session) {
+    private static TableEntity findByPrimaryKeyTransaction(Class subclass, Serializable pk, Session session) throws HibernateException {
         session.beginTransaction(); //TODO Demeter Violation with Implicit Transaction object
         TableEntity found = (TableEntity) session.get(subclass, pk);
         session.getTransaction().commit(); //Violation

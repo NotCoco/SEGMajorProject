@@ -94,13 +94,12 @@ public class PageManagerTest {
        assertEquals(getAll().size(), 1);
     }
 
-    //@Test(expected = ConstraintViolationException.class)
-    //public void testEmptyIndex() throws ConstraintViolationException {
     //@Test(expected = PersistenceException.class)
     @Test
     public void testEmptyIndex() {
        createAndSavePage("biliary", null, "2", "1"); //Should throw something?
-       assertEquals(getAll().size(), 0);
+       createAndSavePage("biliary2", 2, "2", "1");
+       assertEquals(getAll().size(), 1);
     } //TODO: Doesn't throw an error, just doesn't create?
 
     //@Test(expected = ConstraintViolationException.class)
@@ -166,6 +165,16 @@ public class PageManagerTest {
         assertTrue(findBySlug("Slug2").equals(getListOfPages().get(1)));
     }
 
+    @Test
+    public void testUnfoundPrimaryKey() {
+        fillDatabase();
+        assertNull(findBySlug("fakekey"));
+    }
+    @Test(expected = IllegalArgumentException.class)
+    public void testNullPrimaryKey() throws IllegalStateException {
+        fillDatabase();
+        assertNull(findBySlug(null));
+    }
     private static ArrayList<Page> getListOfPages() {
         ArrayList<Page> listOfPages = new ArrayList<>();
         listOfPages.add(new Page("Slug1", 0, "Title1", "Content1"));
