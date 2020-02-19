@@ -1,48 +1,49 @@
 package main.java.com.projectBackEnd;
+import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @Table(name = Medicine.TABLENAME)
 
-public class Medicine {
+public class Medicine implements TableEntity{
 
     // Table columns
-    public static final String TABLENAME = "Medicines";
+    public static final String TABLENAME = "Medicine";
     private static final String ID = "ID";
     private static final String NAME = "Name";
     private static final String TYPE = "Type";
 
-    @Id @GeneratedValue
-    @Column(name="ID", unique = true)
-    private int id;
+    @Id
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = ID, nullable = false)
+    private Integer primaryKey;
 
-    @Column(name="NAME", nullable = false)
+    @Column(name = NAME, nullable = false)
+    @Type(type = "text")
     private String name;
 
-    // Liquid, Tablet, Capsule, Injection, Topical, Suppositories, Drops, Inhalers
-    @Column(name="TYPE",nullable = false)
+    @Column(name = TYPE)
+    @Type(type="text")
     private String type;
+    // Liquid, Tablet, Capsule, Injection, Topical, Suppositories, Drops, Inhalers
 
     /**
      * Constructors
      */
     public Medicine(String name, String type) {
-        this.name = new SQLSafeString(name).toString();
-        this.type = new SQLSafeString(type).toString();
-    }
-
-    // Unsure if it should stay
-    public Medicine(Integer id, String name, String type) {
-        this.id = id;
-        this.name = new SQLSafeString(name).toString();
-        this.type = new SQLSafeString(type).toString();
+        this.name = name;
+        this.type = type;
     }
 
     // Getters and setters; ID cannot be changed
 
-    public  Integer getId() {
-        return id;
+    public Integer getPrimaryKey() {
+        return primaryKey;
     }
 
     public String getName() {
@@ -63,8 +64,32 @@ public class Medicine {
 
     @Override
     public String toString() {
-        return "Medicine: " + this.id + ", " + this.name + ", " + this.type;
+        return "Medicine: " + this.primaryKey + ", " + this.name + ", " + this.type;
     }
+
+    public static String getCreateQuery() {
+        String createQuery = "CREATE TABLE " + TABLENAME + " (";
+        createQuery += ID + " INTEGER NOT NULL AUTO-INCREMENT, ";
+        createQuery += NAME + " VARCHAR(255) NOT NULL, ";
+        createQuery += TYPE + " VARCHAR(255), ";
+        createQuery += "PRIMARY KEY (" + ID + "));";
+        System.out.println(createQuery);
+        return createQuery;
+    }
+
+    public boolean equals(Medicine otherMed) {
+        return (getPrimaryKey() == otherMed.getPrimaryKey()) && getName().equals(otherMed.getName()) &&
+                getType().equals(otherMed.getType());
+    }
+
+    @Override
+    public TableEntity imitate(TableEntity toCopy) {
+        Medicine medToCopy = (Medicine) toCopy;
+        setName(medToCopy.getName());
+        setType(medToCopy.getType());
+        return this;
+    }
+
 
 }
 
