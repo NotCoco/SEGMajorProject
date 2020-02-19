@@ -1,4 +1,7 @@
 package main.java.com.projectBackEnd;
 
-abstract public class TableEntity {
+import java.io.Serializable;
+
+public interface TableEntity {
+    public Serializable getPrimaryKey();
 }

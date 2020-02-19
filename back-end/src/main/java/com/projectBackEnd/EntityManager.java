@@ -95,6 +95,27 @@ public class EntityManager { //TODO Try with statics to see which is cleaner
         session.getTransaction().commit(); //Violation
         return found;
     }
+
+
+    public static void delete(TableEntity object) {
+        SessionFactory sf = HibernateUtility.getSessionFactory(object.getClass()); //Violates Demeter
+        Session session = sf.openSession();
+        try {
+            deletePageTransaction(object, session);
+        } catch(HibernateException ex) {
+            if (session.getTransaction() != null) session.getTransaction().rollback();
+        } finally {
+            session.close();
+            sf.close();
+        }
+    }
+
+    private static void deletePageTransaction(TableEntity object, Session session) throws HibernateException {
+        session.beginTransaction();
+        TableEntity entityToDelete = (TableEntity) getByPrimaryKey(object.getClass(), object.getPrimaryKey());
+        session.delete(entityToDelete);
+        session.getTransaction().commit();
+    }
 }
 /*public static void removeAllInstances(final Class<?> clazz) {
     SessionFactory sessionFactory = HibernateUtil.getSessionFactory();

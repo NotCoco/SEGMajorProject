@@ -37,12 +37,12 @@ public class PageManagerTest extends PageManager {
         //String[] databaseInfo = {}; //Size 0 since it will use the default from the DBInitialiser class.
         //DatabaseInitialiser.main(databaseInfo);
         //TODO : Now unnecessary, delete.
-        deleteAll();
+        //deleteAll();
     }
     @After
     public void tearDown() {
-       //DatabaseInitialiser.dropAllTables();
-       deleteAll();
+       DatabaseInitialiser.dropAllTables();
+       //deleteAll();
     }
 
     @Test

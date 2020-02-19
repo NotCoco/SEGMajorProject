@@ -1,8 +1,11 @@
 package main.java.com.projectBackEnd;
+import org.hibernate.annotations.Type;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @Table(name = Page.TABLENAME)
@@ -11,7 +14,7 @@ import javax.persistence.Table;
  * in the database for Hibernate and JavaX to identify for database management.
  * https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
-public class Page extends TableEntity { //TODO extends Entity, for easier Json conversion for frontend management
+public class Page implements TableEntity { //TODO extends Entity, for easier Json conversion for frontend management
 
     // Table Headers stored as public static final Strings
     public static final String TABLENAME = "Page"; //Hibernate requires this to be the same as class name
@@ -29,9 +32,11 @@ public class Page extends TableEntity { //TODO extends Entity, for easier Json c
     private Integer index;
 
     @Column(name = TITLE)
+    @Type(type="text")
     private String title;
 
     @Column(name = CONTENT)
+    @Type(type="text")
     private String content;
     //Attributes for each will be stored here, under the names given by @Column.
 
@@ -41,8 +46,8 @@ public class Page extends TableEntity { //TODO extends Entity, for easier Json c
     public Page() {
     }
 
-    public Page(String slug, Integer index, String title, String content) {
-        this.slug = slug;
+    public Page(Serializable slug, Integer index, String title, String content) {
+        this.slug = (String) slug;
         this.index = index;
         this.title = title;
         this.content = content;
@@ -50,7 +55,11 @@ public class Page extends TableEntity { //TODO extends Entity, for easier Json c
 
     //GETTERS AND SETTERS:
 
-    public String getSlug() {
+    public Serializable getSlug() {
+        return slug;
+    }
+
+    public Serializable getPrimaryKey() {
         return slug;
     }
 

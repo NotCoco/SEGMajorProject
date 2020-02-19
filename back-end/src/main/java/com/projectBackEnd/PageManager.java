@@ -1,4 +1,5 @@
 package main.java.com.projectBackEnd;
+import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,30 +79,16 @@ public class PageManager {
      * @param page The slug to whom the page belongs (if slug cannot be sent by frontend explicitly).
      */
     public static void delete(Page page) {
-        SessionFactory sf = HibernateUtility.getSessionFactory(page.getClass()); //Violates Demeter
-        Session session = sf.openSession();
-        try {
-            deletePageTransaction(page, session);
-        } catch(HibernateException ex) {
-            if (session.getTransaction() != null) session.getTransaction().rollback();
-        } finally {
-            session.close();
-            sf.close();
-        }
+        EntityManager.delete(page);
     }
 
-    private static void deletePageTransaction(Page page, Session session) throws HibernateException {
-        session.beginTransaction();
-        Page pageFromDatabase = findBySlug(page.getSlug());
-        session.delete(pageFromDatabase);
-        session.getTransaction().commit();
-    }
 
-    public static Page findBySlug(String slug) { //External java processing
-        List<Page> cast = EntityManager.getAll(Page.class);
+    public static Page findBySlug(Serializable slug) { //External java processing
+        /*List<Page> cast = EntityManager.getAll(Page.class);
         List<Page> found = cast.stream().filter(p -> p.getSlug().equals(slug)).collect(Collectors.toList());
         if (found.size() == 0) return null;
-        else return found.get(0);
+        else return found.get(0);*/
+        return (Page) EntityManager.getByPrimaryKey(Page.class, slug);
     }
     //TODO Make these inherited or abstract class/interface for others.
     public static void deleteAll() {
