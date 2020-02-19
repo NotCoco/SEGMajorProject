@@ -18,9 +18,18 @@ public class EntityManager { //TODO Try with statics to see which is cleaner
         //https://stackoverflow.com/questions/43037814/how-to-get-all-data-in-the-table-with-hibernate/43067399
         //Use <T> as per link
         Session session = HibernateUtility.getSessionFactory(subclass).openSession();
+        List<T> results = null;
+        try {
+            results = getAllCriteria(subclass, session);
+        } finally {
+            session.close();
+        }
+        return results;
+    }
+    private static <T> List<T> getAllCriteria(Class subclass, Session session) {
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<T> criteria = builder.createQuery(subclass);
-        criteria.from(subclass);        
+        criteria.from(subclass);
         return session.createQuery(criteria).getResultList();
     }
     public static void deleteAll(Class subclass) {
