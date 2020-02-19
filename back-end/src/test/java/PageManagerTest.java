@@ -1,8 +1,6 @@
 package test.java;
 
-import main.java.com.projectBackEnd.HibernateUtility;
-import main.java.com.projectBackEnd.Page;
-import main.java.com.projectBackEnd.PageManager;
+import main.java.com.projectBackEnd.*;
 import org.junit.*;
 
 import javax.persistence.PersistenceException;
@@ -16,6 +14,21 @@ public class PageManagerTest extends PageManager {
     @BeforeClass
     public static void setUpDatabase() {
         HibernateUtility.setLocation("testhibernate.cfg.xml");
+    }
+
+    public static ConnectionLeakUtil connectionLeakUtil = null;
+    @BeforeClass
+    public static void initConnectionLeakUtility() {
+        if ( true ) {
+            connectionLeakUtil = new ConnectionLeakUtil();
+        }
+    }
+
+    @AfterClass
+    public static void assertNoLeaks() {
+        if ( true ) {
+            connectionLeakUtil.assertNoLeaks();
+        }
     }
 
     @Before
@@ -33,6 +46,13 @@ public class PageManagerTest extends PageManager {
     }
 
     @Test
+    public void testGetByPrimaryKey() {
+        fillDatabase();
+        Page pageWithSlug2 = (Page) (EntityManager.getByPrimaryKey(Page.class, "Slug2"));
+        assertTrue(pageWithSlug2.equals(getListOfPages().get(1)));
+    }
+
+    @Test
     public void testCreatePage() {
        Page page = createPage("biliary_atresia", 0, "Biliary Atresia", "" +
                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
@@ -42,7 +62,7 @@ public class PageManagerTest extends PageManager {
 
     @Test
     public void testCreateAndSavePage() {
-       Page page = createAndSavePage("biliary_atresia", 0, "Biliary Atresia", "" +
+       createAndSavePage("biliary_atresia", 0, "Biliary Atresia", "" +
                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
                "");
        assertEquals(getAll().size(), 1);

@@ -4,6 +4,7 @@ import java.util.stream.Collectors;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 /**
  * PageManager class that deals with interacting with the database itself with respect to Pages.
@@ -46,7 +47,8 @@ public class PageManager {
      * @return The updated version
      */
     public static Page update(Page page) { //TODO Session to become instance variable, for cleaner code
-        Session session = HibernateUtility.getSessionFactory(page.getClass()).openSession(); //Violates Demeter
+        SessionFactory sf = HibernateUtility.getSessionFactory(page.getClass()); //Violates Demeter
+        Session session = sf.openSession();
         Page pageFromDatabase = null;
         try {
             pageFromDatabase = updatePageTransaction(page, session);
@@ -54,6 +56,7 @@ public class PageManager {
             if (session.getTransaction() != null) session.getTransaction().rollback();
         } finally {
             session.close();
+            sf.close();
         }
         return pageFromDatabase;
     }
@@ -75,13 +78,15 @@ public class PageManager {
      * @param page The slug to whom the page belongs (if slug cannot be sent by frontend explicitly).
      */
     public static void delete(Page page) {
-        Session session = HibernateUtility.getSessionFactory(page.getClass()).openSession();
+        SessionFactory sf = HibernateUtility.getSessionFactory(page.getClass()); //Violates Demeter
+        Session session = sf.openSession();
         try {
             deletePageTransaction(page, session);
         } catch(HibernateException ex) {
             if (session.getTransaction() != null) session.getTransaction().rollback();
         } finally {
             session.close();
+            sf.close();
         }
     }
 

@@ -9,6 +9,7 @@ import org.hibernate.cfg.Configuration;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import java.io.Serializable;
 import java.util.List;
 
 public class EntityManager { //TODO Try with statics to see which is cleaner
@@ -16,13 +17,9 @@ public class EntityManager { //TODO Try with statics to see which is cleaner
 
     public static <T> List<T> getAll(Class subclass) { //Hibernate get all, no HQL
         //https://stackoverflow.com/questions/43037814/how-to-get-all-data-in-the-table-with-hibernate/43067399
-        //Use <T> as per link
-        Session session = HibernateUtility.getSessionFactory(subclass).openSession();
         List<T> results = null;
-        try {
-            results = getAllCriteria(subclass, session);
-        } finally {
-            session.close();
+        try (SessionFactory sf = HibernateUtility.getSessionFactory(subclass)) {
+            results = getAllCriteria(subclass, sf.openSession());
         }
         return results;
     }
@@ -33,13 +30,15 @@ public class EntityManager { //TODO Try with statics to see which is cleaner
         return session.createQuery(criteria).getResultList();
     }
     public static void deleteAll(Class subclass) {
-        Session session = HibernateUtility.getSessionFactory(subclass).openSession();
+        SessionFactory sf = HibernateUtility.getSessionFactory(subclass);
+        Session session = sf.openSession();
         try {
             deleteAllTransaction(subclass, session);
         } catch(HibernateException ex) {
             if (session.getTransaction() != null) session.getTransaction().rollback();
         } finally {
             session.close();
+            sf.close();
         }
     }
     private static void deleteAllTransaction(Class subclass, Session session) {
@@ -57,13 +56,15 @@ public class EntityManager { //TODO Try with statics to see which is cleaner
     //public <U> void insertTyple(U newObject) Basically the same :\ U extends T doesn't work.
     public static Object insertTuple(Object newObject) {
         //assert TableEntity.class.isAssignableFrom(newObject.getClass());
-        Session session = HibernateUtility.getSessionFactory(newObject.getClass()).openSession();
+        SessionFactory sf = HibernateUtility.getSessionFactory(newObject.getClass());
+        Session session = sf.openSession();
         try {
             insertTupleTransaction(newObject, session);
         } catch(HibernateException ex) {
             if (session.getTransaction() != null) session.getTransaction().rollback();
         } finally {
             session.close();
+            sf.close();
         }
         return newObject;
     }
@@ -72,6 +73,27 @@ public class EntityManager { //TODO Try with statics to see which is cleaner
         session.beginTransaction();
         session.save(newObject);
         session.getTransaction().commit();
+    }
+
+    public static Object getByPrimaryKey(Class subclass, Serializable pk) {
+        SessionFactory sf = HibernateUtility.getSessionFactory(subclass);
+        Session session = sf.openSession();
+        Object found = null;
+        try {
+            found = findByPrimaryKeyTransaction(subclass, pk, session);
+        } catch(HibernateException ex) {
+            if (session.getTransaction() != null) session.getTransaction().rollback(); //VIOLATES
+        } finally {
+            session.close();
+            sf.close();
+        }
+        return found;
+    }
+    private static Object findByPrimaryKeyTransaction(Class subclass, Serializable pk, Session session) {
+        session.beginTransaction(); //TODO Demeter Violation with Implicit Transaction object
+        Object found = session.get(subclass, pk);
+        session.getTransaction().commit(); //Violation
+        return found;
     }
 }
 /*public static void removeAllInstances(final Class<?> clazz) {
