@@ -4,8 +4,6 @@ import java.util.stream.Collectors;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
-
 
 /**
  * PageManager class that deals with interacting with the database itself with respect to Pages.
@@ -48,45 +46,50 @@ public class PageManager {
      * @return The updated version
      */
     public static Page update(Page page) { //TODO Session to become instance variable, for cleaner code
-        Session session = HibernateUtility.getSessionFactory(page.getClass()).openSession();
-        Transaction transaction = null;
+        Session session = HibernateUtility.getSessionFactory(page.getClass()).openSession(); //Violates Demeter
         Page pageFromDatabase = null;
         try {
-            transaction = session.beginTransaction();
-            pageFromDatabase = (Page) session.load(page.getClass(), page.getSlug());
-            pageFromDatabase.setContent(page.getContent());
-            pageFromDatabase.setIndex(page.getIndex());
-            pageFromDatabase.setTitle(page.getTitle());
-            session.getTransaction().commit();
+            pageFromDatabase = updatePageTransaction(page, session);
         } catch(HibernateException ex) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
+            if (session.getTransaction() != null) session.getTransaction().rollback();
         } finally {
             session.close();
         }
         return pageFromDatabase;
     }
-
+    private static Page matchFields(Page pageFromDatabase, Page newPage) {
+        pageFromDatabase.setContent(newPage.getContent());
+        pageFromDatabase.setIndex(newPage.getIndex());
+        pageFromDatabase.setTitle(newPage.getTitle());
+        return pageFromDatabase;
+    }
+    private static Page updatePageTransaction(Page page, Session session) throws HibernateException {
+        session.beginTransaction(); //TODO Demeter Violation with Implicit Transaction object
+        Page pageFromDatabase = (Page) session.load(page.getClass(), page.getSlug());
+        matchFields(pageFromDatabase, page);
+        session.getTransaction().commit(); //Violation
+        return pageFromDatabase;
+    }
     /**
      * Deletes a page object from the database based on its slug.
      * @param page The slug to whom the page belongs (if slug cannot be sent by frontend explicitly).
      */
     public static void delete(Page page) {
         Session session = HibernateUtility.getSessionFactory(page.getClass()).openSession();
-        Transaction transaction = null;
         try {
-            transaction = session.beginTransaction();
-            Page pageFromDatabase = findBySlug(page.getSlug());
-            session.delete(pageFromDatabase);
-            session.getTransaction().commit();
+            deletePageTransaction(page, session);
         } catch(HibernateException ex) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
+            if (session.getTransaction() != null) session.getTransaction().rollback();
         } finally {
             session.close();
         }
+    }
+
+    private static void deletePageTransaction(Page page, Session session) throws HibernateException {
+        session.beginTransaction();
+        Page pageFromDatabase = findBySlug(page.getSlug());
+        session.delete(pageFromDatabase);
+        session.getTransaction().commit();
     }
 
     public static Page findBySlug(String slug) { //External java processing
@@ -208,10 +211,10 @@ public class PageManager {
     //TODO Convert the outputs into jsons instead of file returns somewhere. Perhaps a class that takes Entity objects.
     //TODO Remove this unnecessary method as the frontend do not require it, currently staying for exemplar purpose.
     */
-        /**
-     * Gets a list of all the pages
-     * @return A list of all the pages
-     */
+/**
+ * Gets a list of all the pages
+ * @return A list of all the pages
+ */
         /*
 public List<Page> getAll() { //<-- HQL get all
     Session session = getSessionFactory().openSession();

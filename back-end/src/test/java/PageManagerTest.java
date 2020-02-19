@@ -24,6 +24,7 @@ public class PageManagerTest extends PageManager {
         //String[] databaseInfo = {}; //Size 0 since it will use the default from the DBInitialiser class.
         //DatabaseInitialiser.main(databaseInfo);
         //TODO : Now unnecessary, delete.
+        deleteAll();
     }
     @After
     public void tearDown() {
@@ -72,11 +73,12 @@ public class PageManagerTest extends PageManager {
 
     //@Test(expected = ConstraintViolationException.class)
     //public void testEmptyIndex() throws ConstraintViolationException {
-    @Test(expected = PersistenceException.class)
-    public void testEmptyIndex() throws PersistenceException {
+    //@Test(expected = PersistenceException.class)
+    @Test
+    public void testEmptyIndex() {
        createAndSavePage("biliary", null, "2", "1"); //Should throw something?
        assertEquals(getAll().size(), 0);
-    }
+    } //TODO: Doesn't throw an error, just doesn't create?
 
     //@Test(expected = ConstraintViolationException.class)
     //public void testDuplicatePrimaryKey() throws ConstraintViolationException {

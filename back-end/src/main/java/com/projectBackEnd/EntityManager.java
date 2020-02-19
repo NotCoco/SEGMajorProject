@@ -25,20 +25,20 @@ public class EntityManager { //TODO Try with statics to see which is cleaner
     }
     public static void deleteAll(Class subclass) {
         Session session = HibernateUtility.getSessionFactory(subclass).openSession();
-        Transaction transaction = null;
         try {
-            transaction = session.beginTransaction();
-            for (Object tuple : getAll(subclass)) { //Deleting one by one is recommended to deal with cascading.
-                session.delete(tuple);
-            }
-            session.getTransaction().commit();
+            deleteAllTransaction(subclass, session);
         } catch(HibernateException ex) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
+            if (session.getTransaction() != null) session.getTransaction().rollback();
         } finally {
             session.close();
         }
+    }
+    private static void deleteAllTransaction(Class subclass, Session session) {
+        session.beginTransaction();
+        for (Object tuple : getAll(subclass)) { //Deleting one by one is recommended to deal with cascading.
+            session.delete(tuple);
+        }
+        session.getTransaction().commit();
     }
 
     /**
@@ -49,19 +49,20 @@ public class EntityManager { //TODO Try with statics to see which is cleaner
     public static Object insertTuple(Object newObject) {
         //assert TableEntity.class.isAssignableFrom(newObject.getClass());
         Session session = HibernateUtility.getSessionFactory(newObject.getClass()).openSession();
-        Transaction transaction = null;
         try {
-            transaction = session.beginTransaction();
-            session.save(newObject);
-            transaction.commit();
+            insertTupleTransaction(newObject, session);
         } catch(HibernateException ex) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
+            if (session.getTransaction() != null) session.getTransaction().rollback();
         } finally {
             session.close();
         }
         return newObject;
+    }
+
+    private static void insertTupleTransaction(Object newObject, Session session) {
+        session.beginTransaction();
+        session.save(newObject);
+        session.getTransaction().commit();
     }
 }
 /*public static void removeAllInstances(final Class<?> clazz) {
