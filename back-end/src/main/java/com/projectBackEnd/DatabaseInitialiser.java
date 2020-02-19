@@ -1,16 +1,17 @@
 package main.java.com.projectBackEnd;
 import java.sql.*;
+import java.util.Collection;
 import java.util.HashSet;
-
+//TODO DELETE THIS UNNECESSARY HIBERNATE DOES IT FOR YOU
 /**
  * An initialiser class for a database. Running this with the correct database credentials
  * will initialise the classes
- */
+ */ //Unused class
 public class DatabaseInitialiser { //https://www.tutorialspoint.com/jdbc/jdbc-create-tables.htm
-    private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    private static final String DB_URL = "jdbc:mysql://localhost/testunittest"; //TODO OPEN TO CHANGE, make user friendly
-    private static final String USER = "root";
-    private static final String PASS = "";
+    private static String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+    private static String DB_URL = "jdbc:mysql://localhost/testunittest"; //TODO OPEN TO CHANGE, make user friendly
+    private static String USER = "root";
+    private static String PASS = "";
 
     /**
      * Main method will connect and run SQL CreateQueries from all the different types of table
@@ -19,6 +20,11 @@ public class DatabaseInitialiser { //https://www.tutorialspoint.com/jdbc/jdbc-cr
      * @param args
      */
     public static void main(String[] args) {
+        if (args.length != 0) resetDatabaseDetails(args);
+        runCollectionOfQueries(getAllCreateQueries());
+    }
+
+    private static void runCollectionOfQueries(Collection<String> queries) {
         Connection connection = null;
         Statement statement = null;
         try {
@@ -26,7 +32,7 @@ public class DatabaseInitialiser { //https://www.tutorialspoint.com/jdbc/jdbc-cr
             connection = DriverManager.getConnection(DB_URL, USER, PASS);
             statement = connection.createStatement();
 
-            for (String createQuery : getAllCreateQueries()) {
+            for (String createQuery : queries) {
                 statement.execute(createQuery);
             }
 
@@ -38,11 +44,10 @@ public class DatabaseInitialiser { //https://www.tutorialspoint.com/jdbc/jdbc-cr
                     connection.close();
                 }
             } catch (SQLException e) {
-                System.out.println(e);
+                e.printStackTrace();
             }
         }
     }
-
     /**
      * Creates a hash set of strings of Create Queries for DB initialisation.
      * @return Set of queries strings from each Table entity.
@@ -50,15 +55,39 @@ public class DatabaseInitialiser { //https://www.tutorialspoint.com/jdbc/jdbc-cr
     private static HashSet<String> getAllCreateQueries() {
         HashSet<String> allCreateQueries = new HashSet<>();
         allCreateQueries.add(
-            new SQLSafeString(Page.getCreateQuery()).toString()
+            (Page.getCreateQuery())
         );
         /*allCreateQueries.add(
             new SQLSafeString(Medicine.getCreateQuery()).toString()
         );*/
         /*allCreateQueries.add(
             new SQLSafeString(Login.getCreateQuery()).toString()
-        );*/
+        );*/ //TODO Fill this in with all the other entity create queries.
         return allCreateQueries;
+    }
+
+    private static HashSet<String> getAllDropQueries() {
+        HashSet<String> allDropQueries = new HashSet<>();
+        allDropQueries.add(
+                ("DROP TABLE " + Page.TABLENAME)
+        );
+
+        return allDropQueries;
+    }
+
+    public static void dropAllTables() {
+        runCollectionOfQueries(getAllDropQueries());
+    }
+
+    private static void resetDatabaseDetails(String[] args) {
+        if (args.length > 0) {
+            System.out.println("Main method takes arguments such as 'localhost/testdatabase', then user/pass.");
+            DB_URL = "jdbc:mysql://" + args[0];
+        }
+        if (args.length == 3) {
+            USER = args[1];
+            PASS = args[2];
+        }
     }
 }
 
