@@ -18,6 +18,7 @@ public class EntityManager { //TODO Try with statics to see which is cleaner
     public static <T> List<T> getAll(Class subclass) { //Hibernate get all, no HQL
         //https://stackoverflow.com/questions/43037814/how-to-get-all-data-in-the-table-with-hibernate/43067399
         List<T> results = null;
+        if (!extendsTableEntity(subclass)) return results;
         try (SessionFactory sf = HibernateUtility.getSessionFactory(subclass)) {
             results = getAllCriteria(subclass, sf.openSession());
         }
@@ -30,6 +31,7 @@ public class EntityManager { //TODO Try with statics to see which is cleaner
         return session.createQuery(criteria).getResultList();
     }
     public static void deleteAll(Class subclass) {
+        if (!extendsTableEntity(subclass)) return;
         SessionFactory sf = HibernateUtility.getSessionFactory(subclass);
         Session session = sf.openSession();
         try {
@@ -49,13 +51,9 @@ public class EntityManager { //TODO Try with statics to see which is cleaner
         session.getTransaction().commit();
     }
 
-    /**
-     * Insert a new page to be added to the database
-     * @param newObject The page to be added to the database
-     */
     //public <U> void insertTyple(U newObject) Basically the same :\ U extends T doesn't work.
-    public static Object insertTuple(Object newObject) {
-        //assert TableEntity.class.isAssignableFrom(newObject.getClass());
+    public static TableEntity insertTuple(TableEntity newObject) {
+        //if (!extendsTableEntity(newObject.getClass())) return newObject;
         SessionFactory sf = HibernateUtility.getSessionFactory(newObject.getClass());
         Session session = sf.openSession();
         try {
@@ -68,17 +66,18 @@ public class EntityManager { //TODO Try with statics to see which is cleaner
         }
         return newObject;
     }
-
-    private static void insertTupleTransaction(Object newObject, Session session) {
+    //TODO (Wasif, delete all mass commented out code)
+    private static void insertTupleTransaction(TableEntity newObject, Session session) {
         session.beginTransaction();
         session.save(newObject);
         session.getTransaction().commit();
     }
 
-    public static Object getByPrimaryKey(Class subclass, Serializable pk) {
+    public static TableEntity getByPrimaryKey(Class subclass, Serializable pk) {
+        if (!extendsTableEntity(subclass)) return null;
         SessionFactory sf = HibernateUtility.getSessionFactory(subclass);
         Session session = sf.openSession();
-        Object found = null;
+        TableEntity found = null;
         try {
             found = findByPrimaryKeyTransaction(subclass, pk, session);
         } catch(HibernateException ex) {
@@ -89,9 +88,9 @@ public class EntityManager { //TODO Try with statics to see which is cleaner
         }
         return found;
     }
-    private static Object findByPrimaryKeyTransaction(Class subclass, Serializable pk, Session session) {
+    private static TableEntity findByPrimaryKeyTransaction(Class subclass, Serializable pk, Session session) {
         session.beginTransaction(); //TODO Demeter Violation with Implicit Transaction object
-        Object found = session.get(subclass, pk);
+        TableEntity found = (TableEntity) session.get(subclass, pk);
         session.getTransaction().commit(); //Violation
         return found;
     }
@@ -101,7 +100,7 @@ public class EntityManager { //TODO Try with statics to see which is cleaner
         SessionFactory sf = HibernateUtility.getSessionFactory(object.getClass()); //Violates Demeter
         Session session = sf.openSession();
         try {
-            deletePageTransaction(object, session);
+            deleteTransaction(object, session);
         } catch(HibernateException ex) {
             if (session.getTransaction() != null) session.getTransaction().rollback();
         } finally {
@@ -109,13 +108,16 @@ public class EntityManager { //TODO Try with statics to see which is cleaner
             sf.close();
         }
     }
+    private static void deleteTransaction(TableEntity object, Session session) throws HibernateException {
+        session.beginTransaction();
+        TableEntity entityToDelete = getByPrimaryKey(object.getClass(), object.getPrimaryKey());
+        session.delete(entityToDelete);
+        session.getTransaction().commit();
+    }
 
-    /**
-     * Old entity / Old entity's primary key comes back in with NEW content.
-     * @param
-     * @return
-     */
-    public static TableEntity update(TableEntity updatedCopy) { //TODO Session to become instance variable, for cleaner code
+    //TODO Might need to return back down if frontend send strings etc. I presume they will json and send the (page) back
+    //Methods are commented out already in the PageManager if they send a String primary key.
+    public static TableEntity update(TableEntity updatedCopy) {
         SessionFactory sf = HibernateUtility.getSessionFactory(updatedCopy.getClass()); //Violates Demeter
         Session session = sf.openSession();
         TableEntity fromDatabase = null;
@@ -129,21 +131,21 @@ public class EntityManager { //TODO Try with statics to see which is cleaner
         }
         return fromDatabase;
     }
+    public static boolean extendsTableEntity(Class c) { //TODO: Thoughts on this?
+        return TableEntity.class.isAssignableFrom(c);
+    }
 
     private static TableEntity updateTransaction(TableEntity updatedCopy, Session session) throws HibernateException {
         session.beginTransaction(); //TODO Demeter Violation with Implicit Transaction object
-        Page pageFromDatabase = (Page) session.load(updatedCopy.getClass(), updatedCopy.getPrimaryKey());
-        pageFromDatabase.imitate(updatedCopy);
+        TableEntity fromDatabase = (TableEntity) session.load(updatedCopy.getClass(), updatedCopy.getPrimaryKey());
+        //TODO: If not found?
+        if (fromDatabase != null) fromDatabase.imitate(updatedCopy);
+        else insertTuple(updatedCopy);
         session.getTransaction().commit(); //Violation
-        return pageFromDatabase;
+        return fromDatabase;
     }
 
-    private static void deletePageTransaction(TableEntity object, Session session) throws HibernateException {
-        session.beginTransaction();
-        TableEntity entityToDelete = (TableEntity) getByPrimaryKey(object.getClass(), object.getPrimaryKey());
-        session.delete(entityToDelete);
-        session.getTransaction().commit();
-    }
+
 }
 /*public static void removeAllInstances(final Class<?> clazz) {
     SessionFactory sessionFactory = HibernateUtil.getSessionFactory();

@@ -20,9 +20,8 @@ public class HibernateUtility {
         }
         StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties());
-        SessionFactory sessionFactory = configuration
+        return configuration
                 .buildSessionFactory(builder.build());
-        return sessionFactory;
     }
     public static void setLocation(String locationIn) {
         location = locationIn;
