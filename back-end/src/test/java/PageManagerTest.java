@@ -6,10 +6,12 @@ import org.junit.*;
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 
+import static main.java.com.projectBackEnd.PageManager.createAndSavePage;
+import static main.java.com.projectBackEnd.PageManager.*;
 import static org.junit.Assert.*;
 
 
-public class PageManagerTest extends PageManager {
+public class PageManagerTest {
 
     @BeforeClass
     public static void setUpDatabase() {

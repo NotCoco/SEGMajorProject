@@ -48,31 +48,7 @@ public class PageManager {
      * @return The updated version
      */
     public static Page update(Page page) { //TODO Session to become instance variable, for cleaner code
-        SessionFactory sf = HibernateUtility.getSessionFactory(page.getClass()); //Violates Demeter
-        Session session = sf.openSession();
-        Page pageFromDatabase = null;
-        try {
-            pageFromDatabase = updatePageTransaction(page, session);
-        } catch(HibernateException ex) {
-            if (session.getTransaction() != null) session.getTransaction().rollback();
-        } finally {
-            session.close();
-            sf.close();
-        }
-        return pageFromDatabase;
-    }
-    private static Page matchFields(Page pageFromDatabase, Page newPage) {
-        pageFromDatabase.setContent(newPage.getContent());
-        pageFromDatabase.setIndex(newPage.getIndex());
-        pageFromDatabase.setTitle(newPage.getTitle());
-        return pageFromDatabase;
-    }
-    private static Page updatePageTransaction(Page page, Session session) throws HibernateException {
-        session.beginTransaction(); //TODO Demeter Violation with Implicit Transaction object
-        Page pageFromDatabase = (Page) session.load(page.getClass(), page.getSlug());
-        matchFields(pageFromDatabase, page);
-        session.getTransaction().commit(); //Violation
-        return pageFromDatabase;
+        return (Page) EntityManager.update(page);
     }
     /**
      * Deletes a page object from the database based on its slug.

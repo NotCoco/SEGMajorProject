@@ -110,6 +110,34 @@ public class EntityManager { //TODO Try with statics to see which is cleaner
         }
     }
 
+    /**
+     * Old entity / Old entity's primary key comes back in with NEW content.
+     * @param
+     * @return
+     */
+    public static TableEntity update(TableEntity updatedCopy) { //TODO Session to become instance variable, for cleaner code
+        SessionFactory sf = HibernateUtility.getSessionFactory(updatedCopy.getClass()); //Violates Demeter
+        Session session = sf.openSession();
+        TableEntity fromDatabase = null;
+        try {
+            fromDatabase = updateTransaction(updatedCopy, session);
+        } catch(HibernateException ex) {
+            if (session.getTransaction() != null) session.getTransaction().rollback();
+        } finally {
+            session.close();
+            sf.close();
+        }
+        return fromDatabase;
+    }
+
+    private static TableEntity updateTransaction(TableEntity updatedCopy, Session session) throws HibernateException {
+        session.beginTransaction(); //TODO Demeter Violation with Implicit Transaction object
+        Page pageFromDatabase = (Page) session.load(updatedCopy.getClass(), updatedCopy.getPrimaryKey());
+        pageFromDatabase.imitate(updatedCopy);
+        session.getTransaction().commit(); //Violation
+        return pageFromDatabase;
+    }
+
     private static void deletePageTransaction(TableEntity object, Session session) throws HibernateException {
         session.beginTransaction();
         TableEntity entityToDelete = (TableEntity) getByPrimaryKey(object.getClass(), object.getPrimaryKey());

@@ -26,7 +26,7 @@ public class Page implements TableEntity { //TODO extends Entity, for easier Jso
     @Id
     //@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = SLUG)
-    private String slug;
+    private String primaryKey;
 
     @Column(name = INDEX, nullable=false)
     private Integer index;
@@ -47,7 +47,7 @@ public class Page implements TableEntity { //TODO extends Entity, for easier Jso
     }
 
     public Page(Serializable slug, Integer index, String title, String content) {
-        this.slug = (String) slug;
+        this.primaryKey = (String) slug;
         this.index = index;
         this.title = title;
         this.content = content;
@@ -56,16 +56,13 @@ public class Page implements TableEntity { //TODO extends Entity, for easier Jso
     //GETTERS AND SETTERS:
 
     public Serializable getSlug() {
-        return slug;
+        return primaryKey;
     }
 
     public Serializable getPrimaryKey() {
-        return slug;
+        return primaryKey;
     }
 
-    public void setSlug(String slug) {
-        this.slug = slug;
-    }
 
     public Integer getIndex() {
         return index;
@@ -90,7 +87,7 @@ public class Page implements TableEntity { //TODO extends Entity, for easier Jso
 
     @Override
     public String toString() {
-        return "Page: " + this.slug + ", " + this.index + ", " + this.title + ", " + this.content;
+        return "Page: " + this.primaryKey + ", " + this.index + ", " + this.title + ", " + this.content;
     }
     //TODO Below method unnecessary hibernate does it for you.
     public static String getCreateQuery() {
@@ -108,5 +105,14 @@ public class Page implements TableEntity { //TODO extends Entity, for easier Jso
     public boolean equals(Page otherPage) {
         return getSlug().equals(otherPage.getSlug()) && (getIndex() == otherPage.getIndex()) && getTitle().equals(otherPage.getTitle()) &&
                 getContent().equals(otherPage.getContent());
+    }
+
+    @Override
+    public TableEntity imitate(TableEntity newCopy) {
+        Page newPage = (Page) newCopy;
+        setContent(newPage.getContent());
+        setIndex(newPage.getIndex());
+        setTitle(newPage.getTitle());
+        return this;
     }
 }
