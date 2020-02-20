@@ -12,10 +12,7 @@ public class BackEndMain {
 
 	
 	public static void main(String []args){
-
 		System.out.println("Hello World");
-		UserManager pm = new UserManager();
-		pm.addUser("123","321");
 	}
 
 
