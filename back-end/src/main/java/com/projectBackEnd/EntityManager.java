@@ -12,7 +12,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import java.io.Serializable;
 import java.util.List;
 
-public class EntityManager <T extends TableEntity>{ //TODO Try with statics to see which is cleaner
+public class EntityManager <T extends TableEntity> { //TODO Try with statics to see which is cleaner
     private Class<T> subclass;
     public void setSubclass(Class<T> subclass) {
         this.subclass = subclass;
@@ -52,7 +52,6 @@ public class EntityManager <T extends TableEntity>{ //TODO Try with statics to s
         }
         session.getTransaction().commit();
     }
-
 
     public T insertTuple(T newObject) {
         //if (!extendsTableEntity(newObject.getClass())) return newObject;

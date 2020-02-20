@@ -9,7 +9,7 @@ import java.io.Serializable;
  * //https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
 
-public class PageManager extends EntityManager {
+public class PageManager extends EntityManager implements PageManagerInterface {
     public PageManager() {
         super();
         setSubclass(Page.class);

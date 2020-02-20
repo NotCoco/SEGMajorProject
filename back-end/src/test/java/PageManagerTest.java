@@ -18,19 +18,22 @@ public class PageManagerTest extends PageManager {
         HibernateUtility.setLocation("testhibernate.cfg.xml");
     }
 
+    @AfterClass
+    public static void resetDatabase() {
+        HibernateUtility.setLocation("");
+        //Close Factory
+    }
+
     public static ConnectionLeakUtil connectionLeakUtil = null;
     @BeforeClass
     public static void initConnectionLeakUtility() {
-        if ( true ) {
-            connectionLeakUtil = new ConnectionLeakUtil();
-        }
+        connectionLeakUtil = new ConnectionLeakUtil();
     }
 
     @AfterClass
     public static void assertNoLeaks() {
-        if ( true ) {
-            connectionLeakUtil.assertNoLeaks();
-        }
+        connectionLeakUtil.assertNoLeaks();
+
     }
 
     @Before
@@ -39,11 +42,10 @@ public class PageManagerTest extends PageManager {
         //String[] databaseInfo = {}; //Size 0 since it will use the default from the DBInitialiser class.
         //DatabaseInitialiser.main(databaseInfo);
         //TODO : Now unnecessary, delete.
-        //deleteAll();
+        deleteAll();
     }
     @After
     public void tearDown() {
-
        deleteAll();
     }
 
