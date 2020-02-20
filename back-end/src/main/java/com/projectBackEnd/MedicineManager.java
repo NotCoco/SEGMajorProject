@@ -6,8 +6,13 @@ import org.hibernate.cfg.Configuration;
 
 
 // TODO (Jeanne) : commenting
-public class MedicineManager {
+public class MedicineManager extends EntityManager implements MedicineManagerInterface {
 
+    public MedicineManager() {
+        super();
+        setSubclass(Medicine.class);
+        HibernateUtility.addAnnotation(Page.class);
+    }
 
     public static Medicine createAndSaveMedicine(String name, String type) {
         Medicine newMedicine = new Medicine(name, type);
