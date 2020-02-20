@@ -1,7 +1,9 @@
-package main.java.com.projectBackEnd;
+package main.java.com.projectBackEnd.Entities.Page;
 
-import org.hibernate.SessionFactory;
 
+import main.java.com.projectBackEnd.TableEntity;
+
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -9,16 +11,15 @@ import java.util.List;
  * //TODO Filter the interfaces!
  */
 public interface PageManagerInterface {
-    public Page createPage(String slug, Integer index, String title, String content);
-    public void createAndSavePage(String slug, Integer index, String title, String content);
-    public void update(Page page);
-    public void updateContentBySlug(String slug, String newContent);
-    public void updateTitleBySlug(String slug, String newTitle);
-    public void deleteByPrimaryKey(String slug);
-    public void updateIndexBySlug(String slug, Integer newIndex);
-    public List<Page> getAll();
-    public Page findBySlug(String slug);
+    public Page addPage(String slug, Integer index, String title, String content);
+
     public void deleteAll();
-    public void insertTuple(Page page);
-    public List<Page> getAllPagesByTitle(String title);
-} //TODO Order this so it looks good.
+
+    //TODO Explicit cast these so that they always come out correct?
+    public List<Page> getAllPages();
+    public Page addPage(Page newPage);
+    public Page getByPrimaryKey(Serializable pk);
+    public void delete(Page object);
+    public Page update(Page updatedCopy);
+    //TODO Ask L2, because they can technically move down.
+}
