@@ -17,7 +17,7 @@ import java.io.Serializable;
 public class Page implements TableEntity { //TODO extends Entity, for easier Json conversion for frontend management
 
     // Table Headers stored as public static final Strings
-    public static final String TABLENAME = "Page"; //Hibernate requires this to be the same as class name
+    public static final String TABLENAME = "Pages"; //Hibernate requires this to be the same as class name
     public static final String SLUG = "Slug";
     private static final String INDEX = "`Index`";
     private static final String TITLE = "Title";

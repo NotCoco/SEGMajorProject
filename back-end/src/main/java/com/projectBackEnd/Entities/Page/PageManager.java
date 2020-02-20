@@ -1,8 +1,4 @@
 package main.java.com.projectBackEnd.Entities.Page;
-
-
-import java.util.List;
-
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.Page;
 import java.io.Serializable;
@@ -13,8 +9,12 @@ import java.io.Serializable;
  * //https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
 
-public class PageManager {
-
+public class PageManager extends EntityManager {
+    public PageManager() {
+        super();
+        setSubclass(Page.class);
+        //HibernateUtility.addAnnotatedEntityClass(Page.class);
+    }
     /**
      * Creates a page object
      * @param slug The slug of the new page
@@ -23,7 +23,7 @@ public class PageManager {
      * @param content The content of the new page.
      * @return the created page
      */
-    public static Page createPage(String slug, Integer index, String title, String content) {
+    public Page createPage(String slug, Integer index, String title, String content) {
         return new Page(slug, index, title, content);
     }
 
@@ -35,49 +35,15 @@ public class PageManager {
      * @param content The content of the new page.
      * @return the created page
      */
-    public static Page createAndSavePage(String slug, Integer index, String title, String content) {
+    public Page createAndSavePage(String slug, Integer index, String title, String content) {
         Page newPage = (createPage(slug, index, title, content));
-        EntityManager.insertTuple(newPage);
+        insertTuple(newPage);
         return newPage;
     }
 
-    /**
-     * A page is provided with new attributes, it replaces the page with the same ID
-     * in the database.
-     * @param page The page that will be updated
-     * @return The updated version
-     */
-
-    public static Page update(Page page) { //TODO Session to become instance variable, for cleaner code
-        return (Page) EntityManager.update(page);
-    }
-    /**
-     * Deletes a page object from the database based on its slug.
-     * @param page The slug to whom the page belongs (if slug cannot be sent by frontend explicitly).
-     */
-    public static void delete(Page page) {
-        EntityManager.delete(page);
-    }
-
-
-    public static Page findBySlug(Serializable slug) { //External java processing
-        /*List<Page> cast = EntityManager.getAll(Page.class);
-        List<Page> found = cast.stream().filter(p -> p.getSlug().equals(slug)).collect(Collectors.toList());
-        if (found.size() == 0) return null;
-        else return found.get(0);*/
-        return (Page) EntityManager.getByPrimaryKey(Page.class, slug);
-    }
-    //TODO Make these inherited or abstract class/interface for others.
-    public static void deleteAll() {
-        EntityManager.deleteAll(Page.class);
-    }
-
-    public static List<Page> getAll() {
-        return EntityManager.getAll(Page.class);
-    }
-
-    public static void insertTuple(Page p) {
-        EntityManager.insertTuple(p);
+    @Override
+    public Page getByPrimaryKey(Serializable slug) {
+        return (Page) super.getByPrimaryKey(slug);
     }
 }
 

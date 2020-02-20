@@ -50,7 +50,7 @@ public class PageManagerTest extends PageManager {
     @Test
     public void testGetByPrimaryKey() {
         fillDatabase();
-        Page pageWithSlug2 = (Page) (EntityManager.getByPrimaryKey(Page.class, "Slug2"));
+        Page pageWithSlug2 = (Page) (getByPrimaryKey("Slug2"));
         assertTrue(pageWithSlug2.equals(getListOfPages().get(1)));
     }
 
@@ -77,7 +77,7 @@ public class PageManagerTest extends PageManager {
                 "");
         insertTuple(page);
         fillDatabase();
-        Page pageFromDatabase = findBySlug("biliary_atresia");
+        Page pageFromDatabase = getByPrimaryKey("biliary_atresia");
         //assertEquals(pageFromDatabase.getContent(), page.getContent());
         assertTrue(pageFromDatabase.equals(page));
     }
@@ -145,7 +145,7 @@ public class PageManagerTest extends PageManager {
     public void testWhichDeleted() {
         fillDatabase();
         delete(getListOfPages().get(1));
-        assertNull(findBySlug(getListOfPages().get(1).getSlug()));
+        assertNull(getByPrimaryKey(getListOfPages().get(1).getSlug()));
     }
 
     @Test
@@ -154,7 +154,7 @@ public class PageManagerTest extends PageManager {
 
         fillDatabase();
         update(replacementPage);
-        Page foundPage = findBySlug("Slug3");
+        Page foundPage = getByPrimaryKey("Slug3");
 
         assertEquals(foundPage.getContent(), replacementPage.getContent());
     }
@@ -162,18 +162,18 @@ public class PageManagerTest extends PageManager {
     @Test
     public void testFindBySlug() {
         fillDatabase();
-        assertTrue(findBySlug("Slug2").equals(getListOfPages().get(1)));
+        assertTrue(getByPrimaryKey("Slug2").equals(getListOfPages().get(1)));
     }
 
     @Test
     public void testUnfoundPrimaryKey() {
         fillDatabase();
-        assertNull(findBySlug("fakekey"));
+        assertNull(getByPrimaryKey("fakekey"));
     }
     @Test(expected = IllegalArgumentException.class)
     public void testNullPrimaryKey() throws IllegalStateException {
         fillDatabase();
-        assertNull(findBySlug(null));
+        assertNull(getByPrimaryKey(null));
     }
     private static ArrayList<Page> getListOfPages() {
         ArrayList<Page> listOfPages = new ArrayList<>();
@@ -188,7 +188,7 @@ public class PageManagerTest extends PageManager {
         listOfPages.add(new Page("Slug17", 4, "Title5", "Content5"));
         return listOfPages;
     }
-    private static void fillDatabase() {
+    private void fillDatabase() {
         for (Page p : getListOfPages()) {
             insertTuple(p);
         }

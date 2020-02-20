@@ -12,49 +12,51 @@ import javax.persistence.criteria.CriteriaQuery;
 import java.io.Serializable;
 import java.util.List;
 
-public class EntityManager { //TODO Try with statics to see which is cleaner
+public class EntityManager <T extends TableEntity>{ //TODO Try with statics to see which is cleaner
+    private Class<T> subclass;
+    public void setSubclass(Class<T> subclass) {
+        this.subclass = subclass;
+    }
 
-
-    public static <T> List<T> getAll(Class subclass) { //Hibernate get all, no HQL
+    public List<T> getAll() {
         //https://stackoverflow.com/questions/43037814/how-to-get-all-data-in-the-table-with-hibernate/43067399
         List<T> results = null;
-        if (!extendsTableEntity(subclass)) return results;
-        try (SessionFactory sf = HibernateUtility.getSessionFactory(subclass)) {
-            results = getAllCriteria(subclass, sf.openSession());
+        try (Session session = HibernateUtility.getSessionFactory(subclass).openSession()) {
+            results = getAllSession(session);
         }
         return results;
+        //Doesn't close its own factory, will leak until factory is properly implemented.
     }
-    private static <T> List<T> getAllCriteria(Class subclass, Session session) {
+    private List<T> getAllSession(Session session) throws HibernateException  {
         CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<T> criteria = builder.createQuery(subclass);
+        CriteriaQuery<T>  criteria = builder.createQuery(subclass);
         criteria.from(subclass);
         return session.createQuery(criteria).getResultList();
     }
-    public static void deleteAll(Class subclass) {
-        if (!extendsTableEntity(subclass)) return;
+    public void deleteAll() {
         SessionFactory sf = HibernateUtility.getSessionFactory(subclass);
         Session session = sf.openSession();
         try {
-            deleteAllTransaction(subclass, session);
+            deleteAllTransaction(session);
         } catch(HibernateException ex) {
             if (session.getTransaction() != null) session.getTransaction().rollback();
         } finally {
             session.close();
-            sf.close();
+            //sf.close(); //No longer closes the factory
         }
     }
-    private static void deleteAllTransaction(Class subclass, Session session) throws  HibernateException {
+    private void deleteAllTransaction(Session session) throws  HibernateException {
         session.beginTransaction();
-        for (Object tuple : getAll(subclass)) { //Deleting one by one is recommended to deal with cascading.
+        for (Object tuple : getAll()) { //Deleting one by one is recommended to deal with cascading.
             session.delete(tuple);
         }
         session.getTransaction().commit();
     }
 
-    //public <U> void insertTyple(U newObject) Basically the same :\ U extends T doesn't work.
-    public static TableEntity insertTuple(TableEntity newObject) {
+
+    public T insertTuple(T newObject) {
         //if (!extendsTableEntity(newObject.getClass())) return newObject;
-        SessionFactory sf = HibernateUtility.getSessionFactory(newObject.getClass());
+        SessionFactory sf = HibernateUtility.getSessionFactory(newObject.getClass()); //
         Session session = sf.openSession();
         try {
             insertTupleTransaction(newObject, session);
@@ -62,24 +64,23 @@ public class EntityManager { //TODO Try with statics to see which is cleaner
             if (session.getTransaction() != null) session.getTransaction().rollback();
         } finally {
             session.close();
-            sf.close();
+            //sf.close(); No longer closes its own factory
         }
         return newObject;
     }
     //TODO (Wasif, delete all mass commented out code)
-    private static void insertTupleTransaction(TableEntity newObject, Session session) throws HibernateException {
+    private void insertTupleTransaction(T newObject, Session session) throws HibernateException {
         session.beginTransaction();
         session.save(newObject);
         session.getTransaction().commit();
     }
 
-    public static TableEntity getByPrimaryKey(Class subclass, Serializable pk) {
-        if (!extendsTableEntity(subclass)) return null;
+    public T getByPrimaryKey(Serializable pk) {
         SessionFactory sf = HibernateUtility.getSessionFactory(subclass);
         Session session = sf.openSession();
-        TableEntity found = null;
+        T found = null;
         try {
-            found = findByPrimaryKeyTransaction(subclass, pk, session);
+            found = findByPrimaryKeyTransaction(pk, session);
         } catch(HibernateException ex) {
             if (session.getTransaction() != null) session.getTransaction().rollback(); //VIOLATES
         } finally {
@@ -88,16 +89,15 @@ public class EntityManager { //TODO Try with statics to see which is cleaner
         }
         return found;
     }
-    private static TableEntity findByPrimaryKeyTransaction(Class subclass, Serializable pk, Session session) throws HibernateException {
+    private T findByPrimaryKeyTransaction(Serializable pk, Session session) throws HibernateException {
         session.beginTransaction(); //TODO Demeter Violation with Implicit Transaction object
-        TableEntity found = (TableEntity) session.get(subclass, pk);
+        T found = (T) session.get(subclass, pk);
         session.getTransaction().commit(); //Violation
         return found;
     }
 
-
-    public static void delete(TableEntity object) {
-        SessionFactory sf = HibernateUtility.getSessionFactory(object.getClass()); //Violates Demeter
+    public void delete(T object) {
+        SessionFactory sf = HibernateUtility.getSessionFactory(object.getClass());
         Session session = sf.openSession();
         try {
             deleteTransaction(object, session);
@@ -105,39 +105,36 @@ public class EntityManager { //TODO Try with statics to see which is cleaner
             if (session.getTransaction() != null) session.getTransaction().rollback();
         } finally {
             session.close();
-            sf.close();
+            //sf.close();
         }
     }
-    private static void deleteTransaction(TableEntity object, Session session) throws HibernateException {
+    private void deleteTransaction(T object, Session session) throws HibernateException {
         session.beginTransaction();
-        TableEntity entityToDelete = getByPrimaryKey(object.getClass(), object.getPrimaryKey());
+        T entityToDelete = getByPrimaryKey(object.getPrimaryKey());
         session.delete(entityToDelete);
         session.getTransaction().commit();
     }
 
     //TODO Might need to return back down if frontend send strings etc. I presume they will json and send the (page) back
     //Methods are commented out already in the PageManager if they send a String primary key.
-    public static TableEntity update(TableEntity updatedCopy) {
-        SessionFactory sf = HibernateUtility.getSessionFactory(updatedCopy.getClass()); //Violates Demeter
+    public T update(T updatedCopy) {
+        SessionFactory sf = HibernateUtility.getSessionFactory(updatedCopy.getClass()); //Gets sf
         Session session = sf.openSession();
-        TableEntity fromDatabase = null;
+        T fromDatabase = null;
         try {
             fromDatabase = updateTransaction(updatedCopy, session);
         } catch(HibernateException ex) {
             if (session.getTransaction() != null) session.getTransaction().rollback();
         } finally {
             session.close();
-            sf.close();
+            //sf.close();
         }
         return fromDatabase;
     }
-    public static boolean extendsTableEntity(Class c) { //TODO: Thoughts on this?
-        return TableEntity.class.isAssignableFrom(c);
-    }
 
-    private static TableEntity updateTransaction(TableEntity updatedCopy, Session session) throws HibernateException {
+    private T updateTransaction(T updatedCopy, Session session) throws HibernateException {
         session.beginTransaction(); //TODO Demeter Violation with Implicit Transaction object
-        TableEntity fromDatabase = (TableEntity) session.load(updatedCopy.getClass(), updatedCopy.getPrimaryKey());
+        T fromDatabase = (T) session.load(updatedCopy.getClass(), updatedCopy.getPrimaryKey());
         //TODO: If not found?
         if (fromDatabase != null) fromDatabase.imitate(updatedCopy);
         else insertTuple(updatedCopy);
