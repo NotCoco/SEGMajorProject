@@ -1,4 +1,6 @@
-package main.java.com.projectBackEnd;
+package main.java.com.projectBackEnd.Entities.Page;
+
+import main.java.com.projectBackEnd.TableEntity;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
@@ -17,7 +19,7 @@ import java.io.Serializable;
 public class Page implements TableEntity { //TODO extends Entity, for easier Json conversion for frontend management
 
     // Table Headers stored as public static final Strings
-    public static final String TABLENAME = "Page"; //Hibernate requires this to be the same as class name
+    public static final String TABLENAME = "Pages"; //Hibernate requires this to be the same as class name
     public static final String SLUG = "Slug";
     private static final String INDEX = "`Index`";
     private static final String TITLE = "Title";
@@ -89,18 +91,6 @@ public class Page implements TableEntity { //TODO extends Entity, for easier Jso
     public String toString() {
         return "Page: " + this.primaryKey + ", " + this.index + ", " + this.title + ", " + this.content;
     }
-    //TODO Below method unnecessary hibernate does it for you.
-    public static String getCreateQuery() {
-        String createQuery = "CREATE TABLE " + TABLENAME + " (";
-        createQuery += SLUG + " VARCHAR(255) NOT NULL, "; //Maybe static.makeSafe? No interface...
-        createQuery += INDEX + " INTEGER NOT NULL, ";
-        createQuery += TITLE + " TEXT, ";
-        createQuery += CONTENT + " TEXT, ";
-        createQuery += "PRIMARY KEY (" + SLUG + ")";
-        createQuery += ");";
-        System.out.println(createQuery);
-        return createQuery;
-    }
 
     public boolean equals(Page otherPage) {
         return getSlug().equals(otherPage.getSlug()) && (getIndex() == otherPage.getIndex()) && getTitle().equals(otherPage.getTitle()) &&
@@ -108,7 +98,7 @@ public class Page implements TableEntity { //TODO extends Entity, for easier Jso
     }
 
     @Override
-    public TableEntity imitate(TableEntity newCopy) {
+    public TableEntity copy(TableEntity newCopy) {
         Page newPage = (Page) newCopy;
         setContent(newPage.getContent());
         setIndex(newPage.getIndex());

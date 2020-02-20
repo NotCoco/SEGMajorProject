@@ -1,11 +1,11 @@
-package main.java.com.projectBackEnd;
+package main.java.com.projectBackEnd.Entities.Page;
+
+import main.java.com.projectBackEnd.EntityManager;
+import main.java.com.projectBackEnd.HibernateUtility;
+
+
 import java.io.Serializable;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 
 /**
  * PageManager class that deals with interacting with the database itself with respect to Pages.
@@ -13,20 +13,12 @@ import org.hibernate.SessionFactory;
  * //https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
 
-public class PageManager {
-
-    /**
-     * Creates a page object
-     * @param slug The slug of the new page
-     * @param index The index of the new page
-     * @param title The title of the new page
-     * @param content The content of the new page.
-     * @return the created page
-     */
-    public static Page createPage(String slug, Integer index, String title, String content) {
-        return new Page(slug, index, title, content);
+public class PageManager extends EntityManager implements PageManagerInterface {
+    public PageManager() {
+        super();
+        setSubclass(Page.class);
+        HibernateUtility.addAnnotation(Page.class);
     }
-
     /**
      * Creates a page and adds it to the database table
      * @param slug The slug of the new page
@@ -35,48 +27,32 @@ public class PageManager {
      * @param content The content of the new page.
      * @return the created page
      */
-    public static Page createAndSavePage(String slug, Integer index, String title, String content) {
-        Page newPage = (createPage(slug, index, title, content));
-        EntityManager.insertTuple(newPage);
+    public Page addPage(String slug, Integer index, String title, String content) {
+        Page newPage = new Page(slug, index, title, content);
+        insertTuple(newPage);
+        return newPage;
+    }
+    public Page addPage(Page newPage) {
+        insertTuple(newPage);
         return newPage;
     }
 
-    /**
-     * A page is provided with new attributes, it replaces the page with the same ID
-     * in the database.
-     * @param page The page that will be updated
-     * @return The updated version
-     */
-    public static Page update(Page page) { //TODO Session to become instance variable, for cleaner code
-        return (Page) EntityManager.update(page);
-    }
-    /**
-     * Deletes a page object from the database based on its slug.
-     * @param page The slug to whom the page belongs (if slug cannot be sent by frontend explicitly).
-     */
-    public static void delete(Page page) {
-        EntityManager.delete(page);
+    @Override
+    public Page getByPrimaryKey(Serializable slug) {
+        return (Page) super.getByPrimaryKey(slug);
     }
 
-
-    public static Page findBySlug(Serializable slug) { //External java processing
-        /*List<Page> cast = EntityManager.getAll(Page.class);
-        List<Page> found = cast.stream().filter(p -> p.getSlug().equals(slug)).collect(Collectors.toList());
-        if (found.size() == 0) return null;
-        else return found.get(0);*/
-        return (Page) EntityManager.getByPrimaryKey(Page.class, slug);
+    public List<Page> getAllPages() {
+        return (List<Page>) super.getAll();
     }
-    //TODO Make these inherited or abstract class/interface for others.
-    public static void deleteAll() {
-        EntityManager.deleteAll(Page.class);
+    @Override
+    public void delete(Page pageToDelete) {
+        super.delete(pageToDelete);
     }
-
-    public static List<Page> getAll() {
-        return EntityManager.getAll(Page.class);
-    }
-
-    public static void insertTuple(Page p) {
-        EntityManager.insertTuple(p);
+    @Override
+    public Page update(Page updatedCopy) {
+        super.update(updatedCopy);
+        return updatedCopy;
     }
 }
 
@@ -86,7 +62,7 @@ public class PageManager {
  * @return The page we find
  */
     /*public Page findBySlug(String slug) {
-        Session session = getSessionFactory().openSession();
+        Session session = buildSessionFactory().openSession();
         slug = new SQLSafeString(slug).toString();
         Page page = (Page) session.load(Page.class, slug);
         session.close();
@@ -100,7 +76,7 @@ public class PageManager {
  */
     /*
     public void updateContentBySlug(String slug, String newContent) {
-        Session session = getSessionFactory().openSession();
+        Session session = buildSessionFactory().openSession();
         session.beginTransaction();
         slug = new SQLSafeString(slug).toString();
 
@@ -117,7 +93,7 @@ public class PageManager {
  */
     /*
     public void updateTitleBySlug(String slug, String newTitle) {
-        Session session = getSessionFactory().openSession();
+        Session session = buildSessionFactory().openSession();
         session.beginTransaction();
         slug = new SQLSafeString(slug).toString();
 
@@ -132,7 +108,7 @@ public class PageManager {
  * @param slug The slug of the page to be deleted
  */ /*
     public void deleteByPrimaryKey(String slug) {
-        Session session = getSessionFactory().openSession();
+        Session session = buildSessionFactory().openSession();
         session.beginTransaction();
         slug = new SQLSafeString(slug).toString();
         Page page = findBySlug(slug);
@@ -141,28 +117,87 @@ public class PageManager {
         session.close();
     }*/ //TODO: Delete these, frontend are unlikely to send specific primary keys.
 
-
 /**
  * Updates a page's index depending on its slug
  * @param slug The slug of the page
  * @param newIndex The new index
  */
     /* public void updateIndexBySlug(String slug, Integer newIndex) {
-        Session session = getSessionFactory().openSession();
+        Session session = buildSessionFactory().openSession();
         session.beginTransaction();
         slug = new SQLSafeString(slug).toString();
         Page pageFromDatabase = (Page) session.load(Page.class, slug);
         pageFromDatabase.setIndex(newIndex);
         session.getTransaction().commit();
         session.close();
-    }*/ //TODO Frontend will probably not be using this method, instead only using update(...) with jsons as
+    }
+
+    /**
+     * Gets a list of all the pages
+     * @return A list of all the pages
+     */
+    /*public List<Page> getAll() {
+        Session session = buildSessionFactory().openSession();
+        String hqlQuery = "FROM " + new SQLSafeString(Page.TABLENAME);
+        @SuppressWarnings("Unchecked")
+        List<Page> pages = session.createQuery(hqlQuery).list();
+        session.close();
+        return pages;
+    }*/
+
+    /**
+     * Locates and returns a page by its slug
+     * @param slug The slug of the page we're looking for
+     * @return The page we find
+     */
+    /*
+    public Page findBySlug(String slug) {
+        Session session = buildSessionFactory().openSession();
+        slug = new SQLSafeString(slug).toString();
+        Page page = (Page) session.load(Page.class, slug);
+        session.close();
+        return page;
+    }
+*/
+    /**
+     * Deletes all the pages in the page table.
+     */
+    /*
+    public void deleteAll() { //TODO Move up with parameter? Perhaps.
+        Session session = buildSessionFactory().openSession();
+        session.beginTransaction();
+        Query query = session.createQuery("DELETE FROM " + new SQLSafeString(Page.TABLENAME) + " ");
+        query.executeUpdate();
+        session.getTransaction().commit();
+        session.close();
+    }
+*/
+    /**
+     * Insert a new page to be added to the database
+     * @param page The page to be added to the database
+     */
+    /*
+    public void insertTuple(Page page) {
+        Session session = buildSessionFactory().openSession();
+        session.beginTransaction();
+        session.save(page);
+        session.getTransaction().commit();
+        session.close();
+    }*/
+
+    /**
+     * Get all the pages with a given title
+     * @return
+     */
+
+     //TODO Frontend will probably not be using this method, instead only using update(...) with jsons as
 // they'll be sending .json objects not strings.
 /**
  * Get all the pages with a given title
  * @return
  */
     /*public List<Page> getAllPagesByTitle(String title) {
-        Session session = getSessionFactory().openSession();
+        Session session = buildSessionFactory().openSession();
         String sql = "SELECT * FROM " + Page.TABLENAME + " WHERE " + Page.TITLE + " = '" + title + "';";
         SQLQuery query = session.createSQLQuery(sql);
         query.addEntity(Page.class);
@@ -185,7 +220,7 @@ public class PageManager {
  */
         /*
 public List<Page> getAll() { //<-- HQL get all
-    Session session = getSessionFactory().openSession();
+    Session session = buildSessionFactory().openSession();
     String hqlQuery = "FROM " + (Page.TABLENAME);
     @SuppressWarnings("Unchecked")
     List<Page> pages = session.createQuery(hqlQuery).list();
@@ -198,7 +233,7 @@ public List<Page> getAll() { //<-- HQL get all
  * @return
  *//*
     public Page getBySlug(String slug){ //Queries hibernate internally
-        Session session = getSessionFactory().openSession();
+        Session session = buildSessionFactory().openSession();
         CriteriaBuilder cb = session.getCriteriaBuilder();
         CriteriaQuery<Page> query = cb.createQuery(Page.class);
         Root<Page> root = query.from(Page.class);
@@ -211,7 +246,7 @@ public List<Page> getAll() { //<-- HQL get all
  * Deletes all the pages in the page table.
  */
     /*public void deleteAll() { //TODO Move up with parameter? Perhaps.
-        Session session = getSessionFactory().openSession();
+        Session session = buildSessionFactory().openSession();
         session.beginTransaction();
         Query query = session.createQuery("DELETE FROM " + (Page.TABLENAME) + " ");
         query.executeUpdate();

@@ -1,62 +1,46 @@
 package test.java;
 
 import main.java.com.projectBackEnd.*;
+import main.java.com.projectBackEnd.Entities.Page.Page;
+import main.java.com.projectBackEnd.Entities.Page.PageManager;
+
 import org.junit.*;
 
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 
-import static main.java.com.projectBackEnd.PageManager.createAndSavePage;
-import static main.java.com.projectBackEnd.PageManager.*;
 import static org.junit.Assert.*;
 
 
-public class PageManagerTest {
-
-    @BeforeClass
-    public static void setUpDatabase() {
-        HibernateUtility.setLocation("testhibernate.cfg.xml");
-    }
-
+public class PageManagerTest extends PageManager {
     public static ConnectionLeakUtil connectionLeakUtil = null;
     @BeforeClass
-    public static void initConnectionLeakUtility() {
-        if ( true ) {
-            connectionLeakUtil = new ConnectionLeakUtil();
-        }
+    public static void setUpDatabase() {
+        HibernateUtility.setResource("testhibernate.cfg.xml");
+        connectionLeakUtil = new ConnectionLeakUtil();
     }
 
     @AfterClass
     public static void assertNoLeaks() {
-        if ( true ) {
-            connectionLeakUtil.assertNoLeaks();
-        }
+        HibernateUtility.shutdown();
+        connectionLeakUtil.assertNoLeaks();
     }
 
     @Before
-    public void setUp() { //For this run it will use the same DatabaseInitialiser object, right? Won't interfere
-                            // With existing running ones if I were to run it with a different DB / change the object?
-        //String[] databaseInfo = {}; //Size 0 since it will use the default from the DBInitialiser class.
-        //DatabaseInitialiser.main(databaseInfo);
-        //TODO : Now unnecessary, delete.
-        //deleteAll();
-    }
-    @After
-    public void tearDown() {
-       DatabaseInitialiser.dropAllTables();
-       //deleteAll();
+    public void setUp() {
+        deleteAll();
     }
 
     @Test
     public void testGetByPrimaryKey() {
         fillDatabase();
-        Page pageWithSlug2 = (Page) (EntityManager.getByPrimaryKey(Page.class, "Slug2"));
+        Page pageWithSlug2 = (Page) (getByPrimaryKey("Slug2"));
         assertTrue(pageWithSlug2.equals(getListOfPages().get(1)));
     }
 
     @Test
     public void testCreatePage() {
-       Page page = createPage("biliary_atresia", 0, "Biliary Atresia", "" +
+       Page page = new Page("biliary_atresia", 0, "Biliary Atresia", "" +
                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
                "");
        assertEquals(page.getTitle(), "Biliary Atresia"); //TODO Hamcrest these.
@@ -64,7 +48,7 @@ public class PageManagerTest {
 
     @Test
     public void testCreateAndSavePage() {
-       createAndSavePage("biliary_atresia", 0, "Biliary Atresia", "" +
+       addPage("biliary_atresia", 0, "Biliary Atresia", "" +
                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
                "");
        assertEquals(getAll().size(), 1);
@@ -72,33 +56,32 @@ public class PageManagerTest {
 
     @Test
     public void testSavedPage() {
-        Page page = createPage("biliary_atresia", 0, "Biliary Atresia", "" +
+        Page page = new Page("biliary_atresia", 0, "Biliary Atresia", "" +
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
                 "");
         insertTuple(page);
         fillDatabase();
-        Page pageFromDatabase = findBySlug("biliary_atresia");
-        //assertEquals(pageFromDatabase.getContent(), page.getContent());
+        Page pageFromDatabase = getByPrimaryKey("biliary_atresia");
         assertTrue(pageFromDatabase.equals(page));
     }
 
     @Test
     public void testSafeNames() {
-       createAndSavePage(";DROP TABLE Pages", 2, "';'''", "sdafds");
+       addPage(";DROP TABLE Pages", 2, "';'''", "sdafds");
        assertEquals(getAll().size(), 1);
     }
 
     @Test
     public void testEmptyContent() {
-       createAndSavePage("biliary_atresia", 0, "", "");
+       addPage("biliary_atresia", 0, "", "");
        assertEquals(getAll().size(), 1);
     }
 
     //@Test(expected = PersistenceException.class)
     @Test
     public void testEmptyIndex() {
-       createAndSavePage("biliary", null, "2", "1"); //Should throw something?
-       createAndSavePage("biliary2", 2, "2", "1");
+       addPage("biliary", null, "2", "1"); //Should throw something?
+       addPage("biliary2", 2, "2", "1");
        assertEquals(getAll().size(), 1);
     } //TODO: Doesn't throw an error, just doesn't create?
 
@@ -106,8 +89,8 @@ public class PageManagerTest {
     //public void testDuplicatePrimaryKey() throws ConstraintViolationException {
     @Test(expected = PersistenceException.class)
     public void testDuplicatePrimaryKey() throws PersistenceException {
-        createAndSavePage("biliary_atresia", 0, "Random Title", "Content");
-        createAndSavePage("biliary_atresia", 1, "Random Title 2", "Content");
+        addPage("biliary_atresia", 0, "Random Title", "Content");
+        addPage("biliary_atresia", 1, "Random Title 2", "Content");
     }
 
     @Test
@@ -118,10 +101,10 @@ public class PageManagerTest {
 
     @Test
     public void testIdenticalPages() {
-        Page page = createPage("biliary_atresia", 0, "Biliary Atresia", "" +
+        Page page = new Page("biliary_atresia", 0, "Biliary Atresia", "" +
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
                 "");
-        Page page2 = createPage("biliary_atresia", 0, "Biliary Atresia", "" +
+        Page page2 = new Page("biliary_atresia", 0, "Biliary Atresia", "" +
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
                 "");
         assertTrue(page.equals(page2));
@@ -145,16 +128,16 @@ public class PageManagerTest {
     public void testWhichDeleted() {
         fillDatabase();
         delete(getListOfPages().get(1));
-        assertNull(findBySlug(getListOfPages().get(1).getSlug()));
+        assertNull(getByPrimaryKey(getListOfPages().get(1).getSlug()));
     }
 
     @Test
     public void testUpdatePage() {
-        Page replacementPage = createPage("Slug3", 10, "Title3", "New content!");
+        Page replacementPage = new Page("Slug3", 10, "Title3", "New content!");
 
         fillDatabase();
         update(replacementPage);
-        Page foundPage = findBySlug("Slug3");
+        Page foundPage = getByPrimaryKey("Slug3");
 
         assertEquals(foundPage.getContent(), replacementPage.getContent());
     }
@@ -162,18 +145,18 @@ public class PageManagerTest {
     @Test
     public void testFindBySlug() {
         fillDatabase();
-        assertTrue(findBySlug("Slug2").equals(getListOfPages().get(1)));
+        assertTrue(getByPrimaryKey("Slug2").equals(getListOfPages().get(1)));
     }
 
     @Test
     public void testUnfoundPrimaryKey() {
         fillDatabase();
-        assertNull(findBySlug("fakekey"));
+        assertNull(getByPrimaryKey("fakekey"));
     }
     @Test(expected = IllegalArgumentException.class)
     public void testNullPrimaryKey() throws IllegalStateException {
         fillDatabase();
-        assertNull(findBySlug(null));
+        assertNull(getByPrimaryKey(null));
     }
     private static ArrayList<Page> getListOfPages() {
         ArrayList<Page> listOfPages = new ArrayList<>();
@@ -188,7 +171,7 @@ public class PageManagerTest {
         listOfPages.add(new Page("Slug17", 4, "Title5", "Content5"));
         return listOfPages;
     }
-    private static void fillDatabase() {
+    private void fillDatabase() {
         for (Page p : getListOfPages()) {
             insertTuple(p);
         }
