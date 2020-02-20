@@ -6,6 +6,9 @@ import org.hibernate.cfg.Configuration;
 
 
 // TODO (Jeanne) : commenting
+// TODO (Jeanne) : implement getByType
+
+
 public class MedicineManager extends EntityManager implements MedicineManagerInterface {
 
     public MedicineManager() {
@@ -29,7 +32,7 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
     }
 
     public Medicine findByID(Integer id) {
-        return (Medicine) EntityManager.getByPrimaryKey(Page.class, id);
+        return (Medicine) EntityManager.getByPrimaryKey(Medicine.class, id);
     }
 
     public void deleteAll() {
@@ -39,6 +42,9 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
     public List<Medicine> getAllMedicines() {
         return EntityManager.getAll(Medicine.class);
     }
-    
+
+    public List<Medicine> getByType() {
+        // code
+    }
 
 }
