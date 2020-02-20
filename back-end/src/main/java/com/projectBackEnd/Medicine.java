@@ -10,6 +10,8 @@ import java.io.Serializable;
 @Entity
 @Table(name = Medicine.TABLENAME)
 
+// TODO : Commenting
+
 public class Medicine implements TableEntity{
 
     // Table columns
