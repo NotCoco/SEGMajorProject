@@ -9,7 +9,6 @@ import java.util.List;
 //TODO (Jeanne) : Commenting
 public interface MedicineManagerInterface {
 
-
     public void deleteAll();
     public List<Page> getAllMedicines();
     public Medicine createAndSaveMedicine(String name, String type);
