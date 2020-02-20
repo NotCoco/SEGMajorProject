@@ -14,36 +14,31 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
         HibernateUtility.addAnnotation(Page.class);
     }
 
-    public static Medicine createAndSaveMedicine(String name, String type) {
+    public Medicine createAndSaveMedicine(String name, String type) {
         Medicine newMedicine = new Medicine(name, type);
         EntityManager.insertTuple(newMedicine);
         return newMedicine;
     }
 
-    public static Medicine update(Medicine med) { //TODO Session to become instance variable, for cleaner code
+    public Medicine update(Medicine med) { //TODO Session to become instance variable, for cleaner code
         return (Medicine) EntityManager.update(med);
     }
 
-    public static void delete(Medicine med) {
+    public void delete(Medicine med) {
         EntityManager.delete(med);
     }
 
-    public static Medicine findByID(Integer id) {
+    public Medicine findByID(Integer id) {
         return (Medicine) EntityManager.getByPrimaryKey(Page.class, id);
     }
 
-    public static void deleteAll() {
+    public void deleteAll() {
         EntityManager.deleteAll(Medicine.class);
     }
 
-    public static List<Medicine> getAll() {
+    public List<Medicine> getAllMedicines() {
         return EntityManager.getAll(Medicine.class);
     }
-
-    public static void insertTuple(Medicine med) {
-        EntityManager.insertTuple(med);
-    }
-
 
 
 //
