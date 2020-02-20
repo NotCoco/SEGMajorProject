@@ -14,42 +14,22 @@ import static org.junit.Assert.*;
 
 
 public class PageManagerTest extends PageManager {
-
+    public static ConnectionLeakUtil connectionLeakUtil = null;
     @BeforeClass
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
-        //HibernateUtility.replaceAnnotationList(new ArrayList<Class>(Arrays.asList(Page.class)));
-    }
-
-    @AfterClass
-    public static void resetDatabase() {
-        HibernateUtility.shutdown();
-        //Close Factory
-    }
-
-    public static ConnectionLeakUtil connectionLeakUtil = null;
-    @BeforeClass
-    public static void initConnectionLeakUtility() {
         connectionLeakUtil = new ConnectionLeakUtil();
     }
 
     @AfterClass
     public static void assertNoLeaks() {
+        HibernateUtility.shutdown();
         connectionLeakUtil.assertNoLeaks();
-
     }
 
     @Before
-    public void setUp() { //For this run it will use the same DatabaseInitialiser object, right? Won't interfere
-                            // With existing running ones if I were to run it with a different DB / change the object?
-        //String[] databaseInfo = {}; //Size 0 since it will use the default from the DBInitialiser class.
-        //DatabaseInitialiser.main(databaseInfo);
-        //TODO : Now unnecessary, delete.
+    public void setUp() {
         deleteAll();
-    }
-    @After
-    public void tearDown() {
-       deleteAll();
     }
 
     @Test
