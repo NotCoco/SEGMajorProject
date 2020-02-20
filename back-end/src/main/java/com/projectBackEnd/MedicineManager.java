@@ -5,6 +5,7 @@ import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
 
 
+// TODO (Jeanne) : commenting
 public class MedicineManager {
 
 
@@ -14,7 +15,6 @@ public class MedicineManager {
         return newMedicine;
     }
 
-
     public static Medicine update(Medicine med) { //TODO Session to become instance variable, for cleaner code
         return (Medicine) EntityManager.update(med);
     }
@@ -23,15 +23,10 @@ public class MedicineManager {
         EntityManager.delete(med);
     }
 
-    public static Medicine findByID(Integer id) { //External java processing
-        /*List<Page> cast = EntityManager.getAll(Page.class);
-        List<Page> found = cast.stream().filter(p -> p.getSlug().equals(slug)).collect(Collectors.toList());
-        if (found.size() == 0) return null;
-        else return found.get(0);*/
+    public static Medicine findByID(Integer id) {
         return (Medicine) EntityManager.getByPrimaryKey(Page.class, id);
     }
 
-    //TODO Make these inherited or abstract class/interface for others.
     public static void deleteAll() {
         EntityManager.deleteAll(Medicine.class);
     }
@@ -128,7 +123,7 @@ public class MedicineManager {
 //        session.close();
 //        return medicines;
 //    }
-
-    //Delete all method?
+    
+//  Delete all method?
 
 }

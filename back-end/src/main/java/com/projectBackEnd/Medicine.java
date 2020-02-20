@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = Medicine.TABLENAME)
 
-// TODO : Commenting
+// TODO (Jeanne): Commenting
 
 public class Medicine implements TableEntity{
 
