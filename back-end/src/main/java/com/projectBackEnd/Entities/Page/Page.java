@@ -1,4 +1,6 @@
-package main.java.com.projectBackEnd;
+package main.java.com.projectBackEnd.Entities.Page;
+
+import main.java.com.projectBackEnd.TableEntity;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;

@@ -1,12 +1,14 @@
 package test.java;
 
 import main.java.com.projectBackEnd.*;
+import main.java.com.projectBackEnd.Entities.Page.Page;
 import main.java.com.projectBackEnd.Entities.Page.PageManager;
-import main.java.com.projectBackEnd.Page;
+
 import org.junit.*;
 
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
@@ -15,12 +17,13 @@ public class PageManagerTest extends PageManager {
 
     @BeforeClass
     public static void setUpDatabase() {
-        HibernateUtility.setLocation("testhibernate.cfg.xml");
+        HibernateUtility.setResource("testhibernate.cfg.xml");
+        HibernateUtility.replaceAnnotationList(new ArrayList<Class>(Arrays.asList(Page.class)));
     }
 
     @AfterClass
     public static void resetDatabase() {
-        HibernateUtility.setLocation("");
+        HibernateUtility.shutdown();
         //Close Factory
     }
 

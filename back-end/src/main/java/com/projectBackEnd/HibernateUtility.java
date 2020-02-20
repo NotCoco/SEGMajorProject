@@ -1,30 +1,54 @@
 package main.java.com.projectBackEnd;
 
 import org.hibernate.SessionFactory;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
-public class HibernateUtility {
+import java.util.ArrayList;
 
-    public static String location = "";
-    /**
-     * Gets the session factory created in this case specifically for the Page class
-     * @return The session factory.
-     */
-    public static SessionFactory getSessionFactory(Class entityclass) { //TODO Takes Class entityclass
-        Configuration configuration = new Configuration();
-        if (location.length() > 0) {
-            configuration.addAnnotatedClass(entityclass).configure(location);
-        } else {
-            configuration.addAnnotatedClass(entityclass).configure(); //TODO These two lines need to be dynamic, controlling location of DB and class
+public class HibernateUtility
+{
+    private static SessionFactory sessionFactory;
+    private static String resourceName="hibernate.cfg.xml";
+    private static ArrayList<Class> annotations;
+
+    public static SessionFactory buildSessionFactory()
+    {
+        try {
+            Configuration cfg = new Configuration();
+            for(Class a : annotations){
+                cfg.addAnnotatedClass(a);
+            }
+            sessionFactory = cfg.configure("/main/resources/"+resourceName).buildSessionFactory();
+            return sessionFactory;
+
+        } catch (Throwable ex) {
+            System.err.println("SF creation failure." + ex);
+            throw new ExceptionInInitializerError(ex);
         }
-        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
-                .applySettings(configuration.getProperties());
-        return configuration
-                .buildSessionFactory(builder.build());
     }
-    public static void setLocation(String locationIn) {
-        location = locationIn;
+
+    public static void setResource(String newName){
+        resourceName = newName;
     }
+
+    public static void replaceAnnotationList(ArrayList<Class> newAnnotations){
+        annotations = newAnnotations;
+        buildSessionFactory();
+    }
+
+    public static void addAnnotation(Class c){
+        annotations.add(c);
+        buildSessionFactory();
+    }
+
+    public static SessionFactory getSessionFactory() {
+        return sessionFactory;
+    }
+
+    public static void shutdown() {
+        getSessionFactory().close();
+    }
+
+    //TODO Allow dynamic controlling location of DB and class
 
 }

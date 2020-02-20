@@ -21,7 +21,7 @@ public class EntityManager <T extends TableEntity> { //TODO Try with statics to 
     public List<T> getAll() {
         //https://stackoverflow.com/questions/43037814/how-to-get-all-data-in-the-table-with-hibernate/43067399
         List<T> results = null;
-        try (Session session = HibernateUtility.getSessionFactory(subclass).openSession()) {
+        try (Session session = HibernateUtility.buildSessionFactory().openSession()) {
             results = getAllSession(session);
         }
         return results;
@@ -34,7 +34,7 @@ public class EntityManager <T extends TableEntity> { //TODO Try with statics to 
         return session.createQuery(criteria).getResultList();
     }
     public void deleteAll() {
-        SessionFactory sf = HibernateUtility.getSessionFactory(subclass);
+        SessionFactory sf = HibernateUtility.buildSessionFactory();
         Session session = sf.openSession();
         try {
             deleteAllTransaction(session);
@@ -55,7 +55,7 @@ public class EntityManager <T extends TableEntity> { //TODO Try with statics to 
 
     public T insertTuple(T newObject) {
         //if (!extendsTableEntity(newObject.getClass())) return newObject;
-        SessionFactory sf = HibernateUtility.getSessionFactory(newObject.getClass()); //
+        SessionFactory sf = HibernateUtility.buildSessionFactory(); //
         Session session = sf.openSession();
         try {
             insertTupleTransaction(newObject, session);
@@ -75,7 +75,7 @@ public class EntityManager <T extends TableEntity> { //TODO Try with statics to 
     }
 
     public T getByPrimaryKey(Serializable pk) {
-        SessionFactory sf = HibernateUtility.getSessionFactory(subclass);
+        SessionFactory sf = HibernateUtility.buildSessionFactory();;
         Session session = sf.openSession();
         T found = null;
         try {
@@ -96,7 +96,7 @@ public class EntityManager <T extends TableEntity> { //TODO Try with statics to 
     }
 
     public void delete(T object) {
-        SessionFactory sf = HibernateUtility.getSessionFactory(object.getClass());
+        SessionFactory sf = HibernateUtility.buildSessionFactory();
         Session session = sf.openSession();
         try {
             deleteTransaction(object, session);
@@ -117,7 +117,7 @@ public class EntityManager <T extends TableEntity> { //TODO Try with statics to 
     //TODO Might need to return back down if frontend send strings etc. I presume they will json and send the (page) back
     //Methods are commented out already in the PageManager if they send a String primary key.
     public T update(T updatedCopy) {
-        SessionFactory sf = HibernateUtility.getSessionFactory(updatedCopy.getClass()); //Gets sf
+        SessionFactory sf = HibernateUtility.buildSessionFactory(); //Gets sf
         Session session = sf.openSession();
         T fromDatabase = null;
         try {
@@ -144,7 +144,7 @@ public class EntityManager <T extends TableEntity> { //TODO Try with statics to 
 
 }
 /*public static void removeAllInstances(final Class<?> clazz) {
-    SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+    SessionFactory sessionFactory = HibernateUtility.buildSessionFactory();
     Session session = sessionFactory.getCurrentSession();
     session.beginTransaction();
     final List<?> instances = session.createCriteria(clazz).list();
