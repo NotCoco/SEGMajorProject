@@ -8,7 +8,6 @@ import org.junit.*;
 
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
@@ -63,7 +62,6 @@ public class PageManagerTest extends PageManager {
         insertTuple(page);
         fillDatabase();
         Page pageFromDatabase = getByPrimaryKey("biliary_atresia");
-        //assertEquals(pageFromDatabase.getContent(), page.getContent());
         assertTrue(pageFromDatabase.equals(page));
     }
 
