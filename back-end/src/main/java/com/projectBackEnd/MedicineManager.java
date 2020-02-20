@@ -43,8 +43,31 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
         return EntityManager.getAll(Medicine.class);
     }
 
-    public List<Medicine> getByType() {
+    public List<Medicine> getAllByType() {
         // code
     }
+
+    public List<Medicine> getAllByName() {
+        // code
+    }
+
+    public void deleteByID() {
+        // code
+    }
+
+    public Medicine updateNameByID(Medicine med){
+        // code
+    }
+
+    public Medicine updateTypeByID(Medicine med){
+        // code
+    }
+
+
+    // deleteByID
+    // updateTypeByID
+    // updateNameByID
+    // getAllMedicineByType
+    // getAllMedicineByName
 
 }
