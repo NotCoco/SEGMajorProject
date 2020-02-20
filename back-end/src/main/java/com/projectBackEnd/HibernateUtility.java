@@ -5,6 +5,9 @@ import org.hibernate.cfg.Configuration;
 
 import java.util.ArrayList;
 
+/**
+ * http://www.jcombat.com/hibernate/introduction-to-hibernateutil-and-the-sessionfactory-interface
+ */
 public class HibernateUtility
 {
     private static SessionFactory sessionFactory;
@@ -13,6 +16,9 @@ public class HibernateUtility
 
     public static SessionFactory buildSessionFactory()
     {
+        if (sessionFactory != null) {
+            if (sessionFactory.isOpen()) sessionFactory.close();
+        }
         try {
             Configuration cfg = new Configuration();
             for(Class a : annotations){
@@ -37,12 +43,16 @@ public class HibernateUtility
     }
 
     public static void addAnnotation(Class c){
+        if (annotations == null) {
+            annotations = new ArrayList<>();
+        }
         annotations.add(c);
         buildSessionFactory();
     }
 
     public static SessionFactory getSessionFactory() {
-        return sessionFactory;
+        if (sessionFactory != null) return sessionFactory;
+        else return buildSessionFactory();
     }
 
     public static void shutdown() {

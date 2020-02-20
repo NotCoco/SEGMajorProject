@@ -21,9 +21,10 @@ public class EntityManager <T extends TableEntity> { //TODO Try with statics to 
     public List<T> getAll() {
         //https://stackoverflow.com/questions/43037814/how-to-get-all-data-in-the-table-with-hibernate/43067399
         List<T> results = null;
-        try (Session session = HibernateUtility.buildSessionFactory().openSession()) {
+        try (Session session = HibernateUtility.getSessionFactory().openSession()) {
             results = getAllSession(session);
         }
+        //HibernateUtility.getSessionFactory().close();
         return results;
         //Doesn't close its own factory, will leak until factory is properly implemented.
     }
@@ -34,7 +35,7 @@ public class EntityManager <T extends TableEntity> { //TODO Try with statics to 
         return session.createQuery(criteria).getResultList();
     }
     public void deleteAll() {
-        SessionFactory sf = HibernateUtility.buildSessionFactory();
+        SessionFactory sf = HibernateUtility.getSessionFactory();
         Session session = sf.openSession();
         try {
             deleteAllTransaction(session);
@@ -55,7 +56,7 @@ public class EntityManager <T extends TableEntity> { //TODO Try with statics to 
 
     public T insertTuple(T newObject) {
         //if (!extendsTableEntity(newObject.getClass())) return newObject;
-        SessionFactory sf = HibernateUtility.buildSessionFactory(); //
+        SessionFactory sf = HibernateUtility.getSessionFactory();
         Session session = sf.openSession();
         try {
             insertTupleTransaction(newObject, session);
@@ -63,7 +64,7 @@ public class EntityManager <T extends TableEntity> { //TODO Try with statics to 
             if (session.getTransaction() != null) session.getTransaction().rollback();
         } finally {
             session.close();
-            //sf.close(); No longer closes its own factory
+            //sf.close(); //No longer closes its own factory
         }
         return newObject;
     }
@@ -75,7 +76,7 @@ public class EntityManager <T extends TableEntity> { //TODO Try with statics to 
     }
 
     public T getByPrimaryKey(Serializable pk) {
-        SessionFactory sf = HibernateUtility.buildSessionFactory();;
+        SessionFactory sf = HibernateUtility.getSessionFactory();
         Session session = sf.openSession();
         T found = null;
         try {
@@ -84,19 +85,19 @@ public class EntityManager <T extends TableEntity> { //TODO Try with statics to 
             if (session.getTransaction() != null) session.getTransaction().rollback(); //VIOLATES
         } finally {
             session.close();
-            sf.close();
+            //sf.close();
         }
         return found;
     }
     private T findByPrimaryKeyTransaction(Serializable pk, Session session) throws HibernateException {
         session.beginTransaction(); //TODO Demeter Violation with Implicit Transaction object
-        T found = (T) session.get(subclass, pk);
+        T found = session.get(subclass, pk);
         session.getTransaction().commit(); //Violation
         return found;
     }
 
     public void delete(T object) {
-        SessionFactory sf = HibernateUtility.buildSessionFactory();
+        SessionFactory sf = HibernateUtility.getSessionFactory();
         Session session = sf.openSession();
         try {
             deleteTransaction(object, session);
@@ -117,7 +118,7 @@ public class EntityManager <T extends TableEntity> { //TODO Try with statics to 
     //TODO Might need to return back down if frontend send strings etc. I presume they will json and send the (page) back
     //Methods are commented out already in the PageManager if they send a String primary key.
     public T update(T updatedCopy) {
-        SessionFactory sf = HibernateUtility.buildSessionFactory(); //Gets sf
+        SessionFactory sf = HibernateUtility.getSessionFactory(); //Gets sf
         Session session = sf.openSession();
         T fromDatabase = null;
         try {

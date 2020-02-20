@@ -18,7 +18,7 @@ public class PageManagerTest extends PageManager {
     @BeforeClass
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
-        HibernateUtility.replaceAnnotationList(new ArrayList<Class>(Arrays.asList(Page.class)));
+        //HibernateUtility.replaceAnnotationList(new ArrayList<Class>(Arrays.asList(Page.class)));
     }
 
     @AfterClass
