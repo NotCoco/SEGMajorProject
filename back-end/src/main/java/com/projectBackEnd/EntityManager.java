@@ -19,13 +19,13 @@ public class EntityManager <T extends TableEntity> { //TODO Try with statics to 
         //https://stackoverflow.com/questions/43037814/how-to-get-all-data-in-the-table-with-hibernate/43067399
         List<T> results = null;
         try (Session session = HibernateUtility.getSessionFactory().openSession()) {
-            results = getAllSession(session);
+            results = getAll(session);
         }
         //HibernateUtility.getSessionFactory().close();
         return results;
         //Doesn't close its own factory, will leak until factory is properly implemented.
     }
-    private List<T> getAllSession(Session session) throws HibernateException  {
+    private List<T> getAll(Session session) throws HibernateException  {
         CriteriaBuilder builder = session.getCriteriaBuilder();
         CriteriaQuery<T>  criteria = builder.createQuery(subclass);
         criteria.from(subclass);
@@ -35,7 +35,7 @@ public class EntityManager <T extends TableEntity> { //TODO Try with statics to 
         SessionFactory sf = HibernateUtility.getSessionFactory();
         Session session = sf.openSession();
         try {
-            deleteAllTransaction(session);
+            deleteAll(session);
         } catch(HibernateException ex) {
             if (session.getTransaction() != null) session.getTransaction().rollback();
         } finally {
@@ -43,7 +43,7 @@ public class EntityManager <T extends TableEntity> { //TODO Try with statics to 
             //sf.close(); //No longer closes the factory
         }
     }
-    private void deleteAllTransaction(Session session) throws  HibernateException {
+    private void deleteAll(Session session) throws  HibernateException {
         session.beginTransaction();
         for (Object tuple : getAll()) { //Deleting one by one is recommended to deal with cascading.
             session.delete(tuple);
@@ -56,7 +56,7 @@ public class EntityManager <T extends TableEntity> { //TODO Try with statics to 
         SessionFactory sf = HibernateUtility.getSessionFactory();
         Session session = sf.openSession();
         try {
-            insertTupleTransaction(newObject, session);
+            insertTuple(newObject, session);
         } catch(HibernateException ex) {
             if (session.getTransaction() != null) session.getTransaction().rollback();
         } finally {
@@ -66,7 +66,7 @@ public class EntityManager <T extends TableEntity> { //TODO Try with statics to 
         return newObject;
     }
     //TODO (Wasif, delete all mass commented out code)
-    private void insertTupleTransaction(T newObject, Session session) throws HibernateException {
+    private void insertTuple(T newObject, Session session) throws HibernateException {
         session.beginTransaction();
         session.save(newObject);
         session.getTransaction().commit();
@@ -77,7 +77,7 @@ public class EntityManager <T extends TableEntity> { //TODO Try with statics to 
         Session session = sf.openSession();
         T found = null;
         try {
-            found = findByPrimaryKeyTransaction(pk, session);
+            found = getByPrimaryKey(pk, session);
         } catch(HibernateException ex) {
             if (session.getTransaction() != null) session.getTransaction().rollback(); //VIOLATES
         } finally {
@@ -86,7 +86,7 @@ public class EntityManager <T extends TableEntity> { //TODO Try with statics to 
         }
         return found;
     }
-    private T findByPrimaryKeyTransaction(Serializable pk, Session session) throws HibernateException {
+    private T getByPrimaryKey(Serializable pk, Session session) throws HibernateException {
         session.beginTransaction(); //TODO Demeter Violation with Implicit Transaction object
         T found = session.get(subclass, pk);
         session.getTransaction().commit(); //Violation
@@ -97,7 +97,7 @@ public class EntityManager <T extends TableEntity> { //TODO Try with statics to 
         SessionFactory sf = HibernateUtility.getSessionFactory();
         Session session = sf.openSession();
         try {
-            deleteTransaction(object, session);
+            delete(object, session);
         } catch(HibernateException ex) {
             if (session.getTransaction() != null) session.getTransaction().rollback();
         } finally {
@@ -105,7 +105,7 @@ public class EntityManager <T extends TableEntity> { //TODO Try with statics to 
             //sf.close();
         }
     }
-    private void deleteTransaction(T object, Session session) throws HibernateException {
+    private void delete(T object, Session session) throws HibernateException {
         session.beginTransaction();
         T entityToDelete = getByPrimaryKey(object.getPrimaryKey());
         session.delete(entityToDelete);
@@ -119,7 +119,7 @@ public class EntityManager <T extends TableEntity> { //TODO Try with statics to 
         Session session = sf.openSession();
         T fromDatabase = null;
         try {
-            fromDatabase = updateTransaction(updatedCopy, session);
+            fromDatabase = update(updatedCopy, session);
         } catch(HibernateException ex) {
             if (session.getTransaction() != null) session.getTransaction().rollback();
         } finally {
@@ -129,11 +129,11 @@ public class EntityManager <T extends TableEntity> { //TODO Try with statics to 
         return fromDatabase;
     }
 
-    private T updateTransaction(T updatedCopy, Session session) throws HibernateException {
+    private T update(T updatedCopy, Session session) throws HibernateException {
         session.beginTransaction(); //TODO Demeter Violation with Implicit Transaction object
         T fromDatabase = (T) session.load(updatedCopy.getClass(), updatedCopy.getPrimaryKey());
         //TODO: If not found?
-        if (fromDatabase != null) fromDatabase.imitate(updatedCopy);
+        if (fromDatabase != null) fromDatabase.copy(updatedCopy);
         else insertTuple(updatedCopy);
         session.getTransaction().commit(); //Violation
         return fromDatabase;

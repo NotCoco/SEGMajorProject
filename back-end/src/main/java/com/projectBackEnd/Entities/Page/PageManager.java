@@ -5,6 +5,7 @@ import main.java.com.projectBackEnd.HibernateUtility;
 
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * PageManager class that deals with interacting with the database itself with respect to Pages.
@@ -19,18 +20,6 @@ public class PageManager extends EntityManager implements PageManagerInterface {
         HibernateUtility.addAnnotation(Page.class);
     }
     /**
-     * Creates a page object
-     * @param slug The slug of the new page
-     * @param index The index of the new page
-     * @param title The title of the new page
-     * @param content The content of the new page.
-     * @return the created page
-     */
-    public Page createPage(String slug, Integer index, String title, String content) {
-        return new Page(slug, index, title, content);
-    }
-
-    /**
      * Creates a page and adds it to the database table
      * @param slug The slug of the new page
      * @param index The index of the new page
@@ -38,8 +27,12 @@ public class PageManager extends EntityManager implements PageManagerInterface {
      * @param content The content of the new page.
      * @return the created page
      */
-    public Page createAndSavePage(String slug, Integer index, String title, String content) {
-        Page newPage = (createPage(slug, index, title, content));
+    public Page addPage(String slug, Integer index, String title, String content) {
+        Page newPage = new Page(slug, index, title, content);
+        insertTuple(newPage);
+        return newPage;
+    }
+    public Page addPage(Page newPage) {
         insertTuple(newPage);
         return newPage;
     }
@@ -47,6 +40,19 @@ public class PageManager extends EntityManager implements PageManagerInterface {
     @Override
     public Page getByPrimaryKey(Serializable slug) {
         return (Page) super.getByPrimaryKey(slug);
+    }
+
+    public List<Page> getAllPages() {
+        return (List<Page>) super.getAll();
+    }
+    @Override
+    public void delete(Page pageToDelete) {
+        super.delete(pageToDelete);
+    }
+    @Override
+    public Page update(Page updatedCopy) {
+        super.update(updatedCopy);
+        return updatedCopy;
     }
 }
 

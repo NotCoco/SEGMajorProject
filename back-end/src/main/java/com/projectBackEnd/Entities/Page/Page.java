@@ -98,7 +98,7 @@ public class Page implements TableEntity { //TODO extends Entity, for easier Jso
     }
 
     @Override
-    public TableEntity imitate(TableEntity newCopy) {
+    public TableEntity copy(TableEntity newCopy) {
         Page newPage = (Page) newCopy;
         setContent(newPage.getContent());
         setIndex(newPage.getIndex());

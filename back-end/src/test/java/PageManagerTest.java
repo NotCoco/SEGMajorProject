@@ -40,7 +40,7 @@ public class PageManagerTest extends PageManager {
 
     @Test
     public void testCreatePage() {
-       Page page = createPage("biliary_atresia", 0, "Biliary Atresia", "" +
+       Page page = new Page("biliary_atresia", 0, "Biliary Atresia", "" +
                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
                "");
        assertEquals(page.getTitle(), "Biliary Atresia"); //TODO Hamcrest these.
@@ -48,7 +48,7 @@ public class PageManagerTest extends PageManager {
 
     @Test
     public void testCreateAndSavePage() {
-       createAndSavePage("biliary_atresia", 0, "Biliary Atresia", "" +
+       addPage("biliary_atresia", 0, "Biliary Atresia", "" +
                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
                "");
        assertEquals(getAll().size(), 1);
@@ -56,7 +56,7 @@ public class PageManagerTest extends PageManager {
 
     @Test
     public void testSavedPage() {
-        Page page = createPage("biliary_atresia", 0, "Biliary Atresia", "" +
+        Page page = new Page("biliary_atresia", 0, "Biliary Atresia", "" +
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
                 "");
         insertTuple(page);
@@ -67,21 +67,21 @@ public class PageManagerTest extends PageManager {
 
     @Test
     public void testSafeNames() {
-       createAndSavePage(";DROP TABLE Pages", 2, "';'''", "sdafds");
+       addPage(";DROP TABLE Pages", 2, "';'''", "sdafds");
        assertEquals(getAll().size(), 1);
     }
 
     @Test
     public void testEmptyContent() {
-       createAndSavePage("biliary_atresia", 0, "", "");
+       addPage("biliary_atresia", 0, "", "");
        assertEquals(getAll().size(), 1);
     }
 
     //@Test(expected = PersistenceException.class)
     @Test
     public void testEmptyIndex() {
-       createAndSavePage("biliary", null, "2", "1"); //Should throw something?
-       createAndSavePage("biliary2", 2, "2", "1");
+       addPage("biliary", null, "2", "1"); //Should throw something?
+       addPage("biliary2", 2, "2", "1");
        assertEquals(getAll().size(), 1);
     } //TODO: Doesn't throw an error, just doesn't create?
 
@@ -89,8 +89,8 @@ public class PageManagerTest extends PageManager {
     //public void testDuplicatePrimaryKey() throws ConstraintViolationException {
     @Test(expected = PersistenceException.class)
     public void testDuplicatePrimaryKey() throws PersistenceException {
-        createAndSavePage("biliary_atresia", 0, "Random Title", "Content");
-        createAndSavePage("biliary_atresia", 1, "Random Title 2", "Content");
+        addPage("biliary_atresia", 0, "Random Title", "Content");
+        addPage("biliary_atresia", 1, "Random Title 2", "Content");
     }
 
     @Test
@@ -101,10 +101,10 @@ public class PageManagerTest extends PageManager {
 
     @Test
     public void testIdenticalPages() {
-        Page page = createPage("biliary_atresia", 0, "Biliary Atresia", "" +
+        Page page = new Page("biliary_atresia", 0, "Biliary Atresia", "" +
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
                 "");
-        Page page2 = createPage("biliary_atresia", 0, "Biliary Atresia", "" +
+        Page page2 = new Page("biliary_atresia", 0, "Biliary Atresia", "" +
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
                 "");
         assertTrue(page.equals(page2));
@@ -133,7 +133,7 @@ public class PageManagerTest extends PageManager {
 
     @Test
     public void testUpdatePage() {
-        Page replacementPage = createPage("Slug3", 10, "Title3", "New content!");
+        Page replacementPage = new Page("Slug3", 10, "Title3", "New content!");
 
         fillDatabase();
         update(replacementPage);
