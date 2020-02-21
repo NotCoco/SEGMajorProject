@@ -11,7 +11,7 @@ import java.util.HashSet;
 public class HibernateUtility
 {
     private static SessionFactory sessionFactory;
-    private static String resourceName="hibernate.cfg.xml";
+    private static String resourceName="/main/resources/hibernate.cfg.xml";
     private static HashSet<Class> annotations;
 
     public synchronized static SessionFactory buildSessionFactory()
@@ -24,7 +24,7 @@ public class HibernateUtility
             for(Class a : annotations){
                 cfg.addAnnotatedClass(a);
             }
-            sessionFactory = cfg.configure("/main/resources/"+resourceName).buildSessionFactory();
+            sessionFactory = cfg.configure(resourceName).buildSessionFactory();
             return sessionFactory;
 
         } catch (Throwable ex) {
