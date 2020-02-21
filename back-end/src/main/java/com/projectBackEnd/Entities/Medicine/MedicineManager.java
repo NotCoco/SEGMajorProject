@@ -20,7 +20,7 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
         HibernateUtility.addAnnotation(Medicine.class);
     }
 
-    public Medicine createAndSaveMedicine(String name, String type) {
+    public Medicine addMedicine(String name, String type) {
         Medicine newMedicine = new Medicine(name, type);
         super.insertTuple(newMedicine);
         return newMedicine;
@@ -42,31 +42,25 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
         return super.getAll();
     }
 
-//    public List<Medicine> getAllByType() {
-//        // code
-//    }
-//
-//    public List<Medicine> getAllByName() {
-//        // code
-//    }
-//
-//    public void deleteByID() {
-//        // code
-//    }
-//
-//    public Medicine updateNameByID(Medicine med){
-//        // code
-//    }
-//
-//    public Medicine updateTypeByID(Medicine med){
-//        // code
-//    }
+    public List<Medicine> getAllByType() {
+        return null;
+    }
 
+    public List<Medicine> getAllByName() {
+        return null;
+    }
 
-    // deleteByID
-    // updateTypeByID
-    // updateNameByID
-    // getAllMedicineByType
-    // getAllMedicineByName
+    public void deleteByID() {
+
+    }
+
+    public Medicine updateNameByID(Medicine med){
+        return null;
+    }
+
+    public Medicine updateTypeByID(Medicine med){
+        return null;
+    }
+    
 
 }
