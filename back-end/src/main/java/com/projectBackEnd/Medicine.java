@@ -53,7 +53,7 @@ public class Medicine implements TableEntity{
     }
 
     public void setName(String name) {
-        this.name = new SQLSafeString(name).toString();
+        this.name = name;
     }
 
     public String getType() {
@@ -61,22 +61,12 @@ public class Medicine implements TableEntity{
     }
 
     public void setType(String type) {
-        this.type = new SQLSafeString(type).toString();
+        this.type = type;
     }
 
     @Override
     public String toString() {
         return "Medicine: " + this.primaryKey + ", " + this.name + ", " + this.type;
-    }
-
-    public static String getCreateQuery() {
-        String createQuery = "CREATE TABLE " + TABLENAME + " (";
-        createQuery += ID + " INTEGER NOT NULL AUTO-INCREMENT, ";
-        createQuery += NAME + " VARCHAR(255) NOT NULL, ";
-        createQuery += TYPE + " VARCHAR(255), ";
-        createQuery += "PRIMARY KEY (" + ID + "));";
-        System.out.println(createQuery);
-        return createQuery;
     }
 
     public boolean equals(Medicine otherMed) {
