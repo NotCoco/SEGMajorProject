@@ -1,5 +1,6 @@
 package main.java.com.projectBackEnd.Entities.Medicine;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
@@ -9,8 +10,6 @@ import org.hibernate.cfg.Configuration;
 
 
 // TODO (Jeanne) : commenting
-// TODO (Jeanne) : implement getByType
-
 
 public class MedicineManager extends EntityManager implements MedicineManagerInterface {
 
@@ -42,25 +41,12 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
         return super.getAll();
     }
 
-    public List<Medicine> getAllByType() {
-        return null;
+    public List<Medicine> getAllMedicinesByType(String type) {
+        return getAllMedicines().stream().filter(m -> m.getType().equals(type)).collect(Collectors.toList());
     }
 
-    public List<Medicine> getAllByName() {
-        return null;
+    public List<Medicine> getAllMedicinesByName(String name) {
+        return getAllMedicines().stream().filter(m -> m.getName().equals(name)).collect(Collectors.toList());
     }
-
-    public void deleteByID() {
-
-    }
-
-    public Medicine updateNameByID(Medicine med){
-        return null;
-    }
-
-    public Medicine updateTypeByID(Medicine med){
-        return null;
-    }
-    
 
 }
