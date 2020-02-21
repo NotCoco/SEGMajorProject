@@ -1,6 +1,7 @@
 package main.java.com.projectBackEnd;
 import org.hibernate.annotations.Type;
 
+import javax.persistence.*;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -21,7 +22,7 @@ public class Medicine implements TableEntity{
     private static final String TYPE = "Type";
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ID, nullable = false)
     private Integer primaryKey;
 
@@ -43,7 +44,6 @@ public class Medicine implements TableEntity{
     }
 
     // Getters and setters; ID cannot be changed
-
     public Integer getPrimaryKey() {
         return primaryKey;
     }
@@ -73,7 +73,7 @@ public class Medicine implements TableEntity{
         return (getPrimaryKey() == otherMed.getPrimaryKey()) && getName().equals(otherMed.getName()) &&
                 getType().equals(otherMed.getType());
     }
-    
+
     @Override
     public TableEntity copy(TableEntity toCopy) {
         Medicine medToCopy = (Medicine) toCopy;

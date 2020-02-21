@@ -31,8 +31,8 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
         super.delete(med);
     }
 
-    public Medicine findByID(Integer id) {
-        return (Medicine) super.getByPrimaryKey(Medicine.class, id);
+    public Medicine getByPrimaryKey(Integer id) {
+        return (Medicine) super.getByPrimaryKey(id);
     }
 
     public void deleteAll() {

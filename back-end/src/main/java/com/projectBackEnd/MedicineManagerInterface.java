@@ -16,7 +16,7 @@ public interface MedicineManagerInterface {
     //public Medicine getByPrimaryKey(Integer pk);
     public void delete(Medicine med);
     public Medicine update(Medicine med);
-    public Medicine findByID(Integer id);
+    public Medicine getByPrimaryKey(Integer id);
 
 
 
