@@ -10,13 +10,13 @@ import java.util.List;
 public interface MedicineManagerInterface {
 
     public void deleteAll();
-    public List<Page> getAllMedicines();
+    public List<Medicine> getAllMedicines();
     public Medicine createAndSaveMedicine(String name, String type);
     //public Medicine addMedicine(Medicine newMedicine);
     //public Medicine getByPrimaryKey(Integer pk);
     public void delete(Medicine med);
     public Medicine update(Medicine med);
-    public Medicine findByID(Integer id);
+    public Medicine getByPrimaryKey(Integer id);
 
 
 

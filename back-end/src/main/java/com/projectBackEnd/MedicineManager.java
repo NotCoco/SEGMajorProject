@@ -14,54 +14,50 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
     public MedicineManager() {
         super();
         setSubclass(Medicine.class);
-        HibernateUtility.addAnnotation(Page.class);
+        HibernateUtility.addAnnotation(Medicine.class);
     }
 
     public Medicine createAndSaveMedicine(String name, String type) {
         Medicine newMedicine = new Medicine(name, type);
-        EntityManager.insertTuple(newMedicine);
+        super.insertTuple(newMedicine);
         return newMedicine;
     }
 
     public Medicine update(Medicine med) { //TODO Session to become instance variable, for cleaner code
-        return (Medicine) EntityManager.update(med);
+        return (Medicine) super.update(med);
     }
 
     public void delete(Medicine med) {
-        EntityManager.delete(med);
+        super.delete(med);
     }
 
-    public Medicine findByID(Integer id) {
-        return (Medicine) EntityManager.getByPrimaryKey(Medicine.class, id);
-    }
-
-    public void deleteAll() {
-        EntityManager.deleteAll(Medicine.class);
+    public Medicine getByPrimaryKey(Integer id) {
+        return (Medicine) super.getByPrimaryKey(id);
     }
 
     public List<Medicine> getAllMedicines() {
-        return EntityManager.getAll(Medicine.class);
+        return super.getAll();
     }
 
-    public List<Medicine> getAllByType() {
-        // code
-    }
-
-    public List<Medicine> getAllByName() {
-        // code
-    }
-
-    public void deleteByID() {
-        // code
-    }
-
-    public Medicine updateNameByID(Medicine med){
-        // code
-    }
-
-    public Medicine updateTypeByID(Medicine med){
-        // code
-    }
+//    public List<Medicine> getAllByType() {
+//        // code
+//    }
+//
+//    public List<Medicine> getAllByName() {
+//        // code
+//    }
+//
+//    public void deleteByID() {
+//        // code
+//    }
+//
+//    public Medicine updateNameByID(Medicine med){
+//        // code
+//    }
+//
+//    public Medicine updateTypeByID(Medicine med){
+//        // code
+//    }
 
 
     // deleteByID
