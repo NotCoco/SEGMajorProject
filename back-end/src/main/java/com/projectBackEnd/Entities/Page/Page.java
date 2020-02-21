@@ -19,7 +19,7 @@ import java.io.Serializable;
 public class Page implements TableEntity { //TODO extends Entity, for easier Json conversion for frontend management
 
     // Table Headers stored as public static final Strings
-    public static final String TABLENAME = "Pages"; //Hibernate requires this to be the same as class name
+    public static final String TABLENAME = "Pages";
     public static final String SLUG = "Slug";
     private static final String INDEX = "`Index`";
     private static final String TITLE = "Title";
@@ -57,19 +57,12 @@ public class Page implements TableEntity { //TODO extends Entity, for easier Jso
 
     //GETTERS AND SETTERS:
 
-    public Serializable getSlug() {
-        return primaryKey;
-    }
-
     public Serializable getPrimaryKey() {
         return primaryKey;
     }
-
-
     public Integer getIndex() {
         return index;
     }
-
     public void setIndex(Integer index) {
         this.index = index;
     }
@@ -93,8 +86,8 @@ public class Page implements TableEntity { //TODO extends Entity, for easier Jso
     }
 
     public boolean equals(Page otherPage) {
-        return getSlug().equals(otherPage.getSlug()) && (getIndex() == otherPage.getIndex()) && getTitle().equals(otherPage.getTitle()) &&
-                getContent().equals(otherPage.getContent());
+        return getPrimaryKey().equals(otherPage.getPrimaryKey()) && (getIndex() == otherPage.getIndex()) &&
+                getTitle().equals(otherPage.getTitle()) && getContent().equals(otherPage.getContent());
     }
 
     @Override
