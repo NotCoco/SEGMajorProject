@@ -18,7 +18,7 @@ import java.io.Serializable;
 public class Medicine implements TableEntity{
 
     // Table columns
-    public static final String TABLENAME = "Medicine";
+    public static final String TABLENAME = "Medicines";
     private static final String ID = "ID";
     private static final String NAME = "Name";
     private static final String TYPE = "Type";
