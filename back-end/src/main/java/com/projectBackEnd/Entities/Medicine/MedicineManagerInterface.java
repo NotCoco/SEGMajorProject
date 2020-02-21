@@ -1,4 +1,4 @@
-package main.java.com.projectBackEnd;
+package main.java.com.projectBackEnd.Entities.Medicine;
 
 
 import main.java.com.projectBackEnd.TableEntity;
