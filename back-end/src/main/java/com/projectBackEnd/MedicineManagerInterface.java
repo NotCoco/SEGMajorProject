@@ -10,7 +10,7 @@ import java.util.List;
 public interface MedicineManagerInterface {
 
     public void deleteAll();
-    public List<Page> getAllMedicines();
+    public List<Medicine> getAllMedicines();
     public Medicine createAndSaveMedicine(String name, String type);
     //public Medicine addMedicine(Medicine newMedicine);
     //public Medicine getByPrimaryKey(Integer pk);

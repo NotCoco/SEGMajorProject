@@ -73,15 +73,14 @@ public class Medicine implements TableEntity{
         return (getPrimaryKey() == otherMed.getPrimaryKey()) && getName().equals(otherMed.getName()) &&
                 getType().equals(otherMed.getType());
     }
-
+    
     @Override
-    public TableEntity imitate(TableEntity toCopy) {
+    public TableEntity copy(TableEntity toCopy) {
         Medicine medToCopy = (Medicine) toCopy;
         setName(medToCopy.getName());
         setType(medToCopy.getType());
         return this;
     }
-
 
 }
 
