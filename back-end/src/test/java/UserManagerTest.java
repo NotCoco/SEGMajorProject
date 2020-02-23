@@ -110,6 +110,7 @@ public class UserManagerTest{
 		users.add(new User("user5",hash("password5")));
 		users.add(new User("user6",hash("password6")));
 		users.add(new User("user7",hash("password7")));
+
 		return users;
 	
 	}

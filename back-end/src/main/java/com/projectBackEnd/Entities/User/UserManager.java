@@ -10,7 +10,7 @@ public class UserManager extends EntityManager implements UserManagerInterface {
         super();
         setSubclass(User.class);
         HibernateUtility.addAnnotation(User.class);
-		userManager = (UserManagerInterface)this;
+		userManager = this;
     }
 	public static UserManagerInterface getUserManager(){
 		if(userManager != null)

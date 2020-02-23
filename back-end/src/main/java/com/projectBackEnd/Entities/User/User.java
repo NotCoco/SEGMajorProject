@@ -20,7 +20,7 @@ public class User implements TableEntity{
 	private final static String PASSWORD = "password";
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     	@Column(name = KEY)
-   	private String primaryKey;
+   	private int primaryKey;
     	@Column(name = USERNAME)
     	@Type(type="text")
 	private String username;
@@ -31,6 +31,7 @@ public class User implements TableEntity{
 		this.username = username;
 		this.password = password;
 	}
+	public User(){};
     	public Serializable getPrimaryKey() {
         	return primaryKey;
     	}
