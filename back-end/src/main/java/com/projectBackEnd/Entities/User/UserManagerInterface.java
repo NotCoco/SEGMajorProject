@@ -1,8 +1,5 @@
 package main.java.com.projectBackEnd.Entities.User;
 
-
-import main.java.com.projectBackEnd.TableEntity;
-
 import java.io.Serializable;
 
 

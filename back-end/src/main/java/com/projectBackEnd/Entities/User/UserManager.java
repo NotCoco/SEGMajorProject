@@ -2,7 +2,7 @@ package main.java.com.projectBackEnd.Entities.User;
 
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
-import org.hibernate.annotations.Type;
+
 
 public class UserManager extends EntityManager implements UserManagerInterface {
 	private static UserManagerInterface userManager;
