@@ -56,9 +56,9 @@ public class SessionManagerTest{
 		List<Session> sessions = (List<Session>)((EntityManager)sessionManager).getAll();
 		assertEquals(1,sessions.stream().filter(s->(s.getToken().equals(token))).count());
 		Thread.sleep(2005);
-		assertFalse(sessionManager.verifySession(token));
+		sessionManager.verifySession(token);
+		sessions = (List<Session>)((EntityManager)sessionManager).getAll();
 		assertEquals(0,sessions.stream().filter(s->(s.getToken().equals(token))).count());
-
 
 	}
 	@Test
@@ -66,15 +66,16 @@ public class SessionManagerTest{
 		String token = sessionManager.getNewSession("1",100);
 		List<Session> sessions = (List<Session>)((EntityManager)sessionManager).getAll();
 		assertEquals(1,sessions.size());
-		assertEquals(token,sessions.get(0));
+		assertEquals(token,sessions.get(0).getToken());
 		sessionManager.terminateSession(token);
 		assertEquals(0,((EntityManager)sessionManager).getAll().size());
 	}
 	private ArrayList<Session> getTestSessions(){
-		ArrayList<Session> sessions = new ArrayList<Session> ();
+		ArrayList<Session> sessions = new ArrayList<Session>();
 		sessions.add(new Session("1",100));
 		sessions.add(new Session("2",100));
 		sessions.add(new Session("3",100));
+
 		return sessions;
 	}
 	private void fill(){

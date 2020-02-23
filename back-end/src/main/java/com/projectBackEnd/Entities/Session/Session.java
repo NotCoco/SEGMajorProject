@@ -44,10 +44,13 @@ public class Session implements TableEntity{
 	private String generateToken(){
 		Random rand = new Random();
 		String s = null;
+        	String alphaNum = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvxyz"; 		
 		do{
-			byte[] bytes = new byte[256];
-			rand.nextBytes(bytes);
-			s =  new String(bytes,Charset.forName("UTF-8"));
+			StringBuilder sb = new StringBuilder();		
+			for(int i = 0; i < 26;++i){
+				sb.append(alphaNum.charAt(rand.nextInt(alphaNum.length())));
+			}
+			s = sb.toString();
 		}while(s == null && SessionManager.getSessionManager().verifySession(s));	
 		return s;
 	}
