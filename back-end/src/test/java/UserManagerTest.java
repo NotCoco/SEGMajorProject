@@ -15,6 +15,7 @@ import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.*;
+import java.math.BigInteger;
 
 public class UserManagerTest{
     public static ConnectionLeakUtil connectionLeakUtil = null;    
@@ -42,33 +43,38 @@ public class UserManagerTest{
 	public void testAddUser(){
 		fill();
 		try{
-			userManager.addUser("user8",hash("password8"));
+			userManager.addUser("user8","password8");
 		}
 		catch(UsernameExistsException e){
 			fail();
 		}		
 		List<User> users = (List<User>)((EntityManager)userManager).getAll();
-		assertEquals(users.size(),7);
-		assertEquals(1,users.stream().filter(u->(u.getUsername().equals("user8") && u.getPassword().equals(hash("password8")) == true)).count());
+		assertEquals(users.size(),8);
+		assertEquals(1,users.stream().filter(u->(u.getUsername().equals("user8") && u.getPassword().equals(hash("password8")))).count());
 	}
 	@Test(expected = UsernameExistsException.class)
 	public void testAddExistingUser()throws UsernameExistsException{
 		fill();
-		userManager.addUser("user5",hash("password5"));
+		userManager.addUser("user5","password5");
 	}
 	@Test
 	public void testVerifyUser(){
 		fill();
-		assertNotNull(userManager.verifyUser("not_in","not in"));
-		assertNull(userManager.verifyUser("user6",hash("password6")));
+		assertNull(userManager.verifyUser("not_in","not in"));
+		assertNotNull(userManager.verifyUser("user6","password6"));
 	}
 	@Test
-	public void testChangePassword(){
+	public void testChangePassword() throws UserNotExistException{
 		fill();
-		userManager.changePassword("user1",hash("password10"));
+		userManager.changePassword("user1","password10");
 		List<User> users = (List<User>)((EntityManager)userManager).getAll();
-		assertEquals(1,users.stream().filter(u->(u.getUsername().equals("user1") && u.getPassword().equals(hash("password10")) == true)).count());
-		assertEquals(users.size(),6);
+		assertEquals(1,users.stream().filter(u->(u.getUsername().equals("user1") && u.getPassword().equals(hash("password10")))).count());
+		assertEquals(users.size(),7);
+	}
+	@Test(expected = UserNotExistException.class)
+	public void testChangePasswordUserNotExsist() throws UserNotExistException{
+		fill();
+		userManager.changePassword("user20","password10");
 	}
 	@Test
 	public void testDeleteUser(){
@@ -77,12 +83,13 @@ public class UserManagerTest{
 			userManager.deleteUser("user1");
 			List<User> users = (List<User>)((EntityManager)userManager).getAll();
 			assertEquals(0,users.stream().filter(u->(u.getUsername().equals("user1") && u.getPassword().equals(hash("password10")) == true)).count());
-			assertEquals(users.size(),5);
+			assertEquals(users.size(),6);
 		}
 		catch(UserNotExistException e){
 			fail();
 		}
 	}
+
 	@Test(expected = UserNotExistException.class)
 	public void testDeleteNotExistingUser() throws UserNotExistException{
 		fill();
@@ -92,8 +99,9 @@ public class UserManagerTest{
 	private String hash(String in){
 		try{
 			MessageDigest alg = MessageDigest.getInstance("SHA-512"); 
-			byte[] encryptedBytes = alg.digest(in.getBytes(StandardCharsets.UTF_8));
-			return new String(encryptedBytes, StandardCharsets.UTF_8);
+			alg.reset();
+			alg.update(in.getBytes(StandardCharsets.UTF_8));
+			return String.format("%0128x", new BigInteger(1, alg.digest()));
 		}
         catch (NoSuchAlgorithmException e) { 
             throw new RuntimeException(e); 
