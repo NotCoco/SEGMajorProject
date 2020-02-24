@@ -56,14 +56,12 @@ public class User implements TableEntity{
 	public boolean equals(User user){
 		return user.username == username;
 	}
-    	@Override
-    	public TableEntity copy(TableEntity newCopy) {
-		if(newCopy instanceof User){
-			User u = (User) newCopy;
-			return new User(u.getUsername(),u.getPassword());
-		}
-		else{
-			return null;
-		}
-	}
+  @Override
+    public TableEntity copy(TableEntity newCopy) {
+        if(newCopy instanceof User){
+            setUsername(((User) newCopy).getUsername());
+            setPassword(((User) newCopy).getPassword());
+        }
+        return newCopy;
+    }
 }
