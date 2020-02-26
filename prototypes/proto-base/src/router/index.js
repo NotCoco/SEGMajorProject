@@ -8,6 +8,11 @@ import Introduction from '../views/demo-pages/Introduction.vue'
 import Nutrition from '../views/demo-pages/Nutrition.vue'
 import Medications from '../views/demo-pages/Medications.vue'
 
+import AdminLayout from '../views/AdminLayout.vue'
+import AdminAllPages from '../views/AdminAllPages.vue'
+import AdminDrugChart from '../views/AdminDrugChart.vue'
+
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -32,6 +37,20 @@ const routes = [
             component: Medications
           },
         ]
+      }
+    ]
+  },
+  {
+    path: '/admin',
+    component: AdminLayout,
+    children: [
+      {
+        path: 'pages',
+        component: AdminAllPages
+      },
+      {
+        path: 'drug-chart',
+        component: AdminDrugChart
       }
     ]
   }

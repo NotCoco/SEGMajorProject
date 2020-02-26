@@ -34,18 +34,6 @@
 </template>
 
 <style lang="scss" scoped>
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
-}
-
-.fade-enter, .fade-leave-to {
-  opacity: 0;
-}
-
-.fade-enter {
-  transform: translateY(-12px);
-}
-
 .root {
   height: 100%;
 }
@@ -57,45 +45,7 @@
 
 .page-content {
   flex-grow: 1;
-}
-
-.sidebar {
-  min-height: 100%;
-  width: 285px;
-  flex-shrink: 0;
-  border-right: 2px solid #eee;
-
-  overflow-y: auto;
-
-  .sidebar-label {
-    font-family: "Signika", serif;
-    font-size: 28px;
-    color: rgb(153, 153, 170);
-  }
-}
-
-.navigation-items {
-  margin-top: 20px;
-
-  .navigation-item {
-    display: block;
-    color: rgb(35, 68, 72);
-    padding: 7px 12px;
-    margin-bottom: 15px;
-    font-size: 18px;
-    transition: background-color 0.2s, color 0.2s;
-    border-radius: 4px;
-    cursor: pointer;
-
-    &:hover {
-      background: rgba(180, 180, 192, 0.08);
-    }
-
-    &.router-link-exact-active {
-      background: rgba(185, 180, 192, 0.12);
-      color: #282235;
-    }
-  }
+  overflow-y: scroll;
 }
 </style>
 
