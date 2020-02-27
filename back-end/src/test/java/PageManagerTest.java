@@ -129,7 +129,7 @@ public class PageManagerTest extends PageManager {
     public void testWhichDeleted() {
         fillDatabase();
         delete(getListOfPages().get(1));
-        assertNull(getByPrimaryKey(getListOfPages().get(1).getSlug()));
+        assertNull(getByPrimaryKey(getListOfPages().get(1).getPrimaryKey()));
     }
 
     @Test
