@@ -1,33 +1,41 @@
 <template>
-  <div class="root">
+  <div id="root">
     <section class="section">
       <div class="custom-content-container">
         <h1 class="title">All Pages</h1>
 
         <div class="pages-list">
-          <div class="card">
-            <div class="card-content">
-              <p class="page-name">Introduction</p>
+          <router-link to="Introduction" append class="card-wrapper">
+            <div class="card">
+              <div class="card-content">
+                <p class="page-name">Introduction</p>
+              </div>
             </div>
-          </div>
+          </router-link>
 
-          <div class="card">
-            <div class="card-content">
-              <p class="page-name">Nutrition</p>
+          <router-link to="Nutrition" append class="card-wrapper">
+            <div class="card">
+              <div class="card-content">
+                <p class="page-name">Nutrition</p>
+              </div>
             </div>
-          </div>
+          </router-link>
 
-          <div class="card">
-            <div class="card-content">
-              <p class="page-name">Medications</p>
+          <router-link to="Medications" append class="card-wrapper">
+            <div class="card">
+              <div class="card-content">
+                <p class="page-name">Medications</p>
+              </div>
             </div>
-          </div>
+          </router-link>
 
-          <div class="card">
-            <div class="card-content">
-              <p class="page-name">Immunisation and Infection</p>
+          <router-link to="Immunisation and Infection" append class="card-wrapper">
+            <div class="card">
+              <div class="card-content">
+                <p class="page-name">Immunisation and Infection</p>
+              </div>
             </div>
-          </div>
+          </router-link>
         </div>
       </div>
     </section>
@@ -35,16 +43,32 @@
 </template>
 
 <style lang="scss" scoped>
+@import "@/styles";
+
+#root {
+  height: 100%;
+  background: #fefeff;
+}
+
 .pages-list {
   margin-top: 50px;
 }
 
+.card-wrapper {
+  display: block;
+  margin-bottom: 15px;
+}
+
 .card {
-  margin-bottom: 20px;
+  transition: background-color 0.2s;
 
   .page-name {
     font-size: 18px;
     font-weight: bold;
+  }
+
+  &:hover {
+    background-color: #f8f8f8;
   }
 }
 </style>
