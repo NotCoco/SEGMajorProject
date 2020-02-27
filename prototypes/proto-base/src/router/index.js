@@ -9,7 +9,9 @@ import Nutrition from '../views/demo-pages/Nutrition.vue'
 import Medications from '../views/demo-pages/Medications.vue'
 
 import AdminLayout from '../views/AdminLayout.vue'
+import AdminDashboard from '../views/AdminDashboard.vue'
 import AdminAllPages from '../views/AdminAllPages.vue'
+import AdminEditPage from '../views/AdminEditPage.vue'
 import AdminDrugChart from '../views/AdminDrugChart.vue'
 
 
@@ -45,8 +47,16 @@ const routes = [
     component: AdminLayout,
     children: [
       {
+        path: '',
+        component: AdminDashboard
+      },
+      {
         path: 'pages',
         component: AdminAllPages
+      },
+      {
+        path: 'pages/:id',
+        component: AdminEditPage
       },
       {
         path: 'drug-chart',
