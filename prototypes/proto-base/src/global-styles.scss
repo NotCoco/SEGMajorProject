@@ -63,3 +63,26 @@
 .fade-enter {
   transform: translateY(-12px);
 }
+
+
+// RICH TEXT EDITOR STYLES
+div.ProseMirror[contenteditable=true] {
+  outline: none; // prevent outline from showing in RTE
+}
+
+.fullheight-editor {
+  height: 100%;
+  .ProseMirror {
+    height: 100%;
+  }
+}
+
+// RTE Placeholder
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-empty-text);
+  float: left;
+  color: #aaa;
+  pointer-events: none;
+  height: 0;
+  font-style: italic;
+}
