@@ -10,7 +10,23 @@ info:
     url: ""
     name: ""
 tags:
+  - name: sites
+    description: Create, retrieve, update and delete sites and their pages
 paths:
+  /sites:
+    get:
+      tags:
+      - sites
+      summary: Get a list of all sites
+      produces:
+      - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/SiteDescription"
 definitions:
   SiteDescription:
     type: object
