@@ -116,7 +116,7 @@ paths:
     parameters:
     - name: "siteSlug"
       in: "path"
-      description: "Slug of site that page to update belongs to"
+      description: "Slug of site that page belongs to"
       required: true
       type: "string"
     - name: "pageSlug"
@@ -124,6 +124,17 @@ paths:
       description: "Slug of page to update"
       required: true
       type: "string"
+    get:
+      tags:
+      - sites
+      summary: Get a page
+      produces:
+      - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Page"
     put:
       summary: Update an existing page
       consumes:
