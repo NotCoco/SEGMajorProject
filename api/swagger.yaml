@@ -10,8 +10,10 @@ info:
     url: ""
     name: ""
 tags:
-  - name: sites
-    description: Create, retrieve, update and delete sites and their pages
+- name: sites
+  description: Create, retrieve, update and delete sites and their pages
+- name: images
+  description: Image uploading and management
 paths:
   /sites:
     get:
@@ -142,6 +144,28 @@ paths:
       - ApiKeyHeader: []
       tags:
         - sites
+  /images:
+    post:
+      tags:
+      - images
+      summary: Add a new image
+      consumes:
+      - multipart/form-data
+      produces:
+      - application/json
+      parameters:
+      - in: formData
+        name: image
+        description: Image content
+        required: true
+        type: file
+      responses:
+        201:
+          description: Created
+          schema:
+            $ref: '#/definitions/Image'
+      security:
+      - ApiKeyHeader: []
 securityDefinitions:
   ApiKeyHeader:
     type: apiKey
@@ -187,6 +211,12 @@ definitions:
         type: string
       published:
         type: boolean
+  Image:
+    type: object
+    properties:
+      imageUrl:
+        type: string
+        example: https://example.com/images/202002281.png
 # Added by API Auto Mocking Plugin
 host: virtserver.swaggerhub.com
 basePath: /CallumWatkins/KCH-PLS/1.0.0
