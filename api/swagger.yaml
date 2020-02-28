@@ -1,0 +1,19 @@
+swagger: '2.0'
+info:
+  version: 1.0.0
+  title: King's College Hospital - Paediatric Liver Service
+  contact:
+    url: ""
+    email: ""
+  description: KCH Paediatric Liver Service website API.
+  license:
+    url: ""
+    name: ""
+tags:
+paths:
+definitions:
+# Added by API Auto Mocking Plugin
+host: virtserver.swaggerhub.com
+basePath: /CallumWatkins/KCH-PLS/1.0.0
+schemes:
+ - https
