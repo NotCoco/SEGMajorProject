@@ -12,6 +12,45 @@ info:
 tags:
 paths:
 definitions:
+  SiteDescription:
+    type: object
+    properties:
+      slug:
+        type: string
+        example: biliary-atresia
+      name:
+        type: string
+        example: Biliary Atresia
+      description:
+        type: string
+        example: A rare disease of the liver and bile ducts that occurs in infants.
+      published:
+        type: boolean
+  Site:
+    allOf:
+    - $ref: '#/definitions/SiteDescription'
+    - type: object
+      properties:
+        pages:
+          type: array
+          items:
+            $ref: '#/definitions/Page'
+  Page:
+    type: object
+    properties:
+      slug:
+        type: string
+        example: introduction
+      index:
+        type: integer
+        example: 0
+      title:
+        type: string
+        example: Introduction
+      content:
+        type: string
+      published:
+        type: boolean
 # Added by API Auto Mocking Plugin
 host: virtserver.swaggerhub.com
 basePath: /CallumWatkins/KCH-PLS/1.0.0
