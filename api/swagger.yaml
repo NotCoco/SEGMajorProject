@@ -3,12 +3,12 @@ info:
   version: 1.0.0
   title: King's College Hospital - Paediatric Liver Service
   contact:
-    url: ""
-    email: ""
+    url: ''
+    email: ''
   description: KCH Paediatric Liver Service website API.
   license:
-    url: ""
-    name: ""
+    url: ''
+    name: ''
 tags:
 - name: sites
   description: Create, retrieve, update and delete sites and their pages
@@ -26,9 +26,9 @@ paths:
         200:
           description: OK
           schema:
-            type: "array"
+            type: array
             items:
-              $ref: "#/definitions/SiteDescription"
+              $ref: '#/definitions/SiteDescription'
     post:
       tags:
       - sites
@@ -49,11 +49,11 @@ paths:
       - ApiKeyHeader: []
   /sites/{siteSlug}:
     parameters:
-    - name: "siteSlug"
-      in: "path"
-      description: "Slug of site"
+    - name: siteSlug
+      in: path
+      description: Site slug
       required: true
-      type: "string"
+      type: string
     get:
       tags:
       - sites
@@ -64,7 +64,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: "#/definitions/Site"
+            $ref: '#/definitions/Site'
     put:
       summary: Update an existing site
       consumes:
@@ -87,11 +87,11 @@ paths:
         - sites
   /sites/{siteSlug}/pages:
     parameters:
-    - name: "siteSlug"
-      in: "path"
-      description: "Slug of site to add a page to"
+    - name: siteSlug
+      in: path
+      description: Site slug
       required: true
-      type: "string"
+      type: string
     post:
       tags:
       - sites
@@ -114,16 +114,16 @@ paths:
       - ApiKeyHeader: []
   /sites/{siteSlug}/pages/{pageSlug}:
     parameters:
-    - name: "siteSlug"
-      in: "path"
-      description: "Slug of site that page belongs to"
+    - name: siteSlug
+      in: path
+      description: Site slug
       required: true
-      type: "string"
-    - name: "pageSlug"
-      in: "path"
-      description: "Slug of page to update"
+      type: string
+    - name: pageSlug
+      in: path
+      description: Page slug
       required: true
-      type: "string"
+      type: string
     get:
       tags:
       - sites
@@ -134,7 +134,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: "#/definitions/Page"
+            $ref: '#/definitions/Page'
     put:
       summary: Update an existing page
       consumes:
@@ -157,11 +157,11 @@ paths:
         - sites
   /sites/{siteSlug}/page-indices:
     parameters:
-    - name: "siteSlug"
-      in: "path"
-      description: "Slug of site that pages to update belong to"
+    - name: siteSlug
+      in: path
+      description: Site slug
       required: true
-      type: "string"
+      type: string
     patch:
       tags:
       - sites
