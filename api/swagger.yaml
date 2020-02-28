@@ -147,7 +147,7 @@ paths:
         description: Site object to be updated
         required: true
         schema:
-          $ref: '#/definitions/SiteDescription'
+          $ref: '#/definitions/Page'
       responses:
         204:
           description: No content
@@ -155,6 +155,33 @@ paths:
       - ApiKeyHeader: []
       tags:
         - sites
+  /sites/{siteSlug}/page-indices:
+    parameters:
+    - name: "siteSlug"
+      in: "path"
+      description: "Slug of site that pages to update belong to"
+      required: true
+      type: "string"
+    patch:
+      tags:
+      - sites
+      summary: Alter page indices for all pages in a site
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Array of sites and their indices
+        required: true
+        schema:
+          type: array
+          items:
+            $ref: '#/definitions/PageIndex'
+      responses:
+        204:
+          description: No content
+      security:
+      - ApiKeyHeader: []
   /images:
     post:
       tags:
@@ -207,6 +234,18 @@ definitions:
           items:
             $ref: '#/definitions/Page'
   Page:
+    allOf:
+    - $ref: '#/definitions/PageIndex'
+    - type: object
+      properties:
+        title:
+          type: string
+          example: Introduction
+        content:
+          type: string
+        published:
+          type: boolean
+  PageIndex:
     type: object
     properties:
       slug:
@@ -215,13 +254,6 @@ definitions:
       index:
         type: integer
         example: 0
-      title:
-        type: string
-        example: Introduction
-      content:
-        type: string
-      published:
-        type: boolean
   Image:
     type: object
     properties:
