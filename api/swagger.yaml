@@ -27,6 +27,121 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/SiteDescription"
+    post:
+      tags:
+      - sites
+      summary: Add a new site
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Site object to be added
+        required: true
+        schema:
+          $ref: '#/definitions/SiteDescription'
+      responses:
+        201:
+          description: Created
+      security:
+      - ApiKeyHeader: []
+  /sites/{siteSlug}:
+    parameters:
+    - name: "siteSlug"
+      in: "path"
+      description: "Slug of site"
+      required: true
+      type: "string"
+    get:
+      tags:
+      - sites
+      summary: Get a site and all of its pages
+      produces:
+      - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Site"
+    put:
+      summary: Update an existing site
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Site object to be updated
+        required: true
+        schema:
+          $ref: '#/definitions/SiteDescription'
+      responses:
+        204:
+          description: No content
+      security:
+      - ApiKeyHeader: []
+      tags:
+        - sites
+  /sites/{siteSlug}/pages:
+    parameters:
+    - name: "siteSlug"
+      in: "path"
+      description: "Slug of site to add a page to"
+      required: true
+      type: "string"
+    post:
+      tags:
+      - sites
+      summary: Add a new page
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Site object to be added
+        required: true
+        schema:
+          $ref: '#/definitions/Page'
+      responses:
+        201:
+          description: Created
+      security:
+      - ApiKeyHeader: []
+  /sites/{siteSlug}/pages/{pageSlug}:
+    parameters:
+    - name: "siteSlug"
+      in: "path"
+      description: "Slug of site that page to update belongs to"
+      required: true
+      type: "string"
+    - name: "pageSlug"
+      in: "path"
+      description: "Slug of page to update"
+      required: true
+      type: "string"
+    put:
+      summary: Update an existing page
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Site object to be updated
+        required: true
+        schema:
+          $ref: '#/definitions/SiteDescription'
+      responses:
+        204:
+          description: No content
+      security:
+      - ApiKeyHeader: []
+      tags:
+        - sites
 securityDefinitions:
   ApiKeyHeader:
     type: apiKey
