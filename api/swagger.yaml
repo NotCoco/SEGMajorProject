@@ -27,6 +27,11 @@ paths:
             type: "array"
             items:
               $ref: "#/definitions/SiteDescription"
+securityDefinitions:
+  ApiKeyHeader:
+    type: apiKey
+    in: header
+    name: X-API-Key
 definitions:
   SiteDescription:
     type: object
