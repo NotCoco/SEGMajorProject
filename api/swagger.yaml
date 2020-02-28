@@ -84,6 +84,15 @@ paths:
       security:
       - ApiKeyHeader: []
       tags:
+      - sites
+    delete:
+      summary: Delete an existing site
+      responses:
+        204:
+          description: No content
+      security:
+      - ApiKeyHeader: []
+      tags:
         - sites
   /sites/{siteSlug}/pages:
     parameters:
@@ -154,7 +163,16 @@ paths:
       security:
       - ApiKeyHeader: []
       tags:
-        - sites
+      - sites
+    delete:
+      summary: Delete an existing page
+      responses:
+        204:
+          description: No content
+      security:
+      - ApiKeyHeader: []
+      tags:
+      - sites
   /sites/{siteSlug}/page-indices:
     parameters:
     - name: siteSlug
@@ -202,6 +220,22 @@ paths:
           description: Created
           schema:
             $ref: '#/definitions/Image'
+      security:
+      - ApiKeyHeader: []
+  /images/{imageUrl}:
+    parameters:
+    - name: imageUrl
+      in: path
+      description: Image URL
+      required: true
+      type: string
+    delete:
+      tags:
+      - images
+      summary: Delete an existing image
+      responses:
+        204:
+          description: No content
       security:
       - ApiKeyHeader: []
 securityDefinitions:
