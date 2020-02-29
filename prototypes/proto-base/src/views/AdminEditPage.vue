@@ -19,7 +19,7 @@
           </ul>
         </nav>
 
-        <h1 class="title">{{ $route.params.id }}</h1>
+        <input type="text" class="input title" v-bind:value="$route.params.id" placeholder="Enter page title here...">
 
         <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
           <div class="rich-text-editor-menu">
