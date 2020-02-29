@@ -19,7 +19,12 @@
           </ul>
         </nav>
 
-        <input type="text" class="input title" v-bind:value="$route.params.id" placeholder="Enter page title here...">
+        <input
+          type="text"
+          class="input title"
+          v-bind:value="$route.params.id"
+          placeholder="Enter page title here..."
+        />
 
         <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
           <div class="rich-text-editor-menu">
@@ -123,6 +128,12 @@
           </div>
         </editor-menu-bar>
         <editor-content class="content fullheight-editor" :editor="editor" />
+
+        <div class="buttons" style="justify-content: end">
+          <button class="button is-light">Cancel</button>
+          <button class="button is-danger">Delete</button>
+          <button class="button is-success">Save</button>
+        </div>
       </div>
     </section>
   </div>
@@ -215,7 +226,8 @@ export default {
             notAfter: ["paragraph"]
           })
         ]
-      })
+      }),
+      newPage: Boolean
     };
   },
   beforeDestroy() {
