@@ -39,6 +39,10 @@
         </div>
       </div>
     </section>
+
+    <button class="button is-primary new-page-button">
+      <i class="material-icons" style="font-size: 48px;">add</i>
+    </button>
   </div>
 </template>
 
@@ -48,6 +52,7 @@
 #root {
   height: 100%;
   background: #fefeff;
+  position: relative;
 }
 
 .pages-list {
@@ -70,6 +75,14 @@
   &:hover {
     background-color: #f8f8f8;
   }
+}
+
+.new-page-button {
+  position: absolute;
+  bottom: 47px;
+  right: 47px;
+  height: 74px;
+  width: 74px;
 }
 </style>
 
