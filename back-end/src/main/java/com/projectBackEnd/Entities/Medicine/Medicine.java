@@ -1,4 +1,6 @@
-package main.java.com.projectBackEnd;
+package main.java.com.projectBackEnd.Entities.Medicine;
+
+import main.java.com.projectBackEnd.TableEntity;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -6,7 +8,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.io.Serializable;
 
 @Entity
 @Table(name = Medicine.TABLENAME)
@@ -16,7 +17,7 @@ import java.io.Serializable;
 public class Medicine implements TableEntity{
 
     // Table columns
-    public static final String TABLENAME = "Medicine";
+    public static final String TABLENAME = "Medicines";
     private static final String ID = "ID";
     private static final String NAME = "Name";
     private static final String TYPE = "Type";
@@ -38,6 +39,10 @@ public class Medicine implements TableEntity{
     /**
      * Constructors
      */
+
+    public Medicine() {
+    }
+
     public Medicine(String name, String type) {
         this.name = name;
         this.type = type;
