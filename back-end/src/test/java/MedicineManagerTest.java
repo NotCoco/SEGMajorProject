@@ -33,13 +33,12 @@ public class MedicineManagerTest extends MedicineManager {
         deleteAll();
     }
 
-//    @Test
-//    public void testGetByPrimaryKey() {
-//        fillDatabase();
-//        Medicine medicine3 = (Medicine) (getByPrimaryKey("3"));
-//        assertTrue(medicine3.equals(getListOfMedicines().get(3)));
-//    }
-//
+    @Test
+    public void testFillingAndGetting() {
+        fillDatabase();
+        assertEquals(getAllMedicines().size(), 10);
+    }
+
     // Liquid, Tablet, Capsule, Injection, Topical, Suppositories, Drops, Inhalers
 
     private static ArrayList<Medicine> getListOfMedicines() {
