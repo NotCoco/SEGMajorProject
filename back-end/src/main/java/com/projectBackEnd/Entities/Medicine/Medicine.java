@@ -39,6 +39,10 @@ public class Medicine implements TableEntity{
     /**
      * Constructors
      */
+
+    public Medicine() {
+    }
+
     public Medicine(String name, String type) {
         this.name = name;
         this.type = type;
