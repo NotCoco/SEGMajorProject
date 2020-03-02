@@ -9,7 +9,8 @@ datasources:
 jpa:
   default:
     packages-to-scan:
-      - 'java.com.projectBackEnd'
+      - 'java.com.projectBackEnd.Entities.Medicine'
+      - 'java.com.projectBackEnd.Entities.Page'
     properties:
       hibernate:
         hbm2ddl:
