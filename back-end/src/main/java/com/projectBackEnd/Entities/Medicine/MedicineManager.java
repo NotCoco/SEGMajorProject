@@ -1,13 +1,15 @@
-package main.java.com.projectBackEnd;
+package main.java.com.projectBackEnd.Entities.Medicine;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import main.java.com.projectBackEnd.EntityManager;
+import main.java.com.projectBackEnd.HibernateUtility;
 
 import org.hibernate.*;
 import org.hibernate.cfg.Configuration;
 
 
 // TODO (Jeanne) : commenting
-// TODO (Jeanne) : implement getByType
-
 
 public class MedicineManager extends EntityManager implements MedicineManagerInterface {
 
@@ -17,7 +19,7 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
         HibernateUtility.addAnnotation(Medicine.class);
     }
 
-    public Medicine createAndSaveMedicine(String name, String type) {
+    public Medicine addMedicine(String name, String type) {
         Medicine newMedicine = new Medicine(name, type);
         super.insertTuple(newMedicine);
         return newMedicine;
@@ -39,31 +41,12 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
         return super.getAll();
     }
 
-//    public List<Medicine> getAllByType() {
-//        // code
-//    }
-//
-//    public List<Medicine> getAllByName() {
-//        // code
-//    }
-//
-//    public void deleteByID() {
-//        // code
-//    }
-//
-//    public Medicine updateNameByID(Medicine med){
-//        // code
-//    }
-//
-//    public Medicine updateTypeByID(Medicine med){
-//        // code
-//    }
+    public List<Medicine> getAllMedicinesByType(String type) {
+        return getAllMedicines().stream().filter(m -> m.getType().equals(type)).collect(Collectors.toList());
+    }
 
-
-    // deleteByID
-    // updateTypeByID
-    // updateNameByID
-    // getAllMedicineByType
-    // getAllMedicineByName
+    public List<Medicine> getAllMedicinesByName(String name) {
+        return getAllMedicines().stream().filter(m -> m.getName().equals(name)).collect(Collectors.toList());
+    }
 
 }
