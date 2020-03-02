@@ -3,11 +3,13 @@ apply plugin: 'application'
 apply plugin: 'com.adarshr.test-logger'
 mainClassName = 'main.java.com.projectBackEnd.BackEndMain'
 dependencies {
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.hamcrest:hamcrest-all:1.3'
-    testCompile group: 'org.hibernate', name: 'hibernate-testing', version: '5.4.12.Final'
-    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.4.11.Final'
-    compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.19'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.hamcrest:hamcrest-all:1.3'
+    testImplementation group: 'org.hibernate', name: 'hibernate-testing', version: '5.4.12.Final'
+    implementation 'io.micronaut.configuration:micronaut-hibernate-jpa:1.3.0'
+    implementation 'io.micronaut.configuration:micronaut-jdbc-hikari:1.3.0'
+    implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.4.11.Final'
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.19'
 }
 repositories {
     mavenCentral()
