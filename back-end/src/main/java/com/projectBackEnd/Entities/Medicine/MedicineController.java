@@ -27,6 +27,15 @@ public class MedicineController {
         return medicineManager.getAllMedicines();
     }
 
+    @Post("/")
+    public HttpResponse<Medicine> add(@Body @Valid MedicineAddCommand command) {
+        Medicine med = medicineManager.addMedicine(command.getName(), command.getType());
+
+        return HttpResponse
+                .created(med)
+                .headers(headers -> headers.location(location(med.getPrimaryKey())));
+    }
+
     @Put("/")
     public HttpResponse update(@Body @Valid MedicineUpdateCommand command) {
         Medicine medObject = new Medicine(command.getId(), command.getName(), command.getType());
