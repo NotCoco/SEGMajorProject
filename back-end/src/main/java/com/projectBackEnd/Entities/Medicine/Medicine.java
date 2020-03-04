@@ -40,13 +40,22 @@ public class Medicine implements TableEntity{
      * Constructors
      */
 
+    //Empty constructor
     public Medicine() {
+    }
+
+    // Constructor taking id
+    public Medicine(Integer id, String name, String type) {
+        this.primaryKey = id;
+        this.name = name;
+        this.type = type;
     }
 
     public Medicine(String name, String type) {
         this.name = name;
         this.type = type;
     }
+
 
     // Getters and setters; ID cannot be changed
     public Integer getPrimaryKey() {
