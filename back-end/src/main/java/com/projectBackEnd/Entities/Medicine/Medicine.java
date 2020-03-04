@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import javax.validation.constraints.NotNull;
+
 @Entity
 @Table(name = Medicine.TABLENAME)
 
@@ -27,10 +29,12 @@ public class Medicine implements TableEntity{
     @Column(name = ID, nullable = false)
     private Integer primaryKey;
 
+    @NotNull
     @Column(name = NAME, nullable = false)
     @Type(type = "text")
     private String name;
 
+    @NotNull
     @Column(name = TYPE)
     @Type(type="text")
     private String type;
