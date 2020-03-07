@@ -24,14 +24,14 @@ public class UserManagerTest{
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
 		userManager = UserManager.getUserManager();
-        connectionLeakUtil = new ConnectionLeakUtil();
+        //connectionLeakUtil = new ConnectionLeakUtil();
 
     }
 
     @AfterClass
     public static void assertNoLeaks() {
         HibernateUtility.shutdown();
-        connectionLeakUtil.assertNoLeaks();
+        //connectionLeakUtil.assertNoLeaks();
     }
 
     @After

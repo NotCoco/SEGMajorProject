@@ -19,13 +19,13 @@ public class MedicineManagerTest extends MedicineManager {
     @BeforeClass
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
-        connectionLeakUtil = new ConnectionLeakUtil();
+        //connectionLeakUtil = new ConnectionLeakUtil();
     }
 
     @AfterClass
     public static void assertNoLeaks() {
         HibernateUtility.shutdown();
-        connectionLeakUtil.assertNoLeaks();
+        //connectionLeakUtil.assertNoLeaks();
     }
 
     @Before

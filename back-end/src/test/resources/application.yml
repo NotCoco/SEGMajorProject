@@ -10,9 +10,19 @@ jpa:
   default:
     packages-to-scan:
       - 'java.com.projectBackEnd.Entities.Medicine'
-      - 'java.com.projectBackEnd.Entities.Page'
     properties:
       hibernate:
         hbm2ddl:
           auto: update
         show_sql: true
+
+micronaut:
+  server:
+    maxRequestSize: 1MB
+    host: localhost
+    netty:
+      maxHeaderSize: 500KB
+      worker:
+        threads: 8
+      childOptions:
+        autoRead: true

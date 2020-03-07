@@ -2,6 +2,7 @@ package main.java.com.projectBackEnd.Entities.Medicine;
 
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
+import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Delete;
@@ -22,9 +23,14 @@ public class MedicineController {
         this.medicineManager = medicineManager;
     }
 
-    @Get("/list")
+    @Get(value = "/list", produces = MediaType.TEXT_JSON)
     public List<Medicine> list() {
         return medicineManager.getAllMedicines();
+    }
+
+    @Get("/")
+    public String index(){
+        return "Hi test string";
     }
 
     @Post("/")
