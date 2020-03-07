@@ -11,11 +11,10 @@ import javax.persistence.Table;
 
 import javax.validation.constraints.NotNull;
 
-@Entity
-@Table(name = Medicine.TABLENAME)
-
 // TODO (Jeanne): Commenting
 
+@Entity
+@Table(name = Medicine.TABLENAME)
 public class Medicine implements TableEntity{
 
     // Table columns

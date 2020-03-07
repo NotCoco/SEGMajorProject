@@ -2,14 +2,14 @@ datasources:
   default:
     url: ${JDBC_URL:`jdbc:mysql://127.0.0.1:3306/testunittest`}
     username: ${JDBC_USER:root}
-    password: ${JDBC_PASSWORD:""}
+    password: ${JDBC_PASSWORD:}
     driverClassName: ${JDBC_DRIVER:com.mysql.jdbc.Driver}
     dialect: org.hibernate.dialect.MySQL8Dialect
 
 jpa:
   default:
     packages-to-scan:
-      - 'java.com.projectBackEnd.Entities.Medicine'
+      - 'com.projectBackEnd.Entities.Medicine'
     properties:
       hibernate:
         hbm2ddl:
