@@ -17,30 +17,35 @@ import java.util.List;
 @Controller("/medicine")
 public class MedicineController {
 
-//    protected final MedicineManagerInterface medicineManager;
-//
-//    MedicineController(MedicineManagerInterface medicineManager){
-//        this.medicineManager = medicineManager;
-//    }
-//
+    protected final MedicineManagerInterface medicineManager = new MedicineManager();
+
+    MedicineController(){
+        //this.medicineManager = medicineManager;
+    }
+
 //    @Get(value = "/list", produces = MediaType.TEXT_JSON)
 //    public List<Medicine> list() {
 //        return medicineManager.getAllMedicines();
 //    }
+
+    @Get(value = "/{id}", produces = MediaType.TEXT_JSON)
+    public Medicine list(int id) {
+        return medicineManager.getByPrimaryKey(id);
+    }
 
     @Get("/")
     public String index(){
         return "Hi test string";
     }
 
-//    @Post("/")
-//    public HttpResponse<Medicine> add(@Body @Valid MedicineAddCommand command) {
-//        Medicine med = medicineManager.addMedicine(command.getName(), command.getType());
-//
-//        return HttpResponse
-//                .created(med)
-//                .headers(headers -> headers.location(location(med.getPrimaryKey())));
-//    }
+    @Post("/")
+    public HttpResponse<Medicine> add(MedicineAddCommand command) {
+        Medicine med = medicineManager.addMedicine(command.getName(), command.getType());
+
+        return HttpResponse
+                .created(med)
+                .headers(headers -> headers.location(location(med.getPrimaryKey())));
+    }
 //
 //    @Put("/")
 //    public HttpResponse update(@Body @Valid MedicineUpdateCommand command) {
@@ -52,12 +57,12 @@ public class MedicineController {
 //                .header(HttpHeaders.LOCATION, location(command.getId()).getPath());
 //    }
 //
-//    protected URI location(int id) {
-//        return URI.create("/medicine/" + id);
-//    }
-//
-//    protected URI location(Medicine medicine) {
-//        return location(medicine.getPrimaryKey());
-//    }
+    protected URI location(int id) {
+        return URI.create("/medicine/" + id);
+    }
+
+    protected URI location(Medicine medicine) {
+        return location(medicine.getPrimaryKey());
+    }
 
 }
