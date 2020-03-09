@@ -1,5 +1,4 @@
 package main.java.com.projectBackEnd.Entities.Medicine;
-import io.micronaut.core.annotation.Introspected;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -12,11 +11,11 @@ public class MedicineAddCommand {
 
     private String type;
 
-    MedicineAddCommand(){
+    public MedicineAddCommand(){
 
     }
 
-    MedicineAddCommand(String name, String type){
+    public MedicineAddCommand(String name, String type){
         this.name = name;
         this.type = type;
     }

@@ -3,12 +3,7 @@ package main.java.com.projectBackEnd.Entities.Medicine;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
-import io.micronaut.http.annotation.Body;
-import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Delete;
-import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.Post;
-import io.micronaut.http.annotation.Put;
+import io.micronaut.http.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -35,28 +30,29 @@ public class MedicineController {
 
     @Get("/")
     public String index(){
-        return "Hi test string";
+        return "This is our medicine index page";
     }
 
+
     @Post("/")
-    public HttpResponse<Medicine> add(MedicineAddCommand command) {
+    public HttpResponse<Medicine> add(@Body MedicineAddCommand command) {
         Medicine med = medicineManager.addMedicine(command.getName(), command.getType());
 
         return HttpResponse
                 .created(med)
                 .headers(headers -> headers.location(location(med.getPrimaryKey())));
     }
-//
-//    @Put("/")
-//    public HttpResponse update(@Body @Valid MedicineUpdateCommand command) {
-//        Medicine medObject = new Medicine(command.getId(), command.getName(), command.getType());
-//        medicineManager.update(medObject);
-//
-//        return HttpResponse
-//                .noContent()
-//                .header(HttpHeaders.LOCATION, location(command.getId()).getPath());
-//    }
-//
+
+    @Put("/")
+    public HttpResponse update(@Body MedicineUpdateCommand command) {
+        Medicine medObject = new Medicine(command.getId(), command.getName(), command.getType());
+        medicineManager.update(medObject);
+
+        return HttpResponse
+                .noContent()
+                .header(HttpHeaders.LOCATION, location(command.getId()).getPath());
+    }
+
     protected URI location(int id) {
         return URI.create("/medicine/" + id);
     }
