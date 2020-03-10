@@ -46,7 +46,31 @@ public class PageManagerTest extends PageManager {
                "");
        assertEquals(page.getTitle(), "Biliary Atresia"); //TODO Hamcrest these.
     }
-
+    @Test
+    public void testGetNonexistentPrimaryKey() {
+        assertNull(getByPrimaryKey(""));
+    }
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeleteNonexistentPrimaryKey() {
+        delete("");
+    }
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeleteNotInDBObject() {
+        Page pageNotInTable = new Page("notaddedtotable", 0, "notaddedtoTable", "");
+        delete(pageNotInTable);
+    }
+    @Test(expected = PersistenceException.class)
+    public void testUpdateWithBadData() {
+        Page badPage = new Page("Slug1", null, null, null);
+        fillDatabase();
+        update(badPage);
+    }
+    @Test
+    public void testDeleteByPrimaryKey() {
+        fillDatabase();
+        delete(getListOfPages().get(1).getPrimaryKey());
+        assertNull(getByPrimaryKey(getListOfPages().get(1).getPrimaryKey()));
+    }
     @Test
     public void testCreateAndSavePage() {
        addPage("biliary_atresia", 0, "Biliary Atresia", "" +

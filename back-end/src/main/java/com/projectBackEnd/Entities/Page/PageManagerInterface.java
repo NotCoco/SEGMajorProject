@@ -1,6 +1,7 @@
 package main.java.com.projectBackEnd.Entities.Page;
 
 
+import main.java.com.projectBackEnd.Entities.Page.Page;
 import main.java.com.projectBackEnd.TableEntity;
 
 import java.io.Serializable;

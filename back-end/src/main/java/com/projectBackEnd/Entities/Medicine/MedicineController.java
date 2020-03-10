@@ -43,6 +43,12 @@ public class MedicineController {
                 .headers(headers -> headers.location(location(med.getPrimaryKey())));
     }
 
+    @Delete("/{id}")
+    public HttpResponse delete(int id) {
+        medicineManager.delete(id);
+        return HttpResponse.noContent();
+    }
+
     @Put("/")
     public HttpResponse update(@Body MedicineUpdateCommand command) {
         Medicine medObject = new Medicine(command.getId(), command.getName(), command.getType());

@@ -28,13 +28,13 @@ public class Medicine implements TableEntity{
     @Column(name = ID, nullable = false)
     private Integer primaryKey;
 
-    @NotNull
+    //@NotNull
     @Column(name = NAME, nullable = false)
     @Type(type = "text")
     private String name;
 
-    @NotNull
-    @Column(name = TYPE)
+    //@NotNull
+    @Column(name = TYPE, nullable = false)
     @Type(type="text")
     private String type;
     // Liquid, Tablet, Capsule, Injection, Topical, Suppositories, Drops, Inhalers
