@@ -39,6 +39,24 @@ public class MedicineManagerTest extends MedicineManager {
         assertEquals(getAllMedicines().size(), 10);
     }
 
+    @Test
+    public void testDeleteAll() {
+        fillDatabase();
+        deleteAll();
+        assertEquals(getAllMedicines().size(), 0);
+    }
+
+    @Test
+    public void testDelete(){
+        fillDatabase();
+        delete(getListOfMedicines().get(1));
+        assertEquals(getAllMedicines().size(), getListOfMedicines().size()-1);
+        delete(getListOfMedicines().get(2));
+        assertEquals(getAllMedicines().size(), getListOfMedicines().size()-2);
+    }
+
+
+
     // Liquid, Tablet, Capsule, Injection, Topical, Suppositories, Drops, Inhalers
 
     private static ArrayList<Medicine> getListOfMedicines() {
