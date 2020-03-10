@@ -26,8 +26,8 @@ public class SessionManagerTest{
         //connectionLeakUtil.assertNoLeaks();
     }
 
-    @After
-    public void tearDown() {
+    @Before
+    public void setUp() {
 		((EntityManager)sessionManager).deleteAll();
     }
 

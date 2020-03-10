@@ -24,44 +24,46 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 		else
 			return new UserManager();
 	}
-	public void addUser(String username, String password) throws UsernameExistsException{
-		if(getAll().stream().filter(u->((User)u).getUsername().equals(username)).count() > 0)
-			throw new UsernameExistsException("username: " + username + "already exsists");
-		User user = new User(username,hash(password));
+	public void addUser(String email, String password) throws EmailExistsException,InvalidEmailException{
+		if(!isValid(email))
+			throw new InvalidEmailException("email: " + email + " is invalid");
+		if(getAll().stream().filter(u->((User)u).getEmail().equals(email)).count() > 0)
+			throw new EmailExistsException("email: " + email + " already exsists");
+		User user = new User(email,hash(password));
 		insertTuple(user);
 	}
-	public String verifyUser(String username,String password){
-		if(getAll().stream().filter(u->(((User)u).getUsername().equals(username) && ((User)u).getPassword().equals(hash(password)))).count() > 0){
-			return SessionManager.getSessionManager().getNewSession(username,TIMEOUT);
+	public String verifyUser(String email,String password){
+		if(getAll().stream().filter(u->(((User)u).getEmail().equals(email) && ((User)u).getPassword().equals(hash(password)))).count() > 0){
+			return SessionManager.getSessionManager().getNewSession(email,TIMEOUT);
 		}
 		return null;
 			
 	}
-	public void changePassword(String username, String newPassword) throws UserNotExistException{
+	public void changePassword(String email, String newPassword) throws UserNotExistException{
 		List<User> users = getAll();
 		User user = null;
 		for(User u:users){
-			if(u.getUsername().equals(username))
+			if(u.getEmail().equals(email))
 				user = u;
 		}
 		if(user == null)
-			throw new UserNotExistException("there is no user with username: " + username);
+			throw new UserNotExistException("there is no user with email: " + email);
 		user.setPassword(hash(newPassword));
 		update(user);
 		
 	}
-	public void deleteUser(String username) throws UserNotExistException{
+	public void deleteUser(String email) throws UserNotExistException{
 		List<User> users = getAll();
 		boolean found = false;
 		for(User u: users){
-			if(u.getUsername().equals(username)){
+			if(u.getEmail().equals(email)){
 				delete(u);
 				found = true;
 				break;
 			}
 		}
 		if(!found)
-			throw new UserNotExistException("there is no user with username: " + username);
+			throw new UserNotExistException("there is no user with email: " + email);
 	}
 	private String hash(String in){
 		try{
@@ -75,6 +77,9 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 
 		}
 		
+	}
+	private boolean isValid(String email){
+		return true;
 	}
 
 
