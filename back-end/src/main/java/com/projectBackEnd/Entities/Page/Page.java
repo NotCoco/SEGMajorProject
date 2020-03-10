@@ -57,7 +57,7 @@ public class Page implements TableEntity { //TODO extends Entity, for easier Jso
 
     //GETTERS AND SETTERS:
 
-    public Serializable getPrimaryKey() {
+    public String getPrimaryKey() {
         return primaryKey;
     }
     public Integer getIndex() {
