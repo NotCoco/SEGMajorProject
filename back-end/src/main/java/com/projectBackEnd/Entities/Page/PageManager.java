@@ -1,5 +1,6 @@
 package main.java.com.projectBackEnd.Entities.Page;
 
+import main.java.com.projectBackEnd.Entities.Page.Page;
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
 
@@ -13,7 +14,7 @@ import java.util.List;
  * //https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
 
-public class PageManager extends EntityManager implements PageManagerInterface {
+public class PageManager extends EntityManager implements main.java.com.projectBackEnd.Entities.Page.PageManagerInterface {
     public PageManager() {
         super();
         setSubclass(Page.class);

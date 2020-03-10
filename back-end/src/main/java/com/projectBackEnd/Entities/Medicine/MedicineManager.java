@@ -1,8 +1,7 @@
 package main.java.com.projectBackEnd.Entities.Medicine;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import io.micronaut.spring.tx.annotation.Transactional;
+import main.java.com.projectBackEnd.Entities.Medicine.MedicineManagerInterface;
 
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
