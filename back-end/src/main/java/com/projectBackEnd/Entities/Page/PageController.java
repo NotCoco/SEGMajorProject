@@ -10,7 +10,6 @@ import java.net.URI;
 
 @Controller("/page")
 public class PageController {
-    //TODO
     protected final PageManagerInterface pageManager = new PageManager();
     PageController() {}
     @Get(value = "/{slug}", produces = MediaType.TEXT_JSON)
@@ -24,21 +23,28 @@ public class PageController {
     }
 
     @Post("/")
-    public HttpResponse<Page> add(@Body PageCommand command) {
-        Page page = pageManager.addPage(command.getSlug(), command.getIndex(), command.getTitle(), command.getContent());
+    public HttpResponse<Page> add(@Body Page command) {
+        Page page = pageManager.addPage(command.getPrimaryKey(), command.getIndex(), command.getTitle(), command.getContent());
         return HttpResponse
                 .created(page)
                 .headers(headers -> headers.location(location(page.getPrimaryKey())));
     }
 
     @Put("/")
-    public HttpResponse update(@Body PageCommand command) {
-        Page page = new Page(command.getSlug(), command.getIndex(), command.getTitle(), command.getContent());
+    public HttpResponse update(@Body Page command) {
+        Page page = new Page(command.getPrimaryKey(), command.getIndex(), command.getTitle(), command.getContent());
         pageManager.update(page);
         return HttpResponse
                 .noContent()
-                .header(HttpHeaders.LOCATION, location(command.getSlug()).getPath());
+                .header(HttpHeaders.LOCATION, location(command.getPrimaryKey()).getPath());
     }
+
+    @Delete("/{slug}")
+    public HttpResponse delete(String slug) {
+        pageManager.delete(slug);
+        return HttpResponse.noContent();
+    }
+
     protected URI location(String slug) {
         return URI.create("/page/" + slug);
     }
