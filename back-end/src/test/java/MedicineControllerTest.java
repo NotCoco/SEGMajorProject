@@ -60,8 +60,39 @@ public class MedicineControllerTest extends MedicineManager{
     }
 
     @Test
+    public void testDeleteAndGetMedicine(){
+        HttpRequest request = HttpRequest.POST("/medicine", new MedicineAddCommand("ShouldBeDeleted", "Liquid"));
+        HttpResponse response = client.toBlocking().exchange(request);
+        Long id = getEId(response);
+        // Asserting that we've added a medicine
+        assertEquals(HttpStatus.CREATED, response.getStatus());
+
+        request = HttpRequest.DELETE("/medicine/"+id);
+        response = client.toBlocking().exchange(request);
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.GET("/medicine/"+id));
+        });
+    }
+
+    @Test
+    public void testAddNullNameMedicine(){
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.POST("/medicine", new MedicineAddCommand("", "Liquid")));
+        });
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
+    }
+
+    @Test
+    public void testAddNullTypeMedicine(){
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.POST("/medicine", new MedicineAddCommand("TestMed", "")));
+        });
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
+    }
+
+    @Test
     public void testAddAndGetMedicine(){
-        HttpRequest request = HttpRequest.POST("/medicine", new MedicineAddCommand("Med1", "Liquid")); // <3>
+        HttpRequest request = HttpRequest.POST("/medicine", new MedicineAddCommand("Med1", "Liquid"));
         HttpResponse response = client.toBlocking().exchange(request);
         Long id = getEId(response);
 
