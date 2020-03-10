@@ -45,6 +45,22 @@ public class MedicineManagerTest extends MedicineManager {
         assertEquals(getAllMedicines().size(), 0);
     }
 
+    @Test
+    public void testDelete() {
+        fillDatabase();
+        delete(getAllMedicines().get(1)); //Testing object deletion
+        assertEquals(getAll().size(), getListOfMedicines().size()-1);
+        delete(getAllMedicines().get(1));
+        assertEquals(getAll().size(), getListOfMedicines().size()-2);
+    }
+
+    @Test
+    public void testDeleteByPK() {
+        fillDatabase();
+        delete(getAllMedicines().get(1).getPrimaryKey()); //Testing object deletion
+        assertEquals(getAll().size(), getListOfMedicines().size()-1);
+    }
+
 //    @Test
 //    public void testDelete(){
 //        fillDatabase();
