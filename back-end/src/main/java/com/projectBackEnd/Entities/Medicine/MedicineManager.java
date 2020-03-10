@@ -25,20 +25,23 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
         return newMedicine;
     }
 
+    @Override
     public Medicine update(Medicine med) { //TODO Session to become instance variable, for cleaner code
         return (Medicine) super.update(med);
     }
 
+    @Override
     public void delete(Medicine med) {
         super.delete(med);
     }
 
-    public Medicine getByPrimaryKey(Integer id) {
-        return (Medicine) super.getByPrimaryKey(id);
-    }
+//    @Override
+//    public Medicine getByPrimaryKey(int id) {
+//        return (Medicine) super.getByPrimaryKey(id);
+//    }
 
     public List<Medicine> getAllMedicines() {
-        return super.getAll();
+        return (List<Medicine>) super.getAll();
     }
 
     public List<Medicine> getAllMedicinesByType(String type) {

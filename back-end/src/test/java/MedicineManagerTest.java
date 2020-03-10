@@ -46,15 +46,21 @@ public class MedicineManagerTest extends MedicineManager {
         assertEquals(getAllMedicines().size(), 0);
     }
 
-    @Test
-    public void testDelete(){
-        fillDatabase();
-        delete(getListOfMedicines().get(1));
-        assertEquals(getAllMedicines().size(), getListOfMedicines().size()-1);
-        delete(getListOfMedicines().get(2));
-        assertEquals(getAllMedicines().size(), getListOfMedicines().size()-2);
-    }
+//    @Test
+//    public void testDelete(){
+//        fillDatabase();
+//        delete(getListOfMedicines().get(1));
+//        assertEquals(getAllMedicines().size(), getListOfMedicines().size()-1);
+//        delete(getListOfMedicines().get(2));
+//        assertEquals(getAllMedicines().size(), getListOfMedicines().size()-2);
+//    }
 
+//    @Test
+//    public void testDelete() {
+//        fillDatabase();
+//        delete(getListOfMedicines().get(5));
+//        assertEquals(getAll().size(), getListOfMedicines().size()-1);
+//    }
 
 
     // Liquid, Tablet, Capsule, Injection, Topical, Suppositories, Drops, Inhalers

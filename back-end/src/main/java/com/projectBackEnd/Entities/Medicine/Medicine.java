@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @Table(name = Medicine.TABLENAME)
@@ -22,10 +23,9 @@ public class Medicine implements TableEntity{
     private static final String NAME = "Name";
     private static final String TYPE = "Type";
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ID, nullable = false)
-    private Integer primaryKey;
+    private int primaryKey;
 
     @Column(name = NAME, nullable = false)
     @Type(type = "text")
@@ -49,7 +49,7 @@ public class Medicine implements TableEntity{
     }
 
     // Getters and setters; ID cannot be changed
-    public Integer getPrimaryKey() {
+    public Serializable getPrimaryKey() {
         return primaryKey;
     }
 
