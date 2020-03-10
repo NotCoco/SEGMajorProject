@@ -9,6 +9,12 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.math.BigInteger;
 
+import org.apache.commons.validator.routines.EmailValidator;
+
+
+
+
+
 public class UserManager extends EntityManager implements UserManagerInterface {
 	private static UserManagerInterface userManager;
 	private static final int TIMEOUT = 3600; //amount of time for which session will be valid
@@ -25,7 +31,7 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 			return new UserManager();
 	}
 	public void addUser(String email, String password) throws EmailExistsException,InvalidEmailException{
-		if(!isValid(email))
+		if(!EmailValidator.getInstance().isValid(email))
 			throw new InvalidEmailException("email: " + email + " is invalid");
 		if(getAll().stream().filter(u->((User)u).getEmail().equals(email)).count() > 0)
 			throw new EmailExistsException("email: " + email + " already exsists");
@@ -78,9 +84,7 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 		}
 		
 	}
-	private boolean isValid(String email){
-		return true;
-	}
+	
 
 
 }

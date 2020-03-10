@@ -47,7 +47,7 @@ public class HibernateUtility
     }
 
     public static SessionFactory getSessionFactory() {
-        if (sessionFactory != null) return sessionFactory;
+        if (sessionFactory != null && !sessionFactory.isClosed()) return sessionFactory;
         else {
             return buildSessionFactory();
         }

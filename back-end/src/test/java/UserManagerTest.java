@@ -55,7 +55,7 @@ public class UserManagerTest{
 	@Test(expected = InvalidEmailException.class)
 	public void testAddUserInvalidEmail2() throws InvalidEmailException{
 		try{
-			userManager.addUser("email@email","password5");
+			userManager.addUser("ema il@email.com","password5");
 		}
 		catch(EmailExistsException e){
 			fail();
