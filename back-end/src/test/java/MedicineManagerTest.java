@@ -1,12 +1,11 @@
 package test.java;
 
 import main.java.com.projectBackEnd.*;
-import main.java.com.projectBackEnd.Entities.Medicine.Medicine;
+import com.projectBackEnd.Entities.Medicine.Medicine;
 import main.java.com.projectBackEnd.Entities.Medicine.MedicineManager;
 
 import org.junit.*;
 
-import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;

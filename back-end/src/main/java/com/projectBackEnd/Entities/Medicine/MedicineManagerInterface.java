@@ -1,6 +1,8 @@
 package main.java.com.projectBackEnd.Entities.Medicine;
 
 
+import main.java.com.projectBackEnd.Entities.Medicine.Medicine;
+
 import java.util.List;
 
 //TODO (Jeanne) : Commenting

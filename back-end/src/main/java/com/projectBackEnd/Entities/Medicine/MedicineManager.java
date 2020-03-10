@@ -2,16 +2,14 @@ package main.java.com.projectBackEnd.Entities.Medicine;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import main.java.com.projectBackEnd.Entities.Medicine.Medicine;
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
-
-import org.hibernate.*;
-import org.hibernate.cfg.Configuration;
 
 
 // TODO (Jeanne) : commenting
 
-public class MedicineManager extends EntityManager implements MedicineManagerInterface {
+public class MedicineManager extends EntityManager implements main.java.com.projectBackEnd.Entities.Medicine.MedicineManagerInterface {
 
     public MedicineManager() {
         super();
