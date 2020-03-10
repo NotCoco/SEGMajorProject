@@ -1,7 +1,7 @@
 package test.java;
 
 import main.java.com.projectBackEnd.*;
-import com.projectBackEnd.Entities.Medicine.Medicine;
+import main.java.com.projectBackEnd.Entities.Medicine.Medicine;
 import main.java.com.projectBackEnd.Entities.Medicine.MedicineManager;
 
 import org.junit.*;
