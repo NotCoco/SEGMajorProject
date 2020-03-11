@@ -7,6 +7,11 @@ import main.java.com.projectBackEnd.Entities.Medicine.MedicineManager;
 import main.java.com.projectBackEnd.Entities.Medicine.MedicineManagerInterface;
 import org.junit.*;
 
+import javax.persistence.PersistenceException;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;
@@ -35,6 +40,29 @@ public class MedicineManagerTest {
         medicineManager.deleteAll();
     }
 
+
+    @Test
+    public void testCreateMedicine() {
+        Medicine med = new Medicine("Medicine for BA", "Injection");
+        assertEquals(med.getName(), "Medicine for BA");
+        assertEquals(med.getType(), "Injection");
+    }
+
+
+    @Test(expected = PersistenceException.class)
+    public void testUpdateWithIllegalValues() {
+        Medicine med = new Medicine( null, null);
+        fillDatabase();
+        medicineManager.update(med);
+    }
+
+
+    @Test
+    public void testCreateAndSaveMedicine() {
+        medicineManager.addMedicine("Medicine for BA ", "Topical");
+        assertEquals(medicineManager.getAllMedicines().size(), 1);
+    }
+
     @Test
     public void testFillingAndGetting() {
         fillDatabase();
@@ -49,6 +77,11 @@ public class MedicineManagerTest {
 //        System.out.println(med.getPrimaryKey());
 //        System.out.println(getAllMedicines().get(0).getPrimaryKey());
         assertTrue(med.equals(medicineManager.getAllMedicines().get(0)));
+    }
+
+    @Test
+    public void testGetIllegalPrimaryKey() {
+        assertNull(medicineManager.getByPrimaryKey(-1));
     }
 
 
@@ -81,23 +114,37 @@ public class MedicineManagerTest {
 
     @Test
     public void testDeleteIllegalPK() {
-        fillDatabase();
+        int medicines = medicineManager.getAllMedicines().size();
         try {
-            medicineManager.delete(102);
+            medicineManager.delete(-1);
             fail();
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
-            assertEquals(medicineManager.getAllMedicines().size(), getListOfMedicines().size()); // Check that nothing has been removed
+            assertEquals(medicineManager.getAllMedicines().size(), medicines);
+            // Check that nothing has been removed
+        }
+    }
+
+    @Test
+    public void testDeleteNotInDBObject() {
+        Medicine med = new Medicine("Not in db", "NA");
+        int medicines = medicineManager.getAllMedicines().size();
+        try {
+            medicineManager.delete(med);
+            fail();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            assertEquals(medicineManager.getAllMedicines().size(), medicines);
+            // Check that nothing has been removed
         }
     }
 
 
 
-    // Liquid, Tablet, Capsule, Injection, Topical, Suppositories, Drops, Inhalers
-
     private static ArrayList<Medicine> getListOfMedicines() {
         ArrayList<Medicine> listOfMedicines = new ArrayList<>();
 
+        // TYPES : Liquid, Tablet, Capsule, Injection, Topical, Suppositories, Drops, Inhalers
         listOfMedicines.add(new Medicine("Med1", "Liquid"));
         listOfMedicines.add(new Medicine("Med2", "Tablet"));
         listOfMedicines.add(new Medicine("Med3", "Injection"));
