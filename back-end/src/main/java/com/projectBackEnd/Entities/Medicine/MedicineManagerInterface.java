@@ -17,5 +17,7 @@ public interface MedicineManagerInterface {
     public Medicine addMedicine(Medicine med);
     public Medicine getByPrimaryKey(Serializable id);
     public Medicine addMedicine(String name, String type);
+    public List<Medicine> getAllMedicinesByName(String name);
+    public List<Medicine> getAllMedicinesByType(String type);
 
 }
