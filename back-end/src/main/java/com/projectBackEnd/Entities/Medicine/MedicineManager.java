@@ -55,7 +55,7 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
         return med;
     }
 
-     // Update attributes of the object
+    // Update attributes of the object
     // Transactional annotation is inherited so no need to tag these methods
     public Medicine update(Medicine med) {
         return (Medicine) super.update(med);
@@ -74,18 +74,27 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
         return (Medicine) super.getByPrimaryKey(id);
     }
 
-    // Return a list of all medicines in database
+
+    /**
+     * @return a list of all medicines in database
+     */
     public List<Medicine> getAllMedicines() {
         return (List<Medicine>) super.getAll();
     }
 
-    // Return a list of all medicines of given type in database
+
+    /**
+     * @return a list of all medicines of given type in database
+     */
     //@Transactional(readOnly = true)
     public List<Medicine> getAllMedicinesByType(String type) {
         return getAllMedicines().stream().filter(m -> m.getType().equals(type)).collect(Collectors.toList());
     }
 
-    // Return a list of all medicines with given name in database
+
+    /**
+     * @return a list of all medicines with given name in database
+     */
     //@Transactional(readOnly = true)
     public List<Medicine> getAllMedicinesByName(String name) {
         return getAllMedicines().stream().filter(m -> m.getName().equals(name)).collect(Collectors.toList());
