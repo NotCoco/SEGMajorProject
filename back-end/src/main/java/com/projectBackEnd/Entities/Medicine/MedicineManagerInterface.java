@@ -1,19 +1,20 @@
 package main.java.com.projectBackEnd.Entities.Medicine;
 
-
 import java.io.Serializable;
 import java.util.List;
 
-//TODO (Jeanne) : Commenting
+/**
+ *  Methods used by MedicineManager for database queries.
+ */
+
 public interface MedicineManagerInterface {
 
     public void deleteAll();
-    public List<Medicine> getAllMedicines();
-    public Medicine addMedicine(String name, String type);
-    public void delete(Serializable pk);
     public void delete(Medicine med);
+    public void delete(Serializable pk);
     public Medicine update(Medicine med);
+    public List<Medicine> getAllMedicines();
     public Medicine getByPrimaryKey(int id);
-
+    public Medicine addMedicine(String name, String type);
 
 }

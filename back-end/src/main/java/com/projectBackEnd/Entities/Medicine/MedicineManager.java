@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
 
-// TODO (Jeanne) : commenting
 /**
  * MedicineManager defines methods for Medicine objects to interact with the database.
  * This class extends the EntityManager.
