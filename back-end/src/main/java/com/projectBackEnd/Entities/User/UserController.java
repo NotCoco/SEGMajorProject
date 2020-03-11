@@ -18,28 +18,26 @@ public class UserController {
     
 	@Post("/create")
 	public HttpResponse createUser(@Body User user){
-		HttpResponse response = null;
+
 		try{
 			userManager.addUser(user.getEmail(),user.getPassword());
-			response = HttpResponse.created("user created"); 
+			return HttpResponse.created("user created"); 
 		}
 		catch(EmailExistsException e){
-			response = HttpResponse.badRequest("user already exsits");
+			return HttpResponse.badRequest("user already exsits");
 		}
 		catch(InvalidEmailException e){
-			response = HttpResponse.badRequest("invalid email address");
-		}
-		finally{
-			if(response == null) // should not be possible
-				return HttpResponse.serverError();
-			else
-				return response;
+			return HttpResponse.badRequest("invalid email address");
 		}
 	}
 
 	@Post("/login")
 	public HttpResponse<String> login(@Body User user){
-        	return HttpResponse.ok("");
+		String token = userManager.verifyUser(user.getEmail(),user.getPassword());
+		if(token != null)
+			return HttpResponse.ok(token);
+		else
+			return HttpResponse.notFound("invalid credentials");
 	}
 
 	/**
@@ -53,12 +51,24 @@ public class UserController {
 
     	@Delete("/delete_user")
 	public HttpResponse deleteUser(@Body String email){
-        	return HttpResponse.ok();
+
+		try{
+			userManager.deleteUser(email);
+			return HttpResponse.ok();
+		}
+		catch(UserNotExistException e){
+			System.out.println(email);
+			return HttpResponse.notFound("user does not exsist");
+		}
 	}
 
-    	@Post("/verify_token")
-	public HttpResponse verifyToken(@Body String token){
-        	return HttpResponse.ok();
+    	@Post("/verify_session")
+	public HttpResponse verifySession(@Body String token){
+		if(sessionManager.verifySession(token))
+			return HttpResponse.ok();
+		else
+			return HttpResponse.notFound();
+		
 	}
 
 

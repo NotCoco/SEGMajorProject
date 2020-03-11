@@ -42,7 +42,8 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 		if(getAll().stream().filter(u->(((User)u).getEmail().equals(email) && ((User)u).getPassword().equals(hash(password)))).count() > 0){
 			return SessionManager.getSessionManager().getNewSession(email,TIMEOUT);
 		}
-		return null;
+		else
+			return null;
 			
 	}
 	public void changePassword(String email, String newPassword) throws UserNotExistException{
