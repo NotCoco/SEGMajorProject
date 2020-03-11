@@ -10,11 +10,12 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 
-@Entity
-@Table(name = Medicine.TABLENAME)
+import javax.validation.constraints.NotNull;
 
 // TODO (Jeanne): Commenting
 
+@Entity
+@Table(name = Medicine.TABLENAME)
 public class Medicine implements TableEntity{
 
     // Table columns
@@ -27,11 +28,13 @@ public class Medicine implements TableEntity{
     @Column(name = ID, nullable = false)
     private int primaryKey;
 
+    //@NotNull
     @Column(name = NAME, nullable = false)
     @Type(type = "text")
     private String name;
 
-    @Column(name = TYPE)
+    //@NotNull
+    @Column(name = TYPE, nullable = false)
     @Type(type="text")
     private String type;
     // Liquid, Tablet, Capsule, Injection, Topical, Suppositories, Drops, Inhalers
@@ -40,13 +43,22 @@ public class Medicine implements TableEntity{
      * Constructors
      */
 
+    //Empty constructor
     public Medicine() {
+    }
+
+    // Constructor taking id
+    public Medicine(Integer id, String name, String type) {
+        this.primaryKey = id;
+        this.name = name;
+        this.type = type;
     }
 
     public Medicine(String name, String type) {
         this.name = name;
         this.type = type;
     }
+
 
     // Getters and setters; ID cannot be changed
     public Serializable getPrimaryKey() {

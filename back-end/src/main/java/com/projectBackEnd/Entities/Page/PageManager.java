@@ -1,9 +1,7 @@
 package main.java.com.projectBackEnd.Entities.Page;
 
-import main.java.com.projectBackEnd.Entities.Page.Page;
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
-
 
 import java.io.Serializable;
 import java.util.List;
@@ -14,11 +12,17 @@ import java.util.List;
  * //https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
 
-public class PageManager extends EntityManager implements main.java.com.projectBackEnd.Entities.Page.PageManagerInterface {
-    public PageManager() {
+public class PageManager extends EntityManager implements PageManagerInterface {
+    private static PageManagerInterface pageManager;
+    private PageManager() {
         super();
         setSubclass(Page.class);
         HibernateUtility.addAnnotation(Page.class);
+        pageManager = this;
+    }
+    public static PageManagerInterface getPageManager() {
+        if (pageManager != null) return pageManager;
+        else return new PageManager();
     }
     /**
      * Creates a page and adds it to the database table
