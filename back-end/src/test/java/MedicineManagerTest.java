@@ -4,6 +4,7 @@ import main.java.com.projectBackEnd.*;
 import main.java.com.projectBackEnd.Entities.Medicine.Medicine;
 import main.java.com.projectBackEnd.Entities.Medicine.MedicineManager;
 
+import main.java.com.projectBackEnd.Entities.Medicine.MedicineManagerInterface;
 import org.junit.*;
 
 import java.util.ArrayList;
@@ -11,13 +12,15 @@ import java.util.ArrayList;
 import static org.junit.Assert.*;
 
 
-public class MedicineManagerTest extends MedicineManager {
+public class MedicineManagerTest {
 
     public static ConnectionLeakUtil connectionLeakUtil = null;
+    public static MedicineManagerInterface medicineManager = null;
 
     @BeforeClass
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
+        medicineManager = MedicineManager.getMedicineManager();
         //connectionLeakUtil = new ConnectionLeakUtil();
     }
 
@@ -29,64 +32,62 @@ public class MedicineManagerTest extends MedicineManager {
 
     @Before
     public void setUp() {
-        deleteAll();
+        medicineManager.deleteAll();
     }
-    
 
     @Test
     public void testFillingAndGetting() {
         fillDatabase();
-        assertEquals(getAllMedicines().size(), 10);
+        assertEquals(medicineManager.getAllMedicines().size(), 10);
     }
 
     @Test
     public void testGetByPrimaryKey() {
         fillDatabase();
-        int medPK = (int) getAllMedicines().get(0).getPrimaryKey();
-        Medicine med = (Medicine) (getByPrimaryKey(medPK));
-        System.out.println(med);
-        System.out.println(getAllMedicines().get(0));
-
-        assertTrue(med.equals(getAllMedicines().get(0)));
+        int medPK = (int) medicineManager.getAllMedicines().get(0).getPrimaryKey();
+        Medicine med = medicineManager.getByPrimaryKey(medPK);
+//        System.out.println(med.getPrimaryKey());
+//        System.out.println(getAllMedicines().get(0).getPrimaryKey());
+        assertTrue(med.equals(medicineManager.getAllMedicines().get(0)));
     }
 
 
     @Test
     public void testDeleteAll() {
         // Delete all from empty database
-        deleteAll();
-        assertEquals(getAllMedicines().size(), 0);
+        medicineManager.deleteAll();
+        assertEquals(medicineManager.getAllMedicines().size(), 0);
         // Delete all from filled database
         fillDatabase();
-        deleteAll();
-        assertEquals(getAllMedicines().size(), 0);
+        medicineManager.deleteAll();
+        assertEquals(medicineManager.getAllMedicines().size(), 0);
     }
 
     @Test
     public void testDelete() {
         fillDatabase();
-        delete(getAllMedicines().get(1)); //Testing object deletion
-        assertEquals(getAll().size(), getListOfMedicines().size()-1);
-        delete(getAllMedicines().get(1));
-        assertEquals(getAll().size(), getListOfMedicines().size()-2);
+        medicineManager.delete(medicineManager.getAllMedicines().get(1)); //Testing object deletion
+        assertEquals(medicineManager.getAllMedicines().size(), getListOfMedicines().size()-1);
+        medicineManager.delete(medicineManager.getAllMedicines().get(1));
+        assertEquals(medicineManager.getAllMedicines().size(), getListOfMedicines().size()-2);
     }
 
     @Test
     public void testDeleteByPK() {
         fillDatabase();
-        delete(getAllMedicines().get(1).getPrimaryKey()); //Testing object deletion
-        assertEquals(getAll().size(), getListOfMedicines().size()-1);
+        medicineManager.delete(medicineManager.getAllMedicines().get(1).getPrimaryKey()); //Testing object deletion
+        assertEquals(medicineManager.getAllMedicines().size(), getListOfMedicines().size()-1);
     }
 
     @Test
     public void testDeleteIllegalPK() {
         fillDatabase();
         try {
-            delete(102);
+            medicineManager.delete(102);
             fail();
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
-            assertEquals(getAll().size(), getListOfMedicines().size()); // Check that nothing has been removed
+            assertEquals(medicineManager.getAllMedicines().size(), getListOfMedicines().size()); // Check that nothing has been removed
         }
     }
 
@@ -113,7 +114,7 @@ public class MedicineManagerTest extends MedicineManager {
 
     private void fillDatabase() {
         for (Medicine med : getListOfMedicines()) {
-            insertTuple(med);
+            medicineManager.addMedicine(med);
         }
     }
 

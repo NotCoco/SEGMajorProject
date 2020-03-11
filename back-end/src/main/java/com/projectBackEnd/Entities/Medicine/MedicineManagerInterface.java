@@ -15,6 +15,7 @@ public interface MedicineManagerInterface {
     public Medicine update(Medicine med);
     public List<Medicine> getAllMedicines();
     public Medicine getByPrimaryKey(int id);
+    public Medicine addMedicine(Medicine med);
     public Medicine addMedicine(String name, String type);
 
 }
