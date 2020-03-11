@@ -48,15 +48,6 @@ public class MedicineManagerTest {
         assertEquals(med.getType(), "Injection");
     }
 
-
-    @Test(expected = PersistenceException.class)
-    public void testUpdateWithIllegalValues() {
-        Medicine med = new Medicine( null, null);
-        fillDatabase();
-        medicineManager.update(med);
-    }
-
-
     @Test
     public void testCreateAndSaveMedicine() {
         medicineManager.addMedicine("Medicine for BA ", "Topical");
@@ -68,6 +59,19 @@ public class MedicineManagerTest {
         fillDatabase();
         assertEquals(medicineManager.getAllMedicines().size(), 10);
     }
+
+    @Test
+    public void testUpdateMedicine() {
+
+    }
+
+    @Test(expected = PersistenceException.class)
+    public void testUpdateWithIllegalValues() {
+        Medicine med = new Medicine( null, null);
+        fillDatabase();
+        medicineManager.update(med);
+    }
+
 
     @Test
     public void testGetByPrimaryKey() {
@@ -113,7 +117,7 @@ public class MedicineManagerTest {
     }
 
     @Test
-    public void testDeleteIllegalPK() {
+    public void testWithDeleteIllegalPK() {
         int medicines = medicineManager.getAllMedicines().size();
         try {
             medicineManager.delete(-1);
