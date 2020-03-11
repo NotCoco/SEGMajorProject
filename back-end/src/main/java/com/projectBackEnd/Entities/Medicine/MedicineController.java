@@ -4,6 +4,7 @@ import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
+import io.micronaut.validation.Validated;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -37,7 +38,9 @@ public class MedicineController {
     @Post("/")
     public HttpResponse<Medicine> add(@Body MedicineAddCommand command) {
         Medicine med = medicineManager.addMedicine(command.getName(), command.getType());
-
+        if(medicineManager.getByPrimaryKey(med.getPrimaryKey()) == null){
+            return HttpResponse.serverError();
+        }
         return HttpResponse
                 .created(med)
                 .headers(headers -> headers.location(location(med.getPrimaryKey())));

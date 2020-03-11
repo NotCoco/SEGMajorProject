@@ -37,14 +37,14 @@ public class Medicine implements TableEntity {
     @Column(name = ID, nullable = false)
     private Integer primaryKey;
 
-    //@NotNull
-    @Column(name = NAME, nullable = false)
+    @NotNull
     @Type(type = "text")
+    @Column(name = NAME, nullable = false)
     private String name;
 
-    //@NotNull
-    @Column(name = TYPE, nullable = false)
+    @NotNull
     @Type(type="text")
+    @Column(name = TYPE, nullable = false)
     private String type;
 
 

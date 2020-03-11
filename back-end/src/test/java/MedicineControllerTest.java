@@ -70,7 +70,7 @@ public class MedicineControllerTest{
         request = HttpRequest.GET("/medicine/list");
         List<Medicine> medicineList = client.toBlocking().retrieve(request, Argument.of(List.class, Medicine.class));
         for(int i=0; i<ids.size();i++){
-            assertEquals(ids.get(0), medicineList.get(0).getPrimaryKey());
+            assertEquals(ids.get(i), medicineList.get(i).getPrimaryKey());
         }
     }
 
@@ -106,6 +106,7 @@ public class MedicineControllerTest{
         });
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
     }
+
 
     @Test
     public void testAddNullTypeMedicine(){

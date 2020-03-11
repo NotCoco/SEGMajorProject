@@ -3,16 +3,16 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import io.micronaut.core.annotation.Introspected;
 
-//@Introspected
+@Introspected
 public class MedicineUpdateCommand {
 
 
     private int id;
 
-
+    @NotNull
     private String name;
 
-
+    @NotNull
     private String type;
 
     public MedicineUpdateCommand(){
