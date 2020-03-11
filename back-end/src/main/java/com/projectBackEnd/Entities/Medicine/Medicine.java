@@ -56,6 +56,7 @@ public class Medicine implements TableEntity {
     }
 
     public Medicine(String name, String type) {
+        this.primaryKey = -1;
         this.name = name;
         this.type = type;
     }

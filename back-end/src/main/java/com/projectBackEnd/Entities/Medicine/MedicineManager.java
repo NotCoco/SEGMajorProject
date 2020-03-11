@@ -1,6 +1,7 @@
 package main.java.com.projectBackEnd.Entities.Medicine;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.io.Serializable;
 
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
@@ -69,7 +70,7 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
 
     // Return primary key
     @Override
-    public Medicine getByPrimaryKey(Integer id) {
+    public Medicine getByPrimaryKey(Serializable id) {
         return (Medicine) super.getByPrimaryKey(id);
     }
 

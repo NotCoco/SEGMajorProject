@@ -11,7 +11,7 @@ public interface MedicineManagerInterface {
 
     public void deleteAll();
     public void delete(Medicine med);
-    public void delete(Integer pk);
+    public void delete(Serializable pk);
     public Medicine update(Medicine med);
     public List<Medicine> getAllMedicines();
     public Medicine addMedicine(Medicine med);
