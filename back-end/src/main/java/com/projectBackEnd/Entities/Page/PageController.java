@@ -1,6 +1,5 @@
 package main.java.com.projectBackEnd.Entities.Page;
 
-
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
@@ -10,7 +9,7 @@ import java.net.URI;
 
 @Controller("/page")
 public class PageController {
-    protected final PageManagerInterface pageManager = new PageManager();
+    protected final PageManagerInterface pageManager = PageManager.getPageManager();
     PageController() {}
     @Get(value = "/{slug}", produces = MediaType.TEXT_JSON)
     public Page list(String id) {
@@ -23,20 +22,20 @@ public class PageController {
     }
 
     @Post("/")
-    public HttpResponse<Page> add(@Body Page command) {
-        Page page = pageManager.addPage(command.getPrimaryKey(), command.getIndex(), command.getTitle(), command.getContent());
+    public HttpResponse<Page> add(@Body Page pageToAdd) {
+        Page page = pageManager.addPage(pageToAdd.getPrimaryKey(), pageToAdd.getIndex(), pageToAdd.getTitle(), pageToAdd.getContent());
         return HttpResponse
                 .created(page)
                 .headers(headers -> headers.location(location(page.getPrimaryKey())));
     }
 
     @Put("/")
-    public HttpResponse update(@Body Page command) {
-        Page page = new Page(command.getPrimaryKey(), command.getIndex(), command.getTitle(), command.getContent());
+    public HttpResponse update(@Body Page updatedPage) {
+        Page page = new Page(updatedPage.getPrimaryKey(), updatedPage.getIndex(), updatedPage.getTitle(), updatedPage.getContent());
         pageManager.update(page);
         return HttpResponse
                 .noContent()
-                .header(HttpHeaders.LOCATION, location(command.getPrimaryKey()).getPath());
+                .header(HttpHeaders.LOCATION, location(updatedPage.getPrimaryKey()).getPath());
     }
 
     @Delete("/{slug}")
