@@ -11,11 +11,11 @@ public interface MedicineManagerInterface {
 
     public void deleteAll();
     public void delete(Medicine med);
-    public void delete(Serializable pk);
+    public void delete(Integer pk);
     public Medicine update(Medicine med);
     public List<Medicine> getAllMedicines();
-    public Medicine getByPrimaryKey(int id);
     public Medicine addMedicine(Medicine med);
+    public Medicine getByPrimaryKey(Integer id);
     public Medicine addMedicine(String name, String type);
 
 }
