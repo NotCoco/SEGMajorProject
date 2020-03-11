@@ -12,12 +12,16 @@ import main.java.com.projectBackEnd.Entities.Page.Page;
 import main.java.com.projectBackEnd.Entities.Page.PageManager;
 import main.java.com.projectBackEnd.Entities.Page.PageManagerInterface;
 import main.java.com.projectBackEnd.HibernateUtility;
-import org.junit.Test;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -56,8 +60,9 @@ public class PageControllerTest {
 
     @Test
     public void testAddAndGetPage() {
-        Page pageAdded = new Page("testslug/fortesting/test", 3, "Title", "Content");
+        Page pageAdded = new Page("tests[lug/forte\"]sting/test", 3, "Title", "Content");
         HttpRequest request = HttpRequest.POST("/page", pageAdded);
+
         HttpResponse response = client.toBlocking().exchange(request);
         String id = getEId(response);
 
@@ -67,7 +72,7 @@ public class PageControllerTest {
 
         Page testPage = client.toBlocking().retrieve(request, Page.class);
 
-        assertEquals(pageAdded, testPage); //Hopefully checks with the .equals method of page
+        assertTrue(pageAdded.equals(testPage)); //Hopefully checks with the .equals method of page
 
     }
     @Test
@@ -86,7 +91,7 @@ public class PageControllerTest {
 
         request = HttpRequest.GET("/page/" + id);
         Page pageFound = client.toBlocking().retrieve(request, Page.class);
-        assertEquals(pageFound, updatedPage); //Hopefully checks with the .equals method of page
+        assertTrue(pageFound.equals(updatedPage)); //Hopefully checks with the .equals method of page
     }
 
     @Test
@@ -112,8 +117,29 @@ public class PageControllerTest {
         });
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
     }
-
+    /*
+    //TODO Test me!
     private String getEId(HttpResponse response) {
+        String responseHeader = response.header(HttpHeaders.LOCATION);
+        if (responseHeader != null) {
+            int index = responseHeader.indexOf("/page/");
+            if (index != -1) {
+                String cutResponseHeader = responseHeader.substring(index + "/page/".length());
+                try {
+                    return URLEncoder.encode(cutResponseHeader, java.nio.charset.StandardCharsets.UTF_8.toString());
+                } catch (UnsupportedEncodingException e) {
+                    //return URLEncoder.encode(cutResponseHeader);
+                    //TODO Remove deprecation
+                    return null;
+                }
+            }
+            return null;
+
+        }
+        return null;
+    }*/
+    //OLD getEId implementation as I wasn't sure where to put the URL Encoder :S
+        private String getEId(HttpResponse response) {
         String val = response.header(HttpHeaders.LOCATION);
         if (val != null) {
             int index = val.indexOf("/page/");
@@ -127,6 +153,4 @@ public class PageControllerTest {
         else{
             return null;
         }    }
-
-
 }

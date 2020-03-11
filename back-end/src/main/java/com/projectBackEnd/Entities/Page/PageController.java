@@ -12,8 +12,8 @@ public class PageController {
     protected final PageManagerInterface pageManager = PageManager.getPageManager();
     PageController() {}
     @Get(value = "/{slug}", produces = MediaType.TEXT_JSON)
-    public Page list(String id) {
-        return pageManager.getByPrimaryKey(id);
+    public Page list(String slug) {
+        return pageManager.getByPrimaryKey(slug);
     }
 
     @Get("/")
