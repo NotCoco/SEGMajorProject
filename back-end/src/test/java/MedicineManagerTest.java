@@ -55,6 +55,12 @@ public class MedicineManagerTest {
     }
 
     @Test
+    public void testCreateIllegalMedicine(){
+        medicineManager.addMedicine(null,null);
+        assertEquals(medicineManager.getAllMedicines().size(), 0);
+    }
+
+    @Test
     public void testFillingAndGetting() {
         fillDatabase();
         assertEquals(medicineManager.getAllMedicines().size(), 10);
@@ -67,8 +73,8 @@ public class MedicineManagerTest {
 
     @Test(expected = PersistenceException.class)
     public void testUpdateWithIllegalValues() {
-        Medicine med = new Medicine( null, null);
         fillDatabase();
+        Medicine med = new Medicine((int)medicineManager.getAllMedicines().get(0).getPrimaryKey(), null, null);
         medicineManager.update(med);
     }
 
@@ -81,6 +87,7 @@ public class MedicineManagerTest {
 //        System.out.println(med.getPrimaryKey());
 //        System.out.println(getAllMedicines().get(0).getPrimaryKey());
         assertTrue(med.equals(medicineManager.getAllMedicines().get(0)));
+
     }
 
     @Test
@@ -158,7 +165,7 @@ public class MedicineManagerTest {
         listOfMedicines.add(new Medicine("Med7", "Inhaler"));
         listOfMedicines.add(new Medicine("Med8", "Capsule"));
         listOfMedicines.add(new Medicine("Med9", "Liquid"));
-        listOfMedicines.add(new Medicine("Med7", "Topical"));
+        listOfMedicines.add(new Medicine(-1, "Med7", "Topical"));
 
         return listOfMedicines;
     }
