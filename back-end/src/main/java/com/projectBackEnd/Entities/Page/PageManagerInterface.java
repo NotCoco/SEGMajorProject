@@ -19,7 +19,7 @@ public interface PageManagerInterface {
     public List<Page> getAllPages();
     public Page addPage(Page newPage);
     public Page getByPrimaryKey(Serializable pk);
-    public void delete(Page object);
+    public void delete(Page object); //TODO Is unnecessary now, can be removed
     public Page update(Page updatedCopy);
     public Page addPage(String slug, Integer index, String title, String content);
 

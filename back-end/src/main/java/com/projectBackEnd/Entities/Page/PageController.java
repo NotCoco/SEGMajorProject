@@ -7,6 +7,7 @@ import io.micronaut.http.annotation.*;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.net.URI;
+import java.util.List;
 
 @Controller("/page")
 public class PageController {
@@ -22,6 +23,16 @@ public class PageController {
         return "Page page";
     }
 
+    @Get(value = "/list", produces = MediaType.TEXT_JSON)
+    public List<Page> list() {
+        return pageManager.getAllPages();
+    }
+
+//    @Delete("/")
+//    public HttpResponse deleteAll() {
+//        pageManager.deleteAll();
+//        return HttpResponse.noContent();
+//    }
     @Post("/")
     public HttpResponse<Page> add(@Body Page pageToAdd) {
         Page page = pageManager.addPage(pageToAdd.getPrimaryKey(), pageToAdd.getIndex(), pageToAdd.getTitle(), pageToAdd.getContent());
