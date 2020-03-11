@@ -43,6 +43,15 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
         return newMedicine;
     }
 
+    /**
+     * Add a pre-created medicine object to datbase
+     * @param med to add
+     * @return added object
+     */
+    public Medicine addMedicine(Medicine med) {
+        super.insertTuple(med);
+        return med;
+    }
 
      // Update attributes of the object
     // Transactional annotation is inherited so no need to tag these methods
