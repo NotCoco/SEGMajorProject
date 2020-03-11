@@ -11,12 +11,10 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import main.java.com.projectBackEnd.*;
-import main.java.com.projectBackEnd.Entities.Medicine.Medicine;
-import main.java.com.projectBackEnd.Entities.Medicine.MedicineAddCommand;
-import main.java.com.projectBackEnd.Entities.Medicine.MedicineManager;
+import main.java.com.projectBackEnd.Entities.Medicine.*;
+
 import javax.inject.Inject;
 
-import main.java.com.projectBackEnd.Entities.Medicine.MedicineUpdateCommand;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
@@ -31,15 +29,18 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @MicronautTest
-public class MedicineControllerTest extends MedicineManager{
+public class MedicineControllerTest{
 
     @Inject
     @Client("/")
     HttpClient client;
 
+    static MedicineManagerInterface medicineManager;
+
     @BeforeAll
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
+        medicineManager = MedicineManager.getMedicineManager();
     }
 
     @AfterAll
@@ -49,7 +50,7 @@ public class MedicineControllerTest extends MedicineManager{
 
     @BeforeEach
     public void setUp() {
-        deleteAll();
+        medicineManager.deleteAll();
     }
 
     @Test

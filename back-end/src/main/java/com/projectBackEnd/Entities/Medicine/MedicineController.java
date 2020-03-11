@@ -12,7 +12,7 @@ import java.util.List;
 @Controller("/medicine")
 public class MedicineController {
 
-    protected final MedicineManagerInterface medicineManager = new MedicineManager();
+    protected final MedicineManagerInterface medicineManager = MedicineManager.getMedicineManager();
 
     MedicineController(){
         //this.medicineManager = medicineManager;
