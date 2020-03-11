@@ -39,7 +39,23 @@ public class MedicineManagerTest extends MedicineManager {
     }
 
     @Test
+    public void testGetByPrimaryKey() {
+        fillDatabase();
+        int medPK = (int) getAllMedicines().get(0).getPrimaryKey();
+        Medicine med = (Medicine) (getByPrimaryKey(medPK));
+        System.out.println(med);
+        System.out.println(getAllMedicines().get(0));
+
+        assertTrue(med.equals(getAllMedicines().get(0)));
+    }
+
+
+    @Test
     public void testDeleteAll() {
+        // Delete all from empty database
+        deleteAll();
+        assertEquals(getAllMedicines().size(), 0);
+        // Delete all from filled database
         fillDatabase();
         deleteAll();
         assertEquals(getAllMedicines().size(), 0);
@@ -61,21 +77,18 @@ public class MedicineManagerTest extends MedicineManager {
         assertEquals(getAll().size(), getListOfMedicines().size()-1);
     }
 
-//    @Test
-//    public void testDelete(){
-//        fillDatabase();
-//        delete(getListOfMedicines().get(1));
-//        assertEquals(getAllMedicines().size(), getListOfMedicines().size()-1);
-//        delete(getListOfMedicines().get(2));
-//        assertEquals(getAllMedicines().size(), getListOfMedicines().size()-2);
-//    }
+    @Test
+    public void testDeleteIllegalPK() {
+        fillDatabase();
+        try {
+            delete(102);
+            fail();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            assertEquals(getAll().size(), getListOfMedicines().size()); // Check that nothing has been removed
+        }
+    }
 
-//    @Test
-//    public void testDelete() {
-//        fillDatabase();
-//        delete(getListOfMedicines().get(5));
-//        assertEquals(getAll().size(), getListOfMedicines().size()-1);
-//    }
 
 
     // Liquid, Tablet, Capsule, Injection, Topical, Suppositories, Drops, Inhalers
