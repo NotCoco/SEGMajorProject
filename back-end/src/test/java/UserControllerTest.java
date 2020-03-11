@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.fail;
-
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @MicronautTest
 public class UserControllerTest{
@@ -65,19 +65,27 @@ public class UserControllerTest{
 	}
 	@Test
 	public void testCreateSameUser(){
+		try{
+			userManager.addUser("username@mail.com","password");
+		}
+		catch(InvalidEmailException|EmailExistsException e){
+			fail();
+		}
 		HttpRequest request = HttpRequest.POST("/user/create",new User("username@mail.com","password"));
-        	HttpResponse response = client.toBlocking().exchange(request);
-		assertEquals(HttpStatus.BAD_REQUEST, response.getStatus());
-		String reason = client.toBlocking().retrieve(request,String.class);
-		assertEquals("user already exsits", reason);
+        	HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            		client.toBlocking().exchange(request);
+        	});
+		assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatus());
+		assertEquals("user already exsits", thrown.getMessage());
 	}
 	@Test
 	public void testCreateWrongUser(){
-		HttpRequest request = HttpRequest.POST("/user/create",new User("username@mail.com","password"));
-        	HttpResponse response = client.toBlocking().exchange(request);
-		assertEquals(HttpStatus.BAD_REQUEST, response.getStatus());
-		String reason = client.toBlocking().retrieve(request,String.class);
-		assertEquals("invalid email address", reason);
+		HttpRequest request = HttpRequest.POST("/user/create",new User("username@","password"));
+        	HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            		client.toBlocking().exchange(request);
+        	});
+		assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatus());
+		assertEquals("invalid email address", thrown.getMessage());
 		assertNull(userManager.verifyUser("username@mail.com","password"));
 	}
 
@@ -97,9 +105,10 @@ public class UserControllerTest{
 	@Test
 	public void testLoginIncorrect(){
 		HttpRequest request = HttpRequest.POST("/user/login",new User("username@mail.com","password"));
-        	HttpResponse response = client.toBlocking().exchange(request);
-		response = client.toBlocking().exchange(request);
-		assertEquals(HttpStatus.NOT_FOUND , response.getStatus());
+        	HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            		client.toBlocking().exchange(request);
+        	});
+		assertEquals(HttpStatus.NOT_FOUND , thrown.getStatus());
 
 	}
 
@@ -124,10 +133,11 @@ public class UserControllerTest{
 	@Test
 	public void testDeleteUserNotExisting(){
 		HttpRequest request = HttpRequest.DELETE("/user/delete_user",new User("username@mail.com","password"));
-		HttpResponse response = client.toBlocking().exchange(request);
-		assertEquals(HttpStatus.NOT_FOUND , response.getStatus());
-		String reason = client.toBlocking().retrieve(request, String.class);
-		assertEquals("user does not exsist",reason);
+        	HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            		client.toBlocking().exchange(request);
+        	});
+		assertEquals(HttpStatus.NOT_FOUND , thrown.getStatus());
+		assertEquals("user does not exsist",thrown.getMessage());
 		assertNull(userManager.verifyUser("username@mail.com","password"));
 	}
 
@@ -157,18 +167,24 @@ public class UserControllerTest{
 		}
 		String token = userManager.verifyUser("username@mail.com","password");
 		assertNotNull(token);
-		HttpRequest request = HttpRequest.POST("/user/verify_token",token + "1");
-		HttpResponse response = client.toBlocking().exchange(request);
-		assertEquals(HttpStatus.NOT_FOUND , response.getStatus());
-		request = HttpRequest.POST("/user/verify_token","1");
-		response = client.toBlocking().exchange(request);
-		assertEquals(HttpStatus.NOT_FOUND , response.getStatus());
-		request = HttpRequest.POST("/user/verify_token","");
-		response = client.toBlocking().exchange(request);
-		assertEquals(HttpStatus.NOT_FOUND , response.getStatus());
-		request = HttpRequest.POST("/user/verify_token","12345678912345678912345");
-		response = client.toBlocking().exchange(request);
-		assertEquals(HttpStatus.NOT_FOUND , response.getStatus());
+        	HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            		client.toBlocking().exchange(HttpRequest.POST("/user/verify_token",token + "1"));
+        	});
+		assertEquals(HttpStatus.NOT_FOUND , thrown.getStatus());
+		thrown = assertThrows(HttpClientResponseException.class, () -> {
+            		client.toBlocking().exchange(HttpRequest.POST("/user/verify_token","1"));
+        	});
+		assertEquals(HttpStatus.NOT_FOUND , thrown.getStatus());
+
+		thrown = assertThrows(HttpClientResponseException.class, () -> {
+            		client.toBlocking().exchange(HttpRequest.POST("/user/verify_token",""));
+        	});
+		assertEquals(HttpStatus.NOT_FOUND , thrown.getStatus());
+
+		thrown = assertThrows(HttpClientResponseException.class, () -> {
+            		client.toBlocking().exchange(HttpRequest.POST("/user/verify_token","12345678912345678912345"));
+        	});
+		assertEquals(HttpStatus.NOT_FOUND , thrown.getStatus());
 	}
 
 	/**
