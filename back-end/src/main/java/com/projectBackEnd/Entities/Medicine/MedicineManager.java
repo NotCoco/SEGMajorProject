@@ -19,6 +19,7 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
         super();
         setSubclass(Medicine.class);
         HibernateUtility.addAnnotation(Medicine.class);
+        medicineManager = this;
     }
 
     /**
