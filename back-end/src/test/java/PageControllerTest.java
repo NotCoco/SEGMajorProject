@@ -61,10 +61,10 @@ public class PageControllerTest {
     @Test
     public void testAddAndGetPage() {
         Page pageAdded = new Page("tests[lug/forte\"]sting/test", 3, "Title", "Content");
-        HttpRequest request = HttpRequest.POST("/page", pageAdded);
+        HttpRequest request = HttpRequest.POST("/page", pageAdded); //Post takes /page instead of /page/
 
         HttpResponse response = client.toBlocking().exchange(request);
-        String id = getEId(response);
+        String id = getPagePrimaryKeyFromResponse(response);
 
         assertEquals(HttpStatus.CREATED, response.getStatus());
 
@@ -80,7 +80,7 @@ public class PageControllerTest {
         Page pageAdded = new Page("testslug/fortesting/test", 3, "Title", "Content");
         HttpRequest request = HttpRequest.POST("/page", pageAdded);
         HttpResponse response = client.toBlocking().exchange(request);
-        String id =  getEId(response);
+        String id =  getPagePrimaryKeyFromResponse(response);
 
         assertEquals(HttpStatus.CREATED, response.getStatus());
         Page updatedPage = new Page("testslug/fortesting/test", 6, "updatedTitle", "newContent");
@@ -99,7 +99,7 @@ public class PageControllerTest {
         Page pageAdded = new Page("testslug/fortesting/test", 3, "Title", "Content");
         HttpRequest request = HttpRequest.POST("/page", pageAdded);
         HttpResponse response = client.toBlocking().exchange(request);
-        String id = getEId(response);
+        String id = getPagePrimaryKeyFromResponse(response);
         // Asserting that we've added a Page
         assertEquals(HttpStatus.CREATED, response.getStatus());
 
@@ -139,18 +139,15 @@ public class PageControllerTest {
         return null;
     }*/
     //OLD getEId implementation as I wasn't sure where to put the URL Encoder :S
-        private String getEId(HttpResponse response) {
+        private String getPagePrimaryKeyFromResponse(HttpResponse response) {
         String val = response.header(HttpHeaders.LOCATION);
         if (val != null) {
             int index = val.indexOf("/page/");
             if (index != -1) {
                 return (val.substring(index + "/page/".length()));
             }
-            else{
-                return null;
-            }
-        }
-        else{
             return null;
-        }    }
+        }
+        return null;
+        }    
 }
