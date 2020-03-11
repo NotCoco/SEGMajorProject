@@ -57,7 +57,7 @@ public class Page implements TableEntity { //TODO extends Entity, for easier Jso
 
     //GETTERS AND SETTERS:
 
-    public Serializable getPrimaryKey() {
+    public String getPrimaryKey() {
         return primaryKey;
     }
     public Integer getIndex() {
@@ -86,7 +86,7 @@ public class Page implements TableEntity { //TODO extends Entity, for easier Jso
     }
 
     public boolean equals(Page otherPage) {
-        return getPrimaryKey().equals(otherPage.getPrimaryKey()) && (getIndex() == otherPage.getIndex()) &&
+        return getPrimaryKey().equals(otherPage.getPrimaryKey()) && (getIndex().equals(otherPage.getIndex())) &&
                 getTitle().equals(otherPage.getTitle()) && getContent().equals(otherPage.getContent());
     }
 
