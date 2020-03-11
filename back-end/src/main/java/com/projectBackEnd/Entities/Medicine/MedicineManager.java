@@ -69,7 +69,7 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
 
     // Return primary key
     @Override
-    public Medicine getByPrimaryKey(int id) {
+    public Medicine getByPrimaryKey(Integer id) {
         return (Medicine) super.getByPrimaryKey(id);
     }
 

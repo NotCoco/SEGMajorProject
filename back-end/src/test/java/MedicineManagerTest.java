@@ -86,12 +86,19 @@ public class MedicineManagerTest {
         Medicine foundMedicine = firstMed;
         int medPK = foundMedicine.getPrimaryKey();
         Medicine foundMedicineFromDB = medicineManager.getByPrimaryKey(medPK);
-        assertTrue(foundMedicine.equals((Medicine) foundMedicineFromDB));
 
+
+        System.out.println(foundMedicineFromDB.equals(foundMedicine));
+        assertThat(foundMedicine, samePropertyValuesAs(foundMedicineFromDB));
+        assertTrue(foundMedicine.equals((foundMedicineFromDB)));
     }
 
-    //        System.out.println(med.getPrimaryKey());
-//        System.out.println(getAllMedicines().get(0).getPrimaryKey());
+    @Test
+    public void testTwoEqualMedicines() {
+        Medicine med1 = new Medicine("Med1", "nicetype");
+        Medicine med2 = new Medicine("Med1", "nicetype");
+        assertTrue(med1.equals(med2));
+    }
 
     @Test
     public void testGetIllegalPrimaryKey() {

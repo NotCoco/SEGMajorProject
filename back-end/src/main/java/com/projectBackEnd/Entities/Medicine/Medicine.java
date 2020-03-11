@@ -35,7 +35,7 @@ public class Medicine implements TableEntity {
     // Private Fields : primaryKey, name, type
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ID, nullable = false)
-    private int primaryKey;
+    private Integer primaryKey;
 
     //@NotNull
     @Column(name = NAME, nullable = false)
@@ -107,7 +107,7 @@ public class Medicine implements TableEntity {
      * @return boolean, true if same object
      */
     public boolean equals(Medicine otherMed) {
-        return (getPrimaryKey() == otherMed.getPrimaryKey()) && getName().equals(otherMed.getName()) &&
+        return (getPrimaryKey().equals(otherMed.getPrimaryKey())) && getName().equals(otherMed.getName()) &&
                 getType().equals(otherMed.getType());
     }
 
