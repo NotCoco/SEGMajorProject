@@ -82,9 +82,11 @@ public class MedicineManagerTest {
     @Test
     public void testGetByPrimaryKey() {
         fillDatabase();
-        int medPK = medicineManager.getAllMedicines().get(0).getPrimaryKey();
-        Medicine med = medicineManager.getByPrimaryKey(medPK);
-        assertTrue(med.equals(medicineManager.getAllMedicines().get(0)));
+        Medicine firstMed = medicineManager.getAllMedicines().get(0);
+        Medicine foundMedicine = firstMed;
+        int medPK = foundMedicine.getPrimaryKey();
+        Medicine foundMedicineFromDB = medicineManager.getByPrimaryKey(medPK);
+        assertTrue(foundMedicine.equals((Medicine) foundMedicineFromDB));
 
     }
 
