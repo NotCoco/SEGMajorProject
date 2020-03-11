@@ -116,6 +116,7 @@ public class UserManagerTest{
 		fill();
 		assertNull(userManager.verifyUser("not_in","not in"));
 		assertNotNull(userManager.verifyUser("user6@email.com","password6"));
+		assertNotNull(userManager.verifyUser("user6@email.com","password6"));
 	}
 	@Test
 	public void testChangePassword() throws UserNotExistException{
