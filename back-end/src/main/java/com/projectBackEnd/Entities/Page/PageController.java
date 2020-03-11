@@ -4,7 +4,8 @@ import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
-
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.net.URI;
 
 @Controller("/page")
@@ -24,9 +25,11 @@ public class PageController {
     @Post("/")
     public HttpResponse<Page> add(@Body Page pageToAdd) {
         Page page = pageManager.addPage(pageToAdd.getPrimaryKey(), pageToAdd.getIndex(), pageToAdd.getTitle(), pageToAdd.getContent());
+        //TODO will still return created even if there's an unsuccessful creation, this if statement prevents that.
+        //if (pageManager.getByPrimaryKey(pageToAdd.getPrimaryKey()) == null) return HttpResponse.not_acceptable(page).headers(headers -> headers.location((location(page.getPrimaryKey()))));; //I.e. object didn't get created
         return HttpResponse
                 .created(page)
-                .headers(headers -> headers.location(location(page.getPrimaryKey())));
+                .headers(headers -> headers.location((location(page.getPrimaryKey()))));
     }
 
     @Put("/")
@@ -45,9 +48,12 @@ public class PageController {
     }
 
     protected URI location(String slug) {
-        return URI.create("/page/" + slug);
-    }
-    protected URI location(Page page) {
-        return location(page.getPrimaryKey());
+        String encodedSlug = null;
+        try {
+            encodedSlug = URLEncoder.encode(slug, java.nio.charset.StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
+        return URI.create("/page/" + encodedSlug);
     }
 }
