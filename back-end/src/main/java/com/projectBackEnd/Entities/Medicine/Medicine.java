@@ -71,7 +71,7 @@ public class Medicine implements TableEntity {
     /**
      * Getters and setters; ID cannot be changed
      */
-    public Serializable getPrimaryKey() {
+    public Integer getPrimaryKey() {
         return primaryKey;
     }
 

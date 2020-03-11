@@ -74,7 +74,7 @@ public class MedicineManagerTest {
     @Test(expected = PersistenceException.class)
     public void testUpdateWithIllegalValues() {
         fillDatabase();
-        Medicine med = new Medicine((int)medicineManager.getAllMedicines().get(0).getPrimaryKey(), null, null);
+        Medicine med = new Medicine(medicineManager.getAllMedicines().get(0).getPrimaryKey(), null, null);
         medicineManager.update(med);
     }
 
@@ -82,13 +82,14 @@ public class MedicineManagerTest {
     @Test
     public void testGetByPrimaryKey() {
         fillDatabase();
-        int medPK = (int) medicineManager.getAllMedicines().get(0).getPrimaryKey();
+        int medPK = medicineManager.getAllMedicines().get(0).getPrimaryKey();
         Medicine med = medicineManager.getByPrimaryKey(medPK);
-//        System.out.println(med.getPrimaryKey());
-//        System.out.println(getAllMedicines().get(0).getPrimaryKey());
         assertTrue(med.equals(medicineManager.getAllMedicines().get(0)));
 
     }
+
+    //        System.out.println(med.getPrimaryKey());
+//        System.out.println(getAllMedicines().get(0).getPrimaryKey());
 
     @Test
     public void testGetIllegalPrimaryKey() {
@@ -163,8 +164,8 @@ public class MedicineManagerTest {
         listOfMedicines.add(new Medicine("Med4", "Liquid"));
         listOfMedicines.add(new Medicine("Med6", "Drops"));
         listOfMedicines.add(new Medicine("Med7", "Inhaler"));
-        listOfMedicines.add(new Medicine("Med8", "Capsule"));
-        listOfMedicines.add(new Medicine("Med9", "Liquid"));
+        listOfMedicines.add(new Medicine("Med7", "Inhaler"));
+        listOfMedicines.add(new Medicine("Med_8/#", "Liquid"));
         listOfMedicines.add(new Medicine(-1, "Med7", "Topical"));
 
         return listOfMedicines;
