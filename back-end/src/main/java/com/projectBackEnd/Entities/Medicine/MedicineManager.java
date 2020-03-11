@@ -6,7 +6,12 @@ import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
 
 // TODO (Jeanne) : commenting
-
+/**
+ * MedicineManager defines methods for Medicine objects to interact with the database.
+ * This class extends the EntityManager.
+ *
+ * https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
+ */
 public class MedicineManager extends EntityManager implements MedicineManagerInterface {
 
     private static MedicineManagerInterface medicineManager;
@@ -16,10 +21,22 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
         setSubclass(Medicine.class);
         HibernateUtility.addAnnotation(Medicine.class);
     }
+
+    /**
+     * Get method for the medicine manager interface
+     * @return medicineManager ; if none has been defined, create a new MedicineManager()
+     */
     public static MedicineManagerInterface getMedicineManager() {
         return (medicineManager != null) ? medicineManager : new MedicineManager();
     }
 
+
+    /**
+     * Create and add a medicine to the database
+     * @param name
+     * @param type
+     * @return newly created medicine object
+     */
     //@Transactional
     public Medicine addMedicine(String name, String type) {
         Medicine newMedicine = new Medicine(name, type);
@@ -27,30 +44,38 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
         return newMedicine;
     }
 
+
+     // Update attributes of the object
     // Transactional annotation is inherited so no need to tag these methods
-    public Medicine update(Medicine med) { //TODO Session to become instance variable, for cleaner code
+    public Medicine update(Medicine med) {
         return (Medicine) super.update(med);
     }
 
+
+    // Remove medicine object from database
     @Override
     public void delete(Medicine med) {
         super.delete(med);
     }
 
+    // Return primary key
     @Override
     public Medicine getByPrimaryKey(int id) {
         return (Medicine) super.getByPrimaryKey(id);
     }
 
+    // Return a list of all medicines in database
     public List<Medicine> getAllMedicines() {
         return (List<Medicine>) super.getAll();
     }
 
+    // Return a list of all medicines of given type in database
     //@Transactional(readOnly = true)
     public List<Medicine> getAllMedicinesByType(String type) {
         return getAllMedicines().stream().filter(m -> m.getType().equals(type)).collect(Collectors.toList());
     }
 
+    // Return a list of all medicines with given name in database
     //@Transactional(readOnly = true)
     public List<Medicine> getAllMedicinesByName(String name) {
         return getAllMedicines().stream().filter(m -> m.getName().equals(name)).collect(Collectors.toList());
