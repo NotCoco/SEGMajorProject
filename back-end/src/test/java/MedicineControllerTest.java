@@ -23,6 +23,9 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -47,6 +50,27 @@ public class MedicineControllerTest extends MedicineManager{
     @BeforeEach
     public void setUp() {
         deleteAll();
+    }
+
+    @Test
+    public void testAddAndGetAll(){
+        ArrayList<Integer> ids = new ArrayList<>();
+        HttpRequest request = HttpRequest.POST("/medicine", new MedicineAddCommand("ShouldBeDeleted", "Liquid"));
+        HttpResponse response = client.toBlocking().exchange(request);
+        ids.add(getEId(response).intValue());
+        request = HttpRequest.POST("/medicine", new MedicineAddCommand("ShouldBeDeleted", "Liquid"));
+        response = client.toBlocking().exchange(request);
+        ids.add(getEId(response).intValue());
+        request = HttpRequest.POST("/medicine", new MedicineAddCommand("ShouldBeDeleted", "Liquid"));
+        response = client.toBlocking().exchange(request);
+        ids.add(getEId(response).intValue());
+        assertEquals(HttpStatus.CREATED, response.getStatus());
+
+        request = HttpRequest.GET("/medicine/list");
+        List<Medicine> medicineList = client.toBlocking().retrieve(request, Argument.of(List.class, Medicine.class));
+        for(int i=0; i<ids.size();i++){
+            assertEquals(ids.get(0), medicineList.get(0).getPrimaryKey());
+        }
     }
 
     @Test

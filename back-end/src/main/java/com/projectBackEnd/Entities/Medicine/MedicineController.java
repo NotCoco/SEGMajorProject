@@ -18,10 +18,10 @@ public class MedicineController {
         //this.medicineManager = medicineManager;
     }
 
-//    @Get(value = "/list", produces = MediaType.TEXT_JSON)
-//    public List<Medicine> list() {
-//        return medicineManager.getAllMedicines();
-//    }
+    @Get(value = "/list", produces = MediaType.TEXT_JSON)
+    public List<Medicine> list() {
+        return medicineManager.getAllMedicines();
+    }
 
     @Get(value = "/{id}", produces = MediaType.TEXT_JSON)
     public Medicine list(int id) {
