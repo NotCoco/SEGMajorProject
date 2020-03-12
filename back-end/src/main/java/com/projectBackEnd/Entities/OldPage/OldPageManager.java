@@ -1,4 +1,4 @@
-package main.java.com.projectBackEnd.Entities.Page;
+package main.java.com.projectBackEnd.Entities.OldPage;
 
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
@@ -7,22 +7,22 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * PageManager class that deals with interacting with the database itself with respect to Pages.
+ * OldPageManager class that deals with interacting with the database itself with respect to OldPages.
  * Inspiration:
  * //https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
 
-public class PageManager extends EntityManager implements PageManagerInterface {
-    private static PageManagerInterface pageManager;
-    private PageManager() {
+public class OldPageManager extends EntityManager implements OldPageManagerInterface {
+    private static OldPageManagerInterface pageManager;
+    private OldPageManager() {
         super();
-        setSubclass(Page.class);
-        HibernateUtility.addAnnotation(Page.class);
+        setSubclass(OldPage.class);
+        HibernateUtility.addAnnotation(OldPage.class);
         pageManager = this;
     }
-    public static PageManagerInterface getPageManager() {
+    public static OldPageManagerInterface getOldPageManager() {
         if (pageManager != null) return pageManager;
-        else return new PageManager();
+        else return new OldPageManager();
     }
     /**
      * Creates a page and adds it to the database table
@@ -32,30 +32,30 @@ public class PageManager extends EntityManager implements PageManagerInterface {
      * @param content The content of the new page.
      * @return the created page
      */
-    public Page addPage(String slug, Integer index, String title, String content) {
-        Page newPage = new Page(slug, index, title, content);
-        insertTuple(newPage);
-        return newPage;
+    public OldPage addOldPage(String slug, Integer index, String title, String content) {
+        OldPage newOldPage = new OldPage(slug, index, title, content);
+        insertTuple(newOldPage);
+        return newOldPage;
     }
-    public Page addPage(Page newPage) {
-        insertTuple(newPage);
-        return newPage;
+    public OldPage addOldPage(OldPage newOldPage) {
+        insertTuple(newOldPage);
+        return newOldPage;
     }
 
     @Override
-    public Page getByPrimaryKey(Serializable slug) {
-        return (Page) super.getByPrimaryKey(slug);
+    public OldPage getByPrimaryKey(Serializable slug) {
+        return (OldPage) super.getByPrimaryKey(slug);
     }
 
-    public List<Page> getAllPages() {
-        return (List<Page>) super.getAll();
+    public List<OldPage> getAllPages() {
+        return (List<OldPage>) super.getAll();
     }
     @Override
-    public void delete(Page pageToDelete) {
+    public void delete(OldPage pageToDelete) {
         super.delete(pageToDelete);
     }
     @Override
-    public Page update(Page updatedCopy) {
+    public OldPage update(OldPage updatedCopy) {
         super.update(updatedCopy);
         return updatedCopy;
     }
@@ -66,10 +66,10 @@ public class PageManager extends EntityManager implements PageManagerInterface {
  * @param slug The slug of the page we're looking for
  * @return The page we find
  */
-    /*public Page findBySlug(String slug) {
+    /*public OldPage findBySlug(String slug) {
         Session session = buildSessionFactory().openSession();
         slug = new SQLSafeString(slug).toString();
-        Page page = (Page) session.load(Page.class, slug);
+        OldPage page = (OldPage) session.load(OldPage.class, slug);
         session.close();
         return page;
     } //Might need to do getAll and find from that
@@ -85,7 +85,7 @@ public class PageManager extends EntityManager implements PageManagerInterface {
         session.beginTransaction();
         slug = new SQLSafeString(slug).toString();
 
-        Page pageFromDatabase = (Page) session.load(Page.class, slug);
+        OldPage pageFromDatabase = (OldPage) session.load(OldPage.class, slug);
         pageFromDatabase.setContent(new SQLSafeString(newContent).toString());
         session.getTransaction().commit();
         session.close();
@@ -102,7 +102,7 @@ public class PageManager extends EntityManager implements PageManagerInterface {
         session.beginTransaction();
         slug = new SQLSafeString(slug).toString();
 
-        Page pageFromDatabase = (Page) session.load(Page.class, slug);
+        OldPage pageFromDatabase = (OldPage) session.load(OldPage.class, slug);
         pageFromDatabase.setTitle(new SQLSafeString(newTitle).toString());
         session.getTransaction().commit();
         session.close();
@@ -116,7 +116,7 @@ public class PageManager extends EntityManager implements PageManagerInterface {
         Session session = buildSessionFactory().openSession();
         session.beginTransaction();
         slug = new SQLSafeString(slug).toString();
-        Page page = findBySlug(slug);
+        OldPage page = findBySlug(slug);
         session.delete(page);
         session.getTransaction().commit();
         session.close();
@@ -131,7 +131,7 @@ public class PageManager extends EntityManager implements PageManagerInterface {
         Session session = buildSessionFactory().openSession();
         session.beginTransaction();
         slug = new SQLSafeString(slug).toString();
-        Page pageFromDatabase = (Page) session.load(Page.class, slug);
+        OldPage pageFromDatabase = (OldPage) session.load(OldPage.class, slug);
         pageFromDatabase.setIndex(newIndex);
         session.getTransaction().commit();
         session.close();
@@ -141,11 +141,11 @@ public class PageManager extends EntityManager implements PageManagerInterface {
      * Gets a list of all the pages
      * @return A list of all the pages
      */
-    /*public List<Page> getAll() {
+    /*public List<OldPage> getAll() {
         Session session = buildSessionFactory().openSession();
-        String hqlQuery = "FROM " + new SQLSafeString(Page.TABLENAME);
+        String hqlQuery = "FROM " + new SQLSafeString(OldPage.TABLENAME);
         @SuppressWarnings("Unchecked")
-        List<Page> pages = session.createQuery(hqlQuery).list();
+        List<OldPage> pages = session.createQuery(hqlQuery).list();
         session.close();
         return pages;
     }*/
@@ -156,10 +156,10 @@ public class PageManager extends EntityManager implements PageManagerInterface {
      * @return The page we find
      */
     /*
-    public Page findBySlug(String slug) {
+    public OldPage findBySlug(String slug) {
         Session session = buildSessionFactory().openSession();
         slug = new SQLSafeString(slug).toString();
-        Page page = (Page) session.load(Page.class, slug);
+        OldPage page = (OldPage) session.load(OldPage.class, slug);
         session.close();
         return page;
     }
@@ -171,7 +171,7 @@ public class PageManager extends EntityManager implements PageManagerInterface {
     public void deleteAll() { //TODO Move up with parameter? Perhaps.
         Session session = buildSessionFactory().openSession();
         session.beginTransaction();
-        Query query = session.createQuery("DELETE FROM " + new SQLSafeString(Page.TABLENAME) + " ");
+        Query query = session.createQuery("DELETE FROM " + new SQLSafeString(OldPage.TABLENAME) + " ");
         query.executeUpdate();
         session.getTransaction().commit();
         session.close();
@@ -182,7 +182,7 @@ public class PageManager extends EntityManager implements PageManagerInterface {
      * @param page The page to be added to the database
      */
     /*
-    public void insertTuple(Page page) {
+    public void insertTuple(OldPage page) {
         Session session = buildSessionFactory().openSession();
         session.beginTransaction();
         session.save(page);
@@ -201,18 +201,18 @@ public class PageManager extends EntityManager implements PageManagerInterface {
  * Get all the pages with a given title
  * @return
  */
-    /*public List<Page> getAllPagesByTitle(String title) {
+    /*public List<OldPage> getAllPagesByTitle(String title) {
         Session session = buildSessionFactory().openSession();
-        String sql = "SELECT * FROM " + Page.TABLENAME + " WHERE " + Page.TITLE + " = '" + title + "';";
+        String sql = "SELECT * FROM " + OldPage.TABLENAME + " WHERE " + OldPage.TITLE + " = '" + title + "';";
         SQLQuery query = session.createSQLQuery(sql);
-        query.addEntity(Page.class);
+        query.addEntity(OldPage.class);
         List results = query.list();
         session.close();
         return results;
     }*/ //TODO Ask whether this way, direct hard coded SQL onto the database to only get what's needed is better than:
 
     /*
-    public List<Page> getAllPagesByTitle(String title) {
+    public List<OldPage> getAllPagesByTitle(String title) {
         return getAll().stream().filter(p -> p.getTitle().equals(title)).collect(Collectors.toList());
     } //TODO Run this by in testing too! Fix documentation, ask L2
 
@@ -224,11 +224,11 @@ public class PageManager extends EntityManager implements PageManagerInterface {
  * @return A list of all the pages
  */
         /*
-public List<Page> getAll() { //<-- HQL get all
+public List<OldPage> getAll() { //<-- HQL get all
     Session session = buildSessionFactory().openSession();
-    String hqlQuery = "FROM " + (Page.TABLENAME);
+    String hqlQuery = "FROM " + (OldPage.TABLENAME);
     @SuppressWarnings("Unchecked")
-    List<Page> pages = session.createQuery(hqlQuery).list();
+    List<OldPage> pages = session.createQuery(hqlQuery).list();
     session.close();
     return pages;
 }*/
@@ -237,13 +237,13 @@ public List<Page> getAll() { //<-- HQL get all
  * @param slug
  * @return
  *//*
-    public Page getBySlug(String slug){ //Queries hibernate internally
+    public OldPage getBySlug(String slug){ //Queries hibernate internally
         Session session = buildSessionFactory().openSession();
         CriteriaBuilder cb = session.getCriteriaBuilder();
-        CriteriaQuery<Page> query = cb.createQuery(Page.class);
-        Root<Page> root = query.from(Page.class);
+        CriteriaQuery<OldPage> query = cb.createQuery(OldPage.class);
+        Root<OldPage> root = query.from(OldPage.class);
         query.select(root).where(
-                cb.equal(root.get(Page.SLUG.toLowerCase()), slug));
+                cb.equal(root.get(OldPage.SLUG.toLowerCase()), slug));
 
         return session.createQuery(query).getResultList().get(0);
     }*/
@@ -253,13 +253,13 @@ public List<Page> getAll() { //<-- HQL get all
     /*public void deleteAll() { //TODO Move up with parameter? Perhaps.
         Session session = buildSessionFactory().openSession();
         session.beginTransaction();
-        Query query = session.createQuery("DELETE FROM " + (Page.TABLENAME) + " ");
+        Query query = session.createQuery("DELETE FROM " + (OldPage.TABLENAME) + " ");
         query.executeUpdate();
         session.getTransaction().commit();
         session.close();
     }
     public void deleteAllCascade() { //TODO Move up with parameter? Perhaps.
-        for (Page p : (List<Page>) getAll()) {
+        for (OldPage p : (List<OldPage>) getAll()) {
             delete(p);
         }
     }*/

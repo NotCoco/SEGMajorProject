@@ -1,4 +1,4 @@
-package main.java.com.projectBackEnd.Entities.Page;
+package main.java.com.projectBackEnd.Entities.OldPage;
 
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
@@ -10,21 +10,21 @@ import java.net.URI;
 import java.util.List;
 
 @Controller("/page")
-public class PageController {
-    protected final PageManagerInterface pageManager = PageManager.getPageManager();
-    PageController() {}
+public class OldPageController {
+    protected final OldPageManagerInterface pageManager = OldPageManager.getOldPageManager();
+    OldPageController() {}
     @Get(value = "/{slug}", produces = MediaType.TEXT_JSON)
-    public Page list(String slug) {
+    public OldPage list(String slug) {
         return pageManager.getByPrimaryKey(slug);
     }
 
     @Get("/")
     public String index() {
-        return "Page page";
+        return "OldPage page";
     }
 
     @Get(value = "/list", produces = MediaType.TEXT_JSON)
-    public List<Page> list() {
+    public List<OldPage> list() {
         return pageManager.getAllPages();
     }
 
@@ -34,22 +34,22 @@ public class PageController {
 //        return HttpResponse.noContent();
 //    }
     @Post("/")
-    public HttpResponse<Page> add(@Body Page pageToAdd) {
-        Page page = pageManager.addPage(pageToAdd.getPrimaryKey(), pageToAdd.getIndex(), pageToAdd.getTitle(), pageToAdd.getContent());
+    public HttpResponse<OldPage> add(@Body OldPage oldPageToAdd) {
+        OldPage oldPage = pageManager.addOldPage(oldPageToAdd.getPrimaryKey(), oldPageToAdd.getIndex(), oldPageToAdd.getTitle(), oldPageToAdd.getContent());
         //TODO will still return created even if there's an unsuccessful creation, this if statement prevents that.
-        if (pageManager.getByPrimaryKey(pageToAdd.getPrimaryKey()) == null) return HttpResponse.serverError(); //I.e. object didn't get created
+        if (pageManager.getByPrimaryKey(oldPageToAdd.getPrimaryKey()) == null) return HttpResponse.serverError(); //I.e. object didn't get created
         return HttpResponse
-                .created(page)
-                .headers(headers -> headers.location((location(page.getPrimaryKey()))));
+                .created(oldPage)
+                .headers(headers -> headers.location((location(oldPage.getPrimaryKey()))));
     }
 
     @Put("/")
-    public HttpResponse update(@Body Page updatedPage) {
-        Page page = new Page(updatedPage.getPrimaryKey(), updatedPage.getIndex(), updatedPage.getTitle(), updatedPage.getContent());
-        pageManager.update(page);
+    public HttpResponse update(@Body OldPage updatedOldPage) {
+        OldPage oldPage = new OldPage(updatedOldPage.getPrimaryKey(), updatedOldPage.getIndex(), updatedOldPage.getTitle(), updatedOldPage.getContent());
+        pageManager.update(oldPage);
         return HttpResponse
                 .noContent()
-                .header(HttpHeaders.LOCATION, location(updatedPage.getPrimaryKey()).getPath());
+                .header(HttpHeaders.LOCATION, location(updatedOldPage.getPrimaryKey()).getPath());
     }
 
     @Delete("/{slug}")
