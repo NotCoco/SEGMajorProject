@@ -1,5 +1,7 @@
 package main.java.com.projectBackEnd.Entities.Site;
 
+import main.java.com.projectBackEnd.Entities.Page.Page;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -15,5 +17,6 @@ public interface SiteManagerInterface {
     public void delete(Site object); //TODO Is unnecessary now, can be removed
     public Site update(Site updatedVersion);
     public Site addNewSite(String name);
+    public List<Page> getAllPagesOfSite(); //I'm working on it! Act like it exists for now P:
 
 }
