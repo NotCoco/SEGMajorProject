@@ -113,17 +113,17 @@ public class PageControllerTest {
 
     @Test
     public void testAddNullIndexPage(){ //TODO No longer throws anything
-        Page pageAdded = new Page("testslug/fortesting/test", null, "Title", "Content");
-        HttpRequest request = HttpRequest.POST("/page", pageAdded);
-        HttpResponse response = client.toBlocking().exchange(request);
-        String id = getPagePrimaryKeyFromResponse(response);
-        assertNull(pageManager.getByPrimaryKey("testslug/fortesting/test"));
+        //Page pageAdded = new Page("testslug/fortesting/test", null, "Title", "Content");
+        //HttpRequest request = HttpRequest.POST("/page", pageAdded);
+        //HttpResponse response = client.toBlocking().exchange(request);
+        //String id = getPagePrimaryKeyFromResponse(response);
+        //assertNull(pageManager.getByPrimaryKey("testslug/fortesting/test"));
         // Asserting that the page has not been added.
         //assertNotEquals(HttpStatus.CREATED, response.getStatus()); //TODO Still incorrectly true.
-//        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-//            client.toBlocking().exchange(HttpRequest.POST("/page", new Page("slug/test/slug", null, "", "")));
-//        });
-//        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.POST("/page", new Page("slug/test/slug", null, "", "")));
+        });
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
     }
 
     @Test

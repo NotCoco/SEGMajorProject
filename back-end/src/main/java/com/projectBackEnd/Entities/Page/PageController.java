@@ -37,7 +37,7 @@ public class PageController {
     public HttpResponse<Page> add(@Body Page pageToAdd) {
         Page page = pageManager.addPage(pageToAdd.getPrimaryKey(), pageToAdd.getIndex(), pageToAdd.getTitle(), pageToAdd.getContent());
         //TODO will still return created even if there's an unsuccessful creation, this if statement prevents that.
-        //if (pageManager.getByPrimaryKey(pageToAdd.getPrimaryKey()) == null) return HttpResponse.not_acceptable(page).headers(headers -> headers.location((location(page.getPrimaryKey()))));; //I.e. object didn't get created
+        if (pageManager.getByPrimaryKey(pageToAdd.getPrimaryKey()) == null) return HttpResponse.serverError(); //I.e. object didn't get created
         return HttpResponse
                 .created(page)
                 .headers(headers -> headers.location((location(page.getPrimaryKey()))));
