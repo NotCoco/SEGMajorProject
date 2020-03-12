@@ -12,19 +12,19 @@ import main.java.com.projectBackEnd.Entities.Page.Page;
 import main.java.com.projectBackEnd.Entities.Page.PageManager;
 import main.java.com.projectBackEnd.Entities.Page.PageManagerInterface;
 import main.java.com.projectBackEnd.HibernateUtility;
-
+import io.micronaut.core.type.Argument;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
+import java.util.ArrayList;
 import javax.inject.Inject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-
+import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
-
+import javax.validation.ConstraintViolationException;
 @MicronautTest
 public class PageControllerTest {
 
@@ -62,7 +62,6 @@ public class PageControllerTest {
     public void testAddAndGetPage() {
         Page pageAdded = new Page("tests[lug/forte\"]sting/test", 3, "Title", "Content");
         HttpRequest request = HttpRequest.POST("/page", pageAdded); //Post takes /page instead of /page/
-
         HttpResponse response = client.toBlocking().exchange(request);
         String id = getPagePrimaryKeyFromResponse(response);
 
@@ -75,6 +74,7 @@ public class PageControllerTest {
         assertTrue(pageAdded.equals(testPage)); //Hopefully checks with the .equals method of page
 
     }
+
     @Test
     public void testAddAndUpdatePage(){
         Page pageAdded = new Page("testslug/fortesting/test", 3, "Title", "Content");
@@ -86,12 +86,13 @@ public class PageControllerTest {
         Page updatedPage = new Page("testslug/fortesting/test", 6, "updatedTitle", "newContent");
         request = HttpRequest.PUT("/page", updatedPage);
         response = client.toBlocking().exchange(request);
-
+        //Test it has worked in the database too!
         assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
 
         request = HttpRequest.GET("/page/" + id);
         Page pageFound = client.toBlocking().retrieve(request, Page.class);
         assertTrue(pageFound.equals(updatedPage)); //Hopefully checks with the .equals method of page
+        assertNotNull(pageManager.getByPrimaryKey("testslug/fortesting/test"));
     }
 
     @Test
@@ -111,35 +112,57 @@ public class PageControllerTest {
     }
 
     @Test
-    public void testAddNullIndexPage(){
+    public void testAddNullIndexPage(){ //TODO No longer throws anything
+        //Page pageAdded = new Page("testslug/fortesting/test", null, "Title", "Content");
+        //HttpRequest request = HttpRequest.POST("/page", pageAdded);
+        //HttpResponse response = client.toBlocking().exchange(request);
+        //String id = getPagePrimaryKeyFromResponse(response);
+        //assertNull(pageManager.getByPrimaryKey("testslug/fortesting/test"));
+        // Asserting that the page has not been added.
+        //assertNotEquals(HttpStatus.CREATED, response.getStatus()); //TODO Still incorrectly true.
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
             client.toBlocking().exchange(HttpRequest.POST("/page", new Page("slug/test/slug", null, "", "")));
         });
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
     }
-    /*
-    //TODO Test me!
-    private String getEId(HttpResponse response) {
-        String responseHeader = response.header(HttpHeaders.LOCATION);
-        if (responseHeader != null) {
-            int index = responseHeader.indexOf("/page/");
-            if (index != -1) {
-                String cutResponseHeader = responseHeader.substring(index + "/page/".length());
-                try {
-                    return URLEncoder.encode(cutResponseHeader, java.nio.charset.StandardCharsets.UTF_8.toString());
-                } catch (UnsupportedEncodingException e) {
-                    //return URLEncoder.encode(cutResponseHeader);
-                    //TODO Remove deprecation
-                    return null;
-                }
-            }
-            return null;
 
+    @Test
+    public void testGetAllPages() {
+        ArrayList<String> ids = new ArrayList<>();
+        Page pageAdded = new Page("testslug/forte%2Fsting/test", 3, "Title", "Content");
+        HttpRequest request = HttpRequest.POST("/page", pageAdded);
+        HttpResponse response = client.toBlocking().exchange(request);
+        ids.add(getPagePrimaryKeyFromResponse(response));
+        pageAdded = new Page("testslug/fortesting/tes2t", 3, "Title", "Content");
+        request = HttpRequest.POST("/page", pageAdded);
+        response = client.toBlocking().exchange(request);
+        ids.add(getPagePrimaryKeyFromResponse(response));
+
+        assertEquals(HttpStatus.CREATED, response.getStatus());
+
+        request = HttpRequest.GET("/page/list");
+        List<Page> pageList = client.toBlocking().retrieve(request, Argument.of(List.class, Page.class));
+        ArrayList<String> encodedPageIDs = new ArrayList<>();
+        for (int j = 0; j < pageList.size(); ++j) {
+            encodedPageIDs.add(URLEncoder.encode(pageList.get(j).getPrimaryKey()));
         }
-        return null;
-    }*/
+        for(int i=0; i<ids.size();++i){
+            assertEquals(ids.get(i), encodedPageIDs.get(i));
+        }
+    }
+
+    @Test
+    public void testAddDuplicatePrimaryKeyPages() {
+        Page pageAdded = new Page("testslug/fortesting/test", 3, "Title", "Content");
+        HttpRequest request = HttpRequest.POST("/page", pageAdded);
+        HttpResponse response = client.toBlocking().exchange(request);
+        assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.POST("/page", new Page("testslug/fortesting/test", 3, "Tit-le", "Conten/t")));
+        });
+    }
+
     //OLD getEId implementation as I wasn't sure where to put the URL Encoder :S
-        private String getPagePrimaryKeyFromResponse(HttpResponse response) {
+    private String getPagePrimaryKeyFromResponse(HttpResponse response) {
         String val = response.header(HttpHeaders.LOCATION);
         if (val != null) {
             int index = val.indexOf("/page/");
@@ -149,5 +172,6 @@ public class PageControllerTest {
             return null;
         }
         return null;
-        }
+    }
+
 }
