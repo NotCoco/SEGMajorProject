@@ -58,7 +58,7 @@ public class OldPageController {
         return HttpResponse.noContent();
     }
 
-    protected URI location(String slug) {
+    protected URI location(String slug) { //Make it take not the ID to assign the location
         String encodedSlug = null;
         try {
             encodedSlug = URLEncoder.encode(slug, java.nio.charset.StandardCharsets.UTF_8.toString());
