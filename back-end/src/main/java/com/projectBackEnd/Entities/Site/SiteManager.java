@@ -49,7 +49,7 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
         return (Site) super.update(updatedVersion);
     }
     //TODO Reorder these and in the interface.
-    public Site addNewSite(String name) {
+    public Site addSite(String name) {
         Site newSite = new Site(name);
         super.insertTuple(newSite);
         return newSite;

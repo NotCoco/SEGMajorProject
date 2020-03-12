@@ -15,7 +15,8 @@ public interface PageManagerInterface {
     public Page getByPrimaryKey(Serializable pk);
     public void delete(Page object); //TODO Is unnecessary now, can be removed
     public Page update(Page updatedVersion);
-    public Page addNewPage(String name);
+    public Page addPage(String siteName, String slug, int Index, String title, String content);
+    public Page addPage(Site siteName, String slug, int Index, String title, String content);
     public List<Page> getAllPagesOfSite(String siteName); //I'm working on it! Act like it exists for now P:
     public List<Page> getAllPagesOfSite(Site site); //I'm working on it! Act like it exists for now P:
 
