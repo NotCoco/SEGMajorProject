@@ -10,7 +10,7 @@ import javax.persistence.*;
 public class Site implements TableEntity {
     public static final String TABLENAME = "Sites";
     public static final String ID = "ID";
-    private static final String SITENAME = "Name";
+    public static final String SITENAME = "Name";
 
 
     @Id

@@ -1,6 +1,7 @@
 package main.java.com.projectBackEnd.Entities.Site;
 
 
+import main.java.com.projectBackEnd.Entities.Page.Page;
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
 
@@ -52,6 +53,10 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
         Site newSite = new Site(name);
         super.insertTuple(newSite);
         return newSite;
+    }
+
+    public List<Page> getAllPagesOfSite() {
+        return null;
     }
 
 }
