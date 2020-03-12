@@ -22,7 +22,7 @@ public class SiteController {
 
     @Post("/")
     public HttpResponse<Site> add(@Body Site newSiteToAdd) { //TODO Change to site command
-        Site site = siteManager.addNewSite(newSiteToAdd.getName());
+        Site site = siteManager.addSite(newSiteToAdd.getName());
         //TODO will still return created even if there's an unsuccessful creation, this if statement prevents that.
         if (siteManager.getByPrimaryKey(site.getPrimaryKey()) == null) return HttpResponse.serverError(); //I.e. object didn't get created
         return HttpResponse

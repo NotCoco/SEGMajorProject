@@ -49,7 +49,7 @@ public class Page implements TableEntity {
 
     }
 
-    //Need to find out which of these two Micronaut will use. Or just use the getName
+    //Need to find out which of these two Micronaut will use. Or just use the getName, make it print something lol
     public Page(Integer ID, String siteName, String slug, int Index, String title, String content) {
 
     }
