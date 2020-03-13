@@ -253,7 +253,8 @@ public class SiteControllerTest {
             input.add(new PagePatchCommand(currentPage.getPrimaryKey(), currentPage.getSlug(), i));
         } //Will order all pages from 0-4;
 
-        HttpRequest request = HttpRequest.PATCH("/sites/"+ "testSiteA" +"/pages", input); //This line is the issue
+        HttpRequest request = HttpRequest.PATCH("/sites/"+ "testSiteA" +"/pages", input);
+        client.toBlocking().exchange(request);
         //TODO Add the correct parameter for this!
         //Updates all the pages to have a new index.
         //@Patch("/{name}/page-indices")
