@@ -57,15 +57,15 @@ public class Medicine implements TableEntity {
 
     public Medicine(String name, String type) {
         this.primaryKey = -1;
-        this.name = name == "" ? "Unnamed" : name;
-        this.type = type == "" ? "Undefined" : type;
+        this.name = (name != null && "".equals(name.trim())) ? "Unnamed" : name;
+        this.type = (type != null && "".equals(type.trim())) ? "Undefined" : type;
     }
 
     // Constructor taking id
     public Medicine(Integer id, String name, String type) {
         this.primaryKey = id;
-        this.name = name == "" ? "Unnamed" : name;
-        this.type = type == "" ? "Undefined" : type;
+        this.name = (name != null && "".equals(name.trim())) ? "Unnamed" : name;
+        this.type = (type != null && "".equals(type.trim())) ? "Undefined" : type;
     }
 
 
@@ -81,16 +81,14 @@ public class Medicine implements TableEntity {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = (name != null && "".equals(name.trim())) ? "Unnamed" : name;
     }
-
     public String getType() {
         return type;
     }
 
     public void setType(String type) {
-        this.type = type;
-    }
+        this.type = (type != null && "".equals(type.trim())) ? "Undefined" : type;    }
 
 
     /**

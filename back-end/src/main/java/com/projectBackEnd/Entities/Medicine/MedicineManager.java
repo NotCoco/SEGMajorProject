@@ -55,25 +55,31 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
         return med;
     }
 
-    // Update attributes of the object
-    // Transactional annotation is inherited so no need to tag these methods
+    /**
+     * Update attributes of the object
+     * Transactional annotation is inherited so no need to tag these methods
+     * @return updated object
+     */
     public Medicine update(Medicine med) {
         return (Medicine) super.update(med);
     }
 
 
-    // Remove medicine object from database
+    /**
+     * Remove medicine object from database
+    */
     @Override
     public void delete(Medicine med) {
         super.delete(med);
     }
 
-    // Return primary key
+    /**
+     * @return primary key
+     */
     @Override
     public Medicine getByPrimaryKey(Serializable id) {
         return (Medicine) super.getByPrimaryKey(id);
     }
-
 
     /**
      * @return a list of all medicines in database
