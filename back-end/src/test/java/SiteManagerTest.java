@@ -48,13 +48,13 @@ public class SiteManagerTest {
         assertEquals(1, siteManager.getAllSites().size());
     }
 
-    @Test
-    public void testCreateWithIllegalValues() {
-        String name = null;
-        siteManager.addSite(new Site(null, null));
-        siteManager.addSite(name);
-        assertEquals(0, siteManager.getAllSites().size());
-    }
+//    @Test
+//    public void testCreateWithIllegalValues() {
+//        String name = null;
+//        siteManager.addSite(new Site(null, null));
+//        siteManager.addSite(name);
+//        assertEquals(0, siteManager.getAllSites().size());
+//    }
 
     @Test
     public void testEmptyName() {

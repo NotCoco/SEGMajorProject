@@ -4,6 +4,9 @@ import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
+import main.java.com.projectBackEnd.Entities.Page.Page;
+import main.java.com.projectBackEnd.Entities.Page.PageManager;
+import main.java.com.projectBackEnd.Entities.Page.PageManagerInterface;
 
 
 import java.io.UnsupportedEncodingException;
@@ -14,6 +17,8 @@ import java.util.List;
 @Controller("/sites")
 public class SiteController {
     final SiteManagerInterface siteManager = SiteManager.getSiteManager();
+    final PageManagerInterface pageManager = PageManager.getPageManager();
+
     SiteController() {}
     @Get(value = "/list", produces = MediaType.TEXT_JSON)
     public List<Site> list() {
@@ -24,6 +29,27 @@ public class SiteController {
     public String index(){
         return "This is our site index page";
     }
+
+    @Get("/{name}/pages")
+    public List<Page> pages(String name){
+        return pageManager.getAllPagesOfSite(name);
+    }
+
+    @Post("/{name}/pages")
+    public HttpResponse<Page> addPage(String name, @Body Page pageToAdd){
+        Page p = pageManager.addPage(pageToAdd);
+        if(pageManager.getByPrimaryKey(p.getPrimaryKey()) == null){
+            return HttpResponse.serverError();
+        }
+        return HttpResponse
+                .created(p)
+                .headers(headers -> headers.location(pageLocation(name, p.getSlug())));
+    }
+
+//    @Get("/{name}/pages/{page}")
+//    public Page getPage(String name, String page){
+//
+//    }
 
     @Post("/")
     public HttpResponse<Site> add(@Body SiteAddCommand command) {
@@ -52,11 +78,23 @@ public class SiteController {
 
     @Put("/")
     public HttpResponse update(@Body Site updatedSite) {
-        Site site = new Site(updatedSite.getPrimaryKey(), updatedSite.getName());
-        siteManager.update(site);
+        siteManager.update(updatedSite);
         return HttpResponse
                 .noContent()
                 .header(HttpHeaders.LOCATION, location(updatedSite.getName()).getPath());
+    }
+
+    protected URI pageLocation(String siteName, String pageName) {
+        String encodedSlug = null;
+        try {
+            encodedSlug = URLEncoder.encode(siteName, java.nio.charset.StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
+//        System.out.println("/sites/" + siteName + "/pages/" + encodedSlug);
+//        System.out.println("/sites/" + siteName + "/pages/" + encodedSlug);
+//        System.out.println("/sites/" + siteName + "/pages/" + encodedSlug);
+        return URI.create("/sites/" + siteName + "/pages/" + encodedSlug);
     }
 
     protected URI location(String siteName) {

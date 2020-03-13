@@ -27,7 +27,7 @@ public class Site implements TableEntity {
         this.primaryKey = -1;
         this.name = siteName;
     }
-    public Site(Integer ID, String siteName) {
+    public Site(int ID, String siteName) {
         this.primaryKey = ID;
         this.name = siteName;
     }

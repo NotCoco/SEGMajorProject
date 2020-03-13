@@ -10,6 +10,7 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import main.java.com.projectBackEnd.*;
+import main.java.com.projectBackEnd.Entities.Page.Page;
 import main.java.com.projectBackEnd.Entities.Site.*;
 
 import javax.inject.Inject;
@@ -35,7 +36,7 @@ public class SiteControllerTest {
 
     @BeforeAll
     public static void setUpDatabase() {
-        HibernateUtility.setResource("test/resources/testhibernate.cfg.xml");
+        HibernateUtility.setResource("testhibernate.cfg.xml");
         siteManager = SiteManager.getSiteManager();
     }
 
@@ -130,6 +131,18 @@ public class SiteControllerTest {
         Site m = getSite("newName");
         assertEquals("newName", m.getName());
     }
+
+//    @Test
+//    public void testAddPage(){
+//        HttpResponse response = addSite("testSite");
+//        Page page1 = new Page(100, "testSite", "sameSlug", 1, "TitleA", "ContentA");
+//        HttpRequest request = HttpRequest.POST("/sites/testSite/pages", new Page());
+//        response = client.toBlocking().exchange(request);
+//        assertEquals(HttpStatus.CREATED, response.getStatus());
+//
+//        request = HttpRequest.GET("/sites/" + name);
+//        response = client.toBlocking().retrieve(request, Site.class);
+//    }
 
     protected HttpResponse putSite(int id, String newName) {
         HttpRequest request = HttpRequest.PUT("/sites", new Site(id, newName));

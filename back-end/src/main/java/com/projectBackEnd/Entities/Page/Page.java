@@ -70,7 +70,7 @@ public class Page implements TableEntity {
 
 
     //Need to find out which of these two Micronaut will use. Or just use the getName, make it print something lol
-    public Page(Integer ID, String siteName, String slug, Integer index, String title, String content) {
+    public Page(int ID, String siteName, String slug, Integer index, String title, String content) {
         this.primaryKey = ID;
         SiteManagerInterface s = SiteManager.getSiteManager();
         setSite(s.getBySiteName(siteName));
@@ -80,7 +80,7 @@ public class Page implements TableEntity {
         this.content = content;
         System.out.println("Micronaut used Constructor 1! Delete The following constructor"); //TODO REMOVE
     }
-    public Page(Integer ID, Site site, String slug, Integer index, String title, String content) {
+    public Page(int ID, Site site, String slug, Integer index, String title, String content) {
         this.primaryKey = ID;
         setSite(site);
         setSlug(slug);
