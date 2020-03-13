@@ -4,10 +4,8 @@ import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
-import main.java.com.projectBackEnd.Entities.Page.Page;
-import main.java.com.projectBackEnd.Entities.Page.PageManager;
-import main.java.com.projectBackEnd.Entities.Page.PageManagerInterface;
-import main.java.com.projectBackEnd.Entities.Page.PagePatchCommand;
+
+import main.java.com.projectBackEnd.Entities.Page.*;
 
 
 import java.io.UnsupportedEncodingException;
@@ -49,9 +47,9 @@ public class SiteController {
     }
 
     @Post("/{name}/pages")
-    public HttpResponse<Page> addPage(String name, @Body Page pageToAdd){
-        Page p = pageManager.addPage(pageToAdd);
-        if(pageManager.getByPrimaryKey(p.getPrimaryKey()) == null){
+    public HttpResponse<Page> addPage(String name, @Body PageAddCommand pageToAdd){
+        Page p = pageManager.addPage(pageToAdd.getSite().getName(), pageToAdd.getSlug(), pageToAdd.getIndex(), pageToAdd.getTitle(), pageToAdd.getContent());
+        if(pageManager.getPageBySiteAndSlug(p.getSite(), p.getSlug()) == null){
             return HttpResponse.serverError();
         }
         return HttpResponse

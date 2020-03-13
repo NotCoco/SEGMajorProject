@@ -15,17 +15,17 @@ import java.io.Serializable;
 @Table(name = Page.TABLENAME, uniqueConstraints = { @UniqueConstraint(columnNames = {Page.SLUG, Page.SITE})})
 public class Page implements TableEntity {
     public static final String TABLENAME = "Pages";
-    public static final String SLUG = "Slug";
     private static final String ID = "ID";
+    public static final String SITE = "Site";
+    public static final String SLUG = "Slug";
+
     private static final String INDEX = "`Index`";
     private static final String TITLE = "Title";
     private static final String CONTENT = "Content";
-    public static final String SITE = "Site";
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ID, nullable = false)
     private Integer primaryKey;
-
     @ManyToOne(targetEntity = Site.class)
     @OnDelete(action= OnDeleteAction.CASCADE)
     @JoinColumn(name = SITE, nullable = false)
@@ -34,25 +34,20 @@ public class Page implements TableEntity {
     @Column(name = SLUG, nullable = false)
     @Type(type="text")
     private String slug;
-
-
+    @Column(name = INDEX)
+    private Integer index;
     @Column(name = TITLE)
     @Type(type="text")
     private String title;
-
-
-
     @Column(name = CONTENT)
     @Type(type="text")
     private String content;
-
-    @Column(name = INDEX)
-    private Integer index;
 
     public Page() {}
 
 
     public Page(String siteName, String slug, Integer index, String title, String content) {
+        this.primaryKey = -1;
         SiteManagerInterface s = SiteManager.getSiteManager();
         setSite(s.getBySiteName(siteName));
         setSlug(slug);
@@ -61,6 +56,7 @@ public class Page implements TableEntity {
         this.content = content;
     }
     public Page(Site site, String slug, Integer index, String title, String content) {
+        this.primaryKey = -1;
         setSite(site);
         setSlug(slug);
         this.index = index;
@@ -70,7 +66,7 @@ public class Page implements TableEntity {
 
 
     //Need to find out which of these two Micronaut will use. Or just use the getName, make it print something lol
-    public Page(int ID, String siteName, String slug, Integer index, String title, String content) {
+    public Page(Integer ID, String siteName, String slug, Integer index, String title, String content) {
         this.primaryKey = ID;
         SiteManagerInterface s = SiteManager.getSiteManager();
         setSite(s.getBySiteName(siteName));
@@ -80,7 +76,7 @@ public class Page implements TableEntity {
         this.content = content;
         System.out.println("Micronaut used Constructor 1! Delete The following constructor"); //TODO REMOVE
     }
-    public Page(int ID, Site site, String slug, Integer index, String title, String content) {
+    public Page(Integer ID, Site site, String slug, Integer index, String title, String content) {
         this.primaryKey = ID;
         setSite(site);
         setSlug(slug);

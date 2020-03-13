@@ -15,8 +15,8 @@ public interface PageManagerInterface {
     public Page getByPrimaryKey(Integer pk); //TODO In the event that this is not used, we violate Interface Segregation
     public void delete(Page object); //TODO Is unnecessary now, can be removed
     public Page update(Page updatedVersion);
-    public Page addPage(String siteName, String slug, int Index, String title, String content);
-    public Page addPage(Site siteName, String slug, int Index, String title, String content);
+    public Page addPage(String siteName, String slug, Integer Index, String title, String content);
+    public Page addPage(Site siteName, String slug, Integer Index, String title, String content);
     public List<Page> getAllPagesOfSite(String siteName);
     public List<Page> getAllPagesOfSite(Site site);
     public Page getPageBySiteAndSlug(String siteName, String slug);

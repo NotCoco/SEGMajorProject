@@ -10,7 +10,8 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import main.java.com.projectBackEnd.*;
-import main.java.com.projectBackEnd.Entities.Page.Page;
+
+import main.java.com.projectBackEnd.Entities.Page.*;
 import main.java.com.projectBackEnd.Entities.Site.*;
 
 import javax.inject.Inject;
@@ -33,11 +34,13 @@ public class SiteControllerTest {
     HttpClient client;
 
     static SiteManagerInterface siteManager;
+    static PageManagerInterface pageManager;
 
     @BeforeAll
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         siteManager = SiteManager.getSiteManager();
+        pageManager = PageManager.getPageManager();
     }
 
     @AfterAll
@@ -48,6 +51,8 @@ public class SiteControllerTest {
     @BeforeEach
     public void setUp() {
         siteManager.deleteAll();
+        //Automatically deletes all pages too due to cascade, but:
+        pageManager.deleteAll();
     }
 
     @Test
@@ -132,6 +137,43 @@ public class SiteControllerTest {
         assertEquals("newName", m.getName());
     }
 
+    @Test
+    public void testAddingRegularPage() {
+        addSite("testSiteA");
+        addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
+    }
+
+    @Test
+    public void testAddingPageWithNulls() {
+
+    }
+
+    @Test
+    public void testUpdatePageDetails() {
+
+    }
+
+    @Test
+    public void testUpdatePageWithNullValues() {
+
+    }
+
+    @Test
+    public void testPatchingPageIndex() {
+        /*    @Patch("/{name}/page-indices")
+    public HttpResponse<Page> patchPage(String name, @Body List<PagePatchCommand> patchCommandList){
+        for(PagePatchCommand p : patchCommandList){
+            String slug = p.getSlug();
+            Page page = pageManager.getPageBySiteAndSlug(name, slug);
+            page.setIndex(p.getIndex());
+            pageManager.update(page);
+        }
+        return HttpResponse
+                .noContent();
+    }*/
+
+    }
+
 //    @Test
 //    public void testAddPage(){
 //        HttpResponse response = addSite("testSite");
@@ -153,6 +195,17 @@ public class SiteControllerTest {
         HttpRequest request = HttpRequest.POST("/sites", new SiteAddCommand(name));
         HttpResponse response = client.toBlocking().exchange(request);
         return response;
+    }
+    protected HttpResponse addPage(String siteName, String slug, Integer index, String title, String content) {
+        //Page p = pageManager.addPage(siteName, slug, index, title, content);
+        //assertNotNull(pageManager.getPageBySiteAndSlug(p.getSite(), p.getSlug()));
+        // public PageAddCommand(String siteName, String slug, String index, String title, String content){
+        //HttpRequest request = HttpRequest.POST("/page", new Page(siteName, slug, index, title, content));
+        //HttpResponse response = client.toBlocking().exchange(request);
+
+        client.toBlocking().exchange(HttpRequest.POST("/page", new Page(siteName, slug, index, title, content)));
+        return null;
+        //return null;
     }
 
     protected Site getSite(String name) {
