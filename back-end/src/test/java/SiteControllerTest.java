@@ -2,7 +2,6 @@ package test.java;
 
 
 import io.micronaut.test.annotation.MicronautTest;
-import io.micronaut.core.type.Argument;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -21,9 +20,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -39,7 +35,7 @@ public class SiteControllerTest {
 
     @BeforeAll
     public static void setUpDatabase() {
-        HibernateUtility.setResource("testhibernate.cfg.xml");
+        HibernateUtility.setResource("test/resources/testhibernate.cfg.xml");
         siteManager = SiteManager.getSiteManager();
     }
 

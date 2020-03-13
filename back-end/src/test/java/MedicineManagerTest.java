@@ -24,7 +24,7 @@ public class MedicineManagerTest {
 
     @BeforeClass
     public static void setUpDatabase() {
-        HibernateUtility.setResource("testhibernate.cfg.xml");
+        HibernateUtility.setResource("test/resources/testhibernate.cfg.xml");
         medicineManager = MedicineManager.getMedicineManager();
         connectionLeakUtil = new ConnectionLeakUtil();
     }

@@ -7,16 +7,16 @@ import main.java.com.projectBackEnd.Entities.Site.Site;
 import main.java.com.projectBackEnd.Entities.Site.SiteManager;
 import main.java.com.projectBackEnd.Entities.Site.SiteManagerInterface;
 import main.java.com.projectBackEnd.HibernateUtility;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
+import javax.persistence.PersistenceException;
+import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.samePropertyValuesAs;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PageManagerTest {
@@ -27,7 +27,7 @@ public class PageManagerTest {
     private static Site testSiteB = null;
     @BeforeClass
     public static void setUpDatabase() {
-        HibernateUtility.setResource("testhibernate.cfg.xml");
+        HibernateUtility.setResource("test/resources/testhibernate.cfg.xml");
         pageManager = PageManager.getPageManager();
         siteManager = SiteManager.getSiteManager();
         siteManager.addSite("Disease1");
@@ -112,5 +112,119 @@ public class PageManagerTest {
         siteManager.update(updatedSite);
         assertEquals("UpdatedSite", pageManager.getAllPages().get(0).getSite().getName());
     }
-    
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeleteNonexistentPrimaryKey() {
+        pageManager.delete("");
+    }
+    @Test(expected = IllegalArgumentException.class)
+    public void testDeleteNotInDBObject() {
+        Page pageNotInTable = new Page(testSiteB,"notaddedtotable", 0, "notaddedtoTable", "");
+        pageManager.delete(pageNotInTable);
+    }
+    @Test(expected = PersistenceException.class)
+    public void testUpdateWithNullData() {
+        fillDatabase();
+        int primaryKeyOfObjectToUpdate =pageManager.getAllPages().get(0).getPrimaryKey();
+        Page badPage = new Page(primaryKeyOfObjectToUpdate,testSiteB,null, null, null, null);
+        pageManager.update(badPage);
+        for (int i = 0; i < pageManager.getAllPages().size(); ++i) {
+            System.out.println(pageManager.getAllPages().get(i));
+        }
+    }
+
+    @Test
+    public void testCreateAndSavePage() {
+        pageManager.addPage(testSiteA,"biliary_atresia", 0, "Biliary Atresia", "" +
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
+                "");
+        Assert.assertEquals(pageManager.getAllPages().size(), 1);
+    }
+
+    @Test
+    public void testSafeNames() {
+        pageManager.addPage(testSiteA,";DROP TABLE Pages", 2, "';'''", "sdafds");
+        Assert.assertEquals(pageManager.getAllPages().size(), 1);
+    }
+
+    @Test
+    public void testEmptyContent() {
+        pageManager.addPage(testSiteB,"biliary_atresia", 0, "", "");
+        Assert.assertEquals(pageManager.getAllPages().size(), 1);
+    }
+
+    @Test
+    public void testGetAll() {
+        fillDatabase();
+        Assert.assertEquals(pageManager.getAllPages().size(), getListOfPages().size());
+    }
+
+    @Test
+    public void testIdenticalPages() {
+        Page page = new Page(testSiteB, "biliary_atresia", 0, "Biliary Atresia", "" +
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
+                "");
+        Page page2 = new Page(testSiteB,"biliary_atresia", 0, "Biliary Atresia", "" +
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
+                "");
+        assertThat(page, samePropertyValuesAs(page2));
+        //assertTrue(page.equals(page2));
+        //TODO Notice this has no equals method implemented as not necessary
+    }
+
+    @Test
+    public void testDeleteAll() {
+        fillDatabase();
+        pageManager.deleteAll();
+        Assert.assertEquals(pageManager.getAllPages().size(), 0);
+    }
+
+    @Test
+    public void testDelete() {
+        Page replacementPage = pageManager.addPage(testSiteB,"Slug3", 10, "Title3", "New content!");
+        pageManager.delete(pageManager.getAllPages().get(0).getPrimaryKey());
+        Assert.assertEquals(pageManager.getAllPages().size(), 0);
+    }
+
+    @Test
+    public void testUpdatePage() {
+        Page newPage = new Page(9999, testSiteB,"Slug3", 10, "Title3", "New content!");
+        pageManager.addPage(newPage);
+        int assignedID = pageManager.getAllPages().get(0).getPrimaryKey();
+        fillDatabase();
+        Page updatedPage = new Page(assignedID, testSiteB,"Slug3", 14, "Title3", "New conwishwashchangedtent!");
+        pageManager.update(updatedPage);
+        Page foundPage = pageManager.getByPrimaryKey(assignedID);
+
+        Assert.assertEquals(foundPage.getContent(), updatedPage.getContent());
+    }
+
+    @Test
+    public void testUnfoundPrimaryKey() {
+        fillDatabase();
+        assertNull(pageManager.getByPrimaryKey(-100));
+    }
+    @Test(expected = IllegalArgumentException.class)
+    public void testNullPrimaryKey() throws IllegalStateException {
+        fillDatabase();
+        assertNull(pageManager.getByPrimaryKey(null));
+    }
+    private static ArrayList<Page> getListOfPages() {
+        ArrayList<Page> listOfPages = new ArrayList<>();
+        listOfPages.add(new Page(testSiteA,"Slug1", 0, "Title1", "Content1"));
+        listOfPages.add(new Page(testSiteA,"Slug2", 8, "Title2", "Content2"));
+        listOfPages.add(new Page(testSiteA,"Slug3", 7, "Title3", "Content3"));
+        listOfPages.add(new Page(testSiteA,"Slug4", 5, "Title4", "Content4"));
+        listOfPages.add(new Page(testSiteA,"Slug5", 4, "Title5", "Content5"));
+        listOfPages.add(new Page(testSiteA,"Slug8", 4, "Title5", "Content5"));
+        listOfPages.add(new Page(testSiteA,"Slug9", 4, "Title5", "Content5"));
+        listOfPages.add(new Page(testSiteA,"Slug12", 4, "Title5", "Content5"));
+        listOfPages.add(new Page(testSiteA,"Slug17", 4, "Title5", "Content5"));
+        return listOfPages;
+    }
+    private void fillDatabase() {
+        for (Page p : getListOfPages()) {
+            pageManager.addPage(p);
+        }
+    }
 }

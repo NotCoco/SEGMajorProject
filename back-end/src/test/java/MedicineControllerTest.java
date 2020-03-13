@@ -39,7 +39,7 @@ public class MedicineControllerTest{
 
     @BeforeAll
     public static void setUpDatabase() {
-        HibernateUtility.setResource("testhibernate.cfg.xml");
+        HibernateUtility.setResource("test/resources/testhibernate.cfg.xml");
         medicineManager = MedicineManager.getMedicineManager();
     }
 

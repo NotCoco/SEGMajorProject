@@ -20,11 +20,10 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import javax.inject.Inject;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
-import javax.validation.ConstraintViolationException;
+
 @MicronautTest
 public class OldPageControllerTest {
 
@@ -35,7 +34,7 @@ public class OldPageControllerTest {
 
     @BeforeAll
     public static void setUpDatabase() {
-        HibernateUtility.setResource("testhibernate.cfg.xml");
+        HibernateUtility.setResource("test/resources/testhibernate.cfg.xml");
         pageManager = OldPageManager.getOldPageManager();
     }
     @AfterAll

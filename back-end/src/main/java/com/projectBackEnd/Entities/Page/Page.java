@@ -140,4 +140,8 @@ public class Page implements TableEntity {
     public void setIndex(Integer index) {
         this.index = index;
     }
+    //Integer ID, String siteName, String slug, Integer index, String title, String content
+    public String toString() {
+        return "Page: " + getPrimaryKey() + ", from: " + getSite() + " : " + getSlug() + " : " + getIndex() + " : " + getTitle() + " : " + getContent();
+    }
 }
