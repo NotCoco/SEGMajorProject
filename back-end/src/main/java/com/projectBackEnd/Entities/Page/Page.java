@@ -34,7 +34,7 @@ public class Page implements TableEntity {
     @Column(name = SLUG, nullable = false)
     @Type(type="text")
     private String slug;
-    @Column(name = INDEX)
+    @Column(name = INDEX, nullable = false)
     private Integer index;
     @Column(name = TITLE)
     @Type(type="text")

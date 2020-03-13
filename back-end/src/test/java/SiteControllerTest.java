@@ -20,11 +20,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
-
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @MicronautTest
 public class SiteControllerTest {
@@ -150,46 +153,107 @@ public class SiteControllerTest {
 
     @Test
     public void testAddingPageWithNulls() {
-        
+        assertThrows(NullPointerException.class, () -> {
+            HttpResponse response = addPage(null, null, null, null, null);
+        });
     }
 
     @Test
-    public void testUpdatePageDetails() {
+    public void testAddingNullSitePage() {
+        addSite("TestSite");
+        HttpRequest request = HttpRequest.POST(("/sites/"+ "TestSite" +"/pages"), new PageAddCommand(null, "slug", 3, "", ""));
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(request);
+        });
 
     }
 
     @Test
-    public void testUpdatePageWithNullValues() {
+    public void testAddingNullIndexPage() {
+        addSite("testSiteA");
+        HttpRequest request = HttpRequest.POST(("/sites/"+ "testSiteA" +"/pages"), new Page("testSiteA", "slug", null, "", ""));
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(request);
+        }); //Shouldn't be allowed!
+    }
+    @Test
+    public void testUpdatePageTitle() {
+        addSite("testSiteA");
+        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
+        int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
+        //protected HttpResponse putPage(int id, String siteName, String slug, int index, String title, String content) {
+        response = putPage(idOfMadePage, "testSiteA", "nutrition/slu!#g", 1, "newTitle", "nutri!tion/information");
+        assertEquals("newTitle",pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getTitle());
+        String id =  getEUrl(response);
+        Page testPage = getPage(id);
+        assertEquals("newTitle", testPage.getTitle());
+    }
+    @Test
+    public void testUpdatePageSiteToValid() {
+        addSite("testSiteA");
+        addSite("testSiteB");
+        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
+        int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
+        //protected HttpResponse putPage(int id, String siteName, String slug, int index, String title, String content) {
+        response = putPage(idOfMadePage, "testSiteB", "nutrition/slu!#g", 1, "newTitle", "nutri!tion/information");
+        String id =  getEUrl(response);
+        Page testPage = getPage(id);
+        assertEquals("newTitle", testPage.getTitle());
+    }
+    @Test
+    public void testUpdatePageToInvalid() {
+        addSite("testSiteA");
+        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
+        int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            putPage(idOfMadePage, "notvalid", "nutrition/slu!#g", 1, "newTitle", "nutri!tion/information");
+        });
+        assertNotNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
+    }
 
+    @Test
+    public void updateToDuplicateKeysPage() {
+        addSite("testSiteA");
+        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
+        response = addPage("testSiteA", "sameKey", 1, "Title", "nutri!tion/information");
+        int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            putPage(idOfMadePage, "notvalid", "sameKey", 1, "newTitle", "nutri!tion/information");
+        });
+        assertNotNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
     }
 
     @Test
     public void testPatchingPageIndex() {
-        /*    @Patch("/{name}/page-indices")
-    public HttpResponse<Page> patchPage(String name, @Body List<PagePatchCommand> patchCommandList){
-        for(PagePatchCommand p : patchCommandList){
-            String slug = p.getSlug();
-            Page page = pageManager.getPageBySiteAndSlug(name, slug);
-            page.setIndex(p.getIndex());
-            pageManager.update(page);
+        addSite("testSiteA");
+        addPage("testSiteA", "nutrition/slu!#g", 9, "Title", "nutri!tion/information");
+        addPage("testSiteA", "anotherPage", 12, "Title", "nutri!tion/information");
+        addPage("testSiteA", "coolPage", 20, "Title", "nutri!tion/information");
+        addPage("testSiteA", "Paaage", 13, "Title", "nutri!tion/information");
+        //public PagePatchCommand(int id, String slug, int index) {
+        List<Page> allPagesWithID = pageManager.getAllPages();
+        List<PagePatchCommand> input = new ArrayList<>();
+        for(int i = 0; i < allPagesWithID.size(); ++i) {
+            Page currentPage = allPagesWithID.get(i);
+            input.add(new PagePatchCommand(currentPage.getPrimaryKey(), currentPage.getSlug(), i));
+        } //Will order all pages from 0-4;
+
+        HttpRequest request = HttpRequest.PATCH("/sites", input); //DIDN't UPDATE!!
+        //TODO Add the correct parameter for this!
+        //Updates all the pages to have a new index.
+        //@Patch("/{name}/page-indices")
+        //public HttpResponse<Page> patchPage(String name, @Body List<PagePatchCommand> patchCommandList){
+        allPagesWithID = pageManager.getAllPages();
+        for(int i = 0; i < allPagesWithID.size(); ++i) {
+            assertEquals(i, allPagesWithID.get(i).getIndex());
         }
-        return HttpResponse
-                .noContent();
-    }*/
 
     }
 
-//    @Test
-//    public void testAddPage(){
-//        HttpResponse response = addSite("testSite");
-//        Page page1 = new Page(100, "testSite", "sameSlug", 1, "TitleA", "ContentA");
-//        HttpRequest request = HttpRequest.POST("/sites/testSite/pages", new Page());
-//        response = client.toBlocking().exchange(request);
-//        assertEquals(HttpStatus.CREATED, response.getStatus());
-//
-//        request = HttpRequest.GET("/sites/" + name);
-//        response = client.toBlocking().retrieve(request, Site.class);
-//    }
+    protected HttpResponse putPage(int id, String siteName, String slug, int index, String title, String content) {
+        HttpRequest request = HttpRequest.PUT("/sites/"+ siteName +"/pages", new Page(id, siteName, slug, index, title, content));
+        return client.toBlocking().exchange(request);
+    }
 
     protected HttpResponse putSite(int id, String newName) {
         HttpRequest request = HttpRequest.PUT("/sites", new Site(id, newName));
