@@ -35,6 +35,7 @@ public class SiteController {
         return pageManager.getAllPagesOfSite(name);
     }
 
+
     @Post("/{name}/pages")
     public HttpResponse<Page> addPage(String name, @Body Page pageToAdd){
         Page p = pageManager.addPage(pageToAdd);
@@ -44,6 +45,13 @@ public class SiteController {
         return HttpResponse
                 .created(p)
                 .headers(headers -> headers.location(pageLocation(name, p.getSlug())));
+    }
+
+    @Delete("/{name}/pages/{page}")
+    public HttpResponse deletePage(String name, String page){
+        Page p = pageManager.getPageBySiteAndSlug(name, page);
+        pageManager.delete(p);
+        return HttpResponse.noContent();
     }
 
     @Get("/{name}/pages/{page}")
@@ -62,6 +70,7 @@ public class SiteController {
                 .headers(headers -> headers.location(location(s.getName())));
     }
 
+    // can delete if confirmed not needed
     @Get(value = "/id/{id}", produces = MediaType.TEXT_JSON)
     public Site list(int id) {
         return siteManager.getByPrimaryKey(id);
@@ -70,11 +79,27 @@ public class SiteController {
     @Get(value = "/{name}")
     public Site list(String name){return siteManager.getBySiteName(name);}
 
+    @Delete("/{name}")
+    public HttpResponse delete(String name){
+        Site s = siteManager.getBySiteName(name);
+        siteManager.delete(s);
+        return HttpResponse.noContent();
+    }
+
     @Delete("/{id}")
     public HttpResponse delete(int id) {
         siteManager.delete(id);
         return HttpResponse.noContent();
     }
+
+    @Put("{name}/pages")
+    public HttpResponse updatePage(String name, @Body Page updatedPage){
+        pageManager.update(updatedPage);
+        return HttpResponse
+                .noContent()
+                .header(HttpHeaders.LOCATION, pageLocation(name, updatedPage.getSlug()).getPath());
+    }
+
 
     @Put("/")
     public HttpResponse update(@Body Site updatedSite) {
