@@ -59,7 +59,7 @@ public class SiteControllerTest {
     public void testPutLegalSite(){
         HttpResponse response= addSite("legalSite");
         String url = getEUrl(response);
-        int id =  getPKByName(url);
+        int id =  getSitePKByName(url);
         response = putSite(id, "NewName");
         assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
     }
@@ -74,7 +74,7 @@ public class SiteControllerTest {
     public void testUpdateNullNameSite(){
         HttpResponse response = addSite("testSite");
         String url =  getEUrl(response);
-        int id = getPKByName(url);
+        int id = getSitePKByName(url);
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
             client.toBlocking().exchange(HttpRequest.POST("/sites", new Site(id, "")));
         });
@@ -84,7 +84,7 @@ public class SiteControllerTest {
     @Test
     public void testAddNullNameSite(){
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            client.toBlocking().exchange(HttpRequest.POST("/medicine", new SiteAddCommand("")));
+            client.toBlocking().exchange(HttpRequest.POST("/sites", new SiteAddCommand("")));
         });
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
     }
@@ -93,7 +93,7 @@ public class SiteControllerTest {
     public void testDeleteAndGetSite(){
         HttpResponse response = addSite("testSite");
         String url =  getEUrl(response);
-        int id = getPKByName(url);
+        int id = getSitePKByName(url);
         // Asserting that we've added a site
         assertEquals(HttpStatus.CREATED, response.getStatus());
 
@@ -130,7 +130,7 @@ public class SiteControllerTest {
         HttpResponse response = addSite("testSite");
         String url =  getEUrl(response);
 
-        int id = getPKByName(url);
+        int id = getSitePKByName(url);
 
         putSite(id, "newName");
         Site m = getSite("newName");
@@ -140,12 +140,17 @@ public class SiteControllerTest {
     @Test
     public void testAddingRegularPage() {
         addSite("testSiteA");
-        addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
+        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
+        assertNotNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
+
+        String id =  getEUrl(response);
+        Page testPage = getPage(id);
+        assertEquals("Title", testPage.getTitle());
     }
 
     @Test
     public void testAddingPageWithNulls() {
-
+        
     }
 
     @Test
@@ -197,20 +202,19 @@ public class SiteControllerTest {
         return response;
     }
     protected HttpResponse addPage(String siteName, String slug, Integer index, String title, String content) {
-        //Page p = pageManager.addPage(siteName, slug, index, title, content);
-        //assertNotNull(pageManager.getPageBySiteAndSlug(p.getSite(), p.getSlug()));
-        // public PageAddCommand(String siteName, String slug, String index, String title, String content){
-        //HttpRequest request = HttpRequest.POST("/page", new Page(siteName, slug, index, title, content));
-        //HttpResponse response = client.toBlocking().exchange(request);
+        HttpRequest request = HttpRequest.POST(("/sites/"+ siteName +"/pages"), new PageAddCommand(siteName, slug, index, title, content));
+        HttpResponse response = client.toBlocking().exchange(request);
+        return response;
 
-        client.toBlocking().exchange(HttpRequest.POST("/page", new Page(siteName, slug, index, title, content)));
-        return null;
-        //return null;
     }
 
     protected Site getSite(String name) {
         HttpRequest request = HttpRequest.GET("/sites/" + name);
         return client.toBlocking().retrieve(request, Site.class);
+    }
+    protected Page getPage(String name) {
+        HttpRequest request = HttpRequest.GET("/sites/" + name);
+        return client.toBlocking().retrieve(request, Page.class);
     }
 
     private String getEUrl(HttpResponse response) {
@@ -225,7 +229,7 @@ public class SiteControllerTest {
         return null;
     }
 
-    protected int getPKByName(String name){
+    protected int getSitePKByName(String name){
         return getSite(name).getPrimaryKey();
     }
 }

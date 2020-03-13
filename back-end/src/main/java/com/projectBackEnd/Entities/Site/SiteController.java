@@ -122,15 +122,14 @@ public class SiteController {
 
     protected URI pageLocation(String siteName, String pageName) {
         String encodedSlug = null;
+        String encodedPage = null;
         try {
             encodedSlug = URLEncoder.encode(siteName, java.nio.charset.StandardCharsets.UTF_8.toString());
+            encodedPage = URLEncoder.encode(pageName, java.nio.charset.StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {
             return null;
         }
-//        System.out.println("/sites/" + siteName + "/pages/" + encodedSlug);
-//        System.out.println("/sites/" + siteName + "/pages/" + encodedSlug);
-//        System.out.println("/sites/" + siteName + "/pages/" + encodedSlug);
-        return URI.create("/sites/" + siteName + "/pages/" + encodedSlug);
+        return URI.create("/sites/" + encodedSlug + "/pages/" + encodedPage);
     }
 
     protected URI location(String siteName) {
