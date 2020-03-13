@@ -9,9 +9,9 @@ import org.junit.*;
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
+import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 public class SiteManagerTest {
 
@@ -75,13 +75,56 @@ public class SiteManagerTest {
         assertEquals(1, siteManager.getAllSites().size());
     }
 
+    @Test
+    public void testTwoEqualSites() {
+        Site site1 = new Site("Site1");
+        Site site2 = new Site("Site1");
+        assertTrue(site1.equals(site2));
+    }
+
+    @Test
+    public void testGetByPrimaryKey() {
+        fillDatabase();
+        Site firstSite = siteManager.getAllSites().get(0);
+        Site foundSite = firstSite;
+        int sitePK = firstSite.getPrimaryKey();
+        Site foundSiteDB = siteManager.getByPrimaryKey(sitePK);
+
+        assertThat(foundSite, samePropertyValuesAs(foundSiteDB));
+        assertTrue(foundSite.equals((foundSiteDB)));
+    }
+
+    @Test
+    public void testGetIllegalPrimaryKey() {
+        assertNull(siteManager.getByPrimaryKey(-1));
+    }
+
+    @Test
+    public void testGetByName() {
+        fillDatabase();
+        Site site = siteManager.getBySiteName("Disease2");
+        assertEquals("Disease2", site.getName());
+    }
+
+    @Test
+    public void testGetByNameNotInDB() {
+        fillDatabase();
+        Site site = siteManager.getBySiteName("Biliary Atresia");
+        assertNull(site);
+    }
+
+    @Test
+    public void testUpdateSite() {
+
+
+    }
+
     @Test(expected = PersistenceException.class)
     public void testUpdateWithIllegalValues() {
         fillDatabase();
         Site site = new Site(siteManager.getAllSites().get(0).getPrimaryKey(), null);
         siteManager.update(site);
     }
-
 
     @Test
     public void testDeleteAll() {
