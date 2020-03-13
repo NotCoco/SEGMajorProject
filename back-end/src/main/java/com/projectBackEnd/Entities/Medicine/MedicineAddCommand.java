@@ -1,15 +1,15 @@
 package main.java.com.projectBackEnd.Entities.Medicine;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import io.micronaut.core.annotation.Introspected;
-
+//import io.micronaut.core.annotation.Introspected;
+//TODO Reinsert tags as I couldn't get them to compile on IntelliJ Jars.
 //@Introspected
 public class MedicineAddCommand {
 
-
+    @NotNull
     private String name;
 
-
+    @NotNull
     private String type;
 
     public MedicineAddCommand(){
