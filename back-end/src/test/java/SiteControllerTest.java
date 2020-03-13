@@ -51,7 +51,7 @@ public class SiteControllerTest {
     }
 
     @Test
-    public void testPutLegalMedicine(){
+    public void testPutLegalSite(){
         HttpResponse response= addSite("legalSite");
         String url = getEUrl(response);
         int id =  getPKByName(url);

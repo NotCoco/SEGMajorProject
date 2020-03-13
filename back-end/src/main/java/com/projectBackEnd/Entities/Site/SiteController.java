@@ -7,6 +7,7 @@ import io.micronaut.http.annotation.*;
 import main.java.com.projectBackEnd.Entities.Page.Page;
 import main.java.com.projectBackEnd.Entities.Page.PageManager;
 import main.java.com.projectBackEnd.Entities.Page.PageManagerInterface;
+import main.java.com.projectBackEnd.Entities.Page.PagePatchCommand;
 
 
 import java.io.UnsupportedEncodingException;
@@ -35,6 +36,17 @@ public class SiteController {
         return pageManager.getAllPagesOfSite(name);
     }
 
+    @Patch("/{name}/page-indices")
+    public HttpResponse<Page> patchPage(String name, @Body List<PagePatchCommand> patchCommandList){
+        for(PagePatchCommand p : patchCommandList){
+            String slug = p.getSlug();
+            Page page = pageManager.getPageBySiteAndSlug(name, slug);
+            page.setIndex(p.getIndex());
+            pageManager.update(page);
+        }
+        return HttpResponse
+                .noContent();
+    }
 
     @Post("/{name}/pages")
     public HttpResponse<Page> addPage(String name, @Body Page pageToAdd){
@@ -92,8 +104,8 @@ public class SiteController {
         return HttpResponse.noContent();
     }
 
-    @Put("{name}/pages")
-    public HttpResponse updatePage(String name, @Body Page updatedPage){
+    @Put("{name}/pages/{pageName}")
+    public HttpResponse updatePage(String name, String pageName, @Body Page updatedPage){
         pageManager.update(updatedPage);
         return HttpResponse
                 .noContent()
@@ -101,8 +113,8 @@ public class SiteController {
     }
 
 
-    @Put("/")
-    public HttpResponse update(@Body Site updatedSite) {
+    @Put("/{name}")
+    public HttpResponse update(String name, @Body Site updatedSite) {
         siteManager.update(updatedSite);
         //List<Page> p = pageManager.getAllPagesOfSite(updatedSite);
         return HttpResponse
