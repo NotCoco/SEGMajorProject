@@ -12,6 +12,7 @@ import java.util.List;
 @Controller("/page")
 public class PageController {
     protected final PageManagerInterface pageManager = PageManager.getPageManager();
+    protected final ImageHandler imageHandler = new ImageHandler();
     PageController() {}
     @Get(value = "/{slug}", produces = MediaType.TEXT_JSON)
     public Page list(String slug) {
@@ -28,6 +29,8 @@ public class PageController {
         return pageManager.getAllPages();
     }
 
+    @Get(value = "/images", produces = MediaType.TEXT_JSON)
+    public List<String> images() { return imageHandler.getImageUrls(); }
 //    @Delete("/")
 //    public HttpResponse deleteAll() {
 //        pageManager.deleteAll();
@@ -41,6 +44,12 @@ public class PageController {
         return HttpResponse
                 .created(page)
                 .headers(headers -> headers.location((location(page.getPrimaryKey()))));
+    }
+
+    @Post("/images")
+    public HttpResponse<Page> saveImages(@Body List<String> imagesUrls) {
+        if (imageHandler.saveImages(imagesUrls)) return HttpResponse.serverError(); //I.e. object didn't get created
+        return HttpResponse.noContent();
     }
 
     @Put("/")
