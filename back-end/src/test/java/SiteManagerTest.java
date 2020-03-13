@@ -114,6 +114,11 @@ public class SiteManagerTest {
     }
 
     @Test
+    public void testGetAllPagesBySite(){
+
+    }
+
+    @Test
     public void testUpdateSite() {
 
 
