@@ -13,6 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -81,6 +82,43 @@ public class MedicineManagerTest {
             assertEquals(getListOfMedicines().get(i).getName(), medicineManager.getAllMedicines().get(i).getName());
             assertEquals(getListOfMedicines().get(i).getType(), medicineManager.getAllMedicines().get(i).getType());
         }
+    }
+
+    @Test
+    public void testGetAllByType() {
+        fillDatabase();
+        List<Medicine> typeLiquidMedicines = medicineManager.getAllMedicinesByType("Liquid");
+        int size = typeLiquidMedicines.size();
+        assertEquals(3, size);
+        assertEquals("Med1", typeLiquidMedicines.get(0).getName());
+        assertEquals("Med4", typeLiquidMedicines.get(1).getName());
+        assertEquals("Med_8/#", typeLiquidMedicines.get(2).getName());
+    }
+
+    @Test
+    public void testGetAllByName() {
+        fillDatabase();
+        List<Medicine> nameMed4Medicines = medicineManager.getAllMedicinesByName("Med4");
+        int size = nameMed4Medicines.size();
+        assertEquals(2, size);
+        assertEquals("Tablet", nameMed4Medicines.get(0).getType());
+        assertEquals("Liquid", nameMed4Medicines.get(1).getType());
+    }
+
+    @Test
+    public void getByTypeShouldReturnEmpty(){
+        fillDatabase();
+        List<Medicine> typeNoMedicines = medicineManager.getAllMedicinesByType("No");
+        int size = typeNoMedicines.size();
+        assertEquals(0, size);
+    }
+
+    @Test
+    public void getByNameShouldReturnEmpty(){
+        fillDatabase();
+        List<Medicine> nameNoMedicine = medicineManager.getAllMedicinesByName("No");
+        int size = nameNoMedicine.size();
+        assertEquals(0, size);
     }
 
     @Test
@@ -182,8 +220,10 @@ public class MedicineManagerTest {
         }
     }
 
-
-
+    /**
+     * Fill in database with example Medicine objects
+     * @return example objects
+     */
     private static ArrayList<Medicine> getListOfMedicines() {
         ArrayList<Medicine> listOfMedicines = new ArrayList<>();
 
@@ -203,9 +243,7 @@ public class MedicineManagerTest {
     }
 
     private void fillDatabase() {
-        for (Medicine med : getListOfMedicines()) {
-            medicineManager.addMedicine(med);
-        }
+        for (Medicine med : getListOfMedicines()) medicineManager.addMedicine(med);
     }
 
 }
