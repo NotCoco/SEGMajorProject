@@ -10,49 +10,32 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = Page.TABLENAME)
+@Table(name = Page.TABLENAME, uniqueConstraints = { @UniqueConstraint(columnNames = {Page.SLUG, Page.SITE})})
 public class Page implements TableEntity {
     public static final String TABLENAME = "Pages";
-    private static final String SLUG = "Slug";
+    public static final String SLUG = "Slug";
     private static final String ID = "ID";
     private static final String INDEX = "`Index`";
     private static final String TITLE = "Title";
     private static final String CONTENT = "Content";
-    private static final String SITE = "Site";
+    public static final String SITE = "Site";
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ID, nullable = false)
     private Integer primaryKey;
 
-    @Embeddable
-    public static class Key {
-        @ManyToOne
-        @JoinColumn(name = SITE, referencedColumnName = Site.SITENAME, nullable = false)
+        @ManyToOne(targetEntity = Site.class)
+        @JoinColumn(name = SITE, nullable = false)
         private Site site;
+
+    //@ManyToOne(targetEntity = Site.class)
+    //    @JoinColumn(name = SITE, referencedColumnName = Site.SITENAME, nullable = false)
+    //private String site;
 
         @Column(name = SLUG, nullable = false)
         @Type(type="text")
         private String slug;
-        public Key() {}
-        public Key(Site site, String slug) {
-            this.site = site;
-            this.slug = slug;
-        }
-        public Site getSite() {
-            return site;
-        }
-        public void setSite(Site site) {
-            this.site = site;
-        }
-        public String getSlug() {
-            return slug;
-        }
-        public void setSlug(String slug) {
-            this.slug = slug;
-        }
-    }
-    @EmbeddedId
-    private Key key = new Key();
+
 
     @Column(name = TITLE)
     @Type(type="text")
@@ -72,11 +55,11 @@ public class Page implements TableEntity {
 
     public Page(String siteName, String slug, Integer index, String title, String content) {
         SiteManagerInterface s = SiteManager.getSiteManager();
-        key.setSite(s.getBySiteName(siteName));
+        setSite(s.getBySiteName(siteName));
         setIndexTitleContentSlug(index, title, content, slug);
     }
     public Page(Site site, String slug, Integer index, String title, String content) {
-        key.setSite(site);
+        setSite(site);
         setIndexTitleContentSlug(index, title, content, slug);
     }
 
@@ -85,18 +68,18 @@ public class Page implements TableEntity {
     public Page(Integer ID, String siteName, String slug, Integer index, String title, String content) {
         this.primaryKey = ID;
         SiteManagerInterface s = SiteManager.getSiteManager();
-        key.setSite(s.getBySiteName(siteName));
+        setSite(s.getBySiteName(siteName));
         setIndexTitleContentSlug(index, title, content, slug);
         System.out.println("Micronaut used Constructor 1! Delete The following constructor"); //TODO REMOVE
     }
     public Page(Integer ID, Site site, String slug, Integer index, String title, String content) {
         this.primaryKey = ID;
-        key.setSite(site);
+        setSite(site);
         setIndexTitleContentSlug(index, title, content, slug);
         System.out.println("Micronaut used Constructor 2! Delete The above constructor"); //TODO Remove
     }
     private void setIndexTitleContentSlug(int index, String title, String content, String slug) {
-        key.setSlug(slug);
+        setSlug(slug);
         this.index = index;
         this.title = title;
         this.content = content;
@@ -114,16 +97,19 @@ public class Page implements TableEntity {
         return newPageVersion;
     }
     public Site getSite() {
-        return key.getSite();
+        return getSite();
     }
     public void setSite(Site site) {
-        key.setSite(site);
+        this.site = site;
     }
+//    public void setSite(String site) {
+//        this.site = site;
+//    }
     public String getSlug() {
-        return key.getSlug();
+        return getSlug();
     }
     public void setSlug(String slug) {
-        key.setSlug(slug);
+        this.slug = slug;
     }
 
 

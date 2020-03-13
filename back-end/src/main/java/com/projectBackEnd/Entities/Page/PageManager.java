@@ -13,7 +13,9 @@ public class PageManager extends EntityManager implements PageManagerInterface {
     private PageManager() {
         super();
         setSubclass(Page.class);
+        HibernateUtility.addAnnotation(Site.class);
         HibernateUtility.addAnnotation(Page.class);
+
         pageManager = this;
     }
     public static PageManagerInterface getPageManager() {
