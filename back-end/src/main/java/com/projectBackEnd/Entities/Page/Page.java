@@ -102,7 +102,13 @@ public class Page implements TableEntity {
         return primaryKey;
     }
     public TableEntity copy(TableEntity newCopy) {
-        return null;
+        Page newPageVersion = (Page) newCopy;
+        setIndex(newPageVersion.getIndex());
+        setTitle(newPageVersion.getTitle());
+        setContent(newPageVersion.getContent());
+        setSite(newPageVersion.getSite());
+        setSlug(newPageVersion.getSlug());
+        return newPageVersion;
     }
     public Site getSite() {
         return key.getSite();
