@@ -10,9 +10,9 @@ public interface PageManagerInterface {
     public void delete(Serializable primaryKey);
     public void deleteAll();
 
-    public List<Page> getAllPage();
+    public List<Page> getAllPages(); //Probably never called/used?
     public Page addPage(Page newPage);
-    public Page getByPrimaryKey(Serializable pk);
+    public Page getByPrimaryKey(Integer pk); //TODO In the event that this is not used, we violate Interface Segregation
     public void delete(Page object); //TODO Is unnecessary now, can be removed
     public Page update(Page updatedVersion);
     public Page addPage(String siteName, String slug, int Index, String title, String content);
