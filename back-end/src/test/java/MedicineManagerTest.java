@@ -44,26 +44,34 @@ public class MedicineManagerTest {
     @Test
     public void testCreateMedicine() {
         Medicine med = new Medicine("Medicine for BA", "Injection");
-        assertEquals(med.getName(), "Medicine for BA");
-        assertEquals(med.getType(), "Injection");
+        assertEquals("Medicine for BA", med.getName());
+        assertEquals("Injection", med.getType());
     }
 
     @Test
     public void testCreateAndSaveMedicine() {
         medicineManager.addMedicine("Medicine for BA ", "Topical");
-        assertEquals(medicineManager.getAllMedicines().size(), 1);
+        assertEquals(1, medicineManager.getAllMedicines().size());
     }
 
     @Test
-    public void testCreateIllegalMedicine(){
+    public void testCreateWithIllegalValues() {
         medicineManager.addMedicine(null,null);
-        assertEquals(medicineManager.getAllMedicines().size(), 0);
+        medicineManager.addMedicine(new Medicine(null, null, null));
+        assertEquals(0, medicineManager.getAllMedicines().size());
+    }
+
+    @Test
+    public void testCreateWithEmptyValues() {
+        medicineManager.addMedicine("","");
+        assertEquals( "Unnamed" ,medicineManager.getAllMedicines().get(0).getName());
+        assertEquals( "Undefined" ,medicineManager.getAllMedicines().get(0).getType());
     }
 
     @Test
     public void testFillingAndGetting() {
         fillDatabase();
-        assertEquals(medicineManager.getAllMedicines().size(), 10);
+        assertEquals(getListOfMedicines(), medicineManager.getAllMedicines().size());
     }
 
     @Test
@@ -87,16 +95,14 @@ public class MedicineManagerTest {
         int medPK = foundMedicine.getPrimaryKey();
         Medicine foundMedicineFromDB = medicineManager.getByPrimaryKey(medPK);
 
-
-        System.out.println(foundMedicineFromDB.equals(foundMedicine));
         assertThat(foundMedicine, samePropertyValuesAs(foundMedicineFromDB));
         assertTrue(foundMedicine.equals((foundMedicineFromDB)));
     }
 
     @Test
     public void testTwoEqualMedicines() {
-        Medicine med1 = new Medicine("Med1", "nicetype");
-        Medicine med2 = new Medicine("Med1", "nicetype");
+        Medicine med1 = new Medicine("Med1", "type");
+        Medicine med2 = new Medicine("Med1", "type");
         assertTrue(med1.equals(med2));
     }
 
@@ -110,27 +116,27 @@ public class MedicineManagerTest {
     public void testDeleteAll() {
         // Delete all from empty database
         medicineManager.deleteAll();
-        assertEquals(medicineManager.getAllMedicines().size(), 0);
+        assertEquals(0, medicineManager.getAllMedicines().size());
         // Delete all from filled database
         fillDatabase();
         medicineManager.deleteAll();
-        assertEquals(medicineManager.getAllMedicines().size(), 0);
+        assertEquals(0, medicineManager.getAllMedicines().size());
     }
 
     @Test
     public void testDelete() {
         fillDatabase();
         medicineManager.delete(medicineManager.getAllMedicines().get(1)); //Testing object deletion
-        assertEquals(medicineManager.getAllMedicines().size(), getListOfMedicines().size()-1);
+        assertEquals( getListOfMedicines().size()-1, medicineManager.getAllMedicines().size());
         medicineManager.delete(medicineManager.getAllMedicines().get(1));
-        assertEquals(medicineManager.getAllMedicines().size(), getListOfMedicines().size()-2);
+        assertEquals(getListOfMedicines().size()-2, medicineManager.getAllMedicines().size());
     }
 
     @Test
     public void testDeleteByPK() {
         fillDatabase();
         medicineManager.delete(medicineManager.getAllMedicines().get(1).getPrimaryKey()); //Testing object deletion
-        assertEquals(medicineManager.getAllMedicines().size(), getListOfMedicines().size()-1);
+        assertEquals(getListOfMedicines().size()-1, medicineManager.getAllMedicines().size());
     }
 
     @Test
