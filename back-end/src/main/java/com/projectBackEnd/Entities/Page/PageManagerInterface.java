@@ -17,7 +17,10 @@ public interface PageManagerInterface {
     public Page update(Page updatedVersion);
     public Page addPage(String siteName, String slug, int Index, String title, String content);
     public Page addPage(Site siteName, String slug, int Index, String title, String content);
-    public List<Page> getAllPagesOfSite(String siteName); //I'm working on it! Act like it exists for now P:
-    public List<Page> getAllPagesOfSite(Site site); //I'm working on it! Act like it exists for now P:
+    public List<Page> getAllPagesOfSite(String siteName);
+    public List<Page> getAllPagesOfSite(Site site);
+    public List<Page> getPageBySiteAndSlug(String siteName, String slug);
+    public List<Page> getPageBySiteAndSlug(Site site, String slug);
+
 
 }

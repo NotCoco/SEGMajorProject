@@ -44,5 +44,7 @@ public class PageManager extends EntityManager implements PageManagerInterface {
     public List<Page> getAllPagesOfSite(String siteName) {
         return pageManager.getAllPages().stream().filter(p -> p.getSite().getName().equals(siteName)).sorted(Comparator.comparingInt(Page::getIndex)).collect(Collectors.toList());
     }
+    public List<Page> getPageBySiteAndSlug(Site site, String slug) { return null; }
+    public List<Page> getPageBySiteAndSlug(String siteName, String slug) { return null; }
 
 }

@@ -15,8 +15,7 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.samePropertyValuesAs;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PageManagerTest {
@@ -197,6 +196,13 @@ public class PageManagerTest {
         Page foundPage = pageManager.getByPrimaryKey(assignedID);
 
         Assert.assertEquals(foundPage.getContent(), updatedPage.getContent());
+    }
+
+    @Test
+    public void testGetPageBySiteAndSlug() {
+        Page newPage = new Page(testSiteB,"Slug3", 10, "Title3", "New content!");
+        pageManager.addPage(newPage);
+        assertNotNull(pageManager.getPageBySiteAndSlug(testSiteB, "Slug3"));
     }
 
     @Test
