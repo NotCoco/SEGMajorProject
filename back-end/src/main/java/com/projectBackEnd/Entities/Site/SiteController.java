@@ -46,10 +46,10 @@ public class SiteController {
                 .headers(headers -> headers.location(pageLocation(name, p.getSlug())));
     }
 
-//    @Get("/{name}/pages/{page}")
-//    public Page getPage(String name, String page){
-//
-//    }
+    @Get("/{name}/pages/{page}")
+    public Page getPage(String name, String page){
+        return pageManager.getPageBySiteAndSlug(name, page);
+    }
 
     @Post("/")
     public HttpResponse<Site> add(@Body SiteAddCommand command) {
@@ -79,6 +79,7 @@ public class SiteController {
     @Put("/")
     public HttpResponse update(@Body Site updatedSite) {
         siteManager.update(updatedSite);
+        //List<Page> p = pageManager.getAllPagesOfSite(updatedSite);
         return HttpResponse
                 .noContent()
                 .header(HttpHeaders.LOCATION, location(updatedSite.getName()).getPath());
