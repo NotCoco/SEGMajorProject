@@ -7,6 +7,9 @@ import main.java.com.projectBackEnd.Entities.Site.Site;
 import main.java.com.projectBackEnd.Entities.Site.SiteManager;
 import main.java.com.projectBackEnd.Entities.Site.SiteManagerInterface;
 import main.java.com.projectBackEnd.HibernateUtility;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -91,4 +94,12 @@ public class PageManagerTest {
             assertEquals(all.get(i).getIndex(),i);
         }
     }
+
+    @Test
+    public void testForeignKeyDelete() {
+        siteManager.addSite("toDeleteSite");
+        pageManager.addPage("toDeleteSite", "Slug", 3, "Title", "content");
+        siteManager.delete(siteManager.getBySiteName("toDeleteSite"));
+    }
+    
 }
