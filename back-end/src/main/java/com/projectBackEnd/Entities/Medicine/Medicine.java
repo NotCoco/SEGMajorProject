@@ -57,15 +57,15 @@ public class Medicine implements TableEntity {
 
     public Medicine(String name, String type) {
         this.primaryKey = -1;
-        this.name = name;
-        this.type = type;
+        this.name = name == "" ? "Unnamed" : name;
+        this.type = type == "" ? "Undefined" : type;
     }
 
     // Constructor taking id
     public Medicine(Integer id, String name, String type) {
         this.primaryKey = id;
-        this.name = name;
-        this.type = type;
+        this.name = name == "" ? "Unnamed" : name;
+        this.type = type == "" ? "Undefined" : type;
     }
 
 

@@ -55,9 +55,17 @@ public class MedicineManagerTest {
     }
 
     @Test
-    public void testCreateIllegalMedicine(){
+    public void testCreateWithIllegalValues() {
         medicineManager.addMedicine(null,null);
-        assertEquals(medicineManager.getAllMedicines().size(), 0);
+        medicineManager.addMedicine(new Medicine(null, null, null));
+        assertEquals(0, medicineManager.getAllMedicines().size());
+    }
+
+    @Test
+    public void testCreateWithEmptyValues() {
+        medicineManager.addMedicine("","");
+        assertEquals( "Unnamed" ,medicineManager.getAllMedicines().get(0).getName());
+        assertEquals( "Undefined" ,medicineManager.getAllMedicines().get(0).getType());
     }
 
     @Test
