@@ -36,7 +36,7 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
         return newSite;
     }
 
-    public Site getByPrimaryKey(Serializable pk) {
+    public Site getByPrimaryKey(Integer pk) {
         return (Site) super.getByPrimaryKey(pk);
     }
     public Site getBySiteName(String siteName) {

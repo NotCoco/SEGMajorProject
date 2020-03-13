@@ -11,7 +11,7 @@ public class PageManager implements PageManagerInterface {
 
     public List<Page> getAllPage() { return null; }
     public Page addPage(Page newPage) { return null; }
-    public Page getByPrimaryKey(Serializable pk) { return null; }
+    public Page getByPrimaryKey(Integer pk) { return null; }
     public void delete(Page object) {} //TODO Is unnecessary now, can be removed
     public Page update(Page updatedVersion) { return null; }
     public Page addPage(Site siteName, String slug, int Index, String title, String content) { return null; }

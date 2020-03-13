@@ -12,7 +12,7 @@ public interface SiteManagerInterface {
 
     public List<Site> getAllSites();
     public Site addSite(Site newSite);
-    public Site getByPrimaryKey(Serializable pk);
+    public Site getByPrimaryKey(Integer pk);
     public Site getBySiteName(String name);
     public void delete(Site object); //TODO Is unnecessary now, can be removed
     public Site update(Site updatedVersion);
