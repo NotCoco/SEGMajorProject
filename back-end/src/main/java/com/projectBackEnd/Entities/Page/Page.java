@@ -2,6 +2,7 @@ package main.java.com.projectBackEnd.Entities.Page;
 
 import main.java.com.projectBackEnd.Entities.Site.Site;
 import main.java.com.projectBackEnd.Entities.Site.SiteManager;
+import main.java.com.projectBackEnd.Entities.Site.SiteManagerInterface;
 import main.java.com.projectBackEnd.TableEntity;
 import org.hibernate.annotations.Type;
 
@@ -70,7 +71,8 @@ public class Page implements TableEntity {
 
 
     public Page(String siteName, String slug, Integer index, String title, String content) {
-        key.setSite(SiteManager.getSiteManager().getBySiteName(siteName));
+        SiteManagerInterface s = SiteManager.getSiteManager();
+        key.setSite(s.getBySiteName(siteName));
         setIndexTitleContentSlug(index, title, content, slug);
     }
     public Page(Site site, String slug, Integer index, String title, String content) {
@@ -82,7 +84,8 @@ public class Page implements TableEntity {
     //Need to find out which of these two Micronaut will use. Or just use the getName, make it print something lol
     public Page(Integer ID, String siteName, String slug, Integer index, String title, String content) {
         this.primaryKey = ID;
-        key.setSite(SiteManager.getSiteManager().getBySiteName(siteName));
+        SiteManagerInterface s = SiteManager.getSiteManager();
+        key.setSite(s.getBySiteName(siteName));
         setIndexTitleContentSlug(index, title, content, slug);
         System.out.println("Micronaut used Constructor 1! Delete The following constructor"); //TODO REMOVE
     }

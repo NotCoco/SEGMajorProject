@@ -1,8 +1,6 @@
 package main.java.com.projectBackEnd.Entities.Page;
 
 import main.java.com.projectBackEnd.Entities.Site.Site;
-import main.java.com.projectBackEnd.Entities.Site.SiteManager;
-import main.java.com.projectBackEnd.Entities.Site.SiteManagerInterface;
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
 
@@ -12,13 +10,11 @@ import java.util.stream.Collectors;
 
 public class PageManager extends EntityManager implements PageManagerInterface {
     private static PageManagerInterface pageManager;
-    private static SiteManagerInterface siteManager;
     private PageManager() {
         super();
         setSubclass(Page.class);
         HibernateUtility.addAnnotation(Page.class);
         pageManager = this;
-        siteManager = SiteManager.getSiteManager();
     }
     public static PageManagerInterface getPageManager() {
         if (pageManager != null) return pageManager;
@@ -42,7 +38,7 @@ public class PageManager extends EntityManager implements PageManagerInterface {
     public Page update(Page updatedVersion) { super.update(updatedVersion); return updatedVersion; }
     public Page addPage(Site site, String slug, int index, String title, String content) { return (Page) insertTuple(new Page(site, slug, index, title, content)); }
     public Page addPage(String siteName, String slug, int index, String title, String content) { return (Page) insertTuple(new Page(siteName, slug, index, title, content)); }
-    public List<Page> getAllPagesOfSite(Site site) { return getAllPagesOfSite(site.getName()); } //TODO Make this depend on abstraction.
+    public List<Page> getAllPagesOfSite(Site site) { return getAllPagesOfSite(site.getName()); }
     public List<Page> getAllPagesOfSite(String siteName) {
         return pageManager.getAllPages().stream().filter(p -> p.getSite().getName().equals(siteName)).sorted(Comparator.comparingInt(Page::getIndex)).collect(Collectors.toList());
     }
