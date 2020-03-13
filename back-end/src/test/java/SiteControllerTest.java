@@ -224,6 +224,21 @@ public class SiteControllerTest {
     }
 
     @Test
+    public void testDeletePage() {
+        /*@Delete("/{name}/pages/{page}")
+        public HttpResponse deletePage(String name, String page){
+            Page p = pageManager.getPageBySiteAndSlug(name, page);
+            pageManager.delete(p);
+            return HttpResponse.noContent();
+        }*/
+        addSite("testSiteA");
+        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
+        HttpRequest request = HttpRequest.DELETE("/sites/"+ "testSiteA" +"/pages", "nutrition/slu!#g");
+        client.toBlocking().exchange(request);
+        assertNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
+    }
+
+    @Test
     public void testPatchingPageIndex() {
         addSite("testSiteA");
         addPage("testSiteA", "nutrition/slu!#g", 9, "Title", "nutri!tion/information");
@@ -238,7 +253,7 @@ public class SiteControllerTest {
             input.add(new PagePatchCommand(currentPage.getPrimaryKey(), currentPage.getSlug(), i));
         } //Will order all pages from 0-4;
 
-        HttpRequest request = HttpRequest.PATCH("/sites", input); //DIDN't UPDATE!!
+        HttpRequest request = HttpRequest.PATCH("/sites/"+ "testSiteA" +"/pages", input); //This line is the issue
         //TODO Add the correct parameter for this!
         //Updates all the pages to have a new index.
         //@Patch("/{name}/page-indices")
