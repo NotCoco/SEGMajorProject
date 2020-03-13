@@ -6,7 +6,6 @@ import main.java.com.projectBackEnd.Entities.Site.SiteManagerInterface;
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
 
-import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +20,7 @@ public class PageManager extends EntityManager implements PageManagerInterface {
         pageManager = this;
         siteManager = SiteManager.getSiteManager();
     }
-    public static PageManagerInterface getOldPageManager() {
+    public static PageManagerInterface getPageManager() {
         if (pageManager != null) return pageManager;
         else return new PageManager();
     }
