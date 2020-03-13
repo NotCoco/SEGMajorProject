@@ -26,7 +26,7 @@ public class PageManagerTest {
     private static Site testSiteB = null;
     @BeforeClass
     public static void setUpDatabase() {
-        HibernateUtility.setResource("test/resources/testhibernate.cfg.xml");
+        HibernateUtility.setResource("testhibernate.cfg.xml");
         pageManager = PageManager.getPageManager();
         siteManager = SiteManager.getSiteManager();
         siteManager.addSite("Disease1");
