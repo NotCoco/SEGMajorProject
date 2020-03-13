@@ -133,6 +133,16 @@ public class MedicineManagerTest {
         assertEquals(replacementMed.getType(), medInDB.getType());
     }
 
+    @Test
+    public void testUpdateMedicineWithEmptyNameAndEmptyType() {
+        fillDatabase();
+        int id = medicineManager.getAllMedicines().get(0).getPrimaryKey();
+        Medicine replacementMed = new Medicine(id, "", "");
+        medicineManager.update(replacementMed);
+        assertEquals("Unnamed", replacementMed.getName());
+        assertEquals("Undefined", replacementMed.getType());
+    }
+
     @Test(expected = PersistenceException.class)
     public void testUpdateWithIllegalValues() {
         fillDatabase();
