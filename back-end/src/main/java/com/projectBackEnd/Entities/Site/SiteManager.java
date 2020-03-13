@@ -55,8 +55,5 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
         return newSite;
     }
 
-    public List<Page> getAllPagesOfSite() {
-        return null;
-    }
 
 }

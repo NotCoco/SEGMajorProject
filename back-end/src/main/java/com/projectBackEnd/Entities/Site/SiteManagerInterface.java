@@ -17,6 +17,6 @@ public interface SiteManagerInterface {
     public void delete(Site object); //TODO Is unnecessary now, can be removed
     public Site update(Site updatedVersion);
     public Site addSite(String name);
-    public List<Page> getAllPagesOfSite(); //I'm working on it! Act like it exists for now P:
+    //public List<Page> getAllPagesOfSite(Site site); //TODO Think about this
 
 }
