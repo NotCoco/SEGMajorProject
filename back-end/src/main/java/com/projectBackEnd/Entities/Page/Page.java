@@ -4,6 +4,8 @@ import main.java.com.projectBackEnd.Entities.Site.Site;
 import main.java.com.projectBackEnd.Entities.Site.SiteManager;
 import main.java.com.projectBackEnd.Entities.Site.SiteManagerInterface;
 import main.java.com.projectBackEnd.TableEntity;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -24,17 +26,14 @@ public class Page implements TableEntity {
     @Column(name = ID, nullable = false)
     private Integer primaryKey;
 
-        @ManyToOne(targetEntity = Site.class)
-        @JoinColumn(name = SITE, nullable = false)
-        private Site site;
+    @ManyToOne(targetEntity = Site.class)
+    @OnDelete(action= OnDeleteAction.CASCADE)
+    @JoinColumn(name = SITE, nullable = false)
+    private Site site;
 
-    //@ManyToOne(targetEntity = Site.class)
-    //    @JoinColumn(name = SITE, referencedColumnName = Site.SITENAME, nullable = false)
-    //private String site;
-
-        @Column(name = SLUG, nullable = false)
-        @Type(type="text")
-        private String slug;
+    @Column(name = SLUG, nullable = false)
+    @Type(type="text")
+    private String slug;
 
 
     @Column(name = TITLE)
@@ -56,11 +55,17 @@ public class Page implements TableEntity {
     public Page(String siteName, String slug, Integer index, String title, String content) {
         SiteManagerInterface s = SiteManager.getSiteManager();
         setSite(s.getBySiteName(siteName));
-        setIndexTitleContentSlug(index, title, content, slug);
+        setSlug(slug);
+        this.index = index;
+        this.title = title;
+        this.content = content;
     }
     public Page(Site site, String slug, Integer index, String title, String content) {
         setSite(site);
-        setIndexTitleContentSlug(index, title, content, slug);
+        setSlug(slug);
+        this.index = index;
+        this.title = title;
+        this.content = content;
     }
 
 
@@ -69,20 +74,20 @@ public class Page implements TableEntity {
         this.primaryKey = ID;
         SiteManagerInterface s = SiteManager.getSiteManager();
         setSite(s.getBySiteName(siteName));
-        setIndexTitleContentSlug(index, title, content, slug);
+        setSlug(slug);
+        this.index = index;
+        this.title = title;
+        this.content = content;
         System.out.println("Micronaut used Constructor 1! Delete The following constructor"); //TODO REMOVE
     }
     public Page(Integer ID, Site site, String slug, Integer index, String title, String content) {
         this.primaryKey = ID;
         setSite(site);
-        setIndexTitleContentSlug(index, title, content, slug);
-        System.out.println("Micronaut used Constructor 2! Delete The above constructor"); //TODO Remove
-    }
-    private void setIndexTitleContentSlug(int index, String title, String content, String slug) {
         setSlug(slug);
         this.index = index;
         this.title = title;
         this.content = content;
+        System.out.println("Micronaut used Constructor 2! Delete The above constructor"); //TODO Remove
     }
     public Integer getPrimaryKey() {
         return primaryKey;
@@ -97,16 +102,14 @@ public class Page implements TableEntity {
         return newPageVersion;
     }
     public Site getSite() {
-        return getSite();
+        return site;
     }
     public void setSite(Site site) {
         this.site = site;
     }
-//    public void setSite(String site) {
-//        this.site = site;
-//    }
+
     public String getSlug() {
-        return getSlug();
+        return slug;
     }
     public void setSlug(String slug) {
         this.slug = slug;
