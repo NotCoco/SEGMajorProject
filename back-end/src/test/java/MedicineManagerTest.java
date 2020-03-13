@@ -65,8 +65,17 @@ public class MedicineManagerTest {
     @Test
     public void testCreateWithEmptyValues() {
         medicineManager.addMedicine(" ","     ");
-        //assertEquals( "Unnamed", medicineManager.getAllMedicines().get(0).getName());
+        assertEquals( "Unnamed", medicineManager.getAllMedicines().get(0).getName());
         assertEquals( "Undefined", medicineManager.getAllMedicines().get(0).getType());
+    }
+
+    @Test
+    public void testCreateWithWhitespaceInNameAndType() {
+        String name = "Me di ci ne";
+        String type = "Ty     pe";
+        medicineManager.addMedicine(name, type);
+        assertEquals( name, medicineManager.getAllMedicines().get(0).getName());
+        assertEquals( type, medicineManager.getAllMedicines().get(0).getType());
     }
 
     @Test
