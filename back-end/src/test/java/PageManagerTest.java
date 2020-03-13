@@ -100,6 +100,17 @@ public class PageManagerTest {
         siteManager.addSite("toDeleteSite");
         pageManager.addPage("toDeleteSite", "Slug", 3, "Title", "content");
         siteManager.delete(siteManager.getBySiteName("toDeleteSite"));
+        assertEquals(0, pageManager.getAllPages().size());
+    }
+
+    @Test
+    public void testSiteUpdateEffectOnPage() {
+        siteManager.addSite("toUpdateSite");
+        pageManager.addPage("toUpdateSite", "Slug", 3, "title", "content");
+        Site updatedSite = siteManager.getBySiteName("toUpdateSite");
+        updatedSite.setName("UpdatedSite");
+        siteManager.update(updatedSite);
+        assertEquals("UpdatedSite", pageManager.getAllPages().get(0).getSite().getName());
     }
     
 }
