@@ -26,13 +26,13 @@ public class MedicineManagerTest {
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         medicineManager = MedicineManager.getMedicineManager();
-        //connectionLeakUtil = new ConnectionLeakUtil();
+        connectionLeakUtil = new ConnectionLeakUtil();
     }
 
     @AfterClass
     public static void assertNoLeaks() {
         HibernateUtility.shutdown();
-        //connectionLeakUtil.assertNoLeaks();
+        connectionLeakUtil.assertNoLeaks();
     }
 
     @Before
@@ -71,12 +71,28 @@ public class MedicineManagerTest {
     @Test
     public void testFillingAndGetting() {
         fillDatabase();
-        assertEquals(getListOfMedicines(), medicineManager.getAllMedicines().size());
+        assertEquals(getListOfMedicines().size(), medicineManager.getAllMedicines().size());
+    }
+
+    @Test
+    public void testFillingAndGettingValues() {
+        fillDatabase();
+        for (int i =0; i < medicineManager.getAllMedicines().size() ; i++) {
+            assertEquals(getListOfMedicines().get(i).getName(), medicineManager.getAllMedicines().get(i).getName());
+            assertEquals(getListOfMedicines().get(i).getType(), medicineManager.getAllMedicines().get(i).getType());
+        }
     }
 
     @Test
     public void testUpdateMedicine() {
+        fillDatabase();
+        int id = medicineManager.getAllMedicines().get(0).getPrimaryKey();
+        Medicine replacementMed = new Medicine(id, "Ibuprofen", "New Disease Name");
+        medicineManager.update(replacementMed);
 
+        Medicine medInDB = medicineManager.getAllMedicines().get(0);
+        assertEquals(replacementMed.getName(), medInDB.getName());
+        assertEquals(replacementMed.getType(), medInDB.getType());
     }
 
     @Test(expected = PersistenceException.class)

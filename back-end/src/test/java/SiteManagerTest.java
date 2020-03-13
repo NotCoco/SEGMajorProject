@@ -114,14 +114,14 @@ public class SiteManagerTest {
     }
 
     @Test
-    public void testGetAllPagesBySite(){
-
-    }
-
-    @Test
     public void testUpdateSite() {
+        fillDatabase();
+        int id = siteManager.getAllSites().get(0).getPrimaryKey();
+        Site replacementSite = new Site(id, "New Disease Name");
+        siteManager.update(replacementSite);
 
-
+        Site siteInDB = siteManager.getAllSites().get(0);
+        assertEquals(replacementSite.getName(), siteInDB.getName());
     }
 
     @Test(expected = PersistenceException.class)
