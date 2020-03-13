@@ -56,22 +56,51 @@ public class MedicineControllerTest{
     @Test
     public void testAddAndGetAll(){
         ArrayList<Integer> ids = new ArrayList<>();
-        HttpRequest request = HttpRequest.POST("/medicine", new MedicineAddCommand("ShouldBeDeleted", "Liquid"));
-        HttpResponse response = client.toBlocking().exchange(request);
-        ids.add(getEId(response).intValue());
-        request = HttpRequest.POST("/medicine", new MedicineAddCommand("ShouldBeDeleted", "Liquid"));
-        response = client.toBlocking().exchange(request);
-        ids.add(getEId(response).intValue());
-        request = HttpRequest.POST("/medicine", new MedicineAddCommand("ShouldBeDeleted", "Liquid"));
-        response = client.toBlocking().exchange(request);
-        ids.add(getEId(response).intValue());
-        assertEquals(HttpStatus.CREATED, response.getStatus());
+        HttpResponse response;
+        for(int i=0;i<3;i++){
+            response = addMedicine("ShouldBeDeleted", "Liquid");
+            ids.add(getEId(response).intValue());
+        }
 
-        request = HttpRequest.GET("/medicine/list");
+        HttpRequest request = HttpRequest.GET("/medicine/list");
         List<Medicine> medicineList = client.toBlocking().retrieve(request, Argument.of(List.class, Medicine.class));
         for(int i=0; i<ids.size();i++){
             assertEquals(ids.get(i), medicineList.get(i).getPrimaryKey());
         }
+    }
+
+    @Test
+    public void testAddLegalMedicine(){
+        HttpResponse response= addMedicine("Med1", "Liquid");
+        assertEquals(HttpStatus.CREATED, response.getStatus());
+    }
+
+    @Test
+    public void testPutLegalMedicine(){
+        HttpResponse response= addMedicine("Med1", "Liquid");
+        int id =  getEId(response).intValue();
+        response = putMedicine(id, "NewName", "NewType");
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
+    }
+
+    @Test
+    public void testUpdateMedicineNullType(){
+        HttpResponse response = addMedicine("Med1", "Liquid");
+        int id =  getEId(response).intValue();
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.POST("/medicine", new MedicineUpdateCommand(id, "TestMed", "")));
+        });
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
+    }
+
+    @Test
+    public void testUpdateMedicineNullName(){
+        HttpResponse response = addMedicine("Med1", "Liquid");
+        int id =  getEId(response).intValue();
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.POST("/medicine", new MedicineUpdateCommand(id, "", "Liquid")));
+        });
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
     }
 
     @Test
@@ -86,13 +115,12 @@ public class MedicineControllerTest{
 
     @Test
     public void testDeleteAndGetMedicine(){
-        HttpRequest request = HttpRequest.POST("/medicine", new MedicineAddCommand("ShouldBeDeleted", "Liquid"));
-        HttpResponse response = client.toBlocking().exchange(request);
-        Long id = getEId(response);
+        HttpResponse response = addMedicine("Med1", "Liquid");
+        int id =  getEId(response).intValue();
         // Asserting that we've added a medicine
         assertEquals(HttpStatus.CREATED, response.getStatus());
 
-        request = HttpRequest.DELETE("/medicine/"+id);
+        HttpRequest request = HttpRequest.DELETE("/medicine/"+id);
         response = client.toBlocking().exchange(request);
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
             client.toBlocking().exchange(HttpRequest.GET("/medicine/"+id));
@@ -118,38 +146,42 @@ public class MedicineControllerTest{
 
     @Test
     public void testAddAndGetMedicine(){
-        HttpRequest request = HttpRequest.POST("/medicine", new MedicineAddCommand("Med1", "Liquid"));
-        HttpResponse response = client.toBlocking().exchange(request);
-        Long id = getEId(response);
+        HttpResponse response = addMedicine("Med1", "Liquid");
+        int id =  getEId(response).intValue();
 
-        assertEquals(HttpStatus.CREATED, response.getStatus());
-
-        request = HttpRequest.GET("/medicine/"+id);
-
-        Medicine testMed = client.toBlocking().retrieve(request, Medicine.class);
+        Medicine testMed = getMedicine(id);
 
         assertEquals("Med1", testMed.getName());
     }
 
     @Test
     public void testAddAndUpdateMedicine(){
-        HttpRequest request = HttpRequest.POST("/medicine", new MedicineAddCommand("Med1", "Liquid"));
-        HttpResponse response = client.toBlocking().exchange(request);
+        HttpResponse response = addMedicine("Med1", "Liquid");
         int id =  getEId(response).intValue();
 
-        assertEquals(HttpStatus.CREATED, response.getStatus());
+        response = putMedicine(id, "newName", "newType");
 
-        request = HttpRequest.PUT("/medicine", new MedicineUpdateCommand(id, "newName", "newType"));
-        response = client.toBlocking().exchange(request);
-
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
-
-        request = HttpRequest.GET("/medicine/" + id);
-        Medicine m = client.toBlocking().retrieve(request, Medicine.class);
+        Medicine m = getMedicine(id);
         assertEquals("newName", m.getName());
         assertEquals("newType", m.getType());
     }
 
+    protected HttpResponse putMedicine(int id, String name, String type){
+        HttpRequest request = HttpRequest.PUT("/medicine", new MedicineUpdateCommand(id, "newName", "newType"));
+        return client.toBlocking().exchange(request);
+    }
+
+    protected HttpResponse addMedicine(String name, String type){
+        HttpRequest request = HttpRequest.POST("/medicine", new MedicineAddCommand(name, type));
+        HttpResponse response = client.toBlocking().exchange(request);
+        return response;
+    }
+
+    protected Medicine getMedicine(int id){
+        HttpRequest request = HttpRequest.GET("/medicine/" + id);
+        return client.toBlocking().retrieve(request, Medicine.class);
+
+    }
 
     protected Long getEId(HttpResponse response) {
         String val = response.header(HttpHeaders.LOCATION);
