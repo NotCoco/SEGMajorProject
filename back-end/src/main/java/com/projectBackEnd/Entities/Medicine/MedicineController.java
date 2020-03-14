@@ -10,7 +10,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
-@Controller("/medicine")
+@Controller("/medicines")
 public class MedicineController {
 
     protected final MedicineManagerInterface medicineManager = MedicineManager.getMedicineManager();
@@ -19,19 +19,14 @@ public class MedicineController {
         //this.medicineManager = medicineManager;
     }
 
-    @Get(value = "/list", produces = MediaType.TEXT_JSON)
-    public List<Medicine> list() {
-        return medicineManager.getAllMedicines();
-    }
-
     @Get(value = "/{id}", produces = MediaType.TEXT_JSON)
     public Medicine list(int id) {
         return medicineManager.getByPrimaryKey(id);
     }
 
     @Get("/")
-    public String index(){
-        return "This is our medicine index page";
+    public List<Medicine> index(){
+        return medicineManager.getAllMedicines();
     }
 
 
@@ -63,7 +58,7 @@ public class MedicineController {
     }
 
     protected URI location(int id) {
-        return URI.create("/medicine/" + id);
+        return URI.create("/medicines/" + id);
     }
 
     protected URI location(Medicine medicine) {

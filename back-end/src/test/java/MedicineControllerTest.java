@@ -62,7 +62,7 @@ public class MedicineControllerTest{
             ids.add(getEId(response).intValue());
         }
 
-        HttpRequest request = HttpRequest.GET("/medicine/list");
+        HttpRequest request = HttpRequest.GET("/medicines");
         List<Medicine> medicineList = client.toBlocking().retrieve(request, Argument.of(List.class, Medicine.class));
         for(int i=0; i<ids.size();i++){
             assertEquals(ids.get(i), medicineList.get(i).getPrimaryKey());
@@ -88,7 +88,7 @@ public class MedicineControllerTest{
         HttpResponse response = addMedicine("Med1", "Liquid");
         int id =  getEId(response).intValue();
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            client.toBlocking().exchange(HttpRequest.POST("/medicine", new MedicineUpdateCommand(id, "TestMed", "")));
+            client.toBlocking().exchange(HttpRequest.POST("/medicines", new MedicineUpdateCommand(id, "TestMed", "")));
         });
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
     }
@@ -98,7 +98,7 @@ public class MedicineControllerTest{
         HttpResponse response = addMedicine("Med1", "Liquid");
         int id =  getEId(response).intValue();
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            client.toBlocking().exchange(HttpRequest.POST("/medicine", new MedicineUpdateCommand(id, "", "Liquid")));
+            client.toBlocking().exchange(HttpRequest.POST("/medicines", new MedicineUpdateCommand(id, "", "Liquid")));
         });
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
     }
@@ -106,7 +106,7 @@ public class MedicineControllerTest{
     @Test
     public void testNonExistingMedicineReturns404() {
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            client.toBlocking().exchange(HttpRequest.GET("/medicine/3524"));
+            client.toBlocking().exchange(HttpRequest.GET("/medicines/3524"));
         });
 
         assertNotNull(thrown.getResponse());
@@ -120,17 +120,17 @@ public class MedicineControllerTest{
         // Asserting that we've added a medicine
         assertEquals(HttpStatus.CREATED, response.getStatus());
 
-        HttpRequest request = HttpRequest.DELETE("/medicine/"+id);
+        HttpRequest request = HttpRequest.DELETE("/medicines/"+id);
         response = client.toBlocking().exchange(request);
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            client.toBlocking().exchange(HttpRequest.GET("/medicine/"+id));
+            client.toBlocking().exchange(HttpRequest.GET("/medicines/"+id));
         });
     }
 
     @Test
     public void testAddNullNameMedicine(){
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            client.toBlocking().exchange(HttpRequest.POST("/medicine", new MedicineAddCommand("", "Liquid")));
+            client.toBlocking().exchange(HttpRequest.POST("/medicines", new MedicineAddCommand("", "Liquid")));
         });
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
     }
@@ -139,7 +139,7 @@ public class MedicineControllerTest{
     @Test
     public void testAddNullTypeMedicine(){
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            client.toBlocking().exchange(HttpRequest.POST("/medicine", new MedicineAddCommand("TestMed", "")));
+            client.toBlocking().exchange(HttpRequest.POST("/medicines", new MedicineAddCommand("TestMed", "")));
         });
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
     }
@@ -167,18 +167,18 @@ public class MedicineControllerTest{
     }
 
     protected HttpResponse putMedicine(int id, String name, String type){
-        HttpRequest request = HttpRequest.PUT("/medicine", new MedicineUpdateCommand(id, "newName", "newType"));
+        HttpRequest request = HttpRequest.PUT("/medicines", new MedicineUpdateCommand(id, "newName", "newType"));
         return client.toBlocking().exchange(request);
     }
 
     protected HttpResponse addMedicine(String name, String type){
-        HttpRequest request = HttpRequest.POST("/medicine", new MedicineAddCommand(name, type));
+        HttpRequest request = HttpRequest.POST("/medicines", new MedicineAddCommand(name, type));
         HttpResponse response = client.toBlocking().exchange(request);
         return response;
     }
 
     protected Medicine getMedicine(int id){
-        HttpRequest request = HttpRequest.GET("/medicine/" + id);
+        HttpRequest request = HttpRequest.GET("/medicines/" + id);
         return client.toBlocking().retrieve(request, Medicine.class);
 
     }
@@ -186,9 +186,9 @@ public class MedicineControllerTest{
     protected Long getEId(HttpResponse response) {
         String val = response.header(HttpHeaders.LOCATION);
         if (val != null) {
-            int index = val.indexOf("/medicine/");
+            int index = val.indexOf("/medicines/");
             if (index != -1) {
-                return Long.valueOf(val.substring(index + "/medicine/".length()));
+                return Long.valueOf(val.substring(index + "/medicines/".length()));
             }
             else{
                 return null;
