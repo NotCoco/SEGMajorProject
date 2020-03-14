@@ -25,11 +25,11 @@ public class SessionManagerTest{
         HibernateUtility.shutdown();
         //connectionLeakUtil.assertNoLeaks();
     }
-
-    @After
-    public void tearDown() {
-		((EntityManager)sessionManager).deleteAll();
+    @Before
+    public void setUp() {
+	((SessionManager)sessionManager).deleteAll();
     }
+
 
 	@Test
 	public void testGetNewSession(){

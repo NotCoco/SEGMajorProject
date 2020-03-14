@@ -16,33 +16,33 @@ import java.io.Serializable;
 public class User implements TableEntity{
 	public final static String TABLENAME = "Users";
 	private final static String KEY = "id";
-	private final static String USERNAME = "username";
+	private final static String EMAIL = "email";
 	private final static String PASSWORD = "password";
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
     	@Column(name = KEY)
    	private int primaryKey;
-    	@Column(name = USERNAME)
+    	@Column(name = EMAIL)
     	@Type(type="text")
-	private String username;
+	private String email;
     	@Column(name = PASSWORD)
     	@Type(type="text")
 	private String password;
-	public User(String username, String password){
-		this.username = username;
+	public User(String email, String password){
+		this.email = email;
 		this.password = password;
 	}
 	public User(){};
     	public Serializable getPrimaryKey() {
         	return primaryKey;
     	}
-	public String getUsername(){
-		return username;
+	public String getEmail(){
+		return email;
 	}
 	public String getPassword(){
 		return password;
 	}
-	public void setUsername(String username){
-		this.username = username;
+	public void setEmail(String email){
+		this.email = email;
 	}
 	public void setPassword(String password){
 		this.password = password;
@@ -50,16 +50,16 @@ public class User implements TableEntity{
 
     	@Override
     	public String toString() {
-        	return "User: " + this.primaryKey + ", " + this.username + ", " + this.password;
+        	return "User: " + this.primaryKey + ", " + this.email + ", " + this.password;
     	}
 
 	public boolean equals(User user){
-		return user.username == username;
+		return user.email == email;
 	}
   @Override
     public TableEntity copy(TableEntity newCopy) {
         if(newCopy instanceof User){
-            setUsername(((User) newCopy).getUsername());
+            setEmail(((User) newCopy).getEmail());
             setPassword(((User) newCopy).getPassword());
         }
         return newCopy;
