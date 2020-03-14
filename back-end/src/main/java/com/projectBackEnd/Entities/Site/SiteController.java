@@ -96,11 +96,11 @@ public class SiteController {
         return HttpResponse.noContent();
     }
 
-    @Delete("/{id}")
-    public HttpResponse delete(int id) {
-        siteManager.delete(id);
-        return HttpResponse.noContent();
-    }
+//    @Delete("/{id}")
+//    public HttpResponse delete(int id) {
+//        siteManager.delete(id);
+//        return HttpResponse.noContent();
+//    }
 
     @Put("{name}/pages/{pageName}")
     public HttpResponse updatePage(String name, String pageName, @Body Page updatedPage){

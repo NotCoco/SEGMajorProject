@@ -20,6 +20,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,7 +104,7 @@ public class SiteControllerTest {
         // Asserting that we've added a site
         assertEquals(HttpStatus.CREATED, response.getStatus());
 
-        HttpRequest request = HttpRequest.DELETE("/sites/"+id);
+        HttpRequest request = HttpRequest.DELETE("/sites/"+url);
         response = client.toBlocking().exchange(request);
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
             client.toBlocking().exchange(HttpRequest.GET("/sites/"+url));
@@ -146,8 +150,8 @@ public class SiteControllerTest {
         HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
         assertNotNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
 
-        String id =  getEUrl(response);
-        Page testPage = getPage(id);
+        //String id =  getEUrl(response);
+        Page testPage = getPage("testSiteA","nutrition/slu!#g");
         assertEquals("Title", testPage.getTitle());
     }
 
@@ -184,20 +188,20 @@ public class SiteControllerTest {
         //protected HttpResponse putPage(int id, String siteName, String slug, int index, String title, String content) {
         response = putPage(idOfMadePage, "testSiteA", "nutrition/slu!#g", 1, "newTitle", "nutri!tion/information");
         assertEquals("newTitle",pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getTitle());
-        String id =  getEUrl(response);
-        Page testPage = getPage(id);
+        Page testPage = getPage("testSiteA", "nutrition/slu!#g");
         assertEquals("newTitle", testPage.getTitle());
     }
     @Test
     public void testUpdatePageSiteToValid() {
         addSite("testSiteA");
         addSite("testSiteB");
-        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
+        addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
+        //gets id of above page
         int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
-        //protected HttpResponse putPage(int id, String siteName, String slug, int index, String title, String content) {
-        response = putPage(idOfMadePage, "testSiteB", "nutrition/slu!#g", 1, "newTitle", "nutri!tion/information");
-        String id =  getEUrl(response);
-        Page testPage = getPage(id);
+
+        putPage(idOfMadePage, "testSiteA", "nutrition/slu!#g", 1, "newTitle", "nutri!tion/information");
+
+        Page testPage = getPage("testSiteA", "nutrition/slu!#g");
         assertEquals("newTitle", testPage.getTitle());
     }
     @Test
@@ -233,7 +237,8 @@ public class SiteControllerTest {
         }*/
         addSite("testSiteA");
         HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
-        HttpRequest request = HttpRequest.DELETE("/sites/"+ "testSiteA" +"/pages", "nutrition/slu!#g");
+        URI pLoc = pageLocation("testSiteA", "nutrition/slu!#g");
+        HttpRequest request = HttpRequest.DELETE(pLoc.toString());
         client.toBlocking().exchange(request);
         assertNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
     }
@@ -253,7 +258,7 @@ public class SiteControllerTest {
             input.add(new PagePatchCommand(currentPage.getPrimaryKey(), currentPage.getSlug(), i));
         } //Will order all pages from 0-4;
 
-        HttpRequest request = HttpRequest.PATCH("/sites/"+ "testSiteA" +"/pages", input);
+        HttpRequest request = HttpRequest.PATCH("/sites/"+ "testSiteA" +"/page-indices", input);
         client.toBlocking().exchange(request);
         //TODO Add the correct parameter for this!
         //Updates all the pages to have a new index.
@@ -267,12 +272,16 @@ public class SiteControllerTest {
     }
 
     protected HttpResponse putPage(int id, String siteName, String slug, int index, String title, String content) {
-        HttpRequest request = HttpRequest.PUT("/sites/"+ siteName +"/pages", new Page(id, siteName, slug, index, title, content));
+        String pSlug = pageManager.getByPrimaryKey(id).getSlug();
+        URI pLoc = pageLocation(siteName, pSlug);
+        HttpRequest request = HttpRequest.PUT(pLoc, new Page(id, siteName, slug, index, title, content));
         return client.toBlocking().exchange(request);
     }
 
     protected HttpResponse putSite(int id, String newName) {
-        HttpRequest request = HttpRequest.PUT("/sites", new Site(id, newName));
+        String oldSiteName = siteManager.getByPrimaryKey(id).getName();
+        URI sLoc = location(oldSiteName);
+        HttpRequest request = HttpRequest.PUT(sLoc, new Site(id, newName));
         return client.toBlocking().exchange(request);
     }
 
@@ -282,18 +291,22 @@ public class SiteControllerTest {
         return response;
     }
     protected HttpResponse addPage(String siteName, String slug, Integer index, String title, String content) {
-        HttpRequest request = HttpRequest.POST(("/sites/"+ siteName +"/pages"), new PageAddCommand(siteName, slug, index, title, content));
+        URI sLoc = location(siteName);
+        HttpRequest request = HttpRequest.POST((sLoc +"/pages"), new PageAddCommand(siteName, slug, index, title, content));
         HttpResponse response = client.toBlocking().exchange(request);
         return response;
 
     }
 
     protected Site getSite(String name) {
-        HttpRequest request = HttpRequest.GET("/sites/" + name);
+        URI loc = location(name);
+        HttpRequest request = HttpRequest.GET(loc);
         return client.toBlocking().retrieve(request, Site.class);
     }
-    protected Page getPage(String name) {
-        HttpRequest request = HttpRequest.GET("/sites/" + name);
+    protected Page getPage(String name, String pageName) {
+        URI loc = pageLocation(name, pageName);
+
+        HttpRequest request = HttpRequest.GET(loc);
         return client.toBlocking().retrieve(request, Page.class);
     }
 
@@ -307,6 +320,28 @@ public class SiteControllerTest {
             return null;
         }
         return null;
+    }
+
+    protected URI pageLocation(String siteName, String pageName) {
+        String encodedSlug = null;
+        String encodedPage = null;
+        try {
+            encodedSlug = URLEncoder.encode(siteName, java.nio.charset.StandardCharsets.UTF_8.toString());
+            encodedPage = URLEncoder.encode(pageName, java.nio.charset.StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
+        return URI.create("/sites/" + encodedSlug + "/pages/" + encodedPage);
+    }
+
+    protected URI location(String siteName) {
+        String encodedSlug = null;
+        try {
+            encodedSlug = URLEncoder.encode(siteName, java.nio.charset.StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException e) {
+            return null;
+        }
+        return URI.create("/sites/" + encodedSlug);
     }
 
     protected int getSitePKByName(String name){
