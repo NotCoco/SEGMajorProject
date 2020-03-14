@@ -4,24 +4,20 @@ import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
+import io.micronaut.validation.Validated;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
-@Controller("/medicine")
+@Controller("/medicines")
 public class MedicineController {
 
-    protected final MedicineManagerInterface medicineManager = new MedicineManager();
+    protected final MedicineManagerInterface medicineManager = MedicineManager.getMedicineManager();
 
     MedicineController(){
         //this.medicineManager = medicineManager;
     }
-
-//    @Get(value = "/list", produces = MediaType.TEXT_JSON)
-//    public List<Medicine> list() {
-//        return medicineManager.getAllMedicines();
-//    }
 
     @Get(value = "/{id}", produces = MediaType.TEXT_JSON)
     public Medicine list(int id) {
@@ -29,18 +25,26 @@ public class MedicineController {
     }
 
     @Get("/")
-    public String index(){
-        return "This is our medicine index page";
+    public List<Medicine> index(){
+        return medicineManager.getAllMedicines();
     }
 
 
     @Post("/")
     public HttpResponse<Medicine> add(@Body MedicineAddCommand command) {
         Medicine med = medicineManager.addMedicine(command.getName(), command.getType());
-
+        if(medicineManager.getByPrimaryKey(med.getPrimaryKey()) == null){
+            return HttpResponse.serverError();
+        }
         return HttpResponse
                 .created(med)
                 .headers(headers -> headers.location(location(med.getPrimaryKey())));
+    }
+
+    @Delete("/{id}")
+    public HttpResponse delete(int id) {
+        medicineManager.delete(id);
+        return HttpResponse.noContent();
     }
 
     @Put("/")
@@ -54,7 +58,7 @@ public class MedicineController {
     }
 
     protected URI location(int id) {
-        return URI.create("/medicine/" + id);
+        return URI.create("/medicines/" + id);
     }
 
     protected URI location(Medicine medicine) {

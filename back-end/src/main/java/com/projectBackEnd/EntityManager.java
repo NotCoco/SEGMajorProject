@@ -132,6 +132,26 @@ public class EntityManager <T extends TableEntity> { //TODO Try with statics to 
         session.getTransaction().commit();
     }
 
+    public void delete(Serializable pk) {
+        SessionFactory sf = HibernateUtility.getSessionFactory();
+        Session session = sf.openSession();
+        try {
+            delete(pk, session);
+        } catch(HibernateException ex) {
+            if (session.getTransaction() != null) session.getTransaction().rollback();
+        } finally {
+            session.close();
+            //sf.close();
+        }
+    }
+
+    private void delete(Serializable pk, Session session) throws HibernateException {
+        session.beginTransaction();
+        T entityToDelete = getByPrimaryKey(pk);
+        session.delete(entityToDelete);
+        session.getTransaction().commit();
+    }
+
     //TODO Might need to return back down if frontend send strings etc. I presume they will json and send the (page) back
     //Methods are commented out already in the PageManager if they send a String primary key.
 
