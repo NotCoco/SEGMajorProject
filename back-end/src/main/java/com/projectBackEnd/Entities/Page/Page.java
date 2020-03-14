@@ -1,77 +1,126 @@
 package main.java.com.projectBackEnd.Entities.Page;
 
+import main.java.com.projectBackEnd.Entities.Site.Site;
+import main.java.com.projectBackEnd.Entities.Site.SiteManager;
+import main.java.com.projectBackEnd.Entities.Site.SiteManagerInterface;
 import main.java.com.projectBackEnd.TableEntity;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = Page.TABLENAME)
-/**
- * The Page objects as defined for use, also designated entities with tables
- * in the database for Hibernate and JavaX to identify for database management.
- * https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
- */
-public class Page implements TableEntity { //TODO extends Entity, for easier Json conversion for frontend management
-
-    // Table Headers stored as public static final Strings
+@Table(name = Page.TABLENAME, uniqueConstraints = { @UniqueConstraint(columnNames = {Page.SLUG, Page.SITE})})
+public class Page implements TableEntity {
     public static final String TABLENAME = "Pages";
+    private static final String ID = "ID";
+    public static final String SITE = "Site";
     public static final String SLUG = "Slug";
+
     private static final String INDEX = "`Index`";
     private static final String TITLE = "Title";
     private static final String CONTENT = "Content";
 
-    @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = SLUG)
-    private String primaryKey;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = ID, nullable = false)
+    private Integer primaryKey;
+    @ManyToOne(targetEntity = Site.class)
+    @OnDelete(action= OnDeleteAction.CASCADE)
+    @JoinColumn(name = SITE, nullable = false)
+    private Site site;
 
-    @Column(name = INDEX, nullable=false)
+    @Column(name = SLUG, nullable = false)
+    @Type(type="text")
+    private String slug;
+    @Column(name = INDEX, nullable = false)
     private Integer index;
-
     @Column(name = TITLE)
     @Type(type="text")
     private String title;
-
     @Column(name = CONTENT)
     @Type(type="text")
     private String content;
-    //Attributes for each will be stored here, under the names given by @Column.
 
-    /**
-     * Empty Constructor
-     */
-    public Page() {
+    public Page() {}
+
+
+    public Page(String siteName, String slug, Integer index, String title, String content) {
+        this.primaryKey = -1;
+        SiteManagerInterface s = SiteManager.getSiteManager();
+        setSite(s.getBySiteName(siteName));
+        setSlug(slug);
+        this.index = index;
+        this.title = title;
+        this.content = content;
     }
-
-    public Page(Serializable slug, Integer index, String title, String content) {
-        this.primaryKey = (String) slug;
+    public Page(Site site, String slug, Integer index, String title, String content) {
+        this.primaryKey = -1;
+        setSite(site);
+        setSlug(slug);
         this.index = index;
         this.title = title;
         this.content = content;
     }
 
-    //GETTERS AND SETTERS:
 
-    public String getPrimaryKey() {
+    //Need to find out which of these two Micronaut will use. Or just use the getName, make it print something lol
+    public Page(Integer ID, String siteName, String slug, Integer index, String title, String content) {
+        this.primaryKey = ID;
+        SiteManagerInterface s = SiteManager.getSiteManager();
+        setSite(s.getBySiteName(siteName));
+        setSlug(slug);
+        this.index = index;
+        this.title = title;
+        this.content = content;
+        System.out.println("Micronaut used Constructor 1! Delete The following constructor"); //TODO REMOVE
+    }
+    public Page(Integer ID, Site site, String slug, Integer index, String title, String content) {
+        this.primaryKey = ID;
+        setSite(site);
+        setSlug(slug);
+        this.index = index;
+        this.title = title;
+        this.content = content;
+        System.out.println("Micronaut used Constructor 2! Delete The above constructor"); //TODO Remove
+    }
+    public Integer getPrimaryKey() {
         return primaryKey;
     }
-    public Integer getIndex() {
-        return index;
+    public TableEntity copy(TableEntity newCopy) {
+        Page newPageVersion = (Page) newCopy;
+        setIndex(newPageVersion.getIndex());
+        setTitle(newPageVersion.getTitle());
+        setContent(newPageVersion.getContent());
+        setSite(newPageVersion.getSite());
+        setSlug(newPageVersion.getSlug());
+        return newPageVersion;
     }
-    public void setIndex(Integer index) {
-        this.index = index;
+    public Site getSite() {
+        return site;
     }
+    public void setSite(Site site) {
+        this.site = site;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
+
+
     public String getTitle() {
         return title;
     }
+
     public void setTitle(String title) {
         this.title = title;
     }
+
     public String getContent() {
         return content;
     }
@@ -80,22 +129,15 @@ public class Page implements TableEntity { //TODO extends Entity, for easier Jso
         this.content = content;
     }
 
-    @Override
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
+    //Integer ID, String siteName, String slug, Integer index, String title, String content
     public String toString() {
-        return "Page: " + this.primaryKey + ", " + this.index + ", " + this.title + ", " + this.content;
-    }
-
-    public boolean equals(Page otherPage) {
-        return getPrimaryKey().equals(otherPage.getPrimaryKey()) && (getIndex().equals(otherPage.getIndex())) &&
-                getTitle().equals(otherPage.getTitle()) && getContent().equals(otherPage.getContent());
-    }
-
-    @Override
-    public TableEntity copy(TableEntity newCopy) {
-        Page newPage = (Page) newCopy;
-        setContent(newPage.getContent());
-        setIndex(newPage.getIndex());
-        setTitle(newPage.getTitle());
-        return this;
+        return "Page: " + getPrimaryKey() + ", from: " + getSite() + " : " + getSlug() + " : " + getIndex() + " : " + getTitle() + " : " + getContent();
     }
 }

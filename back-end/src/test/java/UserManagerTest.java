@@ -10,9 +10,8 @@ import main.java.com.projectBackEnd.Entities.User.InvalidEmailException;
 import org.junit.*;
 import java.security.MessageDigest; 
 import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException; 
+import java.security.NoSuchAlgorithmException;
 
-import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.*;
@@ -23,7 +22,7 @@ public class UserManagerTest{
 	public static UserManagerInterface userManager = null;
 	@BeforeClass
     public static void setUpDatabase() {
-        HibernateUtility.setResource("testhibernate.cfg.xml");
+        HibernateUtility.setResource("test/resources/testhibernate.cfg.xml");
 		userManager = UserManager.getUserManager();
         //connectionLeakUtil = new ConnectionLeakUtil();
 

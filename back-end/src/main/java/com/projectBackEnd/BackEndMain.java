@@ -11,7 +11,7 @@ public class BackEndMain {
          * title: email title
          * content: email content
          */
-		SendMail.send("AlbertG2001@outlook.com","Title","Hello Hello!");
+		//SendMail.send("AlbertG2001@outlook.com","Title","Hello Hello!");
 		//Something albert did.
 
 		Micronaut.run(BackEndMain.class);

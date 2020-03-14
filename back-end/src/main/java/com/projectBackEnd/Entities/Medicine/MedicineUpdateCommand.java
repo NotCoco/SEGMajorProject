@@ -1,9 +1,9 @@
 package main.java.com.projectBackEnd.Entities.Medicine;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import io.micronaut.core.annotation.Introspected;
-
-@Introspected
+//import io.micronaut.core.annotation.Introspected;
+//TODO Reinsert Tags as I couldn't get them to compile on IntelliJ
+//@Introspected
 public class MedicineUpdateCommand {
 
 
