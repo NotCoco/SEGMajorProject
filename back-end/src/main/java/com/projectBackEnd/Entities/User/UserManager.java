@@ -72,6 +72,21 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 		if(!found)
 			throw new UserNotExistException("there is no user with email: " + email);
 	}
+	public void changeEmail(String oldEmail, String newEmail) throws UserNotExistException { // to be tested
+		List<User> users = getAll();
+		User user = null;
+		for(User u:users){
+			if(u.getEmail().equals(oldEmail))
+				user = u;
+		}
+		if(user == null)
+			throw new UserNotExistException("there is no user with email: " + oldEmail);
+		user.setEmail(newEmail);
+		update(user);
+	}
+	public boolean verifyEmail(String email){ //to be tested
+		return getAll().stream().filter(u->((User)u).getEmail().equals(email)).count() > 0;
+	}
 	private String hash(String in){
 		try{
 			MessageDigest alg = MessageDigest.getInstance("SHA-512"); 

@@ -9,6 +9,11 @@ import io.micronaut.http.annotation.*;
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 
+import main.java.com.projectBackEnd.Entities.ResetLinks.ResetLinkManager;
+import main.java.com.projectBackEnd.Entities.ResetLinks.ResetLinkManagerInterface;
+import main.java.com.projectBackEnd.Entities.ResetLinks.EmailNotExistException;
+
+
 import java.net.URI;
 
 @Controller("/user")
@@ -40,16 +45,7 @@ public class UserController {
 			return HttpResponse.notFound("invalid credentials");
 	}
 
-	/**
-	 TODO:
-		- check with email functionality
-	@Put("/change_password")
-	public HttpResponse changePassword(){
-        	return HttpResponse.ok();
-	}
-	*/
-
-    	@Delete("/delete_user")
+    @Delete("/delete_user")
 	public HttpResponse deleteUser(@Body String email){
 
 		try{
@@ -62,7 +58,7 @@ public class UserController {
 		}
 	}
 
-    	@Post("/verify_session")
+    @Post("/verify_session")
 	public HttpResponse verifySession(@Body String token){
 		if(sessionManager.verifySession(token))
 			return HttpResponse.ok();
@@ -70,6 +66,49 @@ public class UserController {
 			return HttpResponse.notFound();
 		
 	}
+	@Put("/change_password") //test
+	public HttpResponse<String> changePassword(@Body PasswordResetBody body){
+		try{
+        	PasswordReset.getPasswordResetManager().changePassword(body.token, body.password);
+			return HttpResponse.ok();
+		}
+		catch(TokenNotExistException e){
+			return HttpResponse.notFound("incorrect token");
+		}
+		catch(UserNotExistException e){
+			return HttpResponse.notFound("token did not match any user");
+		}	
+	}
+	@Post("/password_reset") //test
+	public HttpResponse<String> getPasswordReset(@Body String email){
+		try{
+        	PasswordReset.getPasswordResetManager().sendPasswordResetLink(email);
+			return HttpResponse.ok();
+		}
+		catch(EmailNotExistException e){
+			return HttpResponse.notFound("incorrect email");
+		}
+		catch(ServerErrorException e){
+			return HttpResponse.serverError();
+		}	
+	}
+	@Put("/change_email") //test
+	public HttpResponse<String> changeEmail(@Body ChangeEmailBody body){
+		if(sessionManager.verifySession(body.sessionToken))
+		{
+			try{
+				userManager.changeEmail(body.oldEmail, body.newEmail);
+				return HttpResponse.ok();
+			}
+			catch(UserNotExistException e){
+				return HttpResponse.notFound("no user with such email");
+			}
+		}
+		else
+			return HttpResponse.unauthorized();
+		
+	}
+	
 
 
 }
