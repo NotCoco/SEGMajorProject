@@ -19,14 +19,14 @@ public class SiteController {
     final PageManagerInterface pageManager = PageManager.getPageManager();
 
     SiteController() {}
-    @Get(value = "/list", produces = MediaType.TEXT_JSON)
-    public List<Site> list() {
-        return siteManager.getAllSites();
-    }
+//    @Get(value = "/list", produces = MediaType.TEXT_JSON)
+//    public List<Site> list() {
+//        return siteManager.getAllSites();
+//    }
 
     @Get("/")
-    public String index(){
-        return "This is our site index page";
+    public List<Site> index(){
+        return siteManager.getAllSites();
     }
 
     @Get("/{name}/pages")
