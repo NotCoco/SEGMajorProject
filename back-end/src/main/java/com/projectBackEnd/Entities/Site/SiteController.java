@@ -48,7 +48,7 @@ public class SiteController {
 
     @Post("/{name}/pages")
     public HttpResponse<Page> addPage(String name, @Body PageAddCommand pageToAdd){
-        Page p = pageManager.addPage(pageToAdd.getSite().getName(), pageToAdd.getSlug(), pageToAdd.getIndex(), pageToAdd.getTitle(), pageToAdd.getContent());
+        Page p = pageManager.addPage(pageToAdd.getSite(), pageToAdd.getSlug(), pageToAdd.getIndex(), pageToAdd.getTitle(), pageToAdd.getContent());
         if(pageManager.getPageBySiteAndSlug(p.getSite(), p.getSlug()) == null){
             return HttpResponse.serverError();
         }
@@ -104,6 +104,7 @@ public class SiteController {
 
     @Put("{name}/pages/{pageName}")
     public HttpResponse updatePage(String name, String pageName, @Body Page updatedPage){
+        //Page updatedPage = new Page(updatedPageCommand.getID(), updatedPageCommand.getSite(), updatedPageCommand.getSlug(), updatedPageCommand.getIndex(), updatedPageCommand.getTitle(), updatedPageCommand.getContent());
         pageManager.update(updatedPage);
         return HttpResponse
                 .noContent()

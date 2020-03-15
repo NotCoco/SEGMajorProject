@@ -125,7 +125,7 @@ public class PageManagerTest {
     public void testUpdateWithNullData() {
         fillDatabase();
         int primaryKeyOfObjectToUpdate =pageManager.getAllPages().get(0).getPrimaryKey();
-        Page badPage = new Page(primaryKeyOfObjectToUpdate,testSiteB,null, null, null, null);
+        Page badPage = new Page(primaryKeyOfObjectToUpdate,"testSiteB",null, null, null, null);
         pageManager.update(badPage);
         for (int i = 0; i < pageManager.getAllPages().size(); ++i) {
             System.out.println(pageManager.getAllPages().get(i));
@@ -187,11 +187,11 @@ public class PageManagerTest {
 
     @Test
     public void testUpdatePage() {
-        Page newPage = new Page(9999, testSiteB,"Slug3", 10, "Title3", "New content!");
+        Page newPage = new Page(9999, "testSiteB","Slug3", 10, "Title3", "New content!");
         pageManager.addPage(newPage);
         int assignedID = pageManager.getAllPages().get(0).getPrimaryKey();
         fillDatabase();
-        Page updatedPage = new Page(assignedID, testSiteB,"Slug3", 14, "Title3", "New conwishwashchangedtent!");
+        Page updatedPage = new Page(assignedID, "testSiteB","Slug3", 14, "Title3", "New conwishwashchangedtent!");
         pageManager.update(updatedPage);
         Page foundPage = pageManager.getByPrimaryKey(assignedID);
 

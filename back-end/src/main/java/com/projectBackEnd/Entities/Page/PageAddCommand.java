@@ -9,7 +9,7 @@ import main.java.com.projectBackEnd.Entities.Site.SiteManagerInterface;
 //@Introspected
 public class PageAddCommand {
 
-    private Site site;
+    private String site;
     @NotNull
     private String slug;
     @NotNull
@@ -26,8 +26,7 @@ public class PageAddCommand {
         setIndex(index);
         this.title = title;
         this.content = content;
-        SiteManagerInterface s = SiteManager.getSiteManager();
-        setSite(s.getBySiteName(siteName));
+        setSite(siteName);
     }
 
     public String getSlug() {
@@ -65,12 +64,13 @@ public class PageAddCommand {
         this.content = content;
     }
 
-    public Site getSite() {
+    public String getSite() {
         return site;
     }
 
-    public void setSite(Site site) {
-        this.site = site;
+    public void setSite(String siteName) {
+        SiteManagerInterface s = SiteManager.getSiteManager();
+        if (s.getBySiteName(siteName) != null) site = siteName;
     }
 
 }
