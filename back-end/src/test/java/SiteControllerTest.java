@@ -206,6 +206,35 @@ public class SiteControllerTest {
         assertEquals("newTitle", testPage.getTitle());
     }
     @Test
+    public void testUpdatePageSlugToValid() {
+        addSite("testSiteA");
+        addSite("testSiteB");
+        addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
+        //gets id of above page
+        int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
+
+        putPage(idOfMadePage, "testSiteA", "nutrition/sl123u!#g", 1, "newTitle", "nutri!tion/information");
+
+        Page testPage = getPage("testSiteA", "nutrition/sl123u!#g");
+        assertEquals("newTitle", testPage.getTitle());
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            getPage("testSiteA", "nutrition/slu!#g");
+        });
+        assertNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
+    }
+    @Test
+    public void testGetNonExistentPage() {
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.GET("nothing"));
+        });
+    }
+    @Test
+    public void testDeleteNonExistentPage() {
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.DELETE("nothing"));
+        });
+    }
+    @Test
     public void testUpdatePageToInvalid() {
         addSite("testSiteA");
         HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
