@@ -306,6 +306,72 @@ paths:
       - ApiKeyHeader: []
       tags:
         - news
+  /medicines:
+    get:
+      tags:
+      - medicines
+      summary: Get a list of all medicines
+      produces:
+      - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Medicine'
+    put:
+      summary: Update an existing medicine
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Medicine object to be updated
+        required: true
+        schema:
+          $ref: '#/definitions/Medicine'
+      responses:
+        204:
+          description: No content
+      security:
+      - ApiKeyHeader: []
+      tags:
+      - medicines
+    post:
+      tags:
+      - medicines
+      summary: Add a new medicine
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Medicine object to be added
+        required: true
+        schema:
+          $ref: '#/definitions/Medicine'
+      responses:
+        201:
+          description: Created
+      security:
+      - ApiKeyHeader: []
+  /medicines/{medicineId}:
+    parameters:
+    - name: medicineId
+      in: path
+      description: Medicine ID
+      required: true
+      type: number
+    delete:
+      summary: Delete an existing medicine
+      responses:
+        204:
+          description: No content
+      security:
+      - ApiKeyHeader: []
+      tags:
+        - medicines
 securityDefinitions:
   ApiKeyHeader:
     type: apiKey
