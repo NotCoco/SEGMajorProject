@@ -385,6 +385,8 @@ definitions:
   SiteDescription:
     type: object
     properties:
+      id:
+        type: number
       slug:
         type: string
         example: biliary-atresia
@@ -410,6 +412,8 @@ definitions:
     - $ref: '#/definitions/PageIndex'
     - type: object
       properties:
+        id:
+          type: number
         title:
           type: string
           example: Introduction
@@ -435,6 +439,8 @@ definitions:
   News:
     type: object
     properties:
+      id:
+        type: number
       title:
         type: string
         example: Coronavirus Information
