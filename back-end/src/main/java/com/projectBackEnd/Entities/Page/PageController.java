@@ -15,13 +15,10 @@ import java.net.URLEncoder;
 import java.util.List;
 
 /**
- * Pages are components of sites, but page control methods could be moved into a more
- * cohesive class of their own for maintaining PageControl Code. The SiteController class still continues to use
- * these API endpoints and test them.
- * Essentially, these methods could be grouped in another way.
- * //TODO Someone verify if this was a good idea please!
+ * PageController no longer affects Site Controller, they just share the same @Controller tag.
  */
-public abstract class PageController {
+@Controller("/sites")
+public class PageController {
     final PageManagerInterface pageManager = PageManager.getPageManager();
 
     public PageController() {
