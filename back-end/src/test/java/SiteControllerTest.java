@@ -83,7 +83,7 @@ public class SiteControllerTest {
         String url =  getEUrl(response);
         int id = getSitePKByName(url);
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            client.toBlocking().exchange(HttpRequest.POST("/sites", new Site(id, "")));
+            client.toBlocking().exchange(HttpRequest.PUT("/sites", new Site(id, "")));
         });
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
     }
@@ -267,16 +267,13 @@ public class SiteControllerTest {
     }
 
     protected HttpResponse putPage(int id, String siteName, String slug, int index, String title, String content) {
-        String pSlug = pageManager.getByPrimaryKey(id).getSlug();
-        URI pLoc = pageLocation(siteName, pSlug);
-        HttpRequest request = HttpRequest.PUT(pLoc, new Page(id, siteName, slug, index, title, content));
+        URI pLoc = location(siteName);
+        HttpRequest request = HttpRequest.PUT(pLoc+"/pages", new Page(id, siteName, slug, index, title, content));
         return client.toBlocking().exchange(request);
     }
 
     protected HttpResponse putSite(int id, String newName) {
-        String oldSiteName = siteManager.getByPrimaryKey(id).getName();
-        URI sLoc = location(oldSiteName);
-        HttpRequest request = HttpRequest.PUT(sLoc, new Site(id, newName));
+        HttpRequest request = HttpRequest.PUT("/sites", new Site(id, newName));
         return client.toBlocking().exchange(request);
     }
 
@@ -328,6 +325,7 @@ public class SiteControllerTest {
         }
         return URI.create("/sites/" + encodedSlug + "/pages/" + encodedPage);
     }
+
 
     protected URI location(String siteName) {
         String encodedSlug = null;

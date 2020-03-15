@@ -67,8 +67,8 @@ public abstract class PageController {
         return pageManager.getPageBySiteAndSlug(name, page);
     }
 
-    @Put("{name}/pages/{pageName}")
-    public HttpResponse updatePage(String name, String pageName, @Body Page updatedPage) {
+    @Put("{name}/pages/")
+    public HttpResponse updatePage(String name, @Body Page updatedPage) {
         //Page updatedPage = new Page(updatedPageCommand.getID(), updatedPageCommand.getSite(), updatedPageCommand.getSlug(), updatedPageCommand.getIndex(), updatedPageCommand.getTitle(), updatedPageCommand.getContent());
         pageManager.update(updatedPage);
         return HttpResponse
