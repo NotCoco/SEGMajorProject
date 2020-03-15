@@ -184,6 +184,7 @@ public class SiteControllerTest {
     public void testUpdatePageTitle() {
         addSite("testSiteA");
         HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
+        assertNotNull(pageManager.getAllPages().get(0));
         int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
         //protected HttpResponse putPage(int id, String siteName, String slug, int index, String title, String content) {
         response = putPage(idOfMadePage, "testSiteA", "nutrition/slu!#g", 1, "newTitle", "nutri!tion/information");
@@ -229,12 +230,6 @@ public class SiteControllerTest {
 
     @Test
     public void testDeletePage() {
-        /*@Delete("/{name}/pages/{page}")
-        public HttpResponse deletePage(String name, String page){
-            Page p = pageManager.getPageBySiteAndSlug(name, page);
-            pageManager.delete(p);
-            return HttpResponse.noContent();
-        }*/
         addSite("testSiteA");
         HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
         URI pLoc = pageLocation("testSiteA", "nutrition/slu!#g");

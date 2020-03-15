@@ -76,6 +76,7 @@ public class Page implements TableEntity {
         this.content = content;
         System.out.println("Micronaut used Constructor 1! Delete The following constructor"); //TODO REMOVE
     }
+    /*
     public Page(Integer ID, Site site, String slug, Integer index, String title, String content) {
         this.primaryKey = ID;
         setSite(site);
@@ -84,7 +85,7 @@ public class Page implements TableEntity {
         this.title = title;
         this.content = content;
         System.out.println("Micronaut used Constructor 2! Delete The above constructor"); //TODO Remove
-    }
+    }*/
     public Integer getPrimaryKey() {
         return primaryKey;
     }
