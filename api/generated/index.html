@@ -202,25 +202,32 @@ font-style: italic;
   <li><a href="#imagesImageUrlDelete"><code><span class="http-method">delete</span> /images/{imageUrl}</code></a></li>
   <li><a href="#imagesPost"><code><span class="http-method">post</span> /images</code></a></li>
   </ul>
+  <h4><a href="#Medicines">Medicines</a></h4>
+  <ul>
+  <li><a href="#medicinesGet"><code><span class="http-method">get</span> /medicines</code></a></li>
+  <li><a href="#medicinesMedicineIdDelete"><code><span class="http-method">delete</span> /medicines/{medicineId}</code></a></li>
+  <li><a href="#medicinesPost"><code><span class="http-method">post</span> /medicines</code></a></li>
+  <li><a href="#medicinesPut"><code><span class="http-method">put</span> /medicines</code></a></li>
+  </ul>
   <h4><a href="#News">News</a></h4>
   <ul>
   <li><a href="#newsGet"><code><span class="http-method">get</span> /news</code></a></li>
   <li><a href="#newsNewsSlugDelete"><code><span class="http-method">delete</span> /news/{newsSlug}</code></a></li>
-  <li><a href="#newsNewsSlugPut"><code><span class="http-method">put</span> /news/{newsSlug}</code></a></li>
   <li><a href="#newsPost"><code><span class="http-method">post</span> /news</code></a></li>
+  <li><a href="#newsPut"><code><span class="http-method">put</span> /news</code></a></li>
   </ul>
   <h4><a href="#Sites">Sites</a></h4>
   <ul>
   <li><a href="#sitesGet"><code><span class="http-method">get</span> /sites</code></a></li>
   <li><a href="#sitesPost"><code><span class="http-method">post</span> /sites</code></a></li>
+  <li><a href="#sitesPut"><code><span class="http-method">put</span> /sites</code></a></li>
   <li><a href="#sitesSiteSlugDelete"><code><span class="http-method">delete</span> /sites/{siteSlug}</code></a></li>
   <li><a href="#sitesSiteSlugGet"><code><span class="http-method">get</span> /sites/{siteSlug}</code></a></li>
   <li><a href="#sitesSiteSlugPageIndicesPatch"><code><span class="http-method">patch</span> /sites/{siteSlug}/page-indices</code></a></li>
   <li><a href="#sitesSiteSlugPagesPageSlugDelete"><code><span class="http-method">delete</span> /sites/{siteSlug}/pages/{pageSlug}</code></a></li>
   <li><a href="#sitesSiteSlugPagesPageSlugGet"><code><span class="http-method">get</span> /sites/{siteSlug}/pages/{pageSlug}</code></a></li>
-  <li><a href="#sitesSiteSlugPagesPageSlugPut"><code><span class="http-method">put</span> /sites/{siteSlug}/pages/{pageSlug}</code></a></li>
   <li><a href="#sitesSiteSlugPagesPost"><code><span class="http-method">post</span> /sites/{siteSlug}/pages</code></a></li>
-  <li><a href="#sitesSiteSlugPut"><code><span class="http-method">put</span> /sites/{siteSlug}</code></a></li>
+  <li><a href="#sitesSiteSlugPagesPut"><code><span class="http-method">put</span> /sites/{siteSlug}/pages</code></a></li>
   </ul>
 
   <h1><a name="Images">Images</a></h1>
@@ -305,6 +312,161 @@ font-style: italic;
         <a href="#Image">Image</a>
   </div> <!-- method -->
   <hr/>
+  <h1><a name="Medicines">Medicines</a></h1>
+  <div class="method"><a name="medicinesGet"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="get"><code class="huge"><span class="http-method">get</span> /medicines</code></pre></div>
+    <div class="method-summary">Get a list of all medicines (<span class="nickname">medicinesGet</span>)</div>
+    <div class="method-notes"></div>
+
+
+
+
+
+
+
+    <h3 class="field-label">Return type</h3>
+    <div class="return-type">
+      array[<a href="#Medicine">Medicine</a>]
+      
+    </div>
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+    <h3 class="field-label">Example data</h3>
+    <div class="example-data-content-type">Content-Type: application/json</div>
+    <pre class="example"><code>[ {
+  "name" : "Ursodeoxycholic Acid",
+  "id" : 0.80082819046101150206595775671303272247314453125,
+  "type" : "type"
+}, {
+  "name" : "Ursodeoxycholic Acid",
+  "id" : 0.80082819046101150206595775671303272247314453125,
+  "type" : "type"
+} ]</code></pre>
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">200</h4>
+    OK
+        
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="medicinesMedicineIdDelete"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="delete"><code class="huge"><span class="http-method">delete</span> /medicines/{medicineId}</code></pre></div>
+    <div class="method-summary">Delete an existing medicine (<span class="nickname">medicinesMedicineIdDelete</span>)</div>
+    <div class="method-notes"></div>
+
+    <h3 class="field-label">Path parameters</h3>
+    <div class="field-items">
+      <div class="param">medicineId (required)</div>
+
+      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; Medicine ID </div>
+    </div>  <!-- field-items -->
+
+
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">204</h4>
+    No content
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="medicinesPost"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="post"><code class="huge"><span class="http-method">post</span> /medicines</code></pre></div>
+    <div class="method-summary">Add a new medicine (<span class="nickname">medicinesPost</span>)</div>
+    <div class="method-notes"></div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">body <a href="#Medicine">Medicine</a> (required)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash; Medicine object to be added </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">201</h4>
+    Created
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="medicinesPut"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="put"><code class="huge"><span class="http-method">put</span> /medicines</code></pre></div>
+    <div class="method-summary">Update an existing medicine (<span class="nickname">medicinesPut</span>)</div>
+    <div class="method-notes"></div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">body <a href="#Medicine">Medicine</a> (required)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash; Medicine object to be updated </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">204</h4>
+    No content
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
   <h1><a name="News">News</a></h1>
   <div class="method"><a name="newsGet"/>
     <div class="method-path">
@@ -333,6 +495,7 @@ font-style: italic;
   "date" : "2020-03-15T00:00:00.000Z",
   "pinned" : true,
   "description" : "Read our official advice regarding COVID-19.",
+  "id" : 0.80082819046101150206595775671303272247314453125,
   "title" : "Coronavirus Information",
   "urgent" : false,
   "content" : "content",
@@ -341,6 +504,7 @@ font-style: italic;
   "date" : "2020-03-15T00:00:00.000Z",
   "pinned" : true,
   "description" : "Read our official advice regarding COVID-19.",
+  "id" : 0.80082819046101150206595775671303272247314453125,
   "title" : "Coronavirus Information",
   "urgent" : false,
   "content" : "content",
@@ -390,48 +554,6 @@ font-style: italic;
         <a href="#"></a>
   </div> <!-- method -->
   <hr/>
-  <div class="method"><a name="newsNewsSlugPut"/>
-    <div class="method-path">
-    <a class="up" href="#__Methods">Up</a>
-    <pre class="put"><code class="huge"><span class="http-method">put</span> /news/{newsSlug}</code></pre></div>
-    <div class="method-summary">Update an existing news post (<span class="nickname">newsNewsSlugPut</span>)</div>
-    <div class="method-notes"></div>
-
-    <h3 class="field-label">Path parameters</h3>
-    <div class="field-items">
-      <div class="param">newsSlug (required)</div>
-
-      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; News slug </div>
-    </div>  <!-- field-items -->
-
-    <h3 class="field-label">Consumes</h3>
-    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
-    <ul>
-      <li><code>application/json</code></li>
-    </ul>
-
-    <h3 class="field-label">Request body</h3>
-    <div class="field-items">
-      <div class="param">body <a href="#News">News</a> (required)</div>
-
-      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash; News object to be updated </div>
-
-    </div>  <!-- field-items -->
-
-
-
-
-
-    <!--Todo: process Response Object and its headers, schema, examples -->
-
-
-
-    <h3 class="field-label">Responses</h3>
-    <h4 class="field-label">204</h4>
-    No content
-        <a href="#"></a>
-  </div> <!-- method -->
-  <hr/>
   <div class="method"><a name="newsPost"/>
     <div class="method-path">
     <a class="up" href="#__Methods">Up</a>
@@ -461,10 +583,52 @@ font-style: italic;
     <!--Todo: process Response Object and its headers, schema, examples -->
 
 
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
 
     <h3 class="field-label">Responses</h3>
     <h4 class="field-label">201</h4>
     Created
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="newsPut"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="put"><code class="huge"><span class="http-method">put</span> /news</code></pre></div>
+    <div class="method-summary">Update an existing news post (<span class="nickname">newsPut</span>)</div>
+    <div class="method-notes"></div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">body <a href="#News">News</a> (required)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash; News object to be updated </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">204</h4>
+    No content
         <a href="#"></a>
   </div> <!-- method -->
   <hr/>
@@ -495,11 +659,13 @@ font-style: italic;
     <pre class="example"><code>[ {
   "name" : "Biliary Atresia",
   "description" : "A rare disease of the liver and bile ducts that occurs in infants.",
+  "id" : 0.80082819046101150206595775671303272247314453125,
   "published" : true,
   "slug" : "biliary-atresia"
 }, {
   "name" : "Biliary Atresia",
   "description" : "A rare disease of the liver and bile ducts that occurs in infants.",
+  "id" : 0.80082819046101150206595775671303272247314453125,
   "published" : true,
   "slug" : "biliary-atresia"
 } ]</code></pre>
@@ -546,10 +712,52 @@ font-style: italic;
     <!--Todo: process Response Object and its headers, schema, examples -->
 
 
+    <h3 class="field-label">Produces</h3>
+    This API call produces the following media types according to the <span class="header">Accept</span> request header;
+    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
 
     <h3 class="field-label">Responses</h3>
     <h4 class="field-label">201</h4>
     Created
+        <a href="#"></a>
+  </div> <!-- method -->
+  <hr/>
+  <div class="method"><a name="sitesPut"/>
+    <div class="method-path">
+    <a class="up" href="#__Methods">Up</a>
+    <pre class="put"><code class="huge"><span class="http-method">put</span> /sites</code></pre></div>
+    <div class="method-summary">Update an existing site (<span class="nickname">sitesPut</span>)</div>
+    <div class="method-notes"></div>
+
+
+    <h3 class="field-label">Consumes</h3>
+    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
+    <ul>
+      <li><code>application/json</code></li>
+    </ul>
+
+    <h3 class="field-label">Request body</h3>
+    <div class="field-items">
+      <div class="param">body <a href="#SiteDescription">SiteDescription</a> (required)</div>
+
+      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash; Site object to be updated </div>
+
+    </div>  <!-- field-items -->
+
+
+
+
+
+    <!--Todo: process Response Object and its headers, schema, examples -->
+
+
+
+    <h3 class="field-label">Responses</h3>
+    <h4 class="field-label">204</h4>
+    No content
         <a href="#"></a>
   </div> <!-- method -->
   <hr/>
@@ -747,56 +955,6 @@ font-style: italic;
         <a href="#Page">Page</a>
   </div> <!-- method -->
   <hr/>
-  <div class="method"><a name="sitesSiteSlugPagesPageSlugPut"/>
-    <div class="method-path">
-    <a class="up" href="#__Methods">Up</a>
-    <pre class="put"><code class="huge"><span class="http-method">put</span> /sites/{siteSlug}/pages/{pageSlug}</code></pre></div>
-    <div class="method-summary">Update an existing page (<span class="nickname">sitesSiteSlugPagesPageSlugPut</span>)</div>
-    <div class="method-notes"></div>
-
-    <h3 class="field-label">Path parameters</h3>
-    <div class="field-items">
-      <div class="param">siteSlug (required)</div>
-
-      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; Site slug </div><div class="param">pageSlug (required)</div>
-
-      <div class="param-desc"><span class="param-type">Path Parameter</span> &mdash; Page slug </div>
-    </div>  <!-- field-items -->
-
-    <h3 class="field-label">Consumes</h3>
-    This API call consumes the following media types via the <span class="header">Content-Type</span> request header:
-    <ul>
-      <li><code>application/json</code></li>
-    </ul>
-
-    <h3 class="field-label">Request body</h3>
-    <div class="field-items">
-      <div class="param">body <a href="#Page">Page</a> (required)</div>
-
-      <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash; Site object to be updated </div>
-
-    </div>  <!-- field-items -->
-
-
-
-
-
-    <!--Todo: process Response Object and its headers, schema, examples -->
-
-
-    <h3 class="field-label">Produces</h3>
-    This API call produces the following media types according to the <span class="header">Accept</span> request header;
-    the media type will be conveyed by the <span class="header">Content-Type</span> response header.
-    <ul>
-      <li><code>application/json</code></li>
-    </ul>
-
-    <h3 class="field-label">Responses</h3>
-    <h4 class="field-label">204</h4>
-    No content
-        <a href="#"></a>
-  </div> <!-- method -->
-  <hr/>
   <div class="method"><a name="sitesSiteSlugPagesPost"/>
     <div class="method-path">
     <a class="up" href="#__Methods">Up</a>
@@ -845,11 +1003,11 @@ font-style: italic;
         <a href="#"></a>
   </div> <!-- method -->
   <hr/>
-  <div class="method"><a name="sitesSiteSlugPut"/>
+  <div class="method"><a name="sitesSiteSlugPagesPut"/>
     <div class="method-path">
     <a class="up" href="#__Methods">Up</a>
-    <pre class="put"><code class="huge"><span class="http-method">put</span> /sites/{siteSlug}</code></pre></div>
-    <div class="method-summary">Update an existing site (<span class="nickname">sitesSiteSlugPut</span>)</div>
+    <pre class="put"><code class="huge"><span class="http-method">put</span> /sites/{siteSlug}/pages</code></pre></div>
+    <div class="method-summary">Update an existing page (<span class="nickname">sitesSiteSlugPagesPut</span>)</div>
     <div class="method-notes"></div>
 
     <h3 class="field-label">Path parameters</h3>
@@ -867,7 +1025,7 @@ font-style: italic;
 
     <h3 class="field-label">Request body</h3>
     <div class="field-items">
-      <div class="param">body <a href="#SiteDescription">SiteDescription</a> (required)</div>
+      <div class="param">body <a href="#Page">Page</a> (required)</div>
 
       <div class="param-desc"><span class="param-type">Body Parameter</span> &mdash; Site object to be updated </div>
 
@@ -894,6 +1052,7 @@ font-style: italic;
   <h3>Table of Contents</h3>
   <ol>
     <li><a href="#Image"><code>Image</code> - </a></li>
+    <li><a href="#Medicine"><code>Medicine</code> - </a></li>
     <li><a href="#News"><code>News</code> - </a></li>
     <li><a href="#Page"><code>Page</code> - </a></li>
     <li><a href="#PageIndex"><code>PageIndex</code> - </a></li>
@@ -910,10 +1069,21 @@ font-style: italic;
     </div>  <!-- field-items -->
   </div>
   <div class="model">
+    <h3><a name="Medicine"><code>Medicine</code> - </a> <a class="up" href="#__Models">Up</a></h3>
+    <div class='model-description'></div>
+    <div class="field-items">
+      <div class="param">id (optional)</div><div class="param-desc"><span class="param-type"><a href="#number">BigDecimal</a></span>  </div>
+<div class="param">name (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+          <div class="param-desc"><span class="param-type">example: Ursodeoxycholic Acid</span></div>
+<div class="param">type (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+    </div>  <!-- field-items -->
+  </div>
+  <div class="model">
     <h3><a name="News"><code>News</code> - </a> <a class="up" href="#__Models">Up</a></h3>
     <div class='model-description'></div>
     <div class="field-items">
-      <div class="param">title (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+      <div class="param">id (optional)</div><div class="param-desc"><span class="param-type"><a href="#number">BigDecimal</a></span>  </div>
+<div class="param">title (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
           <div class="param-desc"><span class="param-type">example: Coronavirus Information</span></div>
 <div class="param">description (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
           <div class="param-desc"><span class="param-type">example: Read our official advice regarding COVID-19.</span></div>
@@ -936,6 +1106,7 @@ font-style: italic;
           <div class="param-desc"><span class="param-type">example: introduction</span></div>
 <div class="param">index (optional)</div><div class="param-desc"><span class="param-type"><a href="#integer">Integer</a></span>  </div>
           <div class="param-desc"><span class="param-type">example: 0</span></div>
+<div class="param">id (optional)</div><div class="param-desc"><span class="param-type"><a href="#number">BigDecimal</a></span>  </div>
 <div class="param">title (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
           <div class="param-desc"><span class="param-type">example: Introduction</span></div>
 <div class="param">content (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
@@ -956,7 +1127,8 @@ font-style: italic;
     <h3><a name="Site"><code>Site</code> - </a> <a class="up" href="#__Models">Up</a></h3>
     <div class='model-description'></div>
     <div class="field-items">
-      <div class="param">slug (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+      <div class="param">id (optional)</div><div class="param-desc"><span class="param-type"><a href="#number">BigDecimal</a></span>  </div>
+<div class="param">slug (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
           <div class="param-desc"><span class="param-type">example: biliary-atresia</span></div>
 <div class="param">name (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
           <div class="param-desc"><span class="param-type">example: Biliary Atresia</span></div>
@@ -970,7 +1142,8 @@ font-style: italic;
     <h3><a name="SiteDescription"><code>SiteDescription</code> - </a> <a class="up" href="#__Models">Up</a></h3>
     <div class='model-description'></div>
     <div class="field-items">
-      <div class="param">slug (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
+      <div class="param">id (optional)</div><div class="param-desc"><span class="param-type"><a href="#number">BigDecimal</a></span>  </div>
+<div class="param">slug (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
           <div class="param-desc"><span class="param-type">example: biliary-atresia</span></div>
 <div class="param">name (optional)</div><div class="param-desc"><span class="param-type"><a href="#string">String</a></span>  </div>
           <div class="param-desc"><span class="param-type">example: Biliary Atresia</span></div>
