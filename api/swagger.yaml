@@ -16,6 +16,8 @@ tags:
   description: Image uploading and management
 - name: news
   description: Create, retrieve, update and delete news posts
+- name: medicines
+  description: Create, retrieve, update and delete medicines
 paths:
   /sites:
     get:
@@ -384,6 +386,16 @@ definitions:
       urgent:
         type: boolean
         example: false
+  Medicine:
+    type: object
+    properties:
+      id:
+        type: number
+      name:
+        type: string
+        example: Ursodeoxycholic Acid
+      type:
+        type: string
 # Added by API Auto Mocking Plugin
 host: virtserver.swaggerhub.com
 basePath: /CallumWatkins/KCH-PLS/1.0.0
