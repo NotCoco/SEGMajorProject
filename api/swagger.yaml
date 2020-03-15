@@ -238,6 +238,72 @@ paths:
           description: No content
       security:
       - ApiKeyHeader: []
+  /news:
+    get:
+      tags:
+      - news
+      summary: Get a list of all news
+      produces:
+      - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/News'
+    post:
+      tags:
+      - news
+      summary: Add a new news post
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Site object to be added
+        required: true
+        schema:
+          $ref: '#/definitions/News'
+      responses:
+        201:
+          description: Created
+      security:
+      - ApiKeyHeader: []
+  /news/{newsSlug}:
+    parameters:
+    - name: newsSlug
+      in: path
+      description: News slug
+      required: true
+      type: string
+    put:
+      summary: Update an existing news post
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: News object to be updated
+        required: true
+        schema:
+          $ref: '#/definitions/News'
+      responses:
+        204:
+          description: No content
+      security:
+      - ApiKeyHeader: []
+      tags:
+      - news
+    delete:
+      summary: Delete an existing news post
+      responses:
+        204:
+          description: No content
+      security:
+      - ApiKeyHeader: []
+      tags:
+        - news
 securityDefinitions:
   ApiKeyHeader:
     type: apiKey
