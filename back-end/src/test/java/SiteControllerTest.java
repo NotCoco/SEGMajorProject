@@ -269,7 +269,7 @@ public class SiteControllerTest {
     protected HttpResponse putPage(int id, String siteName, String slug, int index, String title, String content) {
         String pSlug = pageManager.getByPrimaryKey(id).getSlug();
         URI pLoc = pageLocation(siteName, pSlug);
-        HttpRequest request = HttpRequest.PUT(pLoc, new Page(id, siteName, slug, index, title, content));
+        HttpRequest request = HttpRequest.PUT(pLoc, new PageUpdateCommand(id, siteName, slug, index, title, content));
         return client.toBlocking().exchange(request);
     }
 
