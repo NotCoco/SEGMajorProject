@@ -33,11 +33,31 @@ paths:
             type: array
             items:
               $ref: '#/definitions/SiteDescription'
+    put:
+      summary: Update an existing site
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Site object to be updated
+        required: true
+        schema:
+          $ref: '#/definitions/SiteDescription'
+      responses:
+        204:
+          description: No content
+      security:
+      - ApiKeyHeader: []
+      tags:
+      - sites
     post:
       tags:
       - sites
       summary: Add a new site
       consumes:
+      - application/json
+      produces:
       - application/json
       parameters:
       - in: body
@@ -69,24 +89,6 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Site'
-    put:
-      summary: Update an existing site
-      consumes:
-      - application/json
-      parameters:
-      - in: body
-        name: body
-        description: Site object to be updated
-        required: true
-        schema:
-          $ref: '#/definitions/SiteDescription'
-      responses:
-        204:
-          description: No content
-      security:
-      - ApiKeyHeader: []
-      tags:
-      - sites
     delete:
       summary: Delete an existing site
       responses:
@@ -103,6 +105,24 @@ paths:
       description: Site slug
       required: true
       type: string
+    put:
+      summary: Update an existing page
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Site object to be updated
+        required: true
+        schema:
+          $ref: '#/definitions/Page'
+      responses:
+        204:
+          description: No content
+      security:
+      - ApiKeyHeader: []
+      tags:
+      - sites
     post:
       tags:
       - sites
@@ -146,26 +166,6 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/Page'
-    put:
-      summary: Update an existing page
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      parameters:
-      - in: body
-        name: body
-        description: Site object to be updated
-        required: true
-        schema:
-          $ref: '#/definitions/Page'
-      responses:
-        204:
-          description: No content
-      security:
-      - ApiKeyHeader: []
-      tags:
-      - sites
     delete:
       summary: Delete an existing page
       responses:
@@ -254,11 +254,31 @@ paths:
             type: array
             items:
               $ref: '#/definitions/News'
+    put:
+      summary: Update an existing news post
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: News object to be updated
+        required: true
+        schema:
+          $ref: '#/definitions/News'
+      responses:
+        204:
+          description: No content
+      security:
+      - ApiKeyHeader: []
+      tags:
+      - news
     post:
       tags:
       - news
       summary: Add a new news post
       consumes:
+      - application/json
+      produces:
       - application/json
       parameters:
       - in: body
@@ -279,24 +299,6 @@ paths:
       description: News slug
       required: true
       type: string
-    put:
-      summary: Update an existing news post
-      consumes:
-      - application/json
-      parameters:
-      - in: body
-        name: body
-        description: News object to be updated
-        required: true
-        schema:
-          $ref: '#/definitions/News'
-      responses:
-        204:
-          description: No content
-      security:
-      - ApiKeyHeader: []
-      tags:
-      - news
     delete:
       summary: Delete an existing news post
       responses:
@@ -343,6 +345,8 @@ paths:
       - medicines
       summary: Add a new medicine
       consumes:
+      - application/json
+      produces:
       - application/json
       parameters:
       - in: body
