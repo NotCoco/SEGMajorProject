@@ -14,6 +14,8 @@ tags:
   description: Create, retrieve, update and delete sites and their pages
 - name: images
   description: Image uploading and management
+- name: news
+  description: Create, retrieve, update and delete news posts
 paths:
   /sites:
     get:
@@ -68,8 +70,6 @@ paths:
     put:
       summary: Update an existing site
       consumes:
-      - application/json
-      produces:
       - application/json
       parameters:
       - in: body
@@ -294,6 +294,30 @@ definitions:
       imageUrl:
         type: string
         example: https://example.com/images/202002281.png
+  News:
+    type: object
+    properties:
+      title:
+        type: string
+        example: Coronavirus Information
+      description:
+        type: string
+        example: Read our official advice regarding COVID-19.
+      content:
+        type: string
+      slug:
+        type: string
+        example: 20200315-coronavirus-information
+      date:
+        type: string
+        format: date
+        example: 2020-03-15
+      pinned:
+        type: boolean
+        example: true
+      urgent:
+        type: boolean
+        example: false
 # Added by API Auto Mocking Plugin
 host: virtserver.swaggerhub.com
 basePath: /CallumWatkins/KCH-PLS/1.0.0
