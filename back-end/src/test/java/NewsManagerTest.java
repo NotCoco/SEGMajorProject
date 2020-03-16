@@ -20,6 +20,7 @@ import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
 public class NewsManagerTest {
+    
     public static ConnectionLeakUtil connectionLeakUtil = null;
     public static NewsManagerInterface newsManager = null;
 
@@ -172,24 +173,27 @@ public class NewsManagerTest {
     private static ArrayList<News> getListOfNews() {
         ArrayList<News> listOfNews = new ArrayList<>();
 
-        //    public News(Date date, boolean pinned, String description, String title, boolean urgent, String content, String slug) {
-
-        listOfNews.add(new News(new Date(12343212L), false, "description1", "title1", false, "content1", "slug1"));
-        listOfNews.add(new News(new Date(12343214L), false, "description2", "title2", false, "content2", "slug2"));
-        listOfNews.add(new News(new Date(12343215L), false, "description3", "title3", false, "content3", "slug3"));
-        listOfNews.add(new News(new Date(12343218L), true, "description4", "title4", false, "content4", "slug4"));
-        listOfNews.add(new News(new Date(12343400L), false, "description5", "title5", false, "content5", "slug5"));
-        listOfNews.add(new News(new Date(12343900L), false, "description6", "title6", true, "content6", "slug6"));
-        listOfNews.add(new News(new Date(15343212L), false, "description7", "title7", false, "content7", "slug7"));
-
-
+        listOfNews.add(new News(new Date(12343212L), false, "description1", "title1",
+                false, "content1", "slug1"));
+        listOfNews.add(new News(new Date(12343214L), false, "description2", "title2",
+                false, "content2", "slug2"));
+        listOfNews.add(new News(new Date(12343215L), false, "description3", "title3",
+                false, "content3", "slug3"));
+        listOfNews.add(new News(new Date(12343218L), true, "description4", "title4",
+                false, "content4", "slug4"));
+        listOfNews.add(new News(new Date(12343400L), false, "description5", "title5",
+                false, "content5", "slug5"));
+        listOfNews.add(new News(new Date(12343900L), false, "description6", "title6",
+                true, "content6", "slug6"));
+        listOfNews.add(new News(new Date(15343212L), false, "description7", "title7",
+                false, "content7", "slug7"));
 
         return listOfNews;
     }
 
+
     private void fillDatabase() {
-        for (News news : getListOfNews()) {
-            newsManager.addNews(news);
-        }
+        ArrayList<News> listOfNews = getListOfNews();
+        for (int i = 0; i<listOfNews.size(); ++i) newsManager.addNews(listOfNews.get(i));
     }
 }
