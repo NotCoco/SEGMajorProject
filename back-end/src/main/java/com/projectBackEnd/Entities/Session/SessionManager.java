@@ -52,9 +52,8 @@ public class SessionManager extends EntityManager implements SessionManagerInter
 		return false;
 	}
 
-
-	public String getNewSession(String username,int timeout) {
-		Session s = new Session(username,timeout);
+	public String getNewSession(String email,int timeout){
+		Session s = new Session(email,timeout);
 		insertTuple(s);
 		return s.getToken();
 	}

@@ -4,80 +4,64 @@ import main.java.com.projectBackEnd.Entities.Site.Site;
 import main.java.com.projectBackEnd.Entities.Site.SiteManager;
 import main.java.com.projectBackEnd.Entities.Site.SiteManagerInterface;
 import main.java.com.projectBackEnd.TableEntity;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = Page.TABLENAME)
+@Table(name = Page.TABLENAME, uniqueConstraints = { @UniqueConstraint(columnNames = {Page.SLUG, Page.SITE})})
 public class Page implements TableEntity {
     public static final String TABLENAME = "Pages";
-    private static final String SLUG = "Slug";
     private static final String ID = "ID";
+    public static final String SITE = "Site";
+    public static final String SLUG = "Slug";
+
     private static final String INDEX = "`Index`";
     private static final String TITLE = "Title";
     private static final String CONTENT = "Content";
-    private static final String SITE = "Site";
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ID, nullable = false)
     private Integer primaryKey;
+    @ManyToOne(targetEntity = Site.class)
+    @OnDelete(action= OnDeleteAction.CASCADE)
+    @JoinColumn(name = SITE, nullable = false)
+    private Site site;
 
-    @Embeddable
-    public static class Key {
-        @ManyToOne
-        @JoinColumn(name = SITE, referencedColumnName = Site.SITENAME, nullable = false)
-        private Site site;
-
-        @Column(name = SLUG, nullable = false)
-        @Type(type="text")
-        private String slug;
-        public Key() {}
-        public Key(Site site, String slug) {
-            this.site = site;
-            this.slug = slug;
-        }
-        public Site getSite() {
-            return site;
-        }
-        public void setSite(Site site) {
-            this.site = site;
-        }
-        public String getSlug() {
-            return slug;
-        }
-        public void setSlug(String slug) {
-            this.slug = slug;
-        }
-    }
-    @EmbeddedId
-    private Key key = new Key();
-
+    @Column(name = SLUG, nullable = false)
+    @Type(type="text")
+    private String slug;
+    @Column(name = INDEX, nullable = false)
+    private Integer index;
     @Column(name = TITLE)
     @Type(type="text")
     private String title;
-
-
-
     @Column(name = CONTENT)
     @Type(type="text")
     private String content;
-
-    @Column(name = INDEX)
-    private Integer index;
 
     public Page() {}
 
 
     public Page(String siteName, String slug, Integer index, String title, String content) {
+        this.primaryKey = -1;
         SiteManagerInterface s = SiteManager.getSiteManager();
-        key.setSite(s.getBySiteName(siteName));
-        setIndexTitleContentSlug(index, title, content, slug);
+        setSite(s.getBySiteName(siteName));
+        setSlug(slug);
+        this.index = index;
+        this.title = title;
+        this.content = content;
     }
     public Page(Site site, String slug, Integer index, String title, String content) {
-        key.setSite(site);
-        setIndexTitleContentSlug(index, title, content, slug);
+        this.primaryKey = -1;
+        setSite(site);
+        setSlug(slug);
+        this.index = index;
+        this.title = title;
+        this.content = content;
     }
 
 
@@ -85,22 +69,23 @@ public class Page implements TableEntity {
     public Page(Integer ID, String siteName, String slug, Integer index, String title, String content) {
         this.primaryKey = ID;
         SiteManagerInterface s = SiteManager.getSiteManager();
-        key.setSite(s.getBySiteName(siteName));
-        setIndexTitleContentSlug(index, title, content, slug);
-        System.out.println("Micronaut used Constructor 1! Delete The following constructor"); //TODO REMOVE
-    }
-    public Page(Integer ID, Site site, String slug, Integer index, String title, String content) {
-        this.primaryKey = ID;
-        key.setSite(site);
-        setIndexTitleContentSlug(index, title, content, slug);
-        System.out.println("Micronaut used Constructor 2! Delete The above constructor"); //TODO Remove
-    }
-    private void setIndexTitleContentSlug(int index, String title, String content, String slug) {
-        key.setSlug(slug);
+        setSite(s.getBySiteName(siteName));
+        setSlug(slug);
         this.index = index;
         this.title = title;
         this.content = content;
+        System.out.println("Micronaut used Constructor 1! Delete The following constructor"); //TODO REMOVE
     }
+    /*
+    public Page(Integer ID, Site site, String slug, Integer index, String title, String content) {
+        this.primaryKey = ID;
+        setSite(site);
+        setSlug(slug);
+        this.index = index;
+        this.title = title;
+        this.content = content;
+        System.out.println("Micronaut used Constructor 2! Delete The above constructor"); //TODO Remove
+    }*/
     public Integer getPrimaryKey() {
         return primaryKey;
     }
@@ -114,16 +99,17 @@ public class Page implements TableEntity {
         return newPageVersion;
     }
     public Site getSite() {
-        return key.getSite();
+        return site;
     }
     public void setSite(Site site) {
-        key.setSite(site);
+        this.site = site;
     }
+
     public String getSlug() {
-        return key.getSlug();
+        return slug;
     }
     public void setSlug(String slug) {
-        key.setSlug(slug);
+        this.slug = slug;
     }
 
 
@@ -150,5 +136,9 @@ public class Page implements TableEntity {
 
     public void setIndex(Integer index) {
         this.index = index;
+    }
+    //Integer ID, String siteName, String slug, Integer index, String title, String content
+    public String toString() {
+        return "Page: " + getPrimaryKey() + ", from: " + getSite() + " : " + getSlug() + " : " + getIndex() + " : " + getTitle() + " : " + getContent();
     }
 }

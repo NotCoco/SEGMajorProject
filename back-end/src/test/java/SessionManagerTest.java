@@ -4,7 +4,7 @@ import main.java.com.projectBackEnd.*;
 import main.java.com.projectBackEnd.Entities.Session.Session;
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
-import javax.persistence.PersistenceException;
+
 import static org.junit.Assert.*;
 import org.junit.*;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class SessionManagerTest {
 
 	@BeforeClass
     public static void setUpDatabase() {
-        HibernateUtility.setResource("testhibernate.cfg.xml");
+        HibernateUtility.setResource("test/resources/testhibernate.cfg.xml");
 		sessionManager = SessionManager.getSessionManager();
         //connectionLeakUtil = new ConnectionLeakUtil();
     }
@@ -31,10 +31,9 @@ public class SessionManagerTest {
         //connectionLeakUtil.assertNoLeaks();
     }
 
-
-    @After
-    public void tearDown() {
-		((EntityManager)sessionManager).deleteAll();
+    @Before
+    public void setUp() {
+	((SessionManager)sessionManager).deleteAll();
     }
 
 

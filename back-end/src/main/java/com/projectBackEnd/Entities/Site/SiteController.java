@@ -1,10 +1,11 @@
 package main.java.com.projectBackEnd.Entities.Site;
 
+import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
-import io.micronaut.http.annotation.Body;
-import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.Post;
+import io.micronaut.http.annotation.*;
+
+import main.java.com.projectBackEnd.Entities.Page.*;
 
 
 import java.io.UnsupportedEncodingException;
@@ -12,23 +13,71 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.util.List;
 
-public class SiteController {
+@Controller("/sites")
+public class SiteController extends PageController {
     final SiteManagerInterface siteManager = SiteManager.getSiteManager();
-    SiteController() {}
-    @Get(value = "/list", produces = MediaType.TEXT_JSON)
-    public List<Site> list() {
+    //final PageManagerInterface pageManager = PageManager.getPageManager();
+
+    SiteController() {
+        super();
+    }
+//    @Get(value = "/list", produces = MediaType.TEXT_JSON)
+//    public List<Site> list() {
+//        return siteManager.getAllSites();
+//    }
+
+    @Get("/")
+    public List<Site> index(){
         return siteManager.getAllSites();
     }
 
+
     @Post("/")
-    public HttpResponse<Site> add(@Body Site newSiteToAdd) { //TODO Change to site command
-        Site site = siteManager.addSite(newSiteToAdd.getName());
-        //TODO will still return created even if there's an unsuccessful creation, this if statement prevents that.
-        if (siteManager.getByPrimaryKey(site.getPrimaryKey()) == null) return HttpResponse.serverError(); //I.e. object didn't get created
+    public HttpResponse<Site> add(@Body SiteAddCommand command) {
+        Site s = siteManager.addSite(command.getName());
+        if(siteManager.getByPrimaryKey(s.getPrimaryKey()) == null){
+            return HttpResponse.serverError();
+        }
         return HttpResponse
-                .created(site)
-                .headers(headers -> headers.location((location(site.getName())))); //TODO location should use (also unique) name.
+                .created(s)
+                .headers(headers -> headers.location(location(s.getName())));
     }
+
+    // can delete if confirmed not needed
+    @Get(value = "/id/{id}", produces = MediaType.TEXT_JSON)
+    public Site list(int id) {
+        return siteManager.getByPrimaryKey(id);
+    }
+
+    @Get(value = "/{name}")
+    public Site list(String name){return siteManager.getBySiteName(name);}
+
+    @Delete("/{name}")
+    public HttpResponse delete(String name){
+        Site s = siteManager.getBySiteName(name);
+        siteManager.delete(s);
+        return HttpResponse.noContent();
+    }
+
+//    @Delete("/{id}")
+//    public HttpResponse delete(int id) {
+//        siteManager.delete(id);
+//        return HttpResponse.noContent();
+//    }
+
+
+
+
+    @Put("/")
+    public HttpResponse update(@Body Site updatedSite) {
+        siteManager.update(updatedSite);
+        //List<Page> p = pageManager.getAllPagesOfSite(updatedSite);
+        return HttpResponse
+                .noContent()
+                .header(HttpHeaders.LOCATION, location(updatedSite.getName()).getPath());
+    }
+
+
 
     protected URI location(String siteName) {
         String encodedSlug = null;
@@ -37,7 +86,9 @@ public class SiteController {
         } catch (UnsupportedEncodingException e) {
             return null;
         }
-        return URI.create("/site/" + encodedSlug);
+        return URI.create("/sites/" + encodedSlug);
     }
+
+
 
 }

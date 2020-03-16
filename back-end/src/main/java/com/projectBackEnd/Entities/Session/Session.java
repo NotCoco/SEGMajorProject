@@ -13,62 +13,49 @@ import java.sql.Timestamp;
 import java.io.Serializable;
 @Entity
 @Table(name = Session.TABLENAME)
-public class Session implements TableEntity {
-
-	// Database table columns
+public class Session implements TableEntity{
 	public final static String TABLENAME = "Sessions";
 	private final static String TOKEN = "Token";
 	private final static String DATE = "Date";
 	private final static String TIMEOUT = "Timeout";
-	private final static String USERNAME = "Username";
-
-	// Private fields
+	private final static String EMAIL = "Email";
 	@Id
 	@Column(name = TOKEN)
 	private String token;
-
 	@Column(name = DATE)
 	private Timestamp date;
-
 	@Column(name = TIMEOUT)
 	private Timestamp timeout;
-
-	@Column(name = USERNAME)
-	private String username;
-
-
+	@Column(name = EMAIL)
+	private String email;
 	/**
-	*	timeout in sec
-	*/
-	public Session(String username, int timeout) {
-		this.username = username;
+	 *	timeout in sec
+	 */
+	public Session(String email, int timeout){
+		this.email = email;
 		this.date = new Timestamp(System.currentTimeMillis());
 		this.timeout = new Timestamp(System.currentTimeMillis() + timeout * 1000);
 		this.token = generateToken();
 	}
-
-
 	public Session(){};
-
 	public Serializable getPrimaryKey(){
 		return token;
 	}
-
-	private String generateToken() {
-
+	private String generateToken(){
 		Random rand = new Random();
 		String s = null;
 		String alphaNum = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvxyz";
-		do {
-			StringBuilder sb = new StringBuilder();		
-			for(int i = 0; i < 26;++i) sb.append(alphaNum.charAt(rand.nextInt(alphaNum.length())));
+		do{
+			StringBuilder sb = new StringBuilder();
+			for(int i = 0; i < 26;++i){
+				sb.append(alphaNum.charAt(rand.nextInt(alphaNum.length())));
+			}
 			s = sb.toString();
-		} while(s == null && SessionManager.getSessionManager().verifySession(s));
+		}while(s == null && SessionManager.getSessionManager().verifySession(s));
 		return s;
 	}
-
 	public String getToken(){
-		return token;	
+		return token;
 	}
 	public Timestamp getDate(){
 		return date;
@@ -76,21 +63,23 @@ public class Session implements TableEntity {
 	public Timestamp getTimeout(){
 		return timeout;
 	}
-	public String getUsername(){
-		return username;
+	public String getEmail(){
+		return email;
 	}
 
-
-	public TableEntity copy(TableEntity newCopy) {
-		if (newCopy instanceof Session) {
+	public TableEntity copy(TableEntity newCopy){
+		if(newCopy instanceof Session){
 			token = ((Session)newCopy).getToken();
 			date = ((Session)newCopy).getDate();
 			timeout = ((Session)newCopy).getTimeout();
-			username = ((Session)newCopy).getUsername();
+			email = ((Session)newCopy).getEmail();
 			return this;
 		}
-		else return null;
+		else
+			return null;
+
 	}
 
-	
+
+
 } 

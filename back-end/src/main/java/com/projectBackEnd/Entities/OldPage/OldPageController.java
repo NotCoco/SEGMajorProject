@@ -4,6 +4,8 @@ import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
+import main.java.com.projectBackEnd.Entities.Page.ImageHandler;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.net.URI;
@@ -12,6 +14,7 @@ import java.util.List;
 @Controller("/page")
 public class OldPageController {
     protected final OldPageManagerInterface pageManager = OldPageManager.getOldPageManager();
+    protected final ImageHandler imageHandler = new ImageHandler();
     OldPageController() {}
     @Get(value = "/{slug}", produces = MediaType.TEXT_JSON)
     public OldPage list(String slug) {
@@ -28,6 +31,8 @@ public class OldPageController {
         return pageManager.getAllPages();
     }
 
+    @Get(value = "/images", produces = MediaType.TEXT_JSON)
+    public List<String> images() { return imageHandler.getImageUrls(); }
 //    @Delete("/")
 //    public HttpResponse deleteAll() {
 //        pageManager.deleteAll();
@@ -41,6 +46,12 @@ public class OldPageController {
         return HttpResponse
                 .created(oldPage)
                 .headers(headers -> headers.location((location(oldPage.getPrimaryKey()))));
+    }
+
+    @Post("/images")
+    public HttpResponse<OldPage> saveImages(@Body List<String> imagesUrls) {
+        if (imageHandler.saveImages(imagesUrls)) return HttpResponse.serverError(); //I.e. object didn't get created
+        return HttpResponse.noContent();
     }
 
     @Put("/")
