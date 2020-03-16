@@ -42,13 +42,13 @@ public class PageManager extends EntityManager implements PageManagerInterface {
     public Page addPage(String siteName, String slug, Integer index, String title, String content) { return (Page) insertTuple(new Page(siteName, slug, index, title, content)); }
     public List<Page> getAllPagesOfSite(Site site) { return getAllPagesOfSite(site.getName()); }
     public List<Page> getAllPagesOfSite(String siteName) {
-        return pageManager.getAllPages().stream().filter(p -> p.getSite().getName().equals(siteName)).sorted(Comparator.comparingInt(Page::getIndex)).collect(Collectors.toList());
+        return getAllPages().stream().filter(p -> p.getSite().getName().equals(siteName)).sorted(Comparator.comparingInt(Page::getIndex)).collect(Collectors.toList());
     }
     public Page getPageBySiteAndSlug(Site site, String slug) {
         return getPageBySiteAndSlug(site.getName(), slug);
     }
     public Page getPageBySiteAndSlug(String siteName, String slug) {
-        List<Page> matches = pageManager.getAllPages().stream().filter(p -> p.getSite().getName().equals(siteName) && p.getSlug().equals(slug)).sorted(Comparator.comparingInt(Page::getIndex)).collect(Collectors.toList());
+        List<Page> matches = getAllPages().stream().filter(p -> p.getSite().getName().equals(siteName) && p.getSlug().equals(slug)).sorted(Comparator.comparingInt(Page::getIndex)).collect(Collectors.toList());
         return matches.size()>= 1 ? matches.get(0) : null;
     }
 
