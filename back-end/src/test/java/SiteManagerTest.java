@@ -20,7 +20,7 @@ public class SiteManagerTest {
 
     @BeforeClass
     public static void setUpDatabase() {
-        HibernateUtility.setResource("test/resources/testhibernate.cfg.xml");
+        HibernateUtility.setResource("testhibernate.cfg.xml");
         siteManager = SiteManager.getSiteManager();
         connectionLeakUtil = new ConnectionLeakUtil();
     }
