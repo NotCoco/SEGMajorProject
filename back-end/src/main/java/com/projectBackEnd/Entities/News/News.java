@@ -7,12 +7,22 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
+/**
+ * News objects are database entities for the table 'News' defined in this class.
+ * Attributes :
+ *    - auto-increment primary key as 'ID'
+ *    - slug
+ *    - date as 'Date',
+ *    - pinned and/or urgent
+ *    - title, description
+ *    https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
+ */
+
 @Entity
 @Table(name = News.TABLENAME)
-public class News implements TableEntity{
+public class News implements TableEntity {
 
-
-        // Table columns (attributes)
+    // Table columns (attributes)
     public static final String TABLENAME = "News";
     private static final String ID = "ID";
     private static final String DATE = "Date";
@@ -23,12 +33,11 @@ public class News implements TableEntity{
     private static final String CONTENT = "Content";
     private static final String SLUG = "Slug";
 
-        // Private Fields : primaryKey, name, type
+    // Private fields
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ID, nullable = false)
     private Integer primaryKey;
-
 
 
     @NotNull
@@ -40,14 +49,17 @@ public class News implements TableEntity{
     @Type(type="text")
     @Column(name = DESCRIPTION, nullable = false)
     private String description;
+
     @NotNull
     @Type(type="text")
     @Column(name = CONTENT, nullable = false)
     private String content;
+
     @NotNull
     @Type(type="text")
     @Column(name = SLUG, nullable = false, unique = true)
     private String slug;
+
     @NotNull
     @Type(type="text")
     @Column(name = TITLE, nullable = false)
@@ -56,12 +68,17 @@ public class News implements TableEntity{
     @NotNull
     @Column(name = URGENT, nullable = false)
     private boolean urgent;
+
     @NotNull
     @Column(name = PINNED, nullable = false)
     private boolean pinned;
 
+    /**
+     * Constructors for News
+     */
     public News() {}
 
+    // Auto-increment primary key
     public News(Date date, boolean pinned, String description, String title, boolean urgent, String content, String slug) {
         this.primaryKey = -1;
         this.date = date;
@@ -72,6 +89,8 @@ public class News implements TableEntity{
         this.content = content;
         this.slug = slug;
     }
+
+    // Constructor taking id
     public News(Integer primaryKey, Date date, boolean pinned, String description, String title, boolean urgent, String content, String slug) {
         this.date = date;
         this.pinned = pinned;
@@ -83,13 +102,14 @@ public class News implements TableEntity{
         this.primaryKey = primaryKey;
     }
 
+    /**
+     * Getters and setters
+     * Primary key cannot be changed in the database
+     */
+
     @Override
     public Integer getPrimaryKey() {
         return primaryKey;
-    }
-
-    public void setPrimaryKey(Integer primaryKey) {
-        this.primaryKey = primaryKey;
     }
 
     public Date getDate() {
@@ -147,6 +167,12 @@ public class News implements TableEntity{
     public void setPinned(boolean pinned) {
         this.pinned = pinned;
     }
+
+    /**
+     * Copy the values of the input TableEntity object
+     * @param toCopy
+     * @return this, updated news object
+     */
     @Override
     public TableEntity copy(TableEntity toCopy) {
         News newsToCopy = (News) toCopy;
