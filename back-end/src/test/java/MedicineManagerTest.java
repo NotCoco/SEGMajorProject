@@ -176,7 +176,8 @@ public class MedicineManagerTest {
     public void testTwoEqualMedicines() {
         Medicine med1 = new Medicine("Med1", "type");
         Medicine med2 = new Medicine("Med1", "type");
-        assertTrue(med1.equals(med2));
+        assertThat(med1, samePropertyValuesAs(med2));
+
     }
 
     @Test
@@ -240,7 +241,7 @@ public class MedicineManagerTest {
     }
 
     /**
-     * Fill in database with example Medicine objects
+     * List to fill in database with example Medicine objects
      * @return example objects
      */
     private static ArrayList<Medicine> getListOfMedicines() {
@@ -262,7 +263,7 @@ public class MedicineManagerTest {
     }
 
     private void fillDatabase() {
-        for (Medicine med : getListOfMedicines()) medicineManager.addMedicine(med);
+        ArrayList<Medicine> listOfMeds = getListOfMedicines();
+        for (int i = 0; i<listOfMeds.size(); ++i) medicineManager.addMedicine(listOfMeds.get(i));
     }
-
 }

@@ -101,17 +101,6 @@ public class Medicine implements TableEntity {
 
 
     /**
-     * Check if this object is the same as another medicine object
-     * @param otherMed
-     * @return boolean, true if same object
-     */
-    public boolean equals(Medicine otherMed) {
-        return (getPrimaryKey().equals(otherMed.getPrimaryKey())) && getName().equals(otherMed.getName()) &&
-                getType().equals(otherMed.getType());
-    }
-
-
-    /**
      * Copy the values of the input medicine object
      * @param toCopy
      * @return this, updated medicine object

@@ -48,13 +48,12 @@ public class SiteManagerTest {
         assertEquals(1, siteManager.getAllSites().size());
     }
 
-//    @Test
-//    public void testCreateWithIllegalValues() {
-//        String name = null;
-//        siteManager.addSite(new Site(null, null));
-//        siteManager.addSite(name);
-//        assertEquals(0, siteManager.getAllSites().size());
-//    }
+    @Test
+    public void testCreateWithIllegalValue() {
+        String name = null;
+        siteManager.addSite(name);
+        assertEquals(0, siteManager.getAllSites().size());
+    }
 
     @Test
     public void testEmptyName() {
@@ -79,7 +78,7 @@ public class SiteManagerTest {
     public void testTwoEqualSites() {
         Site site1 = new Site("Site1");
         Site site2 = new Site("Site1");
-        assertTrue(site1.equals(site2));
+        assertThat(site1, samePropertyValuesAs(site2));
     }
 
     @Test
@@ -209,7 +208,8 @@ public class SiteManagerTest {
      * Add sites to database
      */
     private void fillDatabase() {
-        for (Site site : getListOfSites()) siteManager.addSite(site);
+        ArrayList<Site> listOfSites = getListOfSites();
+        for (int i = 0; i<listOfSites.size(); ++i) siteManager.addSite(listOfSites.get(i));
     }
 
 }
