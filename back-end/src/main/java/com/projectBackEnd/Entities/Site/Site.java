@@ -54,7 +54,6 @@ public class Site implements TableEntity {
         return primaryKey;
     }
 
-
     public String getName() {
         return name;
     }
