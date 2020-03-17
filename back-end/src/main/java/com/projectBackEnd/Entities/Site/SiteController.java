@@ -68,8 +68,8 @@ public class SiteController {
 
 
 
-    @Put("/{name}")
-    public HttpResponse update(String name, @Body Site updatedSite) {
+    @Put("/")
+    public HttpResponse update(@Body Site updatedSite) {
         siteManager.update(updatedSite);
         //List<Page> p = pageManager.getAllPagesOfSite(updatedSite);
         return HttpResponse

@@ -64,11 +64,10 @@ public class PageController {
         return pageManager.getPageBySiteAndSlug(name, page);
     }
 
-    //@Put("{name}/pages/{pageName}")
-    //public HttpResponse updatePage(String name, String pageName, @Body PageUpdateCommand updatedPageCommand) {
     @Put("{name}/pages/")
     public HttpResponse updatePage(String name, @Body PageUpdateCommand updatedPageCommand) {
         Page updatedPage = new Page(updatedPageCommand.getPrimaryKey(), updatedPageCommand.getSite(), updatedPageCommand.getSlug(), updatedPageCommand.getIndex(), updatedPageCommand.getTitle(), updatedPageCommand.getContent());
+
         pageManager.update(updatedPage);
         return HttpResponse
                 .noContent()
