@@ -66,14 +66,15 @@ public class NewsManagerTest {
     public void testUpdateNews() {
         fillDatabase();
         int id = newsManager.getAllNews().get(0).getPrimaryKey();
-        News replacementMed = new News(id ,new Date(12343212L), true,
-                "changedDescrption", "newTitle", false, "content1", "slug9");
-        newsManager.update(replacementMed);
+        News replacementNews = new News(id, new Date(12343212L), true,
+                "changedDescription", "newTitle", false, "content1", "slug9");
+        newsManager.update(replacementNews);
 
         News newsInDB = newsManager.getAllNews().get(0);
-        assertEquals(replacementMed.getDescription(), newsInDB.getDescription());
-        assertEquals(replacementMed.getTitle(), newsInDB.getTitle());
+        assertEquals(replacementNews.getDescription(), newsInDB.getDescription());
+        assertEquals(replacementNews.getTitle(), newsInDB.getTitle());
     }
+
 
     @Test
     public void testUpdateNewsWithDupeSlug() {
@@ -92,16 +93,8 @@ public class NewsManagerTest {
     public void testOrderOfNews() {
         fillDatabase();
         List<News> allNews = newsManager.getAllNews();
-        assertEquals("title4", allNews.get(0).getTitle());
-        assertEquals("title1", allNews.get(1).getTitle());
-    }
-    @Test
-    public void testGetPinnedNews() {
-        fillDatabase();
-        List<News> allPinned = newsManager.getAllPinnedNews();
-        for(int i = 0; i < allPinned.size(); ++i) {
-            assertTrue(allPinned.get(i).isPinned());
-        }
+        assertEquals("title6", allNews.get(0).getTitle());
+        assertEquals("title4", allNews.get(1).getTitle());
     }
 
     @Test

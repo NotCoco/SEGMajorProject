@@ -84,8 +84,7 @@ public class NewsManager extends EntityManager implements NewsManagerInterface  
      * @return updated object
      */
     public News update(News news) {
-        super.update(news);
-        return news;
+        return (News) super.update(news);
     }
 
     /**
@@ -102,6 +101,13 @@ public class NewsManager extends EntityManager implements NewsManagerInterface  
      */
     public void delete(Integer pk) {
         super.delete(pk);
+    }
+
+    /**
+     * Remove all news from database
+     */
+    public void deleteAll() {
+        super.deleteAll();
     }
 
     /**
