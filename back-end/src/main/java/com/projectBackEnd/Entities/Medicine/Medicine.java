@@ -49,8 +49,8 @@ public class Medicine implements TableEntity {
 
 
     /**
-     * Constructors : empty constructor, default constructor & cosntructor
-     * that takes the primary key id for object re-creation
+     * Constructors : empty constructor, default constructor & constructor taking primary key id
+     * for object re-creation
      */
     public Medicine() {
     }
@@ -70,7 +70,8 @@ public class Medicine implements TableEntity {
 
 
     /**
-     * Getters and setters; ID cannot be changed
+     * Getters and setters
+     * Primary key id cannot be changed in the database
      */
     public Integer getPrimaryKey() {
         return primaryKey;
@@ -83,6 +84,7 @@ public class Medicine implements TableEntity {
     public void setName(String name) {
         this.name = (name != null && "".equals(name.trim())) ? "Unnamed" : name;
     }
+
     public String getType() {
         return type;
     }
@@ -90,18 +92,8 @@ public class Medicine implements TableEntity {
     public void setType(String type) {
         this.type = (type != null && "".equals(type.trim())) ? "Undefined" : type;    }
 
-
     /**
-     * @return String indicating of private field values of the object
-     */
-    @Override
-    public String toString() {
-        return "Medicine: " + this.primaryKey + ", " + this.name + ", " + this.type;
-    }
-
-
-    /**
-     * Copy the values of the input medicine object
+     * Copy the values of the input TableEntity object
      * @param toCopy
      * @return this, updated medicine object
      */

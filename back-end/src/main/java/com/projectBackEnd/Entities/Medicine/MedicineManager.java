@@ -24,21 +24,19 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
     }
 
     /**
-     * Get method for the medicine manager interface
+     * Get medicine manager interface
      * @return medicineManager ; if none has been defined, create a new MedicineManager()
      */
     public static MedicineManagerInterface getMedicineManager() {
         return (medicineManager != null) ? medicineManager : new MedicineManager();
     }
 
-
     /**
-     * Create and add a medicine to the database
+     * Create and insert a medicine intto the database
      * @param name
      * @param type
      * @return newly created medicine object
      */
-    //@Transactional
     public Medicine addMedicine(String name, String type) {
         Medicine newMedicine = new Medicine(name, type);
         super.insertTuple(newMedicine);
@@ -46,8 +44,8 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
     }
 
     /**
-     * Add a pre-created medicine object to datbase
-     * @param med to add
+     * Insert input medicine object t/into database
+     * @param med
      * @return added object
      */
     public Medicine addMedicine(Medicine med) {
@@ -66,20 +64,13 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
 
 
     /**
-     * Remove medicine object from database
-    */
-    @Override
-    public void delete(Medicine med) {
-        super.delete(med);
-    }
-
-    /**
      * @return primary key
      */
     @Override
     public Medicine getByPrimaryKey(Serializable id) {
         return (Medicine) super.getByPrimaryKey(id);
     }
+
 
     /**
      * @return a list of all medicines in database
@@ -105,5 +96,15 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
     public List<Medicine> getAllMedicinesByName(String name) {
         return getAllMedicines().stream().filter(m -> m.getName().equals(name)).collect(Collectors.toList());
     }
+
+
+    /**
+     * Remove medicine object from database
+    */
+    @Override
+    public void delete(Medicine med) {
+        super.delete(med);
+    }
+
 
 }
