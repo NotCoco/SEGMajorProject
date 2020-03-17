@@ -88,7 +88,7 @@ public class PageManagerTest {
     }
 
     @Test
-    public void testGetAllForStateRetrieval() {
+    public void testGetAllBySite() {
         pageManager.addPage(testSiteA, "Slug1", 3, "TitleA","ContentA");
         pageManager.addPage(testSiteA, "Slug6", 0, "TitleB","ContentB");
         pageManager.addPage(testSiteA, "Slug3", 2, "TitleC","ContentC");
