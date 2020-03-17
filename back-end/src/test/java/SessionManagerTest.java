@@ -5,11 +5,14 @@ import main.java.com.projectBackEnd.Entities.Session.Session;
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 
-import static org.junit.Assert.*;
-import org.junit.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
 
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SessionManagerTest {
 
@@ -17,7 +20,7 @@ public class SessionManagerTest {
 	public static SessionManagerInterface sessionManager = null;
 
 
-	@BeforeClass
+	@BeforeAll
     public static void setUpDatabase() {
 		HibernateUtility.setResource("testhibernate.cfg.xml");
 		sessionManager = SessionManager.getSessionManager();
@@ -25,13 +28,13 @@ public class SessionManagerTest {
     }
 
 
-    @AfterClass
+    @AfterAll
     public static void assertNoLeaks() {
         HibernateUtility.shutdown();
         //connectionLeakUtil.assertNoLeaks();
     }
 
-    @Before
+    @BeforeEach
     public void setUp() {
 	((SessionManager)sessionManager).deleteAll();
     }

@@ -5,17 +5,20 @@ import main.java.com.projectBackEnd.Entities.Medicine.Medicine;
 import main.java.com.projectBackEnd.Entities.Medicine.MedicineManager;
 
 import main.java.com.projectBackEnd.Entities.Medicine.MedicineManagerInterface;
-import org.junit.*;
 
 import javax.persistence.PersistenceException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
 
 
 public class MedicineManagerTest {
@@ -23,20 +26,20 @@ public class MedicineManagerTest {
     public static ConnectionLeakUtil connectionLeakUtil = null;
     public static MedicineManagerInterface medicineManager = null;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         medicineManager = MedicineManager.getMedicineManager();
         connectionLeakUtil = new ConnectionLeakUtil();
     }
 
-    @AfterClass
+    @AfterAll
     public static void assertNoLeaks() {
         HibernateUtility.shutdown();
         connectionLeakUtil.assertNoLeaks();
     }
 
-    @Before
+    @BeforeEach
     public void setUp() {
         medicineManager.deleteAll();
     }
@@ -152,11 +155,13 @@ public class MedicineManagerTest {
         assertEquals("Undefined", replacementMed.getType());
     }
 
-    @Test(expected = PersistenceException.class)
+    @Test
     public void testUpdateWithIllegalValues() {
-        fillDatabase();
-        Medicine med = new Medicine(medicineManager.getAllMedicines().get(0).getPrimaryKey(), null, null);
-        medicineManager.update(med);
+        assertThrows(PersistenceException.class, () -> {
+            fillDatabase();
+            Medicine med = new Medicine(medicineManager.getAllMedicines().get(0).getPrimaryKey(), null, null);
+            medicineManager.update(med);
+        });
     }
 
 
@@ -216,6 +221,7 @@ public class MedicineManagerTest {
     @Test
     public void testWithDeleteIllegalPK() {
         int medicines = medicineManager.getAllMedicines().size();
+
         try {
             medicineManager.delete(-1);
             fail();
