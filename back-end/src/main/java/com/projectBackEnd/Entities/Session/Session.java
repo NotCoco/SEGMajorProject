@@ -13,14 +13,16 @@ import java.sql.Timestamp;
 import java.io.Serializable;
 @Entity
 @Table(name = Session.TABLENAME)
-public class Session implements TableEntity{
+public class Session implements TableEntity {
+	
 	public final static String TABLENAME = "Sessions";
 	private final static String TOKEN = "Token";
 	private final static String DATE = "Date";
 	private final static String TIMEOUT = "Timeout";
 	private final static String EMAIL = "Email";
+
 	@Id
-    	@Column(name = TOKEN)
+	@Column(name = TOKEN)
 	private String token;
 	@Column(name = DATE)
 	private Timestamp date;
@@ -29,57 +31,66 @@ public class Session implements TableEntity{
 	@Column(name = EMAIL)
 	private String email;
 	/**
-	*	timeout in sec
-	*/
+	 *	timeout in sec
+	 */
 	public Session(String email, int timeout){
 		this.email = email;
 		this.date = new Timestamp(System.currentTimeMillis());
 		this.timeout = new Timestamp(System.currentTimeMillis() + timeout * 1000);
 		this.token = generateToken();
 	}
+
 	public Session(){};
-    	public Serializable getPrimaryKey(){
+	public Serializable getPrimaryKey(){
 		return token;
 	}
+
 	private String generateToken(){
 		Random rand = new Random();
 		String s = null;
-        	String alphaNum = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvxyz"; 		
+		String alphaNum = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvxyz";
 		do{
-			StringBuilder sb = new StringBuilder();		
+			StringBuilder sb = new StringBuilder();
 			for(int i = 0; i < 26;++i){
 				sb.append(alphaNum.charAt(rand.nextInt(alphaNum.length())));
 			}
 			s = sb.toString();
-		}while(s == null && SessionManager.getSessionManager().verifySession(s));	
+		}while(s == null && SessionManager.getSessionManager().verifySession(s));
 		return s;
 	}
+
 	public String getToken(){
-		return token;	
+		return token;
 	}
+
 	public Timestamp getDate(){
 		return date;
 	}
+
 	public Timestamp getTimeout(){
 		return timeout;
 	}
+
 	public String getEmail(){
 		return email;
 	}
 
-    	public TableEntity copy(TableEntity newCopy){
-		if(newCopy instanceof Session){		
+	/**
+	 * Copy the values of input object
+	 * @param newCopy
+	 * @return updated object
+	 */
+	public TableEntity copy(TableEntity newCopy) {
+		if(newCopy instanceof Session){
 			token = ((Session)newCopy).getToken();
 			date = ((Session)newCopy).getDate();
 			timeout = ((Session)newCopy).getTimeout();
 			email = ((Session)newCopy).getEmail();
 			return this;
 		}
-		else
-			return null;
-		
+		else return null;
 	}
-	
 
-	
+
+
 } 

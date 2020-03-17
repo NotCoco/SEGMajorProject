@@ -5,8 +5,6 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
 
-import main.java.com.projectBackEnd.Entities.Page.*;
-
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -14,17 +12,13 @@ import java.net.URLEncoder;
 import java.util.List;
 
 @Controller("/sites")
-public class SiteController extends PageController {
+public class SiteController {
+
     final SiteManagerInterface siteManager = SiteManager.getSiteManager();
-    //final PageManagerInterface pageManager = PageManager.getPageManager();
 
     SiteController() {
         super();
     }
-//    @Get(value = "/list", produces = MediaType.TEXT_JSON)
-//    public List<Site> list() {
-//        return siteManager.getAllSites();
-//    }
 
     @Get("/")
     public List<Site> index(){
@@ -59,25 +53,13 @@ public class SiteController extends PageController {
         return HttpResponse.noContent();
     }
 
-//    @Delete("/{id}")
-//    public HttpResponse delete(int id) {
-//        siteManager.delete(id);
-//        return HttpResponse.noContent();
-//    }
-
-
-
-
     @Put("/")
     public HttpResponse update(@Body Site updatedSite) {
         siteManager.update(updatedSite);
-        //List<Page> p = pageManager.getAllPagesOfSite(updatedSite);
         return HttpResponse
                 .noContent()
                 .header(HttpHeaders.LOCATION, location(updatedSite.getName()).getPath());
     }
-
-
 
     protected URI location(String siteName) {
         String encodedSlug = null;
@@ -88,7 +70,6 @@ public class SiteController extends PageController {
         }
         return URI.create("/sites/" + encodedSlug);
     }
-
 
 
 }

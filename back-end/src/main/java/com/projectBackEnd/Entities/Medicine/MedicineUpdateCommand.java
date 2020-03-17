@@ -1,51 +1,27 @@
 package main.java.com.projectBackEnd.Entities.Medicine;
-import javax.validation.constraints.NotBlank;
+
 import javax.validation.constraints.NotNull;
+//TODO Reinsert tags as I couldn't get them to compile on IntelliJ Jars.
 //import io.micronaut.core.annotation.Introspected;
-//TODO Reinsert Tags as I couldn't get them to compile on IntelliJ
+
+/**
+ * MedicineUpdateCommand is an implementation of the Command design pattern.
+ * It creates mock medicine objects and reduced memory use.
+ * It is used by the controller to update a medicine object.
+ */
 //@Introspected
-public class MedicineUpdateCommand {
+public class MedicineUpdateCommand extends MedicineAddCommand {
 
-
+    @NotNull
     private int id;
 
-    @NotNull
-    private String name;
+    public MedicineUpdateCommand() {super();}
 
-    @NotNull
-    private String type;
-
-    public MedicineUpdateCommand(){
-
-    }
-
-    public MedicineUpdateCommand(int id, String name, String type){
-        this.id = id;
-        this.name = name;
-        this.type = type;
-    }
-
-    public int getId(){
-        return id;
-    }
-
-    public String getName(){
-        return name;
-    }
-
-    public String getType(){
-        return type;
-    }
-
-    public void setId(int id){
+    public MedicineUpdateCommand(int id, String name, String type) {
+        super(name, type);
         this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public int getId() { return id; }
 
-    public void setType(String type) {
-        this.type = type;
-    }
 }
