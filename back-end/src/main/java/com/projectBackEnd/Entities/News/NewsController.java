@@ -13,19 +13,15 @@ public class NewsController {
 
     protected final NewsManagerInterface newsManager = NewsManager.getNewsManager();
 
-    @Get(value = "/{id}", produces = MediaType.TEXT_JSON)
-    public News list(int id) {
-        return newsManager.getByPrimaryKey(id);
-    }
 
     @Get("/")
     public List<News> index(){
         return newsManager.getAllNews();
     }
 
-    @Delete("/{id}")
-    public HttpResponse delete(int id) {
-        newsManager.delete(id);
+    @Delete("/{slug}")
+    public HttpResponse delete(String slug) {
+        newsManager.delete(slug);
         return HttpResponse.noContent();
     }
 
@@ -39,7 +35,7 @@ public class NewsController {
 
         return HttpResponse
                 .created(news)
-                .headers(headers -> headers.location(location(news.getPrimaryKey())));
+                .headers(headers -> headers.location(location(news.getSlug())));
     }
 
 
@@ -51,15 +47,15 @@ public class NewsController {
 
         return HttpResponse
                 .noContent()
-                .header(HttpHeaders.LOCATION, location(command.getId()).getPath());
+                .header(HttpHeaders.LOCATION, location(command.getSlug()).getPath());
     }
 
-    protected URI location(int id) {
-        return URI.create("/news/" + id);
+    protected URI location(String slug) {
+        return URI.create("/news/" + slug);
     }
 
     protected URI location(News news) {
-        return location(news.getPrimaryKey());
+        return location(news.getSlug());
     }
 
 }
