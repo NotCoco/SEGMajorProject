@@ -14,9 +14,9 @@ import java.net.URLEncoder;
 import java.util.List;
 
 @Controller("/sites")
-public class SiteController extends PageController {
+public class SiteController {
     final SiteManagerInterface siteManager = SiteManager.getSiteManager();
-    //final PageManagerInterface pageManager = PageManager.getPageManager();
+
 
     SiteController() {
         super();
