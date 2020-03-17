@@ -5,8 +5,6 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
 
-import main.java.com.projectBackEnd.Entities.Page.*;
-
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -15,17 +13,12 @@ import java.util.List;
 
 @Controller("/sites")
 public class SiteController {
+    
     final SiteManagerInterface siteManager = SiteManager.getSiteManager();
-
 
     SiteController() {
         super();
     }
-
-//    @Get(value = "/list", produces = MediaType.TEXT_JSON)
-//    public List<Site> list() {
-//        return siteManager.getAllSites();
-//    }
 
     @Get("/")
     public List<Site> index(){
@@ -63,7 +56,6 @@ public class SiteController {
     @Put("/")
     public HttpResponse update(@Body Site updatedSite) {
         siteManager.update(updatedSite);
-        //List<Page> p = pageManager.getAllPagesOfSite(updatedSite);
         return HttpResponse
                 .noContent()
                 .header(HttpHeaders.LOCATION, location(updatedSite.getName()).getPath());
