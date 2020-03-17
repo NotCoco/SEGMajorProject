@@ -2,7 +2,8 @@ package main.java.com.projectBackEnd.Entities.News;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-
+//TODO Reinsert tags as I couldn't get them to compile on IntelliJ Jars.
+//@Introspected
 public class NewsUpdateCommand extends NewsAddCommand {
 
 

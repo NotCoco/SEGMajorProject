@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
  * It creates mock medicine objects and reduced memory use.
  * It is used by the controller to insert a medicine object into the database/
  */
+//@Introspected
 public class MedicineAddCommand {
 
     @NotNull

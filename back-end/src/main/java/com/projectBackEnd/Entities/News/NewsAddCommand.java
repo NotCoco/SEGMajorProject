@@ -2,7 +2,9 @@ package main.java.com.projectBackEnd.Entities.News;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-
+//import io.micronaut.core.annotation.Introspected;
+//TODO Reinsert tags as I couldn't get them to compile on IntelliJ Jars.
+//@Introspected
 public class NewsAddCommand {
 
     @NotNull
