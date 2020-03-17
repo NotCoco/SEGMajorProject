@@ -4,34 +4,37 @@ import main.java.com.projectBackEnd.Entities.Site.Site;
 import main.java.com.projectBackEnd.Entities.Site.SiteManager;
 import main.java.com.projectBackEnd.Entities.Site.SiteManagerInterface;
 import main.java.com.projectBackEnd.HibernateUtility;
-import org.junit.*;
-
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
 
 public class SiteManagerTest {
 
     public static ConnectionLeakUtil connectionLeakUtil = null;
     public static SiteManagerInterface siteManager = null;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         siteManager = SiteManager.getSiteManager();
         connectionLeakUtil = new ConnectionLeakUtil();
     }
 
-    @AfterClass
+    @AfterAll
     public static void assertNoLeaks() {
         HibernateUtility.shutdown();
         connectionLeakUtil.assertNoLeaks();
     }
 
-    @Before
+    @BeforeEach
     public void setUp() {
         siteManager.deleteAll();
     }
@@ -124,11 +127,13 @@ public class SiteManagerTest {
         assertEquals(replacementSite.getName(), siteInDB.getName());
     }
 
-    @Test(expected = PersistenceException.class)
+    @Test
     public void testUpdateWithIllegalValues() {
-        fillDatabase();
-        Site site = new Site(siteManager.getAllSites().get(0).getPrimaryKey(), null);
-        siteManager.update(site);
+        assertThrows(PersistenceException.class, () -> {
+            fillDatabase();
+            Site site = new Site(siteManager.getAllSites().get(0).getPrimaryKey(), null);
+            siteManager.update(site);
+        });
     }
 
     @Test

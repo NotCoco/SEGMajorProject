@@ -4,10 +4,6 @@ import main.java.com.projectBackEnd.Entities.News.News;
 import main.java.com.projectBackEnd.Entities.News.NewsManager;
 import main.java.com.projectBackEnd.Entities.News.NewsManagerInterface;
 import main.java.com.projectBackEnd.HibernateUtility;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;
@@ -16,28 +12,32 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.samePropertyValuesAs;
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
 
 public class NewsManagerTest {
     
     public static ConnectionLeakUtil connectionLeakUtil = null;
     public static NewsManagerInterface newsManager = null;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         newsManager = NewsManager.getNewsManager();
         connectionLeakUtil = new ConnectionLeakUtil();
     }
 
-    @AfterClass
+    @AfterAll
     public static void assertNoLeaks() {
         HibernateUtility.shutdown();
         connectionLeakUtil.assertNoLeaks();
     }
 
-    @Before
+    @BeforeEach
     public void setUp() {
         newsManager.deleteAll();
     }
@@ -45,7 +45,8 @@ public class NewsManagerTest {
 
     @Test
     public void testCreateAndSaveNews() {
-        newsManager.addNews(new News(new Date(12343212L), false, "desc213ription1", "ti321tle1", false, "con321tent1", "slug1"));
+        newsManager.addNews(new News(new Date(12343212L), false,
+                "desc213ription1", "ti321tle1", false, "con321tent1", "slug1"));
         assertEquals(1, newsManager.getAllNews().size());
     }
 
@@ -65,7 +66,8 @@ public class NewsManagerTest {
     public void testUpdateNews() {
         fillDatabase();
         int id = newsManager.getAllNews().get(0).getPrimaryKey();
-        News replacementMed = new News(id ,new Date(12343212L), true, "changedDescrption", "newTitle", false, "content1", "slug9");
+        News replacementMed = new News(id ,new Date(12343212L), true,
+                "changedDescrption", "newTitle", false, "content1", "slug9");
         newsManager.update(replacementMed);
 
         News newsInDB = newsManager.getAllNews().get(0);
@@ -73,12 +75,17 @@ public class NewsManagerTest {
         assertEquals(replacementMed.getTitle(), newsInDB.getTitle());
     }
 
-    @Test(expected = PersistenceException.class)
+    @Test
     public void testUpdateNewsWithDupeSlug() {
-        fillDatabase();
-        int id = newsManager.getAllNews().get(0).getPrimaryKey();
-        News replacementMed = new News(id ,new Date(12343212L), true, "changedDescrption", "newTitle", false, "content1", "slug1");
-        newsManager.update(replacementMed);
+
+        assertThrows(PersistenceException.class, () -> {
+            fillDatabase();
+            int id = newsManager.getAllNews().get(0).getPrimaryKey();
+            News replacementMed = new News(id ,new Date(12343212L), true, "changedDescrption",
+                    "newTitle", false, "content1", "slug1");
+            newsManager.update(replacementMed);
+        });
+
     }
 
     @Test
@@ -156,7 +163,8 @@ public class NewsManagerTest {
 
     @Test
     public void testDeleteNotInDBObject() {
-        News news = new News(new Date(12343212L), false, "description1", "title1", false, "content1", "slug123");
+        News news = new News(new Date(12343212L), false, "description1", "title1",
+                false, "content1", "slug123");
         int numberOfNews = newsManager.getAllNews().size();
         try {
             newsManager.delete(news);
