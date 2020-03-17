@@ -169,7 +169,7 @@ public class MedicineManagerTest {
         Medicine foundMedicineFromDB = medicineManager.getByPrimaryKey(medPK);
 
         assertThat(foundMedicine, samePropertyValuesAs(foundMedicineFromDB));
-        assertTrue(foundMedicine.equals((foundMedicineFromDB)));
+
     }
 
     @Test
