@@ -83,23 +83,25 @@ public class MedicineControllerTest{
         assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
     }
 
-    @Test
-    public void testUpdateMedicineEmptyName() {
-        HttpResponse response = addMedicine("Med1", "Liquid");
-        int id =  getEId(response).intValue();
-        client.toBlocking().exchange(HttpRequest.POST("/medicines", new MedicineUpdateCommand(id, "", "type")));
-        Medicine found = getMedicine(id);
-        assertEquals("Unnamed", found.getName());
-    }
 
     @Test
     public void testUpdateMedicineEmptyType() {
         HttpResponse response = addMedicine("Med1", "Liquid");
         int id =  getEId(response).intValue();
-        client.toBlocking().exchange(HttpRequest.POST("/medicines", new MedicineUpdateCommand(id, "name", "")));
+        putMedicine(id, "name", "");
         Medicine found = getMedicine(id);
         assertEquals("Undefined", found.getType());
     }
+
+    @Test
+    public void testUpdateMedicineEmptyName() {
+        HttpResponse response = addMedicine("Med1", "Liquid");
+        int id =  getEId(response).intValue();
+        client.toBlocking().exchange(HttpRequest.PUT("/medicines", new MedicineUpdateCommand(id, "", "type")));
+        Medicine found = getMedicine(id);
+        assertEquals("Unnamed", found.getName());
+    }
+
 
     @Test
     public void testNonExistingMedicineReturns404() {
@@ -125,23 +127,21 @@ public class MedicineControllerTest{
         });
     }
 
+
     @Test
-    public void testAddNullNameMedicine(){
-        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            client.toBlocking().exchange(HttpRequest.POST("/medicines",
-                    new MedicineAddCommand("", "Liquid")));
-        });
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
+    public void testAddEmptyNameMedicine(){
+        HttpResponse response = addMedicine("", "Topical");
+        int id =  getEId(response).intValue();
+        Medicine testMed = getMedicine(id);
+        assertEquals("Unnamed", testMed.getName());
     }
 
-
     @Test
-    public void testAddNullTypeMedicine(){
-        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            client.toBlocking().exchange(HttpRequest.POST("/medicines",
-                    new MedicineAddCommand("TestMed", "")));
-        });
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
+    public void testAddEmptyTypeMedicine(){
+        HttpResponse response = addMedicine("Med1", "");
+        int id =  getEId(response).intValue();
+        Medicine testMed = getMedicine(id);
+        assertEquals("Undefined", testMed.getType());
     }
 
     @Test
@@ -153,6 +153,8 @@ public class MedicineControllerTest{
 
         assertEquals("Med1", testMed.getName());
     }
+
+
 
     @Test
     public void testAddAndUpdateMedicine(){
