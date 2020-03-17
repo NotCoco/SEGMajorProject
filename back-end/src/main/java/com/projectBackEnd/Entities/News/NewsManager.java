@@ -89,13 +89,6 @@ public class NewsManager extends EntityManager implements NewsManagerInterface  
     }
 
     /**
-     * Remove all news from database
-     */
-    public void deleteAll() {
-        super.deleteAll();
-    }
-
-    /**
      * Delete input News object
      * @param news
      */
@@ -116,9 +109,7 @@ public class NewsManager extends EntityManager implements NewsManagerInterface  
      */
     public List<News> getAllNews() {
         List<News> allNews = super.getAll();
-        Stream<News> allPinnedNews = allNews.stream().filter(n -> n.isPinned()).sorted(Comparator.comparing(News::getDate, Comparator.nullsLast(Comparator.reverseOrder())));
-        Stream<News> allUnpinnedNews = allNews.stream().filter(n -> !n.isPinned()).sorted(Comparator.comparing(News::getDate, Comparator.nullsLast(Comparator.reverseOrder())));
-        return Stream.concat(allPinnedNews, allUnpinnedNews).collect(Collectors.toList());
+        return sort(allNews);
     } //Sort by Pinned/date then date
 
     /**
@@ -126,8 +117,7 @@ public class NewsManager extends EntityManager implements NewsManagerInterface  
      * Urgent and pinned, urgent only, pinned only, neither pinned nor urgent.
      * @return sorted list of news
      */
-    public List<News> sort() {
-        List<News> all = getAllNews();
+    public List<News> sort(List<News> all) {
 
         // Get pinned AND urgent
         Stream<News> pinnedAndUrgent = all.stream().filter(n -> n.isPinned() && n.isUrgent())
@@ -146,14 +136,6 @@ public class NewsManager extends EntityManager implements NewsManagerInterface  
         List<News> sorted = Stream.concat(Stream.concat(Stream.concat(pinnedAndUrgent, urgentDates), pinnedDates), regular)
                 .collect(Collectors.toList());
         return sorted;
-    }
-
-    /**
-     * @return list of all pinned news
-     */
-    public List<News> getAllPinnedNews() {
-        List<News> allNews = super.getAll();
-        return allNews.stream().filter(n -> n.isPinned()).sorted(Comparator.comparing(News::getDate, Comparator.nullsLast(Comparator.reverseOrder()))).collect(Collectors.toList());
     }
 
 
