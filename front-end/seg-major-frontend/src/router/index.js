@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 
 import AdminLayout from '../views/AdminLayout.vue'
+import AdminHome from '../views/AdminHome.vue'
 
 Vue.use(VueRouter)
 
@@ -14,7 +15,13 @@ const routes = [
   },
   {
     path: '/admin',
-    component: AdminLayout
+    component: AdminLayout,
+    children: [
+      {
+        path: '',
+        component: AdminHome
+      }
+    ]
   }
 ]
 
