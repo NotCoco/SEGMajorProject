@@ -90,7 +90,8 @@ public class SiteManagerTest {
         Site foundSiteDB = siteManager.getByPrimaryKey(sitePK);
 
         assertThat(foundSite, samePropertyValuesAs(foundSiteDB));
-        assertTrue(foundSite.equals((foundSiteDB)));
+        assertThat(foundSite, samePropertyValuesAs(foundSiteDB));
+
     }
 
     @Test
