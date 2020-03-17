@@ -62,6 +62,7 @@ public class NewsManagerTest {
         assertEquals(getListOfNews().size(), newsManager.getAllNews().size());
     }
 
+
     @Test
     public void testUpdateNews() {
         fillDatabase();
@@ -70,7 +71,7 @@ public class NewsManagerTest {
                 "changedDescription", "newTitle", false, "content1", "slug9");
         newsManager.update(replacementNews);
 
-        News newsInDB = newsManager.getAllNews().get(0);
+        News newsInDB = newsManager.getByPrimaryKey(id);
         assertEquals(replacementNews.getDescription(), newsInDB.getDescription());
         assertEquals(replacementNews.getTitle(), newsInDB.getTitle());
     }
@@ -82,9 +83,9 @@ public class NewsManagerTest {
         assertThrows(PersistenceException.class, () -> {
             fillDatabase();
             int id = newsManager.getAllNews().get(0).getPrimaryKey();
-            News replacementMed = new News(id ,new Date(12343212L), true, "changedDescrption",
+            News replacementNews = new News(id ,new Date(12343212L), true, "changedDescrption",
                     "newTitle", false, "content1", "slug1");
-            newsManager.update(replacementMed);
+            newsManager.update(replacementNews);
         });
 
     }
@@ -100,8 +101,8 @@ public class NewsManagerTest {
     @Test
     public void testGetByPrimaryKey() {
         fillDatabase();
-        News firstMed = newsManager.getAllNews().get(0);
-        News foundNews = firstMed;
+        News firstNews = newsManager.getAllNews().get(0);
+        News foundNews = firstNews;
         int newsPK = foundNews.getPrimaryKey();
         News foundNewsFromDB = newsManager.getByPrimaryKey(newsPK);
 
