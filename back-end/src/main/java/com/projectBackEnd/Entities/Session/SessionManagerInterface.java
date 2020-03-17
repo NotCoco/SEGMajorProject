@@ -1,7 +1,7 @@
 package main.java.com.projectBackEnd.Entities.Session;
 
 /**
- *  Methods used by SessionManager for database queries.
+ *  Methods used by SessionManager for database queries for Session objects
  */
 
 public interface SessionManagerInterface {

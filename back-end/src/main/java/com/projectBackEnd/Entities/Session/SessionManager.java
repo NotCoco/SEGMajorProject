@@ -33,14 +33,19 @@ public class SessionManager extends EntityManager implements SessionManagerInter
 	}
 
 
+	public String getNewSession(String email, int timeout){
+		Session s = new Session(email,timeout);
+		insertTuple(s);
+		return s.getToken();
+	}
+
+
 	public boolean verifySession(String token) {
 
 		List<Session> sessions = getAll();
 		List<Session> correct = new ArrayList<Session>();
 
-		for (Session s: sessions) {
-			if(s.getToken().equals(token)) correct.add(s);
-		}		
+		for (Session s: sessions) if(s.getToken().equals(token)) correct.add(s);
 	
 		if (correct.size() == 1) {
 			Session current = correct.get(0);
@@ -51,13 +56,6 @@ public class SessionManager extends EntityManager implements SessionManagerInter
 
 		return false;
 	}
-
-	public String getNewSession(String email,int timeout){
-		Session s = new Session(email,timeout);
-		insertTuple(s);
-		return s.getToken();
-	}
-
 
 	public void terminateSession(String token) {
 		if(getAll().stream().filter(s->((Session)s).getToken().equals(token)).count() == 1) {

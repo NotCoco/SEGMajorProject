@@ -13,12 +13,14 @@ import java.sql.Timestamp;
 import java.io.Serializable;
 @Entity
 @Table(name = Session.TABLENAME)
-public class Session implements TableEntity{
+public class Session implements TableEntity {
+	
 	public final static String TABLENAME = "Sessions";
 	private final static String TOKEN = "Token";
 	private final static String DATE = "Date";
 	private final static String TIMEOUT = "Timeout";
 	private final static String EMAIL = "Email";
+
 	@Id
 	@Column(name = TOKEN)
 	private String token;
@@ -37,10 +39,12 @@ public class Session implements TableEntity{
 		this.timeout = new Timestamp(System.currentTimeMillis() + timeout * 1000);
 		this.token = generateToken();
 	}
+
 	public Session(){};
 	public Serializable getPrimaryKey(){
 		return token;
 	}
+
 	private String generateToken(){
 		Random rand = new Random();
 		String s = null;
@@ -54,20 +58,29 @@ public class Session implements TableEntity{
 		}while(s == null && SessionManager.getSessionManager().verifySession(s));
 		return s;
 	}
+
 	public String getToken(){
 		return token;
 	}
+
 	public Timestamp getDate(){
 		return date;
 	}
+
 	public Timestamp getTimeout(){
 		return timeout;
 	}
+
 	public String getEmail(){
 		return email;
 	}
 
-	public TableEntity copy(TableEntity newCopy){
+	/**
+	 * Copy the values of input object
+	 * @param newCopy
+	 * @return updated object
+	 */
+	public TableEntity copy(TableEntity newCopy) {
 		if(newCopy instanceof Session){
 			token = ((Session)newCopy).getToken();
 			date = ((Session)newCopy).getDate();
@@ -75,9 +88,7 @@ public class Session implements TableEntity{
 			email = ((Session)newCopy).getEmail();
 			return this;
 		}
-		else
-			return null;
-
+		else return null;
 	}
 
 
