@@ -9,22 +9,28 @@ import static org.junit.Assert.*;
 import org.junit.*;
 import java.util.ArrayList;
 import java.util.List;
-public class SessionManagerTest{
+
+
+public class SessionManagerTest {
+
     public static ConnectionLeakUtil connectionLeakUtil = null;    
 	public static SessionManagerInterface sessionManager = null;
+
+
 	@BeforeClass
     public static void setUpDatabase() {
-        HibernateUtility.setResource("test/resources/testhibernate.cfg.xml");
+		HibernateUtility.setResource("testhibernate.cfg.xml");
 		sessionManager = SessionManager.getSessionManager();
-        //connectionLeakUtil = new ConnectionLeakUtil();
-
+        connectionLeakUtil = new ConnectionLeakUtil();
     }
+
 
     @AfterClass
     public static void assertNoLeaks() {
         HibernateUtility.shutdown();
         //connectionLeakUtil.assertNoLeaks();
     }
+
     @Before
     public void setUp() {
 	((SessionManager)sessionManager).deleteAll();
@@ -32,14 +38,16 @@ public class SessionManagerTest{
 
 
 	@Test
-	public void testGetNewSession(){
+	public void testGetNewSession() {
 		fill();
 		String token = sessionManager.getNewSession("1",100);
 		List<Session> sessions = (List<Session>)((EntityManager)sessionManager).getAll();
 		assertEquals(1,sessions.stream().filter(s->(s.getToken().equals(token))).count());
 	}
+
+
 	@Test
-	public void testVerifySession(){
+	public void testVerifySession() {
 		fill();
 		String token = sessionManager.getNewSession("1",100);
 		List<Session> sessions = (List<Session>)((EntityManager)sessionManager).getAll();
@@ -50,7 +58,7 @@ public class SessionManagerTest{
 	}
 
 	@Test
-	public void testTimeout() throws InterruptedException{
+	public void testTimeout() throws InterruptedException {
 		fill();
 		String token = sessionManager.getNewSession("1",2);
 		List<Session> sessions = (List<Session>)((EntityManager)sessionManager).getAll();
@@ -59,10 +67,11 @@ public class SessionManagerTest{
 		sessionManager.verifySession(token);
 		sessions = (List<Session>)((EntityManager)sessionManager).getAll();
 		assertEquals(0,sessions.stream().filter(s->(s.getToken().equals(token))).count());
-
 	}
+
+
 	@Test
-	public void testTerminateSession(){
+	public void testTerminateSession() {
 		String token = sessionManager.getNewSession("1",100);
 		List<Session> sessions = (List<Session>)((EntityManager)sessionManager).getAll();
 		assertEquals(1,sessions.size());
@@ -70,7 +79,9 @@ public class SessionManagerTest{
 		sessionManager.terminateSession(token);
 		assertEquals(0,((EntityManager)sessionManager).getAll().size());
 	}
-	private ArrayList<Session> getTestSessions(){
+
+
+	private ArrayList<Session> getTestSessions() {
 		ArrayList<Session> sessions = new ArrayList<Session>();
 		sessions.add(new Session("1",100));
 		sessions.add(new Session("2",100));
@@ -78,10 +89,13 @@ public class SessionManagerTest{
 
 		return sessions;
 	}
-	private void fill(){
+
+
+	private void fill() {
 		for(Session s : getTestSessions()){
 			((EntityManager)sessionManager).insertTuple(s);
 		}
 	}
+
 
 }

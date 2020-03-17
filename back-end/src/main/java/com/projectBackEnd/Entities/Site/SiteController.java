@@ -21,6 +21,7 @@ public class SiteController {
     SiteController() {
         super();
     }
+
 //    @Get(value = "/list", produces = MediaType.TEXT_JSON)
 //    public List<Site> list() {
 //        return siteManager.getAllSites();
@@ -59,15 +60,6 @@ public class SiteController {
         return HttpResponse.noContent();
     }
 
-//    @Delete("/{id}")
-//    public HttpResponse delete(int id) {
-//        siteManager.delete(id);
-//        return HttpResponse.noContent();
-//    }
-
-
-
-
     @Put("/")
     public HttpResponse update(@Body Site updatedSite) {
         siteManager.update(updatedSite);
@@ -76,8 +68,6 @@ public class SiteController {
                 .noContent()
                 .header(HttpHeaders.LOCATION, location(updatedSite.getName()).getPath());
     }
-
-
 
     protected URI location(String siteName) {
         String encodedSlug = null;
@@ -88,7 +78,6 @@ public class SiteController {
         }
         return URI.create("/sites/" + encodedSlug);
     }
-
 
 
 }
