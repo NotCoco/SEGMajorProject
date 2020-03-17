@@ -59,18 +59,25 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 		update(user);
 		
 	}
-	public void deleteUser(String email) throws UserNotExistException{
-		List<User> users = getAll();
-		boolean found = false;
-		for(User u: users){
-			if(u.getEmail().equals(email)){
-				delete(u);
-				found = true;
-				break;
+	public void deleteUser(String email, String password) throws UserNotExistException{
+		String token = verifyUser(email,password) ;
+		if(token != null){
+			List<User> users = getAll();
+			boolean found = false;
+			SessionManager.getSessionManager().terminateSession(token);
+			for(User u: users){
+				if(u.getEmail().equals(email)){
+					delete(u);
+					found = true;
+					break;
+				}
 			}
+			if(!found)
+				throw new UserNotExistException("user details incorrect");
 		}
-		if(!found)
-			throw new UserNotExistException("there is no user with email: " + email);
+		else{
+				throw new UserNotExistException("user details incorrect");
+		}
 	}
 	public void changeEmail(String oldEmail, String newEmail) throws UserNotExistException,EmailExistsException { 
 		List<User> users = getAll();

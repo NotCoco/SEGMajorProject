@@ -46,14 +46,13 @@ public class UserController {
 	}
 
     @Delete("/delete_user")
-	public HttpResponse deleteUser(@Body String email){
+	public HttpResponse deleteUser(@Body User user){
 
 		try{
-			userManager.deleteUser(email);
+			userManager.deleteUser(user.getEmail(), user.getPassword());
 			return HttpResponse.ok();
 		}
 		catch(UserNotExistException e){
-			System.out.println(email);
 			return HttpResponse.notFound("user does not exsist");
 		}
 	}
@@ -66,7 +65,7 @@ public class UserController {
 			return HttpResponse.notFound();
 		
 	}
-	@Put("/change_password") //test
+	@Put("/change_password") 
 	public HttpResponse<String> changePassword(@Body PasswordResetBody body){
 		try{
         	PasswordReset.getPasswordResetManager().changePassword(body.token, body.password);
@@ -79,10 +78,10 @@ public class UserController {
 			return HttpResponse.notFound("token did not match any user");
 		}	
 	}
-	@Post("/password_reset") //test
-	public HttpResponse<String> getPasswordReset(@Body String email){
+	@Post("/password_reset") 
+	public HttpResponse<String> getPasswordReset(@Body StringBody body){
 		try{
-			PasswordReset.getPasswordResetManager().sendPasswordResetLink(email);
+			PasswordReset.getPasswordResetManager().sendPasswordResetLink(body.string);
 			return HttpResponse.ok();
 		}
 		catch(EmailNotExistException e){

@@ -131,14 +131,11 @@ public class UserControllerTest{
 		assertEquals("invalid credentials", thrown.getResponse().getBody().get());
 	}
 
-	/**
-	* TODO: I do not think this works as intended
-	*/
 	@Test
 	public void testDeleteUserExisting(){
 		HttpResponse response = client.toBlocking().exchange(HttpRequest.POST("/user/create",new User("username@mail.com","password")));
 		assertEquals(HttpStatus.CREATED,response.getStatus());
-            	response = client.toBlocking().exchange(HttpRequest.DELETE("/user/delete_user","username@mail.com"));
+            	response = client.toBlocking().exchange(HttpRequest.DELETE("/user/delete_user",new User("username@mail.com","password")));
 		assertEquals(HttpStatus.OK,response.getStatus());
 		assertNull(userManager.verifyUser("username@mail.com","password"));
 		
@@ -243,13 +240,13 @@ public class UserControllerTest{
 	@Test
 	public void testPasswordResetEmailNotExist(){
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            		client.toBlocking().retrieve(HttpRequest.POST("/user/password_reset","email@email.com"));
+            		client.toBlocking().retrieve(HttpRequest.POST("/user/password_reset",new StringBody("email@email.com")));
         	});
 		assertEquals(HttpStatus.NOT_FOUND , thrown.getStatus());
 		assertEquals("incorrect email",thrown.getResponse().getBody().get());
 	}
 	
-	@Test // what the fuck???????????
+	@Test  
 	public void testPasswordReset(){
 		String email = "test@gmail.com";
 		try{
@@ -259,12 +256,9 @@ public class UserControllerTest{
 			fail();
 		}
 		assertTrue(userManager.verifyEmail(email));
-		//HttpRequest request = HttpRequest.POST("/user/password_reset",email);
-		//HttpResponse response = client.toBlocking().exchange(request);
-		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            		client.toBlocking().retrieve(HttpRequest.POST("/user/password_reset",email));
-        	});
-		//assertEquals(HttpStatus.OK , response.getStatus());
+		HttpRequest request = HttpRequest.POST("/user/password_reset",new StringBody(email));
+		HttpResponse response = client.toBlocking().exchange(request);
+		assertEquals(HttpStatus.OK , response.getStatus());
 		assertTrue(userManager.verifyEmail(email));
 	}
 	

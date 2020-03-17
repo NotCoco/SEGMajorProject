@@ -134,9 +134,9 @@ public class UserManagerTest{
 	public void testDeleteUser(){
 		fill();
 		try{
-			userManager.deleteUser("user1@email.com");
+			userManager.deleteUser("user1@email.com","password1");
 			List<User> users = (List<User>)((EntityManager)userManager).getAll();
-			assertEquals(0,users.stream().filter(u->(u.getEmail().equals("user1@email.com") && u.getPassword().equals(hash("password10")) == true)).count());
+			assertEquals(0,users.stream().filter(u->(u.getEmail().equals("user1@email.com") && u.getPassword().equals(hash("password1")) == true)).count());
 			assertEquals(users.size(),6);
 		}
 		catch(UserNotExistException e){
@@ -147,7 +147,13 @@ public class UserManagerTest{
 	@Test(expected = UserNotExistException.class)
 	public void testDeleteNotExistingUser() throws UserNotExistException{
 		fill();
-		userManager.deleteUser("user0@email.com");
+		userManager.deleteUser("user0@email.com","password0");
+
+	}
+	@Test(expected = UserNotExistException.class)
+	public void testDeleteWrongPasswordUser() throws UserNotExistException{
+		fill();
+		userManager.deleteUser("user1@email.com","password0");
 
 	}
 	@Test(expected = UserNotExistException.class)
