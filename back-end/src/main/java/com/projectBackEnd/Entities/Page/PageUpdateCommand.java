@@ -5,13 +5,14 @@ import main.java.com.projectBackEnd.Entities.Site.Site;
 import main.java.com.projectBackEnd.Entities.Site.SiteManager;
 import main.java.com.projectBackEnd.Entities.Site.SiteManagerInterface;
 //import io.micronaut.core.annotation.Introspected;
-//TODO Reinsert tags as I couldn't get them to compile on IntelliJ Jars.
-//@Introspected
+/**
+ * PageUpdateCommand is an implementation of the Command design pattern.
+ * It is used by the controller to update a Page object.
+ */
 public class PageUpdateCommand extends PageAddCommand {
 
     @NotNull
     private Integer primaryKey;
-
 
     public PageUpdateCommand(){
         super();
@@ -25,11 +26,5 @@ public class PageUpdateCommand extends PageAddCommand {
     public Integer getPrimaryKey() {
         return primaryKey;
     }
-
-    public void setPrimaryKey(Integer primaryKey) {
-        this.primaryKey = primaryKey;
-    }
-
-
 
 }

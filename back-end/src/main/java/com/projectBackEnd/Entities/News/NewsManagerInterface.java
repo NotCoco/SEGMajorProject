@@ -17,7 +17,5 @@ public interface NewsManagerInterface {
     public void delete(News news); //TODO removable?
     public void delete(Serializable pk);
     public List<News> getAllNews();
-    public List<News> sort();
-    public List<News> getAllPinnedNews();
 
 }

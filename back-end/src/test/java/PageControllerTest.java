@@ -21,17 +21,18 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertNull;
+
 
 @MicronautTest
 public class PageControllerTest {
@@ -200,6 +201,7 @@ public class PageControllerTest {
         //public PagePatchCommand(int id, String slug, int index) {
         List<Page> allPagesWithID = pageManager.getAllPages();
         List<PagePatchCommand> input = new ArrayList<>();
+
         for(int i = 0; i < allPagesWithID.size(); ++i) {
             Page currentPage = allPagesWithID.get(i);
             input.add(new PagePatchCommand(currentPage.getPrimaryKey(), currentPage.getSlug(), i));
@@ -212,9 +214,7 @@ public class PageControllerTest {
         //@Patch("/{name}/page-indices")
         //public HttpResponse<Page> patchPage(String name, @Body List<PagePatchCommand> patchCommandList){
         allPagesWithID = pageManager.getAllPages();
-        for(int i = 0; i < allPagesWithID.size(); ++i) {
-            assertEquals(i, allPagesWithID.get(i).getIndex());
-        }
+        for(int i = 0; i < allPagesWithID.size(); ++i) assertEquals(i, allPagesWithID.get(i).getIndex());
 
     }
 
@@ -229,14 +229,15 @@ public class PageControllerTest {
         HttpRequest request = HttpRequest.POST((sLoc +"/pages"), new PageAddCommand(siteName, slug, index, title, content));
         HttpResponse response = client.toBlocking().exchange(request);
         return response;
-
     }
+
     protected Page getPage(String name, String pageName) {
         URI loc = pageLocation(name, pageName);
 
         HttpRequest request = HttpRequest.GET(loc);
         return client.toBlocking().retrieve(request, Page.class);
     }
+
     protected URI pageLocation(String siteName, String pageName) {
         String encodedSlug = null;
         String encodedPage = null;
@@ -255,6 +256,7 @@ public class PageControllerTest {
         HttpResponse response = client.toBlocking().exchange(request);
         return response;
     }
+
     protected URI location(String siteName) {
         String encodedSlug = null;
         try {
