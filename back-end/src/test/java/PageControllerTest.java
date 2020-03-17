@@ -93,6 +93,9 @@ public class PageControllerTest {
     @Test
     public void testAddingNullIndexPage() {
         addSite("testSiteA");
+        assertThrows(NullPointerException.class, () -> {
+            HttpRequest.POST(("/sites/"+ "testSiteA" +"/pages"), new PageAddCommand("testSiteA", "slug", null, "", ""));
+        });
         HttpRequest request = HttpRequest.POST(("/sites/"+ "testSiteA" +"/pages"), new Page("testSiteA", "slug", null, "", ""));
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
             client.toBlocking().exchange(request);
@@ -216,9 +219,8 @@ public class PageControllerTest {
     }
 
     protected HttpResponse putPage(int id, String siteName, String slug, int index, String title, String content) {
-        String pSlug = pageManager.getByPrimaryKey(id).getSlug();
-        URI pLoc = pageLocation(siteName, pSlug);
-        HttpRequest request = HttpRequest.PUT(pLoc, new PageUpdateCommand(id, siteName, slug, index, title, content));
+        URI pLoc = location(siteName);
+        HttpRequest request = HttpRequest.PUT(pLoc+"/pages", new PageUpdateCommand(id, siteName, slug, index, title, content));
         return client.toBlocking().exchange(request);
     }
 
