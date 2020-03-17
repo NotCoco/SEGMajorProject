@@ -1,26 +1,20 @@
 package main.java.com.projectBackEnd.Image;
 
-import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
-import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
-import io.micronaut.validation.Validated;
 
-import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
 
 @Controller("/images")
 public class ImageController {
 
-	protected final ImageHandler imageHandler;
+	protected final ImageManager imageManager;
 
-	public ImageController(){imageHandler = new ImageHandler();}
-
-	public ImageController(String dir){imageHandler = new ImageHandler(dir);}
+	public ImageController(){
+		imageManager = new ImageManager();}
 	@Post("/")
 	public HttpResponse<String> add(@Body String imageBytes) {
-		String msg = imageHandler.saveImage(imageBytes);
+		String msg = imageManager.saveImage(imageBytes);
 		if(msg.equals("Failed")){
 			return HttpResponse.serverError();
 		}
@@ -33,7 +27,7 @@ public class ImageController {
 
 	@Delete("/{imageName}")
 	public HttpResponse delete(String imageName) {
-		if(imageHandler.deleteImage(imageName)){
+		if(imageManager.deleteImage(imageName)){
 			return HttpResponse.noContent();
 		}
 		else {
@@ -42,7 +36,7 @@ public class ImageController {
 	}
 
 	public void deleteAll(){
-		imageHandler.deleteAll();
+		imageManager.deleteAll();
 	}
 
 	protected URI location(String imageName) {

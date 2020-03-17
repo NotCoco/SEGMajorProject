@@ -5,16 +5,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.Base64.Decoder;
 
-public class ImageHandler {
+public class ImageManager {
 	//Random name related variables
 	final String lexicon = "ABCDEFGHIJKLMNOPQRSTUVWXYZ12345674890";
 	final java.util.Random rand = new java.util.Random();
 	final Set<String> identifiers = new HashSet<String>();
 	final String dir;
-	public ImageHandler() {
-		dir = System.getProperty("user.dir")+"\\back-end\\src\\main\\resources\\images\\";
+	public ImageManager() {
+		dir = DirectoryHolder.getDir();
 	}
-	public ImageHandler(String dir) { this.dir = dir; }
+	//public ImageHandler(String dir) { this.dir = dir; }
 
 	public String randomIdentifier() {
 		StringBuilder builder = new StringBuilder();
@@ -105,7 +105,7 @@ public class ImageHandler {
 		}
 	}
 
-	public List<String> getImageUrls()
+	public  List<String> getImageUrls()
 	{
 		File folder = new File(dir);
 		File[] listOfFiles = folder.listFiles();
@@ -119,7 +119,10 @@ public class ImageHandler {
 		return urls;
 	}
 
-	public String getDirectory() {return dir;}
+	public String getDir()
+	{
+		return dir;
+	}
 
 //	public static void main (String[] args)
 //	{
