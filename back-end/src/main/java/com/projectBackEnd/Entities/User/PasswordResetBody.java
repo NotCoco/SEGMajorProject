@@ -7,4 +7,5 @@ public class PasswordResetBody{
 		this.token = token;
 		this.password = password;
 	}
+	public PasswordResetBody(){}
 }

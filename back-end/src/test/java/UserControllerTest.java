@@ -13,8 +13,8 @@ import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import main.java.com.projectBackEnd.*;
 import main.java.com.projectBackEnd.Entities.User.*;
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
-import main.java.com.projectBackEnd.Entities.ResetLinks.ResetLinkManager;
-import main.java.com.projectBackEnd.Entities.ResetLinks.ResetLinkManagerInterface;
+import main.java.com.projectBackEnd.Entities.ResetLinks.*;
+
 
 import javax.inject.Inject;
 
@@ -271,10 +271,45 @@ public class UserControllerTest{
 
 	@Test
 	public void testChangePasswordExisting(){
+		try{
+			userManager.addUser("mail@mail.com","password");
+		}
+		catch(InvalidEmailException|EmailExistsException e){
+			fail();
+		}
 
+
+
+		try{
+			String a = ResetLinkManager.getResetLinkManager().create("mail@mail.com");
+			assertTrue(ResetLinkManager.getResetLinkManager().exist(a));
+			HttpRequest request = HttpRequest.PUT("/user/change_password",new PasswordResetBody(a,"test"));
+			HttpResponse response = client.toBlocking().exchange(request);
+			assertEquals(HttpStatus.OK , response.getStatus());
+			assertFalse(ResetLinkManager.getResetLinkManager().exist(a));
+			assertNotNull(userManager.verifyUser("mail@mail.com","test"));
+		}
+		catch(EmailNotExistException e){
+			fail();
+		}	
+		
 	}
 	@Test
 	public void testChangePasswordNotExisting(){
+		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+				client.toBlocking().retrieve(HttpRequest.PUT("/user/change_password",new PasswordResetBody("VeryRandomString1123423budsadvaswitvdycioy23271g","test")));
+		 });
+		assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
+
+		thrown = assertThrows(HttpClientResponseException.class, () -> {
+				client.toBlocking().retrieve(HttpRequest.PUT("/user/change_password",new PasswordResetBody(null,"test")));
+		 });
+		assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
+
+		thrown = assertThrows(HttpClientResponseException.class, () -> {
+				client.toBlocking().retrieve(HttpRequest.PUT("/user/change_password",new PasswordResetBody("","test")));
+		 });
+		assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
 
 	}
 }
