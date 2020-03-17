@@ -1,16 +1,14 @@
 package main.java.com.projectBackEnd.Entities.Site;
 
-
-import main.java.com.projectBackEnd.Entities.Page.Page;
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
-
-import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class SiteManager extends EntityManager implements SiteManagerInterface {
+
     private static SiteManagerInterface siteManager;
+
     private SiteManager() {
         super();
         setSubclass(Site.class);
@@ -31,6 +29,12 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
         return (List<Site>) super.getAll();
     }
 
+    public Site addSite(String name) {
+        Site newSite = new Site(name);
+        super.insertTuple(newSite);
+        return newSite;
+    }
+
     public Site addSite(Site newSite) {
         super.insertTuple(newSite);
         return newSite;
@@ -48,12 +52,5 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
     public Site update(Site updatedVersion) {
         return (Site) super.update(updatedVersion);
     }
-    //TODO Reorder these and in the interface.
-    public Site addSite(String name) {
-        Site newSite = new Site(name);
-        super.insertTuple(newSite);
-        return newSite;
-    }
-
 
 }

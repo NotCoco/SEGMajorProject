@@ -20,18 +20,19 @@ import java.math.BigInteger;
 public class UserManagerTest{
 	public static ConnectionLeakUtil connectionLeakUtil = null;
 	public static UserManagerInterface userManager = null;
+
 	@BeforeClass
-	public static void setUpDatabase() {
-		HibernateUtility.setResource("test/resources/testhibernate.cfg.xml");
+    public static void setUpDatabase() {
+		HibernateUtility.setResource("testhibernate.cfg.xml");
 		userManager = UserManager.getUserManager();
-		//connectionLeakUtil = new ConnectionLeakUtil();
+		connectionLeakUtil = new ConnectionLeakUtil();
 
 	}
 
 	@AfterClass
 	public static void assertNoLeaks() {
 		HibernateUtility.shutdown();
-		//connectionLeakUtil.assertNoLeaks();
+		connectionLeakUtil.assertNoLeaks();
 	}
 
 	@Before

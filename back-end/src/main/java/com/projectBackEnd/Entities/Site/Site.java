@@ -6,9 +6,10 @@ import org.hibernate.annotations.Type;
 import javax.persistence.*;
 /**
  * Site objects are database entities for the table 'Site' defined in this class.
+ * They can be considered as a category of pages, one site is created for each condition.
  * The have two attributes :
  *    - auto-increment primary key as 'ID' in table
- *    - site name as 'Name',
+ *    - site name as 'Name'.
  *
  *    https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
