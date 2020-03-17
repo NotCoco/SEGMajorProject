@@ -31,7 +31,7 @@ public class SessionManagerTest {
     @AfterAll
     public static void assertNoLeaks() {
         HibernateUtility.shutdown();
-        //connectionLeakUtil.assertNoLeaks();
+        connectionLeakUtil.assertNoLeaks();
     }
 
     @BeforeEach
