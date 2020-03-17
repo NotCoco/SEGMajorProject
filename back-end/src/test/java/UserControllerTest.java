@@ -11,13 +11,10 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import main.java.com.projectBackEnd.*;
-import main.java.com.projectBackEnd.Entities.User.User;
-import main.java.com.projectBackEnd.Entities.User.UserManager;
-import main.java.com.projectBackEnd.Entities.User.UserManagerInterface;
-import main.java.com.projectBackEnd.Entities.User.InvalidEmailException;
-import main.java.com.projectBackEnd.Entities.User.EmailExistsException;
-import main.java.com.projectBackEnd.Entities.User.UserNotExistException;
+import main.java.com.projectBackEnd.Entities.User.*;
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
+import main.java.com.projectBackEnd.Entities.ResetLinks.ResetLinkManager;
+import main.java.com.projectBackEnd.Entities.ResetLinks.ResetLinkManagerInterface;
 
 import javax.inject.Inject;
 
@@ -33,6 +30,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @MicronautTest
 public class UserControllerTest{
@@ -42,6 +41,7 @@ public class UserControllerTest{
     @Client("/")
     HttpClient client;
 	private static final UserManagerInterface userManager = UserManager.getUserManager();
+	private static final ResetLinkManagerInterface linkManager = ResetLinkManager.getResetLinkManager();
     @BeforeAll
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
@@ -200,7 +200,75 @@ public class UserControllerTest{
 		assertEquals(HttpStatus.NOT_FOUND , thrown.getStatus());
 	}
 
-	/**
+
+	
+	@Test
+	public void testChangeEmailExist(){
+		try{
+			userManager.addUser("username@mail.com","password");
+		}
+		catch(InvalidEmailException|EmailExistsException e){
+			fail();
+		}
+		String a = userManager.verifyUser("username@mail.com","password");
+		HttpRequest request = HttpRequest.PUT("/user/change_email",new ChangeEmailBody("username@mail.com","username1@mail.com",a));
+		HttpResponse response = client.toBlocking().exchange(request);
+		assertEquals(HttpStatus.OK , response.getStatus());
+		assertNotNull(userManager.verifyUser("username1@mail.com","password"));
+	}
+	@Test
+	public void testChangeEmailNotExist(){
+		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            		client.toBlocking().exchange(HttpRequest.PUT("/user/change_email",new ChangeEmailBody("username@mail.com","username1@mail.com","")));
+        	});
+		assertEquals(HttpStatus.UNAUTHORIZED , thrown.getStatus());
+	}
+	@Test
+	public void testChangeDuplicateEmail(){
+		try{
+			userManager.addUser("username@mail.com","password");
+			userManager.addUser("username1@mail.com","password");
+		}
+		catch(InvalidEmailException|EmailExistsException e){
+			fail();
+		} 
+		String a = userManager.verifyUser("username@mail.com","password");
+		assertNotNull(a);
+		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            		client.toBlocking().retrieve(HttpRequest.PUT("/user/change_email",new ChangeEmailBody("username@mail.com","username1@mail.com",a)));
+        	});
+		assertEquals(HttpStatus.BAD_REQUEST , thrown.getStatus());
+		assertNotNull(userManager.verifyUser("username@mail.com","password"));
+	}
+	@Test
+	public void testPasswordResetEmailNotExist(){
+		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            		client.toBlocking().retrieve(HttpRequest.POST("/user/password_reset","email@email.com"));
+        	});
+		assertEquals(HttpStatus.NOT_FOUND , thrown.getStatus());
+		assertEquals("incorrect email",thrown.getResponse().getBody().get());
+	}
+	
+	@Test // what the fuck???????????
+	public void testPasswordReset(){
+		String email = "test@gmail.com";
+		try{
+			userManager.addUser(email,"password");
+		}
+		catch(InvalidEmailException|EmailExistsException e){
+			fail();
+		}
+		assertTrue(userManager.verifyEmail(email));
+		//HttpRequest request = HttpRequest.POST("/user/password_reset",email);
+		//HttpResponse response = client.toBlocking().exchange(request);
+		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            		client.toBlocking().retrieve(HttpRequest.POST("/user/password_reset",email));
+        	});
+		//assertEquals(HttpStatus.OK , response.getStatus());
+		assertTrue(userManager.verifyEmail(email));
+	}
+	
+
 	@Test
 	public void testChangePasswordExisting(){
 
@@ -209,6 +277,4 @@ public class UserControllerTest{
 	public void testChangePasswordNotExisting(){
 
 	}
-	*/
-
 }

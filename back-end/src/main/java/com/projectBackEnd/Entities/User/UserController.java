@@ -82,7 +82,7 @@ public class UserController {
 	@Post("/password_reset") //test
 	public HttpResponse<String> getPasswordReset(@Body String email){
 		try{
-        	PasswordReset.getPasswordResetManager().sendPasswordResetLink(email);
+			PasswordReset.getPasswordResetManager().sendPasswordResetLink(email);
 			return HttpResponse.ok();
 		}
 		catch(EmailNotExistException e){
@@ -92,7 +92,7 @@ public class UserController {
 			return HttpResponse.serverError();
 		}	
 	}
-	@Put("/change_email") //test
+	@Put("/change_email") 
 	public HttpResponse<String> changeEmail(@Body ChangeEmailBody body){
 		if(sessionManager.verifySession(body.sessionToken))
 		{
@@ -102,6 +102,9 @@ public class UserController {
 			}
 			catch(UserNotExistException e){
 				return HttpResponse.notFound("no user with such email");
+			}
+			catch(EmailExistsException r){
+				return HttpResponse.badRequest("this email already exists");
 			}
 		}
 		else

@@ -14,7 +14,7 @@ public class SessionManagerTest{
 	public static SessionManagerInterface sessionManager = null;
 	@BeforeClass
     public static void setUpDatabase() {
-        HibernateUtility.setResource("test/resources/testhibernate.cfg.xml");
+        HibernateUtility.setResource("testhibernate.cfg.xml");
 		sessionManager = SessionManager.getSessionManager();
         //connectionLeakUtil = new ConnectionLeakUtil();
 

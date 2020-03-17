@@ -21,7 +21,7 @@ public class Link implements TableEntity{
 	private String token;
 	@Column(name = Link.EMAIL)
 	private String email;
-
+	public Link(){};
 	public Link(String email){
 		this.email = email;
 		token = generateToken();	

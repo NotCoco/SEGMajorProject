@@ -22,7 +22,7 @@ public class UserManagerTest{
 	public static UserManagerInterface userManager = null;
 	@BeforeClass
     public static void setUpDatabase() {
-        HibernateUtility.setResource("test/resources/testhibernate.cfg.xml");
+        HibernateUtility.setResource("testhibernate.cfg.xml");
 		userManager = UserManager.getUserManager();
         //connectionLeakUtil = new ConnectionLeakUtil();
 
@@ -149,6 +149,38 @@ public class UserManagerTest{
 		fill();
 		userManager.deleteUser("user0@email.com");
 
+	}
+	@Test(expected = UserNotExistException.class)
+	public void testChangeEmailBadEmail() throws UserNotExistException,EmailExistsException{
+		fill();
+		userManager.changeEmail("user@email.com","user19@email.com");
+
+	}
+	@Test(expected = EmailExistsException.class)
+	public void testChangeEmailExisitngEmail() throws EmailExistsException,UserNotExistException{
+		fill();
+		
+		userManager.changeEmail("user1@email.com","user5@email.com");
+
+	}
+	@Test
+	public void testChangeEmail(){
+		fill();
+		try{
+		userManager.changeEmail("user1@email.com","user10@email.com");
+		assertNotNull(userManager.verifyUser("user10@email.com","password1"));
+		}
+		catch(Exception e){
+			fail();
+		}	
+	}
+	@Test	
+	public void testVerifyEmail(){
+		fill();
+		
+		assertTrue(userManager.verifyEmail("user1@email.com"));
+		assertFalse(userManager.verifyEmail("user0@email.com"));
+		
 	}
 	private String hash(String in){
 		try{

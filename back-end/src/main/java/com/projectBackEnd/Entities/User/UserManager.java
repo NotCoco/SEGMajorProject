@@ -9,7 +9,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.math.BigInteger;
 
-//import org.apache.commons.validator.routines.EmailValidator;
+import org.apache.commons.validator.routines.EmailValidator;
 
 
 
@@ -31,8 +31,8 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 			return new UserManager();
 	}
 	public void addUser(String email, String password) throws EmailExistsException,InvalidEmailException{
-//		if(!EmailValidator.getInstance().isValid(email))
-//			throw new InvalidEmailException("email: " + email + " is invalid");
+		if(!EmailValidator.getInstance().isValid(email))
+			throw new InvalidEmailException("email: " + email + " is invalid");
 		if(getAll().stream().filter(u->((User)u).getEmail().equals(email)).count() > 0)
 			throw new EmailExistsException("email: " + email + " already exsists");
 		User user = new User(email,hash(password));
@@ -72,20 +72,22 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 		if(!found)
 			throw new UserNotExistException("there is no user with email: " + email);
 	}
-	public void changeEmail(String oldEmail, String newEmail) throws UserNotExistException { // to be tested
+	public void changeEmail(String oldEmail, String newEmail) throws UserNotExistException,EmailExistsException { 
 		List<User> users = getAll();
 		User user = null;
 		for(User u:users){
 			if(u.getEmail().equals(oldEmail))
 				user = u;
+			if(u.getEmail().equals(newEmail))
+				throw new EmailExistsException("email: " + newEmail + " already exists");
 		}
 		if(user == null)
 			throw new UserNotExistException("there is no user with email: " + oldEmail);
 		user.setEmail(newEmail);
 		update(user);
 	}
-	public boolean verifyEmail(String email){ //to be tested
-		return getAll().stream().filter(u->((User)u).getEmail().equals(email)).count() > 0;
+	public boolean verifyEmail(String email){ 
+		return (getAll().stream().filter(u->((User)u).getEmail().equals(email)).count() > 0);
 	}
 	private String hash(String in){
 		try{

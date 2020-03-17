@@ -19,7 +19,7 @@ public class OldPageManagerTest {
    public static OldPageManagerInterface pageManager = null;
     @BeforeClass
     public static void setUpDatabase() {
-        HibernateUtility.setResource("test/resources/testhibernate.cfg.xml");
+        HibernateUtility.setResource("testhibernate.cfg.xml");
         pageManager = OldPageManager.getOldPageManager();
        connectionLeakUtil = new ConnectionLeakUtil();
     }

@@ -9,6 +9,6 @@ public interface UserManagerInterface{
 	public void changePassword(String email, String newPassword) throws UserNotExistException;
 	public void deleteUser(String email) throws UserNotExistException;
 	public boolean verifyEmail(String email);
-	public void changeEmail(String oldEmail, String newEmail) throws UserNotExistException;
+	public void changeEmail(String oldEmail, String newEmail) throws UserNotExistException,EmailExistsException;
 }
 

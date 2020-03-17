@@ -9,5 +9,6 @@ public class ChangeEmailBody{
 		this.newEmail = newEmail;
 		this.sessionToken = sessionToken;
 	}
+	public ChangeEmailBody(){}
 
 }
