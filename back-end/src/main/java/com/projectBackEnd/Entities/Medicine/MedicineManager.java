@@ -7,7 +7,7 @@ import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
 
 /**
- * MedicineManager defines methods for Medicine objects to interact with the database.
+ * MedicineManager defines methods to interact with the Medicine table in the database.
  * This class extends the EntityManager.
  *
  * https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/

@@ -1,10 +1,16 @@
 package main.java.com.projectBackEnd.Entities.Page;
-import javax.validation.constraints.NotBlank;
+
 import javax.validation.constraints.NotNull;
-import main.java.com.projectBackEnd.Entities.Site.Site;
 import main.java.com.projectBackEnd.Entities.Site.SiteManager;
 import main.java.com.projectBackEnd.Entities.Site.SiteManagerInterface;
 //import io.micronaut.core.annotation.Introspected;
+
+/**
+ * PageAddCommand is an implementation of the Command design pattern.
+ * It creates mock Page objects and reduced memory use.
+ * It is used by the controller to insert a Page object into the db.
+ */
+
 //TODO Reinsert tags as I couldn't get them to compile on IntelliJ Jars.
 //@Introspected
 public class PageAddCommand {
