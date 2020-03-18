@@ -13,7 +13,7 @@
 
         <div class="level is-mobile">
           <div class="level-left">
-            <button class="button is-light">Cancel</button>
+            <router-link to="/admin/sites" class="button is-light">Cancel</router-link>
           </div>
           <div class="level-right">
             <button class="button is-success is-medium">Create</button>
