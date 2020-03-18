@@ -80,31 +80,5 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
     }
 
 
-    /**
-     * @return a list of all medicines of given type in database
-     */
-    //@Transactional(readOnly = true)
-    public List<Medicine> getAllMedicinesByType(String type) {
-        return getAllMedicines().stream().filter(m -> m.getType().equals(type)).collect(Collectors.toList());
-    }
-
-
-    /**
-     * @return a list of all medicines with given name in database
-     */
-    //@Transactional(readOnly = true)
-    public List<Medicine> getAllMedicinesByName(String name) {
-        return getAllMedicines().stream().filter(m -> m.getName().equals(name)).collect(Collectors.toList());
-    }
-
-
-    /**
-     * Remove medicine object from database
-    */
-    @Override
-    public void delete(Medicine med) {
-        super.delete(med);
-    }
-
 
 }

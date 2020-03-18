@@ -13,7 +13,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
@@ -96,42 +95,6 @@ public class MedicineManagerTest {
         }
     }
 
-    @Test
-    public void testGetAllByType() {
-        fillDatabase();
-        List<Medicine> typeLiquidMedicines = medicineManager.getAllMedicinesByType("Liquid");
-        int size = typeLiquidMedicines.size();
-        assertEquals(3, size);
-        assertEquals("Med1", typeLiquidMedicines.get(0).getName());
-        assertEquals("Med4", typeLiquidMedicines.get(1).getName());
-        assertEquals("Med_8/#", typeLiquidMedicines.get(2).getName());
-    }
-
-    @Test
-    public void testGetAllByName() {
-        fillDatabase();
-        List<Medicine> nameMed4Medicines = medicineManager.getAllMedicinesByName("Med4");
-        int size = nameMed4Medicines.size();
-        assertEquals(2, size);
-        assertEquals("Tablet", nameMed4Medicines.get(0).getType());
-        assertEquals("Liquid", nameMed4Medicines.get(1).getType());
-    }
-
-    @Test
-    public void getByTypeShouldReturnEmpty(){
-        fillDatabase();
-        List<Medicine> typeNoMedicines = medicineManager.getAllMedicinesByType("No");
-        int size = typeNoMedicines.size();
-        assertEquals(0, size);
-    }
-
-    @Test
-    public void getByNameShouldReturnEmpty(){
-        fillDatabase();
-        List<Medicine> nameNoMedicine = medicineManager.getAllMedicinesByName("No");
-        int size = nameNoMedicine.size();
-        assertEquals(0, size);
-    }
 
     @Test
     public void testUpdateMedicine() {
@@ -205,9 +168,9 @@ public class MedicineManagerTest {
     @Test
     public void testDelete() {
         fillDatabase();
-        medicineManager.delete(medicineManager.getAllMedicines().get(1)); //Testing object deletion
+        medicineManager.delete(medicineManager.getAllMedicines().get(1).getPrimaryKey()); //Testing object deletion
         assertEquals( getListOfMedicines().size()-1, medicineManager.getAllMedicines().size());
-        medicineManager.delete(medicineManager.getAllMedicines().get(1));
+        medicineManager.delete(medicineManager.getAllMedicines().get(1).getPrimaryKey());
         assertEquals(getListOfMedicines().size()-2, medicineManager.getAllMedicines().size());
     }
 
@@ -237,7 +200,7 @@ public class MedicineManagerTest {
         Medicine med = new Medicine("Not in db", "NA");
         int medicines = medicineManager.getAllMedicines().size();
         try {
-            medicineManager.delete(med);
+            medicineManager.delete(med.getPrimaryKey());
             fail();
         } catch (IllegalArgumentException e) {
             e.printStackTrace();

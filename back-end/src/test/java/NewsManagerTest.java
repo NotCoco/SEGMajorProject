@@ -99,6 +99,14 @@ public class NewsManagerTest {
     }
 
     @Test
+    public void testGetNewsBySlug() {
+        fillDatabase();
+        News found = newsManager.getNewsBySlug("slug2");
+        assertNotNull(found);
+        assertEquals("content2", found.getContent());
+    }
+
+    @Test
     public void testGetByPrimaryKey() {
         fillDatabase();
         News firstNews = newsManager.getAllNews().get(0);

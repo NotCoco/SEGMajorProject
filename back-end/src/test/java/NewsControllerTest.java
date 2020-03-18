@@ -59,10 +59,9 @@ public class NewsControllerTest {
     public void testAddAndGetNews(){
         HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics",
                 true, "COVID-19 originated from Wuhan, China", "slug");
-        int id =  getEId(response).intValue();
-
-        News testNews = getNews(id);
-
+        assertEquals("slug", getEUrl(response));
+        News testNews = newsManager.getNewsBySlug("slug");
+        assertNotNull(testNews);
         assertEquals("Corona virus pandemics", testNews.getTitle());
     }
 
@@ -82,20 +81,16 @@ public class NewsControllerTest {
         return response;
     }
 
-    protected News getNews(Integer id){
-        HttpRequest request = HttpRequest.GET("/news/" + id);
-        return client.toBlocking().retrieve(request, News.class);
-
-    }
-
-    protected Long getEId(HttpResponse response) {
+    private String getEUrl(HttpResponse response) {
         String val = response.header(HttpHeaders.LOCATION);
         if (val != null) {
             int index = val.indexOf("/news/");
-            if (index != -1) return Long.valueOf(val.substring(index + "/news/".length()));
-            else return null;
+            if (index != -1) {
+                return (val.substring(index + "/news/".length()));
+            }
+            return null;
         }
-        else return null;
+        return null;
     }
 
 
