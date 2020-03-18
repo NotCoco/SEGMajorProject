@@ -2,7 +2,7 @@
   <div id="admin-all-sites">
     <div class="expanded-scrollable-area">
       <section class="section">
-        <div class="container">
+        <div class="custom-content-container">
           <h1 class="title">All Sites</h1>
 
           <div class="card">
