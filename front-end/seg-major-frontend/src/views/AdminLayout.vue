@@ -3,7 +3,7 @@
     <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
       <div class="container">
         <div class="navbar-brand">
-          <a class="navbar-item text-brand">Admin</a>
+          <router-link to="/admin" class="navbar-item text-brand">Admin</router-link>
 
           <a class="navbar-item">Sites</a>
 
