@@ -21,7 +21,7 @@ public class NewsController {
 
     @Delete("/{slug}")
     public HttpResponse delete(String slug) {
-        newsManager.delete(slug);
+        newsManager.delete(newsManager.getNewsBySlug(slug).getPrimaryKey());
         return HttpResponse.noContent();
     }
 
