@@ -5,5 +5,7 @@ const api = axios.create({
 })
 
 export default {
-
+    createSite(siteName) {
+        return api.post('/sites', { name: siteName })
+    }
 }
