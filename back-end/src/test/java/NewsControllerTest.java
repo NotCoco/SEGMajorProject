@@ -25,9 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @MicronautTest
 public class NewsControllerTest {
@@ -65,6 +63,17 @@ public class NewsControllerTest {
         assertEquals("Corona virus pandemics", testNews.getTitle());
     }
 
+    @Test
+    public void testUpdateLegalNews(){
+        HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics",
+                true, "COVID-19 originated from Wuhan, China", "slug");
+
+        System.out.println(id + " 2222222");
+        response = putNews(id, new Date(324189213L), true, "NewDescription", "NewTitle",true, "NewContent", "NewSlug");
+//        assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
+    }
+
+
 
     protected HttpResponse putNews(Integer primaryKey, Date date, boolean pinned, String description, String title,
                                    boolean urgent, String content, String slug) {
@@ -93,5 +102,14 @@ public class NewsControllerTest {
         return null;
     }
 
+    protected Long getEId(HttpResponse response) {
+        String val = response.header(HttpHeaders.LOCATION);
+        if (val != null) {
+            int index = val.indexOf("/news/");
+            if (index != -1) return Long.valueOf(val.substring(index + "/news/".length()));
+            else return null;
+        }
+        else return null;
+    }
 
 }
