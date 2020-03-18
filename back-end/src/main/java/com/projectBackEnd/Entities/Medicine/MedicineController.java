@@ -10,11 +10,14 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
+import main.java.com.projectBackEnd.Entities.Session.SessionManager;
+import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
+
 @Controller("/medicines")
 public class MedicineController {
 
     protected final MedicineManagerInterface medicineManager = MedicineManager.getMedicineManager();
-
+	private final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
     MedicineController(){
         //this.medicineManager = medicineManager;
     }
@@ -31,7 +34,9 @@ public class MedicineController {
 
 
     @Post("/")
-    public HttpResponse<Medicine> add(@Body MedicineAddCommand command) {
+    public HttpResponse<Medicine> add(@Header("X-API-Key") String session,@Body MedicineAddCommand command) {
+		if(!sessionManager.verifySession(session))
+			return HttpResponse.unauthorized();
         Medicine med = medicineManager.addMedicine(command.getName(), command.getType());
         if(medicineManager.getByPrimaryKey(med.getPrimaryKey()) == null){
             return HttpResponse.serverError();
@@ -42,13 +47,17 @@ public class MedicineController {
     }
 
     @Delete("/{id}")
-    public HttpResponse delete(int id) {
+    public HttpResponse delete(@Header("X-API-Key") String session,int id) {
+		if(!sessionManager.verifySession(session))
+			return HttpResponse.unauthorized();
         medicineManager.delete(id);
         return HttpResponse.noContent();
     }
 
     @Put("/")
-    public HttpResponse update(@Body MedicineUpdateCommand command) {
+    public HttpResponse update(@Header("X-API-Key") String session,@Body MedicineUpdateCommand command) {
+		if(!sessionManager.verifySession(session))
+			return HttpResponse.unauthorized();
         Medicine medObject = new Medicine(command.getId(), command.getName(), command.getType());
         medicineManager.update(medObject);
 

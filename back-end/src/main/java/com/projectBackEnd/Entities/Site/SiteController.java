@@ -6,8 +6,8 @@ import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
 
 import main.java.com.projectBackEnd.Entities.Page.*;
-
-
+import main.java.com.projectBackEnd.Entities.Session.SessionManager;
+import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -17,7 +17,7 @@ import java.util.List;
 public class SiteController {
     final SiteManagerInterface siteManager = SiteManager.getSiteManager();
     final PageManagerInterface pageManager = PageManager.getPageManager();
-
+	private final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
     SiteController() {}
 //    @Get(value = "/list", produces = MediaType.TEXT_JSON)
 //    public List<Site> list() {
@@ -35,7 +35,9 @@ public class SiteController {
     }
 
     @Patch("/{name}/page-indices")
-    public HttpResponse<Page> patchPage(String name, @Body List<PagePatchCommand> patchCommandList){
+    public HttpResponse<Page> patchPage(String name,@Header("X-API-Key") String session, @Body List<PagePatchCommand> patchCommandList){
+		if(!sessionManager.verifySession(session))
+			return HttpResponse.unauthorized();
         for(PagePatchCommand p : patchCommandList){
             String slug = p.getSlug();
             Page page = pageManager.getPageBySiteAndSlug(name, slug);
@@ -47,7 +49,9 @@ public class SiteController {
     }
 
     @Post("/{name}/pages")
-    public HttpResponse<Page> addPage(String name, @Body PageAddCommand pageToAdd){
+    public HttpResponse<Page> addPage(String name,@Header("X-API-Key") String session, @Body PageAddCommand pageToAdd){
+		if(!sessionManager.verifySession(session))
+			return HttpResponse.unauthorized();
         Page p = pageManager.addPage(pageToAdd.getSite().getName(), pageToAdd.getSlug(), pageToAdd.getIndex(), pageToAdd.getTitle(), pageToAdd.getContent());
         if(pageManager.getPageBySiteAndSlug(p.getSite(), p.getSlug()) == null){
             return HttpResponse.serverError();
@@ -58,7 +62,9 @@ public class SiteController {
     }
 
     @Delete("/{name}/pages/{page}")
-    public HttpResponse deletePage(String name, String page){
+    public HttpResponse deletePage(@Header("X-API-Key") String session,String name, String page){
+		if(!sessionManager.verifySession(session))
+			return HttpResponse.unauthorized();
         Page p = pageManager.getPageBySiteAndSlug(name, page);
         pageManager.delete(p);
         return HttpResponse.noContent();
@@ -70,7 +76,9 @@ public class SiteController {
     }
 
     @Post("/")
-    public HttpResponse<Site> add(@Body SiteAddCommand command) {
+    public HttpResponse<Site> add(@Header("X-API-Key") String session,@Body SiteAddCommand command) {
+		if(!sessionManager.verifySession(session))
+			return HttpResponse.unauthorized();
         Site s = siteManager.addSite(command.getName());
         if(siteManager.getByPrimaryKey(s.getPrimaryKey()) == null){
             return HttpResponse.serverError();
@@ -90,7 +98,9 @@ public class SiteController {
     public Site list(String name){return siteManager.getBySiteName(name);}
 
     @Delete("/{name}")
-    public HttpResponse delete(String name){
+    public HttpResponse delete(@Header("X-API-Key") String session,String name){
+		if(!sessionManager.verifySession(session))
+			return HttpResponse.unauthorized();
         Site s = siteManager.getBySiteName(name);
         siteManager.delete(s);
         return HttpResponse.noContent();
@@ -103,7 +113,9 @@ public class SiteController {
 //    }
 
     @Put("{name}/pages/{pageName}")
-    public HttpResponse updatePage(String name, String pageName, @Body Page updatedPage){
+    public HttpResponse updatePage(String name, String pageName,@Header("X-API-Key") String session, @Body Page updatedPage){
+		if(!sessionManager.verifySession(session))
+			return HttpResponse.unauthorized();
         pageManager.update(updatedPage);
         return HttpResponse
                 .noContent()
@@ -112,7 +124,9 @@ public class SiteController {
 
 
     @Put("/{name}")
-    public HttpResponse update(String name, @Body Site updatedSite) {
+    public HttpResponse update(String name,@Header("X-API-Key") String session, @Body Site updatedSite) {
+		if(!sessionManager.verifySession(session))
+			return HttpResponse.unauthorized();
         siteManager.update(updatedSite);
         //List<Page> p = pageManager.getAllPagesOfSite(updatedSite);
         return HttpResponse

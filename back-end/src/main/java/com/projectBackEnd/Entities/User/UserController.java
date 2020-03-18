@@ -59,7 +59,7 @@ public class UserController {
 	@Put("/change_password") 
 	public HttpResponse<String> changePassword(@Body PasswordResetBody body){
 		try{
-        	PasswordReset.getPasswordResetManager().changePassword(body.token, body.password);
+        	PasswordReset.getPasswordResetManager().changePassword(body.getToken(), body.getPassword());
 			return HttpResponse.ok();
 		}
 		catch(TokenNotExistException e){
@@ -74,7 +74,7 @@ public class UserController {
 
 		try{
 
-			PasswordReset.getPasswordResetManager().sendPasswordResetLink(body.string);
+			PasswordReset.getPasswordResetManager().sendPasswordResetLink(body.getString());
 			return HttpResponse.ok();
 		}
 		catch(EmailNotExistException e){
@@ -89,7 +89,7 @@ public class UserController {
 		if(sessionManager.verifySession(session))
 		{
 			try{
-				userManager.changeEmail(body.oldEmail, body.newEmail);
+				userManager.changeEmail(body.getOldEmail(), body.getNewEmail());
 				return HttpResponse.ok();
 			}
 			catch(UserNotExistException e){
