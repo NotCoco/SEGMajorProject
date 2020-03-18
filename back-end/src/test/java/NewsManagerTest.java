@@ -142,7 +142,14 @@ public class NewsManagerTest {
         newsManager.delete(newsManager.getAllNews().get(1));
         assertEquals(getListOfNews().size()-2, newsManager.getAllNews().size());
     }
-
+    @Test
+    public void testDuplicateSlugAddition() {
+        newsManager.addNews(new News(new Date(12343212L), false,
+                "desc213ription1", "ti321tle1", false, "con321tent1", "slug1"));
+        newsManager.addNews(new News(new Date(12343212L), false,
+                "desc213ription1", "ti321tle1", false, "con321tent1", "slug1"));
+        assertEquals(newsManager.getAllNews().size(), 1);
+    }
     @Test
     public void testDeleteByPK() {
         fillDatabase();
