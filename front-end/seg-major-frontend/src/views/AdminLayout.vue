@@ -33,7 +33,9 @@
       </div>
     </nav>
 
-    <router-view></router-view>
+    <div class="expanded-scrollable-area">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
@@ -46,5 +48,11 @@ export default {};
   font-size: 20px;
   font-weight: bold;
   margin-right: 20px;
+}
+
+#admin-layout {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 </style>
