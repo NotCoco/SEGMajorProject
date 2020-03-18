@@ -14,9 +14,9 @@
       </section>
     </div>
 
-    <button class="button is-primary floating-add-button">
+    <router-link to="new" append class="button is-primary floating-add-button">
       <i class="material-icons" style="font-size: 48px;">add</i>
-    </button>
+    </router-link>
   </div>
 </template>
 
