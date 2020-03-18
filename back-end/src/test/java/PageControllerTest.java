@@ -186,7 +186,7 @@ public class PageControllerTest {
         addSite("testSiteA");
         HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-        response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
+        addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
         });
     }
 
