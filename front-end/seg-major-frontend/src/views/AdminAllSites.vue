@@ -5,9 +5,9 @@
         <div class="custom-content-container">
           <h1 class="title">All Sites</h1>
 
-          <div class="card">
+          <div class="card" v-for="site of sites" v-bind:key="site.primaryKey" style="margin-bottom: 20px">
             <div class="card-content">
-              <h5 class="title is-5">Biliary Atresia</h5>
+              <h5 class="title is-5">{{site.name}}</h5>
             </div>
           </div>
         </div>
@@ -21,7 +21,18 @@
 </template>
 
 <script>
-export default {};
+import SitesService from "@/services/sites-service";
+
+export default {
+  data() {
+    return {
+      sites: []
+    };
+  },
+  async mounted() {
+    this.sites = await SitesService.getAllSites();
+  }
+};
 </script>
 
 <style lang="scss" scoped>
