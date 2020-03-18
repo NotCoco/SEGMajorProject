@@ -15,5 +15,9 @@ export default {
 
     getSite(siteName) {
         return api.get(`/sites/${siteName}`)
+    },
+
+    getAllPages(siteName) {
+        return api.get(`/sites/${siteName}/pages`)
     }
 }
