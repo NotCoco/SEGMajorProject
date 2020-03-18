@@ -85,7 +85,7 @@ public class UserController {
 		}	
 	}
 	@Put("/change_email") 
-	public HttpResponse<String> changeEmail(@Header String session, @Body ChangeEmailBody body){
+	public HttpResponse<String> changeEmail(@Header("X-API-Key") String session, @Body ChangeEmailBody body){
 		if(sessionManager.verifySession(session))
 		{
 			try{

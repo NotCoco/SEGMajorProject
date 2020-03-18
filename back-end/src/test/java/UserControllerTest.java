@@ -161,7 +161,7 @@ public class UserControllerTest{
 			fail();
 		}
 		String a = userManager.verifyUser("username@mail.com","password");
-		HttpRequest request = HttpRequest.PUT("/user/change_email",new ChangeEmailBody("username@mail.com","username1@mail.com")).header("session", a);
+		HttpRequest request = HttpRequest.PUT("/user/change_email",new ChangeEmailBody("username@mail.com","username1@mail.com")).header("X-API-Key", a);
 		HttpResponse response = client.toBlocking().exchange(request);
 		assertEquals(HttpStatus.OK , response.getStatus());
 		assertNotNull(userManager.verifyUser("username1@mail.com","password"));
@@ -169,7 +169,7 @@ public class UserControllerTest{
 	@Test
 	public void testChangeEmailNotExist(){
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            		client.toBlocking().exchange(HttpRequest.PUT("/user/change_email",new ChangeEmailBody("username@mail.com","username1@mail.com")).header("session", ""));
+            		client.toBlocking().exchange(HttpRequest.PUT("/user/change_email",new ChangeEmailBody("username@mail.com","username1@mail.com")).header("X-API-Key", ""));
         	});
 		assertEquals(HttpStatus.UNAUTHORIZED , thrown.getStatus());
 	}
@@ -185,7 +185,7 @@ public class UserControllerTest{
 		String a = userManager.verifyUser("username@mail.com","password");
 		assertNotNull(a);
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            		client.toBlocking().retrieve(HttpRequest.PUT("/user/change_email",new ChangeEmailBody("username@mail.com","username1@mail.com")).header("session", a));
+            		client.toBlocking().retrieve(HttpRequest.PUT("/user/change_email",new ChangeEmailBody("username@mail.com","username1@mail.com")).header("X-API-Key", a));
         	});
 		assertEquals(HttpStatus.BAD_REQUEST , thrown.getStatus());
 		assertNotNull(userManager.verifyUser("username@mail.com","password"));
