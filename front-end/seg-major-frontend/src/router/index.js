@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 
 import AdminLayout from '../views/AdminLayout.vue'
 import AdminHome from '../views/AdminHome.vue'
+import AdminAllSites from '../views/AdminAllSites.vue'
 
 Vue.use(VueRouter)
 
@@ -20,6 +21,10 @@ const routes = [
       {
         path: '',
         component: AdminHome
+      },
+      {
+        path: 'sites',
+        component: AdminAllSites
       }
     ]
   }
