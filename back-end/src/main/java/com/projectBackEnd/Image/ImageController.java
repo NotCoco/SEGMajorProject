@@ -5,15 +5,20 @@ import io.micronaut.http.annotation.*;
 
 import java.net.URI;
 
+import main.java.com.projectBackEnd.Entities.Session.SessionManager;
+import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
+
 @Controller("/images")
 public class ImageController {
 
 	protected final ImageManager imageManager;
-
+	protected final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
 	public ImageController(){
 		imageManager = new ImageManager();}
 	@Post("/")
-	public HttpResponse<String> add(@Body String imageBytes) {
+	public HttpResponse<String> add(@Header("X-API-Key") String session,@Body String imageBytes) {
+		if(!sessionManager.verifySession(session))
+			return HttpResponse.unauthorized();
 		String msg = imageManager.saveImage(imageBytes);
 		if(msg.equals("Failed")){
 			return HttpResponse.serverError();
@@ -26,7 +31,9 @@ public class ImageController {
 	}
 
 	@Delete("/{imageName}")
-	public HttpResponse delete(String imageName) {
+	public HttpResponse delete(@Header("X-API-Key") String session,String imageName) {
+		if(!sessionManager.verifySession(session))
+			return HttpResponse.unauthorized();
 		if(imageManager.deleteImage(imageName)){
 			return HttpResponse.noContent();
 		}

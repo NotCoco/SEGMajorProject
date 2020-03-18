@@ -18,7 +18,7 @@ public class MedicineController {
 
     protected final MedicineManagerInterface medicineManager = MedicineManager.getMedicineManager();
 
-	private final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
+	protected final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
 
 
     public MedicineController(){}

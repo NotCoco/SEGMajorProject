@@ -28,6 +28,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import main.java.com.projectBackEnd.Entities.User.UserManager;
 
 @MicronautTest
 public class NewsControllerTest {
@@ -38,15 +41,28 @@ public class NewsControllerTest {
     HttpClient client;
 
     static NewsManagerInterface newsManager;
-
+    private static String token;
     @BeforeAll
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         newsManager = NewsManager.getNewsManager();
+        try{
+        	UserManager.getUserManager().addUser("test@test.com" , "123");
+        	token = UserManager.getUserManager().verifyUser("test@test.com" , "123");
+        }
+        catch(Exception e){
+        	fail();
+        }  
     }
 
     @AfterAll
     public static void closeDatabase() {
+        try{
+        	UserManager.getUserManager().deleteUser("test@test.com" , "123");
+        }
+        catch(Exception e){
+        	fail();
+        }    
         HibernateUtility.shutdown();
     }
 
@@ -69,14 +85,14 @@ public class NewsControllerTest {
     protected HttpResponse putNews(Integer primaryKey, Date date, boolean pinned, String description, String title,
                                    boolean urgent, String content, String slug) {
         HttpRequest request = HttpRequest.PUT("/news", new NewsUpdateCommand(primaryKey, date, pinned, description,
-                title, urgent, content,slug));
+                title, urgent, content,slug)).header("X-API-Key",token);
         return client.toBlocking().exchange(request);
     }
 
     protected HttpResponse addNews(Date date, boolean pinned, String description, String title, boolean urgent,
                                    String content, String slug){
         HttpRequest request = HttpRequest.POST("/news", new NewsAddCommand(date, pinned, description, title,
-                urgent, content, slug));
+                urgent, content, slug)).header("X-API-Key",token);
         HttpResponse response = client.toBlocking().exchange(request);
         return response;
     }
