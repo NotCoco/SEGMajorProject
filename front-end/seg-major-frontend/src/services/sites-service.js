@@ -19,5 +19,10 @@ export default {
     async getAllPages(siteName) {
         const res = await BackendService.getAllPages(siteName)
         return res.data
+    },
+
+    async getPage(siteName, pageSlug) {
+        const res = await BackendService.getPage(siteName, pageSlug)
+        return res.data
     }
 }
