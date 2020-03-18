@@ -32,7 +32,9 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.fail;
 
+import main.java.com.projectBackEnd.Entities.User.UserManager;
 
 @MicronautTest
 public class PageControllerTest {
@@ -43,17 +45,30 @@ public class PageControllerTest {
 
     static SiteManagerInterface siteManager;
     static PageManagerInterface pageManager;
-
+    private static String token;
     @BeforeAll
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         siteManager = SiteManager.getSiteManager();
         pageManager = PageManager.getPageManager();
+        try{
+        	UserManager.getUserManager().addUser("test@test.com" , "123");
+        	token = UserManager.getUserManager().verifyUser("test@test.com" , "123");
+        }
+        catch(Exception e){
+        	fail();
+        }    
     }
 
     @AfterAll
     public static void closeDatabase() {
         HibernateUtility.shutdown();
+        try{
+        	UserManager.getUserManager().deleteUser("test@test.com" , "123");
+        }
+        catch(Exception e){
+        	fail();
+        }    
     }
 
     @BeforeEach
@@ -220,13 +235,13 @@ public class PageControllerTest {
 
     protected HttpResponse putPage(int id, String siteName, String slug, int index, String title, String content) {
         URI pLoc = location(siteName);
-        HttpRequest request = HttpRequest.PUT(pLoc+"/pages", new PageUpdateCommand(id, siteName, slug, index, title, content));
+        HttpRequest request = HttpRequest.PUT(pLoc+"/pages", new PageUpdateCommand(id, siteName, slug, index, title, content)).header("X-API-Key",token);
         return client.toBlocking().exchange(request);
     }
 
     protected HttpResponse addPage(String siteName, String slug, Integer index, String title, String content) {
         URI sLoc = location(siteName);
-        HttpRequest request = HttpRequest.POST((sLoc +"/pages"), new PageAddCommand(siteName, slug, index, title, content));
+        HttpRequest request = HttpRequest.POST((sLoc +"/pages"), new PageAddCommand(siteName, slug, index, title, content)).header("X-API-Key",token);
         HttpResponse response = client.toBlocking().exchange(request);
         return response;
     }
@@ -252,7 +267,7 @@ public class PageControllerTest {
 
     //Adding and locating Site methods
     protected HttpResponse addSite(String name) {
-        HttpRequest request = HttpRequest.POST("/sites", new SiteAddCommand(name));
+        HttpRequest request = HttpRequest.POST("/sites", new SiteAddCommand(name)).header("X-API-Key",token);
         HttpResponse response = client.toBlocking().exchange(request);
         return response;
     }
