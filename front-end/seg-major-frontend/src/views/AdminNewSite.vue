@@ -7,7 +7,7 @@
         <div class="field">
           <label class="label">Site Name</label>
           <div class="control">
-            <input class="input" type="text" placeholder="Enter site name..." />
+            <input class="input" v-model="siteName" type="text" placeholder="Enter site name..." />
           </div>
         </div>
 
@@ -16,7 +16,7 @@
             <router-link to="/admin/sites" class="button is-light">Cancel</router-link>
           </div>
           <div class="level-right">
-            <button class="button is-success is-medium">Create</button>
+            <button class="button is-success is-medium" @click="createSite()">Create</button>
           </div>
         </div>
       </div>
@@ -25,7 +25,20 @@
 </template>
 
 <script>
-export default {};
+import SitesService from "@/services/sites-service";
+export default {
+  data() {
+    return {
+      siteName: ""
+    };
+  },
+  methods: {
+    async createSite() {
+      const res = await SitesService.createSite(this.siteName);
+      console.log(res);
+    }
+  }
+};
 </script>
 
 <style>
