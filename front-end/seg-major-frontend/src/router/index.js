@@ -5,6 +5,7 @@ import Home from '../views/Home.vue'
 import AdminLayout from '../views/AdminLayout.vue'
 import AdminHome from '../views/AdminHome.vue'
 import AdminAllSites from '../views/AdminAllSites.vue'
+import AdminNewSite from '../views/AdminNewSite.vue'
 
 Vue.use(VueRouter)
 
@@ -24,7 +25,11 @@ const routes = [
       },
       {
         path: 'sites',
-        component: AdminAllSites
+        component: AdminAllSites,
+      },
+      {
+        path: 'sites/new',
+        component: AdminNewSite
       }
     ]
   }
