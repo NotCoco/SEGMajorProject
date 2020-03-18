@@ -151,53 +151,6 @@ public class UserControllerTest{
 		assertNull(userManager.verifyUser("username@mail.com","password"));
 	}
 
-
-	@Test
-	public void testVerifySessionCorrect(){
-		try{
-			userManager.addUser("username@mail.com","password");
-		}
-		catch(InvalidEmailException|EmailExistsException e){
-			fail();
-		}
-		String token = userManager.verifyUser("username@mail.com","password");
-		assertNotNull(token);
-		HttpRequest request = HttpRequest.POST("/user/verify_session",token);
-		HttpResponse response = client.toBlocking().exchange(request);
-		assertEquals(HttpStatus.OK , response.getStatus());
-
-	}
-	@Test
-	public void testVerifySessionIncorrect(){
-		try{
-			userManager.addUser("username@mail.com","password");
-		}
-		catch(InvalidEmailException|EmailExistsException e){
-			fail();
-		}
-		String token = userManager.verifyUser("username@mail.com","password");
-		assertNotNull(token);
-        	HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            		client.toBlocking().exchange(HttpRequest.POST("/user/verify_session",token + "1"));
-        	});
-		assertEquals(HttpStatus.NOT_FOUND , thrown.getStatus());
-		thrown = assertThrows(HttpClientResponseException.class, () -> {
-            		client.toBlocking().exchange(HttpRequest.POST("/user/verify_session","1"));
-        	});
-		assertEquals(HttpStatus.NOT_FOUND , thrown.getStatus());
-
-		thrown = assertThrows(HttpClientResponseException.class, () -> {
-            		client.toBlocking().exchange(HttpRequest.POST("/user/verify_session","1234444444444444444444444222222222222222222222246"));
-        	});
-		assertEquals(HttpStatus.NOT_FOUND , thrown.getStatus());
-
-		thrown = assertThrows(HttpClientResponseException.class, () -> {
-            		client.toBlocking().exchange(HttpRequest.POST("/user/verify_session","12345678912345678912345"));
-        	});
-		assertEquals(HttpStatus.NOT_FOUND , thrown.getStatus());
-	}
-
-
 	
 	@Test
 	public void testChangeEmailExist(){
@@ -208,7 +161,7 @@ public class UserControllerTest{
 			fail();
 		}
 		String a = userManager.verifyUser("username@mail.com","password");
-		HttpRequest request = HttpRequest.PUT("/user/change_email",new ChangeEmailBody("username@mail.com","username1@mail.com",a));
+		HttpRequest request = HttpRequest.PUT("/user/change_email",new ChangeEmailBody("username@mail.com","username1@mail.com")).header("session", a);
 		HttpResponse response = client.toBlocking().exchange(request);
 		assertEquals(HttpStatus.OK , response.getStatus());
 		assertNotNull(userManager.verifyUser("username1@mail.com","password"));
@@ -216,7 +169,7 @@ public class UserControllerTest{
 	@Test
 	public void testChangeEmailNotExist(){
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            		client.toBlocking().exchange(HttpRequest.PUT("/user/change_email",new ChangeEmailBody("username@mail.com","username1@mail.com","")));
+            		client.toBlocking().exchange(HttpRequest.PUT("/user/change_email",new ChangeEmailBody("username@mail.com","username1@mail.com")).header("session", ""));
         	});
 		assertEquals(HttpStatus.UNAUTHORIZED , thrown.getStatus());
 	}
@@ -232,7 +185,7 @@ public class UserControllerTest{
 		String a = userManager.verifyUser("username@mail.com","password");
 		assertNotNull(a);
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            		client.toBlocking().retrieve(HttpRequest.PUT("/user/change_email",new ChangeEmailBody("username@mail.com","username1@mail.com",a)));
+            		client.toBlocking().retrieve(HttpRequest.PUT("/user/change_email",new ChangeEmailBody("username@mail.com","username1@mail.com")).header("session", a));
         	});
 		assertEquals(HttpStatus.BAD_REQUEST , thrown.getStatus());
 		assertNotNull(userManager.verifyUser("username@mail.com","password"));
@@ -259,7 +212,8 @@ public class UserControllerTest{
 		HttpRequest request = HttpRequest.POST("/user/password_reset",new StringBody(email));
 		HttpResponse response = client.toBlocking().exchange(request);
 		assertEquals(HttpStatus.OK , response.getStatus());
-		assertTrue(userManager.verifyEmail(email));
+
+
 	}
 	
 

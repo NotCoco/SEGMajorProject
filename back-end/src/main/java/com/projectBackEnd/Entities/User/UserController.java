@@ -21,7 +21,7 @@ public class UserController {
     private final UserManagerInterface userManager = UserManager.getUserManager();
     private final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
     
-	@Post("/create")
+	@Post("/create")//
 	public HttpResponse createUser(@Body User user){
 
 		try{
@@ -45,9 +45,8 @@ public class UserController {
 			return HttpResponse.notFound("invalid credentials");
 	}
 
-    @Delete("/delete_user")
+    	@Delete("/delete_user")
 	public HttpResponse deleteUser(@Body User user){
-
 		try{
 			userManager.deleteUser(user.getEmail(), user.getPassword());
 			return HttpResponse.ok();
@@ -57,14 +56,6 @@ public class UserController {
 		}
 	}
 
-    @Post("/verify_session")
-	public HttpResponse verifySession(@Body String token){
-		if(sessionManager.verifySession(token))
-			return HttpResponse.ok();
-		else
-			return HttpResponse.notFound();
-		
-	}
 	@Put("/change_password") 
 	public HttpResponse<String> changePassword(@Body PasswordResetBody body){
 		try{
@@ -80,7 +71,9 @@ public class UserController {
 	}
 	@Post("/password_reset") 
 	public HttpResponse<String> getPasswordReset(@Body StringBody body){
+
 		try{
+
 			PasswordReset.getPasswordResetManager().sendPasswordResetLink(body.string);
 			return HttpResponse.ok();
 		}
@@ -92,8 +85,8 @@ public class UserController {
 		}	
 	}
 	@Put("/change_email") 
-	public HttpResponse<String> changeEmail(@Body ChangeEmailBody body){
-		if(sessionManager.verifySession(body.sessionToken))
+	public HttpResponse<String> changeEmail(@Header String session, @Body ChangeEmailBody body){
+		if(sessionManager.verifySession(session))
 		{
 			try{
 				userManager.changeEmail(body.oldEmail, body.newEmail);
