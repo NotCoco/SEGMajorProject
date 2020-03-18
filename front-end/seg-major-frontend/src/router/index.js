@@ -7,6 +7,7 @@ import AdminHome from '../views/AdminHome.vue'
 import AdminAllSites from '../views/AdminAllSites.vue'
 import AdminNewSite from '../views/AdminNewSite.vue'
 import AdminSiteLayout from '../views/AdminSiteLayout.vue'
+import AdminAllPages from '../views/AdminAllPages.vue'
 
 Vue.use(VueRouter)
 
@@ -34,7 +35,17 @@ const routes = [
       },
       {
         path: 'sites/:siteName',
-        component: AdminSiteLayout
+        component: AdminSiteLayout,
+        children: [
+          {
+            path: '',
+            redirect: 'pages'
+          },
+          {
+            path: 'pages',
+            component: AdminAllPages
+          }
+        ]
       }
     ]
   }
