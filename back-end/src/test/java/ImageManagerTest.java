@@ -49,14 +49,15 @@ public class ImageManagerTest {
         List<String> urls = imageManager.getImageUrls();
         boolean checkSave = urls.contains(imageManager.getDir()+randomName);
         imageManager.deleteImage(randomName);
-        boolean checkDelete = false;
+        urls = imageManager.getImageUrls();
+        boolean checkDelete = true;
         for(String url : urls)
         {
             if(url.equals(imageManager.getDir()+randomName)){
-                checkDelete = true;
+                checkDelete = false;
             }
         }
-        boolean check = checkDelete&&checkSave;
+        boolean check = (checkDelete)&&checkSave;
         assertTrue(check);
     }
 
