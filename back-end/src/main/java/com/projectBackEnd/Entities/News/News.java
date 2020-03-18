@@ -19,7 +19,7 @@ import java.util.Date;
  */
 
 @Entity
-@Table(name = News.TABLENAME)
+@Table(name = News.TABLENAME, uniqueConstraints = {@UniqueConstraint(columnNames = {News.SLUG})})
 public class News implements TableEntity {
 
     // Table columns (attributes)
