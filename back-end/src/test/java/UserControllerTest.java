@@ -94,13 +94,13 @@ public class UserControllerTest{
         	});
 		assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatus());
 		assertEquals("invalid email address", thrown.getResponse().getBody().get());
-		assertNull(userManager.verifyUser("username@mail.com","password"));
+		assertNull(userManager.verifyUser("username@","password"));
         	thrown = assertThrows(HttpClientResponseException.class, () -> {
-            		client.toBlocking().retrieve(HttpRequest.POST("/user/create",new User("username@","pas1234//--+sword")));
+            		client.toBlocking().retrieve(HttpRequest.POST("/user/create",new User("user name@","pas1234//--+sword")));
         	});
 		assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatus());
 		assertEquals("invalid email address", thrown.getResponse().getBody().get());
-		assertNull(userManager.verifyUser("username@mail.com","pas1234//--+sword"));
+		assertNull(userManager.verifyUser("user name@","pas1234//--+sword"));
 	}
 
 
