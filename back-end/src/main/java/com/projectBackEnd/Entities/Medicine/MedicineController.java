@@ -17,10 +17,12 @@ import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 public class MedicineController {
 
     protected final MedicineManagerInterface medicineManager = MedicineManager.getMedicineManager();
+
 	private final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
-    MedicineController(){
-        //this.medicineManager = medicineManager;
-    }
+
+
+    public MedicineController(){}
+
 
     @Get(value = "/{id}", produces = MediaType.TEXT_JSON)
     public Medicine list(int id) {

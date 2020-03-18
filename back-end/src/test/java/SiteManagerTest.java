@@ -4,34 +4,37 @@ import main.java.com.projectBackEnd.Entities.Site.Site;
 import main.java.com.projectBackEnd.Entities.Site.SiteManager;
 import main.java.com.projectBackEnd.Entities.Site.SiteManagerInterface;
 import main.java.com.projectBackEnd.HibernateUtility;
-import org.junit.*;
-
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
 
 public class SiteManagerTest {
 
     public static ConnectionLeakUtil connectionLeakUtil = null;
     public static SiteManagerInterface siteManager = null;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         siteManager = SiteManager.getSiteManager();
         connectionLeakUtil = new ConnectionLeakUtil();
     }
 
-    @AfterClass
+    @AfterAll
     public static void assertNoLeaks() {
         HibernateUtility.shutdown();
         connectionLeakUtil.assertNoLeaks();
     }
 
-    @Before
+    @BeforeEach
     public void setUp() {
         siteManager.deleteAll();
     }
@@ -48,13 +51,12 @@ public class SiteManagerTest {
         assertEquals(1, siteManager.getAllSites().size());
     }
 
-//    @Test
-//    public void testCreateWithIllegalValues() {
-//        String name = null;
-//        siteManager.addSite(new Site(null, null));
-//        siteManager.addSite(name);
-//        assertEquals(0, siteManager.getAllSites().size());
-//    }
+    @Test
+    public void testCreateWithIllegalValue() {
+        String name = null;
+        siteManager.addSite(name);
+        assertEquals(0, siteManager.getAllSites().size());
+    }
 
     @Test
     public void testEmptyName() {
@@ -79,7 +81,7 @@ public class SiteManagerTest {
     public void testTwoEqualSites() {
         Site site1 = new Site("Site1");
         Site site2 = new Site("Site1");
-        assertTrue(site1.equals(site2));
+        assertThat(site1, samePropertyValuesAs(site2));
     }
 
     @Test
@@ -91,7 +93,8 @@ public class SiteManagerTest {
         Site foundSiteDB = siteManager.getByPrimaryKey(sitePK);
 
         assertThat(foundSite, samePropertyValuesAs(foundSiteDB));
-        assertTrue(foundSite.equals((foundSiteDB)));
+        assertThat(foundSite, samePropertyValuesAs(foundSiteDB));
+
     }
 
     @Test
@@ -124,11 +127,13 @@ public class SiteManagerTest {
         assertEquals(replacementSite.getName(), siteInDB.getName());
     }
 
-    @Test(expected = PersistenceException.class)
+    @Test
     public void testUpdateWithIllegalValues() {
-        fillDatabase();
-        Site site = new Site(siteManager.getAllSites().get(0).getPrimaryKey(), null);
-        siteManager.update(site);
+        assertThrows(PersistenceException.class, () -> {
+            fillDatabase();
+            Site site = new Site(siteManager.getAllSites().get(0).getPrimaryKey(), null);
+            siteManager.update(site);
+        });
     }
 
     @Test
@@ -209,7 +214,8 @@ public class SiteManagerTest {
      * Add sites to database
      */
     private void fillDatabase() {
-        for (Site site : getListOfSites()) siteManager.addSite(site);
+        ArrayList<Site> listOfSites = getListOfSites();
+        for (int i = 0; i<listOfSites.size(); ++i) siteManager.addSite(listOfSites.get(i));
     }
 
 }

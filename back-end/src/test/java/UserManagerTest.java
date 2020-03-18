@@ -8,7 +8,7 @@ import main.java.com.projectBackEnd.Entities.User.EmailExistsException;
 import main.java.com.projectBackEnd.Entities.User.UserNotExistException;
 import main.java.com.projectBackEnd.Entities.User.InvalidEmailException;
 import org.junit.*;
-import java.security.MessageDigest; 
+import java.security.MessageDigest;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 
@@ -18,26 +18,28 @@ import static org.junit.Assert.*;
 import java.math.BigInteger;
 
 public class UserManagerTest{
-    public static ConnectionLeakUtil connectionLeakUtil = null;    
+	public static ConnectionLeakUtil connectionLeakUtil = null;
 	public static UserManagerInterface userManager = null;
+
 	@BeforeClass
     public static void setUpDatabase() {
-        HibernateUtility.setResource("testhibernate.cfg.xml");
+
+		HibernateUtility.setResource("testhibernate.cfg.xml");
 		userManager = UserManager.getUserManager();
-        //connectionLeakUtil = new ConnectionLeakUtil();
+		connectionLeakUtil = new ConnectionLeakUtil();
 
-    }
+	}
 
-    @AfterClass
-    public static void assertNoLeaks() {
-        HibernateUtility.shutdown();
-        //connectionLeakUtil.assertNoLeaks();
-    }
+	@AfterClass
+	public static void assertNoLeaks() {
+		HibernateUtility.shutdown();
+		connectionLeakUtil.assertNoLeaks();
+	}
 
-    @Before
-    public void setUp() {
+	@Before
+	public void setUp() {
 		((EntityManager)userManager).deleteAll();
-    }
+	}
 
 
 	//replace with parametric maybe?
@@ -48,7 +50,7 @@ public class UserManagerTest{
 		}
 		catch(EmailExistsException e){
 			fail();
-		}	
+		}
 	}
 
 	@Test(expected = InvalidEmailException.class)
@@ -58,7 +60,7 @@ public class UserManagerTest{
 		}
 		catch(EmailExistsException e){
 			fail();
-		}	
+		}
 	}
 	@Test(expected = InvalidEmailException.class)
 	public void testAddUserInvalidEmail3() throws InvalidEmailException{
@@ -67,7 +69,7 @@ public class UserManagerTest{
 		}
 		catch(EmailExistsException e){
 			fail();
-		}	
+		}
 	}
 	@Test(expected = InvalidEmailException.class)
 	public void testAddUserInvalidEmail4() throws InvalidEmailException{
@@ -76,7 +78,7 @@ public class UserManagerTest{
 		}
 		catch(EmailExistsException e){
 			fail();
-		}	
+		}
 	}
 	@Test(expected = InvalidEmailException.class)
 	public void testAddUserInvalidEmail5() throws InvalidEmailException{
@@ -85,7 +87,7 @@ public class UserManagerTest{
 		}
 		catch(EmailExistsException e){
 			fail();
-		}			
+		}
 	}
 	@Test
 	public void testAddUser(){
@@ -95,7 +97,7 @@ public class UserManagerTest{
 		}
 		catch(EmailExistsException|InvalidEmailException e){
 			fail();
-		}		
+		}
 		List<User> users = (List<User>)((EntityManager)userManager).getAll();
 		assertEquals(users.size(),8);
 		assertEquals(1,users.stream().filter(u->(u.getEmail().equals("user8@email.com") && u.getPassword().equals(hash("password8")))).count());
@@ -190,16 +192,16 @@ public class UserManagerTest{
 	}
 	private String hash(String in){
 		try{
-			MessageDigest alg = MessageDigest.getInstance("SHA-512"); 
+			MessageDigest alg = MessageDigest.getInstance("SHA-512");
 			alg.reset();
 			alg.update(in.getBytes(StandardCharsets.UTF_8));
 			return String.format("%0128x", new BigInteger(1, alg.digest()));
 		}
-        catch (NoSuchAlgorithmException e) { 
-            throw new RuntimeException(e); 
+		catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
 
 		}
-		
+
 	}
 	private ArrayList<User> getTestUsers(){
 		ArrayList<User> users = new ArrayList<User>();
@@ -213,7 +215,7 @@ public class UserManagerTest{
 
 
 		return users;
-	
+
 	}
 	private void fill(){
 		for(User u : getTestUsers()){

@@ -49,28 +49,29 @@ public class Medicine implements TableEntity {
 
 
     /**
-     * Constructors : empty constructor, default constructor & cosntructor
-     * that takes the primary key id for object re-creation
+     * Constructors : empty constructor, default constructor & constructor taking primary key id
+     * for object re-creation
      */
     public Medicine() {
     }
 
     public Medicine(String name, String type) {
         this.primaryKey = -1;
-        this.name = name == "" ? "Unnamed" : name;
-        this.type = type == "" ? "Undefined" : type;
+        this.name = (name != null && "".equals(name.trim())) ? "Unnamed" : name;
+        this.type = (type != null && "".equals(type.trim())) ? "Undefined" : type;
     }
 
     // Constructor taking id
     public Medicine(Integer id, String name, String type) {
         this.primaryKey = id;
-        this.name = name == "" ? "Unnamed" : name;
-        this.type = type == "" ? "Undefined" : type;
+        this.name = (name != null && "".equals(name.trim())) ? "Unnamed" : name;
+        this.type = (type != null && "".equals(type.trim())) ? "Undefined" : type;
     }
 
 
     /**
-     * Getters and setters; ID cannot be changed
+     * Getters and setters
+     * Primary key id cannot be changed in the database
      */
     public Integer getPrimaryKey() {
         return primaryKey;
@@ -81,7 +82,7 @@ public class Medicine implements TableEntity {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = (name != null && "".equals(name.trim())) ? "Unnamed" : name;
     }
 
     public String getType() {
@@ -89,32 +90,10 @@ public class Medicine implements TableEntity {
     }
 
     public void setType(String type) {
-        this.type = type;
-    }
-
+        this.type = (type != null && "".equals(type.trim())) ? "Undefined" : type;    }
 
     /**
-     * @return String indicating of private field values of the object
-     */
-    @Override
-    public String toString() {
-        return "Medicine: " + this.primaryKey + ", " + this.name + ", " + this.type;
-    }
-
-
-    /**
-     * Check if this object is the same as another medicine object
-     * @param otherMed
-     * @return boolean, true if same object
-     */
-    public boolean equals(Medicine otherMed) {
-        return (getPrimaryKey().equals(otherMed.getPrimaryKey())) && getName().equals(otherMed.getName()) &&
-                getType().equals(otherMed.getType());
-    }
-
-
-    /**
-     * Copy the values of the input medicine object
+     * Copy the values of the input TableEntity object
      * @param toCopy
      * @return this, updated medicine object
      */
