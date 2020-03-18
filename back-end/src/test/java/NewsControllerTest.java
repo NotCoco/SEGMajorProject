@@ -57,6 +57,8 @@ public class NewsControllerTest {
     public void testAddAndGetNews(){
         HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics",
                 true, "COVID-19 originated from Wuhan, China", "slug");
+        assertEquals(HttpStatus.CREATED, response.getStatus());
+
         assertEquals("slug", getEUrl(response));
         News testNews = newsManager.getNewsBySlug("slug");
         assertNotNull(testNews);
@@ -68,8 +70,8 @@ public class NewsControllerTest {
         HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics",
                 true, "COVID-19 originated from Wuhan, China", "slug");
 
-        System.out.println(id + " 2222222");
-        response = putNews(id, new Date(324189213L), true, "NewDescription", "NewTitle",true, "NewContent", "NewSlug");
+//        System.out.println(id + " 2222222");
+//        response = putNews(id, new Date(324189213L), true, "NewDescription", "NewTitle",true, "NewContent", "NewSlug");
 //        assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
     }
 

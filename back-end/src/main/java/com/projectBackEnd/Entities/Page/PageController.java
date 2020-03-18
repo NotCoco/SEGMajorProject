@@ -44,7 +44,7 @@ public class PageController {
     @Post("/{name}/pages")
     public HttpResponse<Page> addPage(String name, @Body PageAddCommand pageToAdd) {
         Page p = pageManager.addPage(pageToAdd.getSite(), pageToAdd.getSlug(), pageToAdd.getIndex(), pageToAdd.getTitle(), pageToAdd.getContent());
-        if (pageManager.getPageBySiteAndSlug(p.getSite(), p.getSlug()) == null) {
+        if (pageManager.getByPrimaryKey(p.getPrimaryKey()) == null) {
             return HttpResponse.serverError();
         }
         return HttpResponse
