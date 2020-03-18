@@ -39,6 +39,7 @@ public class ImageControllerTest {
 	@AfterAll
 	public static void deleteCreatedImages() {
 		imageManager.deleteAll();
+		DirectoryHolder.getDirectoryHolder().setDefaultDir();
 	}
 
 	@Test

@@ -3,7 +3,6 @@ package main.java.com.projectBackEnd.Image;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.Base64.Decoder;
 
 public class ImageManager {
 	//Random name related variables
@@ -99,9 +98,11 @@ public class ImageManager {
 	public void deleteAll()
 	{
 		List<String> listOfImageUrls = getImageUrls();
-		for (String imageUrl : listOfImageUrls)
-		{
-			deleteImage(imageUrl);
+		if(!listOfImageUrls.isEmpty()){
+			for (String imageUrl : listOfImageUrls)
+			{
+				deleteImage(imageUrl.substring(imageUrl.lastIndexOf("/") + 1));
+			}
 		}
 	}
 

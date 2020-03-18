@@ -15,6 +15,7 @@ public class DirectoryHolder {
 	public void setDir(String newDir) {
 		this.dir = newDir;
 	}
+	public void setDefaultDir(){dir = System.getProperty("user.dir")+"\\back-end\\src\\main\\resources\\images\\";}
 	public static String getDir() {
 		return dir;
 	}
