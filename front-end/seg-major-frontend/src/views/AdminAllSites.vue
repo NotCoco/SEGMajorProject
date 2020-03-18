@@ -43,12 +43,4 @@ export default {
 .expanded-scrollable-area {
   overflow-y: scroll;
 }
-
-.floating-add-button {
-  position: absolute;
-  bottom: 47px;
-  right: 47px;
-  height: 74px;
-  width: 74px;
-}
 </style>
