@@ -64,9 +64,9 @@ public class MedicineControllerTest{
 
         HttpRequest request = HttpRequest.GET("/medicines");
         List<Medicine> medicineList = client.toBlocking().retrieve(request, Argument.of(List.class, Medicine.class));
-        for(int i=0; i<ids.size();i++){
-            assertEquals(ids.get(i), medicineList.get(i).getPrimaryKey());
-        }
+
+        for(int i=0; i<ids.size();i++) assertEquals(ids.get(i), medicineList.get(i).getPrimaryKey());
+
     }
 
     @Test
@@ -83,25 +83,25 @@ public class MedicineControllerTest{
         assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
     }
 
+
     @Test
-    public void testUpdateMedicineNullType(){
+    public void testUpdateMedicineEmptyType() {
         HttpResponse response = addMedicine("Med1", "Liquid");
         int id =  getEId(response).intValue();
-        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            client.toBlocking().exchange(HttpRequest.POST("/medicines", new MedicineUpdateCommand(id, "TestMed", "")));
-        });
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
+        putMedicine(id, "name", "");
+        Medicine found = getMedicine(id);
+        assertEquals("Undefined", found.getType());
     }
 
     @Test
-    public void testUpdateMedicineNullName(){
+    public void testUpdateMedicineEmptyName() {
         HttpResponse response = addMedicine("Med1", "Liquid");
         int id =  getEId(response).intValue();
-        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            client.toBlocking().exchange(HttpRequest.POST("/medicines", new MedicineUpdateCommand(id, "", "Liquid")));
-        });
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
+        client.toBlocking().exchange(HttpRequest.PUT("/medicines", new MedicineUpdateCommand(id, "", "type")));
+        Medicine found = getMedicine(id);
+        assertEquals("Unnamed", found.getName());
     }
+
 
     @Test
     public void testNonExistingMedicineReturns404() {
@@ -127,21 +127,21 @@ public class MedicineControllerTest{
         });
     }
 
+
     @Test
-    public void testAddNullNameMedicine(){
-        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            client.toBlocking().exchange(HttpRequest.POST("/medicines", new MedicineAddCommand("", "Liquid")));
-        });
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
+    public void testAddEmptyNameMedicine(){
+        HttpResponse response = addMedicine("", "Topical");
+        int id =  getEId(response).intValue();
+        Medicine testMed = getMedicine(id);
+        assertEquals("Unnamed", testMed.getName());
     }
 
-
     @Test
-    public void testAddNullTypeMedicine(){
-        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            client.toBlocking().exchange(HttpRequest.POST("/medicines", new MedicineAddCommand("TestMed", "")));
-        });
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
+    public void testAddEmptyTypeMedicine(){
+        HttpResponse response = addMedicine("Med1", "");
+        int id =  getEId(response).intValue();
+        Medicine testMed = getMedicine(id);
+        assertEquals("Undefined", testMed.getType());
     }
 
     @Test
@@ -153,6 +153,8 @@ public class MedicineControllerTest{
 
         assertEquals("Med1", testMed.getName());
     }
+
+
 
     @Test
     public void testAddAndUpdateMedicine(){
@@ -167,7 +169,7 @@ public class MedicineControllerTest{
     }
 
     protected HttpResponse putMedicine(int id, String name, String type){
-        HttpRequest request = HttpRequest.PUT("/medicines", new MedicineUpdateCommand(id, "newName", "newType"));
+        HttpRequest request = HttpRequest.PUT("/medicines", new MedicineUpdateCommand(id, name, type));
         return client.toBlocking().exchange(request);
     }
 
@@ -187,16 +189,10 @@ public class MedicineControllerTest{
         String val = response.header(HttpHeaders.LOCATION);
         if (val != null) {
             int index = val.indexOf("/medicines/");
-            if (index != -1) {
-                return Long.valueOf(val.substring(index + "/medicines/".length()));
-            }
-            else{
-                return null;
-            }
+            if (index != -1) return Long.valueOf(val.substring(index + "/medicines/".length()));
+            else return null;
         }
-        else{
-            return null;
-        }
+        else return null;
     }
 
 

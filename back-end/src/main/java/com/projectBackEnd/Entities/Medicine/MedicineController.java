@@ -15,9 +15,7 @@ public class MedicineController {
 
     protected final MedicineManagerInterface medicineManager = MedicineManager.getMedicineManager();
 
-    MedicineController(){
-        //this.medicineManager = medicineManager;
-    }
+    public MedicineController(){}
 
     @Get(value = "/{id}", produces = MediaType.TEXT_JSON)
     public Medicine list(int id) {

@@ -13,28 +13,44 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = User.TABLENAME)
-public class User implements TableEntity{
+public class User implements TableEntity {
+
 	public final static String TABLENAME = "Users";
 	private final static String KEY = "id";
 	private final static String EMAIL = "email";
 	private final static String PASSWORD = "password";
+
+	// Private fields
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
-    	@Column(name = KEY)
+	@Column(name = KEY)
    	private int primaryKey;
-    	@Column(name = EMAIL)
-    	@Type(type="text")
+
+	@Column(name = EMAIL)
+	@Type(type="text")
 	private String email;
-    	@Column(name = PASSWORD)
-    	@Type(type="text")
+
+	@Column(name = PASSWORD)
+	@Type(type="text")
 	private String password;
-	public User(String email, String password){
+
+	/**
+	 * Constructors
+	 * @param email
+	 * @param password
+	 */
+	public User(String email, String password) {
 		this.email = email;
 		this.password = password;
 	}
+
 	public User(){};
-    	public Serializable getPrimaryKey() {
-        	return primaryKey;
-    	}
+
+	/**
+	 * Getters and setters
+	 * Primary Key cannot be changed
+	 */
+	public Serializable getPrimaryKey() { return primaryKey; }
+
 	public String getEmail(){
 		return email;
 	}
@@ -48,15 +64,16 @@ public class User implements TableEntity{
 		this.password = password;
 	}
 
-    	@Override
-    	public String toString() {
-        	return "User: " + this.primaryKey + ", " + this.email + ", " + this.password;
-    	}
+	@Override
+	public String toString() {
+		return "User: " + this.primaryKey + ", " + this.email + ", " + this.password;
+	}
 
 	public boolean equals(User user){
 		return user.email == email;
 	}
-  @Override
+
+  	@Override
     public TableEntity copy(TableEntity newCopy) {
         if(newCopy instanceof User){
             setEmail(((User) newCopy).getEmail());

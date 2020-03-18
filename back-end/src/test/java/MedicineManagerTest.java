@@ -5,16 +5,19 @@ import main.java.com.projectBackEnd.Entities.Medicine.Medicine;
 import main.java.com.projectBackEnd.Entities.Medicine.MedicineManager;
 
 import main.java.com.projectBackEnd.Entities.Medicine.MedicineManagerInterface;
-import org.junit.*;
 
 import javax.persistence.PersistenceException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
 
 
 public class MedicineManagerTest {
@@ -22,20 +25,20 @@ public class MedicineManagerTest {
     public static ConnectionLeakUtil connectionLeakUtil = null;
     public static MedicineManagerInterface medicineManager = null;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         medicineManager = MedicineManager.getMedicineManager();
         connectionLeakUtil = new ConnectionLeakUtil();
     }
 
-    @AfterClass
+    @AfterAll
     public static void assertNoLeaks() {
         HibernateUtility.shutdown();
         connectionLeakUtil.assertNoLeaks();
     }
 
-    @Before
+    @BeforeEach
     public void setUp() {
         medicineManager.deleteAll();
     }
@@ -63,9 +66,18 @@ public class MedicineManagerTest {
 
     @Test
     public void testCreateWithEmptyValues() {
-        medicineManager.addMedicine("","");
-        assertEquals( "Unnamed" ,medicineManager.getAllMedicines().get(0).getName());
-        assertEquals( "Undefined" ,medicineManager.getAllMedicines().get(0).getType());
+        medicineManager.addMedicine(" ","     ");
+        assertEquals( "Unnamed", medicineManager.getAllMedicines().get(0).getName());
+        assertEquals( "Undefined", medicineManager.getAllMedicines().get(0).getType());
+    }
+
+    @Test
+    public void testCreateWithWhitespaceInNameAndType() {
+        String name = "Me di ci ne";
+        String type = "Ty     pe";
+        medicineManager.addMedicine(name, type);
+        assertEquals( name, medicineManager.getAllMedicines().get(0).getName());
+        assertEquals( type, medicineManager.getAllMedicines().get(0).getType());
     }
 
     @Test
@@ -83,6 +95,7 @@ public class MedicineManagerTest {
         }
     }
 
+
     @Test
     public void testUpdateMedicine() {
         fillDatabase();
@@ -95,11 +108,23 @@ public class MedicineManagerTest {
         assertEquals(replacementMed.getType(), medInDB.getType());
     }
 
-    @Test(expected = PersistenceException.class)
-    public void testUpdateWithIllegalValues() {
+    @Test
+    public void testUpdateMedicineWithEmptyNameAndEmptyType() {
         fillDatabase();
-        Medicine med = new Medicine(medicineManager.getAllMedicines().get(0).getPrimaryKey(), null, null);
-        medicineManager.update(med);
+        int id = medicineManager.getAllMedicines().get(0).getPrimaryKey();
+        Medicine replacementMed = new Medicine(id, "", "");
+        medicineManager.update(replacementMed);
+        assertEquals("Unnamed", replacementMed.getName());
+        assertEquals("Undefined", replacementMed.getType());
+    }
+
+    @Test
+    public void testUpdateWithIllegalValues() {
+        assertThrows(PersistenceException.class, () -> {
+            fillDatabase();
+            Medicine med = new Medicine(medicineManager.getAllMedicines().get(0).getPrimaryKey(), null, null);
+            medicineManager.update(med);
+        });
     }
 
 
@@ -112,14 +137,15 @@ public class MedicineManagerTest {
         Medicine foundMedicineFromDB = medicineManager.getByPrimaryKey(medPK);
 
         assertThat(foundMedicine, samePropertyValuesAs(foundMedicineFromDB));
-        assertTrue(foundMedicine.equals((foundMedicineFromDB)));
+
     }
 
     @Test
     public void testTwoEqualMedicines() {
         Medicine med1 = new Medicine("Med1", "type");
         Medicine med2 = new Medicine("Med1", "type");
-        assertTrue(med1.equals(med2));
+        assertThat(med1, samePropertyValuesAs(med2));
+
     }
 
     @Test
@@ -142,9 +168,9 @@ public class MedicineManagerTest {
     @Test
     public void testDelete() {
         fillDatabase();
-        medicineManager.delete(medicineManager.getAllMedicines().get(1)); //Testing object deletion
+        medicineManager.delete(medicineManager.getAllMedicines().get(1).getPrimaryKey()); //Testing object deletion
         assertEquals( getListOfMedicines().size()-1, medicineManager.getAllMedicines().size());
-        medicineManager.delete(medicineManager.getAllMedicines().get(1));
+        medicineManager.delete(medicineManager.getAllMedicines().get(1).getPrimaryKey());
         assertEquals(getListOfMedicines().size()-2, medicineManager.getAllMedicines().size());
     }
 
@@ -158,6 +184,7 @@ public class MedicineManagerTest {
     @Test
     public void testWithDeleteIllegalPK() {
         int medicines = medicineManager.getAllMedicines().size();
+
         try {
             medicineManager.delete(-1);
             fail();
@@ -173,7 +200,7 @@ public class MedicineManagerTest {
         Medicine med = new Medicine("Not in db", "NA");
         int medicines = medicineManager.getAllMedicines().size();
         try {
-            medicineManager.delete(med);
+            medicineManager.delete(med.getPrimaryKey());
             fail();
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
@@ -182,8 +209,10 @@ public class MedicineManagerTest {
         }
     }
 
-
-
+    /**
+     * List to fill in database with example Medicine objects
+     * @return example objects
+     */
     private static ArrayList<Medicine> getListOfMedicines() {
         ArrayList<Medicine> listOfMedicines = new ArrayList<>();
 
@@ -203,9 +232,7 @@ public class MedicineManagerTest {
     }
 
     private void fillDatabase() {
-        for (Medicine med : getListOfMedicines()) {
-            medicineManager.addMedicine(med);
-        }
+        ArrayList<Medicine> listOfMeds = getListOfMedicines();
+        for (int i = 0; i<listOfMeds.size(); ++i) medicineManager.addMedicine(listOfMeds.get(i));
     }
-
 }
