@@ -8,6 +8,7 @@ import AdminAllSites from '../views/AdminAllSites.vue'
 import AdminNewSite from '../views/AdminNewSite.vue'
 import AdminSiteLayout from '../views/AdminSiteLayout.vue'
 import AdminAllPages from '../views/AdminAllPages.vue'
+import AdminEditPage from '../views/AdminEditPage.vue'
 
 Vue.use(VueRouter)
 
@@ -44,6 +45,10 @@ const routes = [
           {
             path: 'pages',
             component: AdminAllPages
+          },
+          {
+            path: 'pages/:pageSlug',
+            component: AdminEditPage
           }
         ]
       }
