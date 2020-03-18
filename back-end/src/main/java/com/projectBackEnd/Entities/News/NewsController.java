@@ -27,17 +27,16 @@ public class NewsController {
 
     @Post("/")
     public HttpResponse<News> add(@Body NewsAddCommand command) {
-
+        int sizeBefore = newsManager.getAllNews().size();
         News news = newsManager.addNews(command.getDate(), command.isPinned(), command.getDescription(),
                 command.getTitle(), command.isUrgent(), command.getContent(), command.getSlug());
-
-        if(newsManager.getByPrimaryKey(news.getPrimaryKey()) == null)return HttpResponse.serverError();
-
-        return HttpResponse
+        if (sizeBefore == newsManager.getAllNews().size()) return HttpResponse.serverError();
+        //if(newsManager.getByPrimaryKey(news.getPrimaryKey()) == null)return HttpResponse.serverError();
+        //The returned news will have an ID of -1 since we don't specify one, so the error should always be thrown?
+        else return HttpResponse
                 .created(news)
                 .headers(headers -> headers.location(location(news.getSlug())));
     }
-
 
     @Put("/")
     public HttpResponse update(@Body NewsUpdateCommand command) {
