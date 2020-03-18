@@ -5,7 +5,7 @@
         <div class="navbar-brand">
           <router-link to="/admin" class="navbar-item text-brand">Admin</router-link>
 
-          <a class="navbar-item">Sites</a>
+          <router-link to="/admin/sites" class="navbar-item">Sites</router-link>
 
           <a class="navbar-item">News</a>
 
