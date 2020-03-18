@@ -9,5 +9,10 @@ export default {
     async getAllSites() {
         const res = await BackendService.getAllSites()
         return res.data
+    },
+
+    async getSite(siteName) {
+        const res = await BackendService.getSite(siteName)
+        return res.data
     }
 }
