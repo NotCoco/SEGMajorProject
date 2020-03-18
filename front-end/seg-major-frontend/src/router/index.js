@@ -6,6 +6,7 @@ import AdminLayout from '../views/AdminLayout.vue'
 import AdminHome from '../views/AdminHome.vue'
 import AdminAllSites from '../views/AdminAllSites.vue'
 import AdminNewSite from '../views/AdminNewSite.vue'
+import AdminSiteLayout from '../views/AdminSiteLayout.vue'
 
 Vue.use(VueRouter)
 
@@ -30,6 +31,10 @@ const routes = [
       {
         path: 'sites/new',
         component: AdminNewSite
+      },
+      {
+        path: 'sites/:siteName',
+        component: AdminSiteLayout
       }
     ]
   }
