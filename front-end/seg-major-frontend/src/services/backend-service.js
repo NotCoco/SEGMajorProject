@@ -23,5 +23,27 @@ export default {
 
     getPage(siteName, pageSlug) {
         return api.get(`/sites/${siteName}/pages/${pageSlug}`)
+    },
+
+    createPage(page) {
+        console.log(page)
+        return api.post(`/sites/${page.site.name}/pages`, {
+            "site": page.site.name,
+            "slug": page.slug,
+            "index": page.index,
+            "title": page.title,
+            "content": page.content
+        })
+    },
+
+    updatePage(page) {
+        return api.put(`/sites/${page.site.name}/pages`, {
+            "primaryKey": page.primaryKey,
+            "site": page.site,
+            "slug": page.slug,
+            "index": page.index,
+            "title": page.title,
+            "content": page.content
+        })
     }
 }

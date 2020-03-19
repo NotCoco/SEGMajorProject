@@ -47,8 +47,14 @@ const routes = [
             component: AdminAllPages
           },
           {
+            path: 'pages/new',
+            component: AdminEditPage,
+            props: { newPage: true }
+          },
+          {
             path: 'pages/:pageSlug',
-            component: AdminEditPage
+            component: AdminEditPage,
+            props: { newPage: false }
           }
         ]
       }
