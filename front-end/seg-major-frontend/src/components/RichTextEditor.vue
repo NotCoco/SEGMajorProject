@@ -173,6 +173,9 @@ export default {
   methods: {
     getJSON() {
       return this.editor.getJSON();
+    },
+    setContent(content) {
+      this.editor.setContent(content);
     }
   },
   beforeDestroy() {
