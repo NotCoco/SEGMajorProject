@@ -202,9 +202,9 @@ public class PageManagerTest {
 
     @Test
     public void testUpdatePage() {
-        assertNotNull(siteManager.getBySiteSlug("Slug1"));
+        assertNotNull(siteManager.getBySiteSlug("Disease1"));
 
-        Page newPage = new Page("Slug1","Slug3", 10, "Title3", "New content!");
+        Page newPage = new Page("Disease1","Slug3", 10, "Title3", "New content!");
         pageManager.addPage(newPage);
         int assignedID = pageManager.getAllPages().get(0).getPrimaryKey();
         fillDatabase();

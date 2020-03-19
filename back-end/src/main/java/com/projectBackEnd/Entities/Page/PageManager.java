@@ -122,8 +122,8 @@ public class PageManager extends EntityManager implements PageManagerInterface {
      * @param slug
      * @return found Page
      */
-    public Page getPageBySiteAndSlug(String siteName, String slug) {
-        List<Page> matches = getAllPages().stream().filter(p -> p.getSite().getName().equals(siteName) && p.getSlug().equals(slug)).sorted(Comparator.comparingInt(Page::getIndex)).collect(Collectors.toList());
+    public Page getPageBySiteAndSlug(String siteSlug, String slug) {
+        List<Page> matches = getAllPages().stream().filter(p -> p.getSite().getSlug().equals(siteSlug) && p.getSlug().equals(slug)).sorted(Comparator.comparingInt(Page::getIndex)).collect(Collectors.toList());
         return matches.size()>= 1 ? matches.get(0) : null;
     }
 
