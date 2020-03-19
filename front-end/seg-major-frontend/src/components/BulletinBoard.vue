@@ -18,6 +18,7 @@
 <script>
 import NewsCard from '@/components/NewsCard.vue';
 import NewsService from '@/services/news-service';
+import ArraySlice from '@/ArraySlice.js';
 
 export default {
   name: "BulletinBoard",
@@ -31,7 +32,7 @@ export default {
   },
   computed: {
     displayItems() {
-      return this.items.slice(0, 5);
+      return new ArraySlice(this.items, 0, Math.min(5, this.items.length));
     }
   },
   async created() {
