@@ -82,6 +82,14 @@
           <i class="material-icons">format_quote</i>
         </button>
 
+        <button
+          class="button is-light rte-menu-button"
+          :class="{ 'is-active': isActive.notification() }"
+          @click="commands.notification"
+        >
+          <i class="material-icons">note</i>
+        </button>
+
         <button class="button is-light rte-menu-button" @click="commands.horizontal_rule">
           <i class="material-icons">remove</i>
         </button>
@@ -125,6 +133,8 @@ import {
   TrailingNode
 } from "tiptap-extensions";
 
+import Notification from "../components/Notification.js";
+
 export default {
   components: {
     EditorMenuBar,
@@ -154,7 +164,8 @@ export default {
           new TrailingNode({
             node: "paragraph",
             notAfter: ["paragraph"]
-          })
+          }),
+          new Notification()
         ]
       })
     };
