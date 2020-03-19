@@ -5,6 +5,7 @@
       <p class="subtitle">Read our latest news and guidance</p>
     </div>
 
+    <loading-spinner class="loading-spinner" v-if="loading"></loading-spinner>
     <div class="no-news-message has-text-centered" v-if="!loading && items.length === 0">No news items</div>
 
     <router-link v-for="item in displayItems" :key="item.slug" :to="`/news/${item.slug}`">
@@ -18,6 +19,7 @@
 </template>
 
 <script>
+import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import NewsCard from '@/components/NewsCard.vue';
 import NewsService from '@/services/news-service';
 import ArraySlice from '@/ArraySlice.js';
@@ -25,6 +27,7 @@ import ArraySlice from '@/ArraySlice.js';
 export default {
   name: "BulletinBoard",
   components: {
+    LoadingSpinner,
     NewsCard
   },
   data () {
@@ -50,6 +53,10 @@ export default {
 .bulletin-board {
   width: 500px;
   border-top: 5px solid #353535;
+
+  .loading-spinner {
+    min-height: 535px;
+  }
 
   .header {
     padding: 2rem 1.5rem;
