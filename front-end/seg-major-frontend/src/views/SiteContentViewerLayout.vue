@@ -22,7 +22,9 @@
       </div>
 
       <div class="page-content">
-        <router-view></router-view>
+        <transition name="fade" mode="out-in">
+          <router-view v-bind:key="$route.path"></router-view>
+        </transition>
       </div>
     </div>
   </div>
