@@ -1,31 +1,41 @@
 <template>
-  <nav class="navbar" role="navigation" aria-label="main navigation">
-    <div class="container is-fluid">
-      <div class="navbar-brand">
-        <a class="navbar-item">
-          <h1 class="title is-5">Logo</h1>
-        </a>
-      </div>
-
-      <div class="navbar-menu">
-        <div class="navbar-start" style="margin-left: 35px">
-          <a class="navbar-item">Home</a>
-          <a class="navbar-item">News</a>
+  <div>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="container is-fluid">
+        <div class="navbar-brand">
+          <a class="navbar-item">
+            <h1 class="title is-5">Logo</h1>
+          </a>
         </div>
 
-        <div class="navbar-end">
-          <div class="searchbox-container">
-            <div class="control has-icons-left" style="height: 100%">
-              <span class="icon is-small is-left" style="height: 100%;">
-                <i class="search-icon material-icons">search</i>
-              </span>
-              <input class="searchbox input" type="text" placeholder="Search" />
+        <div class="navbar-menu">
+          <div class="navbar-start" style="margin-left: 35px">
+            <a class="navbar-item">Home</a>
+            <a class="navbar-item">News</a>
+          </div>
+
+          <div class="navbar-end">
+            <div class="searchbox-container">
+              <div class="control has-icons-left" style="height: 100%">
+                <span class="icon is-small is-left" style="height: 100%;">
+                  <i class="search-icon material-icons">search</i>
+                </span>
+                <input class="searchbox input" type="text" placeholder="Search" />
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </nav>
+    </nav>
+    <transition name="vertical-slide" appear>
+      <router-link class="link" :to="`/news/${urgentNews.slug}`" v-if="displayUrgentNews">
+        <div class="notification is-warning urgent-news">
+          <button class="delete" @click.prevent="closeUrgentNews"></button>
+          <strong>{{ urgentNews.title }}:</strong> {{ urgentNews.content }}
+        </div>
+      </router-link>
+    </transition>
+  </div>
 </template>
 
 <script>
@@ -33,12 +43,54 @@ export default {};
 </script>
 
 <style lang="scss" scoped>
+.vertical-slide-leave, .vertical-slide-enter-to {
+  top: 0;
+}
+.vertical-slide-enter-active, .vertical-slide-leave-active {
+  position: relative;
+  transition: top 0.5s;
+}
+.vertical-slide-enter, .vertical-slide-leave-to {
+  top: -40px;
+}
+
+.notification.urgent-news {
+  transition: background-color 0.2s;
+  background-color: #ffe374;
+  border-radius: 0;
+  padding: 0.4rem 2.75rem 0.4rem 1.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  link {
+    text-decoration: none;
+  }
+
+  .delete {
+    transition: opacity 0.2s;
+    opacity: 0.5;
+    right: 0.75rem;
+  }
+
+  &:hover {
+    background-color: #ffda47;
+
+    .delete {
+      opacity: 1;
+    }
+  }
+}
+
 nav.navbar {
   flex-shrink: 0;
+  height: 68px;
   border-bottom: 3px solid #f5f5f8;
+  
   .navbar-brand {
     padding-left: 14px;
   }
+
   .brand-text {
     .brand-top {
       font-size: 13.5px;
@@ -53,23 +105,28 @@ nav.navbar {
     }
   }
 }
+
 .input.searchbox {
   height: 100%;
   width: 400px;
   border: 0;
   box-shadow: none;
   background-color: #fbfbfb;
+
   &:hover {
     background-color: #f9f9f9;
   }
+
   &:focus {
     background-color: #f5f5f7;
   }
+
   &::placeholder {
     opacity: 1;
     color: #888;
   }
 }
+
 .search-icon {
   color: #aaa;
 }
