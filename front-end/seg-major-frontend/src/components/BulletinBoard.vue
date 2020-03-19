@@ -17,6 +17,7 @@
 
 <script>
 import NewsCard from '@/components/NewsCard.vue';
+import NewsService from '@/services/news-service';
 
 export default {
   name: "BulletinBoard",
@@ -33,6 +34,9 @@ export default {
       return this.items.slice(0, 5);
     }
   },
+  async created() {
+    this.items = await NewsService.getAllNews();
+  }
 };
 </script>
 
