@@ -20,6 +20,8 @@ public class MedicineAddCommand {
     public MedicineAddCommand(){}
 
     public MedicineAddCommand(String name, String type){
+        //setName(name)
+        //setType(type)
         this.name = (name != null && "".equals(name.trim())) ? "Unnamed" : name;
         this.type = (type != null && "".equals(type.trim())) ? "Undefined" : type;
     }

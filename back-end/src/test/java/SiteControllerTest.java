@@ -141,7 +141,7 @@ public class SiteControllerTest {
     }
 
     protected HttpResponse putSite(int id, String newSlug, String newName) {
-        HttpRequest request = HttpRequest.PUT("/sites", new Site(id, newSlug, newName));
+        HttpRequest request = HttpRequest.PUT("/sites", new SiteUpdateCommand(id, newSlug, newName));
         return client.toBlocking().exchange(request);
     }
 

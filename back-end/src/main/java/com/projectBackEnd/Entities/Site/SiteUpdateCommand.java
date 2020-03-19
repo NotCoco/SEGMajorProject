@@ -17,7 +17,7 @@ public class SiteUpdateCommand extends SiteAddCommand {
         super(siteSlug, siteName);
         this.id = id;
     }
-
+    public void setId(Integer newId) { id = newId; }
     public Integer getId() { return id; }
 
 }

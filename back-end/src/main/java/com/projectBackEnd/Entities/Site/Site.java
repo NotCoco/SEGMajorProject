@@ -45,7 +45,7 @@ public class Site implements TableEntity {
         this.slug = siteSlug;
     }
 
-    public Site(int ID, String siteSlug, String siteName) {
+    public Site(Integer ID, String siteSlug, String siteName) {
         this.primaryKey = ID;
         this.name = siteName;
         this.slug = siteSlug;

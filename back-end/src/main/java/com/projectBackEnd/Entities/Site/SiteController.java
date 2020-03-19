@@ -55,6 +55,7 @@ public class SiteController {
 
     @Put("/")
     public HttpResponse update(@Body SiteUpdateCommand updatedSiteCommand) {
+        System.out.println("+++++++++" + updatedSiteCommand.getId() + " " + updatedSiteCommand.getSlug() + " " + updatedSiteCommand.getName());
         Site newSite = new Site(updatedSiteCommand.getId(), updatedSiteCommand.getSlug(), updatedSiteCommand.getName());
         siteManager.update(newSite);
         return HttpResponse
