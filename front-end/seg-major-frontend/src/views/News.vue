@@ -53,6 +53,7 @@ import NewsService from '@/services/news-service';
 import Navbar from "@/components/Navbar.vue";
 import NewsCard from "@/components/NewsCard.vue";
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
+import ArraySlice from '@/ArraySlice.js';
 
 export default {
   props: {
@@ -80,10 +81,9 @@ export default {
     },
   },
   computed: {
-    paginatedItems(){
-      const start = (this.currentPageNumber - 1) * this.pageSize,
-            end = start + this.pageSize;
-      return this.items.slice(start, end);
+    paginatedItems() {
+      const start = (this.currentPageNumber - 1) * this.pageSize;
+      return new ArraySlice(this.items, start, this.pageSize);
     },
     pageCount() {
       return Math.max(Math.ceil(this.items.length / this.pageSize), 1);
