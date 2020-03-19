@@ -10,7 +10,7 @@
             v-bind:key="site.primaryKey"
             class="is-block"
             style="margin-bottom: 20px"
-            v-bind:to="site.name"
+            v-bind:to="site.slug"
             append
           >
             <div class="card">

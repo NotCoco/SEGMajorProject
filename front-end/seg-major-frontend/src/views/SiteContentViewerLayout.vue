@@ -10,7 +10,7 @@
             <nav class="sidebar-navigation">
               <div class="navigation-items">
                 <router-link
-                  v-bind:to="`/${page.site.name}/${page.slug}`"
+                  v-bind:to="`/${page.site.slug}/${page.slug}`"
                   v-for="page of pages"
                   v-bind:key="page.primaryKey"
                   class="navigation-item is-unselectable"

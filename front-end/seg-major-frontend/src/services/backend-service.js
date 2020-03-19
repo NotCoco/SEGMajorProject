@@ -5,30 +5,30 @@ const api = axios.create({
 })
 
 export default {
-  createSite(siteName) {
-    return api.post('/sites', { name: siteName })
+  createSite(site) {
+    return api.post('/sites', site)
   },
 
   getAllSites() {
     return api.get('/sites')
   },
 
-  getSite(siteName) {
-    return api.get(`/sites/${siteName}`)
+  getSite(siteSlug) {
+    return api.get(`/sites/${siteSlug}`)
   },
 
-  getAllPages(siteName) {
-    return api.get(`/sites/${siteName}/pages`)
+  getAllPages(siteSlug) {
+    return api.get(`/sites/${siteSlug}/pages`)
   },
 
-  getPage(siteName, pageSlug) {
-    return api.get(`/sites/${siteName}/pages/${pageSlug}`)
+  getPage(siteSlug, pageSlug) {
+    return api.get(`/sites/${siteSlug}/pages/${pageSlug}`)
   },
 
   createPage(page) {
     console.log(page)
-    return api.post(`/sites/${page.site.name}/pages`, {
-      "site": page.site.name,
+    return api.post(`/sites/${page.site.slug}/pages`, {
+      "site": page.site.slug,
       "slug": page.slug,
       "index": page.index,
       "title": page.title,
@@ -37,9 +37,10 @@ export default {
   },
 
   updatePage(page) {
-    return api.put(`/sites/${page.site.name}/pages`, {
+    console.log(page)
+    return api.put(`/sites/${page.site.slug}/pages`, {
       "primaryKey": page.primaryKey,
-      "site": page.site,
+      "site": page.site.slug,
       "slug": page.slug,
       "index": page.index,
       "title": page.title,
