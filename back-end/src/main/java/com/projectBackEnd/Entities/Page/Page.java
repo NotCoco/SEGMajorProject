@@ -63,10 +63,10 @@ public class Page implements TableEntity {
      */
     public Page() {}
 
-    public Page(String siteName, String slug, Integer index, String title, String content) {
+    public Page(String siteSlug, String slug, Integer index, String title, String content) {
         this.primaryKey = -1;
         SiteManagerInterface s = SiteManager.getSiteManager();
-        setSite(s.getBySiteName(siteName));
+        setSite(s.getBySiteSlug(siteSlug));
         setSlug(slug);
         this.index = index;
         this.title = title;
@@ -82,10 +82,10 @@ public class Page implements TableEntity {
         this.content = content;
     }
 
-    public Page(Integer ID, String siteName, String slug, Integer index, String title, String content) {
+    public Page(Integer ID, String siteSlug, String slug, Integer index, String title, String content) {
         this.primaryKey = ID;
         SiteManagerInterface s = SiteManager.getSiteManager();
-        setSite(s.getBySiteName(siteName));
+        setSite(s.getBySiteSlug(siteSlug));
         setSlug(slug);
         this.index = index;
         this.title = title;

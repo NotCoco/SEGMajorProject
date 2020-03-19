@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 /**
  * PageManager defines methods to interact with the Page table in the database.
  * This class extends the EntityManager.
- *
+ * //TODO Remove methods only used by testing.
  * https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
 public class PageManager extends EntityManager implements PageManagerInterface {
@@ -95,15 +95,15 @@ public class PageManager extends EntityManager implements PageManagerInterface {
      * @param site
      * @return List of pages
      */
-    public List<Page> getAllPagesOfSite(Site site) { return getAllPagesOfSite(site.getName()); }
+    public List<Page> getAllPagesOfSite(Site site) { return getAllPagesOfSite(site.getSlug()); }
 
     /**
      * Get all pages belonging to input site in database
      * @param siteName
      * @return List of pages
      */
-    public List<Page> getAllPagesOfSite(String siteName) {
-        return getAllPages().stream().filter(p -> p.getSite().getName().equals(siteName)).sorted(Comparator.comparingInt(Page::getIndex)).collect(Collectors.toList());
+    public List<Page> getAllPagesOfSite(String siteSlug) {
+        return getAllPages().stream().filter(p -> p.getSite().getSlug().equals(siteSlug)).sorted(Comparator.comparingInt(Page::getIndex)).collect(Collectors.toList());
     }
 
     /**
@@ -113,7 +113,7 @@ public class PageManager extends EntityManager implements PageManagerInterface {
      * @return found Page
      */
     public Page getPageBySiteAndSlug(Site site, String slug) {
-        return getPageBySiteAndSlug(site.getName(), slug);
+        return getPageBySiteAndSlug(site.getSlug(), slug);
     }
 
     /**
@@ -122,8 +122,8 @@ public class PageManager extends EntityManager implements PageManagerInterface {
      * @param slug
      * @return found Page
      */
-    public Page getPageBySiteAndSlug(String siteName, String slug) {
-        List<Page> matches = getAllPages().stream().filter(p -> p.getSite().getName().equals(siteName) && p.getSlug().equals(slug)).sorted(Comparator.comparingInt(Page::getIndex)).collect(Collectors.toList());
+    public Page getPageBySiteAndSlug(String siteSlug, String slug) {
+        List<Page> matches = getAllPages().stream().filter(p -> p.getSite().getSlug().equals(siteSlug) && p.getSlug().equals(slug)).sorted(Comparator.comparingInt(Page::getIndex)).collect(Collectors.toList());
         return matches.size()>= 1 ? matches.get(0) : null;
     }
 

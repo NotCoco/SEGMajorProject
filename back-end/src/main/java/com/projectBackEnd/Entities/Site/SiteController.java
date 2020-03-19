@@ -28,13 +28,13 @@ public class SiteController {
 
     @Post("/")
     public HttpResponse<Site> add(@Body SiteAddCommand command) {
-        Site s = siteManager.addSite(command.getName());
+        Site s = siteManager.addSite(command.getSlug(), command.getName());
         if(siteManager.getByPrimaryKey(s.getPrimaryKey()) == null){
             return HttpResponse.serverError();
         }
         return HttpResponse
                 .created(s)
-                .headers(headers -> headers.location(location(s.getName())));
+                .headers(headers -> headers.location(location(s.getSlug())));
     }
 
     // can delete if confirmed not needed
@@ -43,28 +43,30 @@ public class SiteController {
         return siteManager.getByPrimaryKey(id);
     }
 
-    @Get(value = "/{name}")
-    public Site list(String name){return siteManager.getBySiteName(name);}
+    @Get(value = "/{slug}")
+    public Site list(String slug){return siteManager.getBySiteSlug(slug);}
 
-    @Delete("/{name}")
-    public HttpResponse delete(String name){
-        Site s = siteManager.getBySiteName(name);
+    @Delete("/{slug}")
+    public HttpResponse delete(String slug){
+        Site s = siteManager.getBySiteSlug(slug);
         siteManager.delete(s);
         return HttpResponse.noContent();
     }
 
     @Put("/")
-    public HttpResponse update(@Body Site updatedSite) {
-        siteManager.update(updatedSite);
+    public HttpResponse update(@Body SiteUpdateCommand updatedSiteCommand) {
+        System.out.println("+++++++++" + updatedSiteCommand.getId() + " " + updatedSiteCommand.getSlug() + " " + updatedSiteCommand.getName());
+        Site newSite = new Site(updatedSiteCommand.getId(), updatedSiteCommand.getSlug(), updatedSiteCommand.getName());
+        siteManager.update(newSite);
         return HttpResponse
                 .noContent()
-                .header(HttpHeaders.LOCATION, location(updatedSite.getName()).getPath());
+                .header(HttpHeaders.LOCATION, location(updatedSiteCommand.getSlug()).getPath());
     }
 
-    protected URI location(String siteName) {
+    protected URI location(String siteSlug) {
         String encodedSlug = null;
         try {
-            encodedSlug = URLEncoder.encode(siteName, java.nio.charset.StandardCharsets.UTF_8.toString());
+            encodedSlug = URLEncoder.encode(siteSlug, java.nio.charset.StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {
             return null;
         }

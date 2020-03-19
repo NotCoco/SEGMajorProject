@@ -5,6 +5,8 @@ import main.java.com.projectBackEnd.Entities.Site.Site;
 import java.io.Serializable;
 import java.util.List;
 
+//TODO Remove methods not called by the API i.e. only called by testing
+
 public interface PageManagerInterface {
     //TODO Technically these are shared two methods that could come from a super Interface.
     public void delete(Serializable primaryKey);
