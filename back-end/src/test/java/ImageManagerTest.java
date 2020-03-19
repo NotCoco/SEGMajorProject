@@ -59,6 +59,7 @@ public class ImageManagerTest {
         }
         boolean check = (checkDelete)&&checkSave;
         assertTrue(check);
+        assertEquals(0, imageManager.getImageUrls().size());
     }
 
 }

@@ -57,7 +57,6 @@ public class ImageControllerTest {
 		String imageName = getEUrl(response);
 		HttpRequest request = HttpRequest.DELETE("/images/"+imageName);
 		HttpResponse response2 = client.toBlocking().exchange(request);
-
 		assertEquals(HttpStatus.NO_CONTENT, response2.getStatus());
 	}
 
