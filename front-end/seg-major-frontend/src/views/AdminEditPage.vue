@@ -39,9 +39,17 @@
             <a class="button is-static">/biliary-atresia/</a>
           </p>
           <p class="control is-expanded">
-            <input class="input" type="text" v-bind:value="page.slug" placeholder="Enter URL Slug here..." />
+            <input
+              class="input"
+              type="text"
+              v-bind:value="page.slug"
+              placeholder="Enter URL Slug here..."
+            />
           </p>
         </div>
+
+        <rich-text-editor></rich-text-editor>
+        
       </div>
     </section>
   </div>
@@ -51,12 +59,27 @@
 #admin-edit-page {
   height: 100%;
 }
+
+.section {
+  height: 100%;
+}
+
+.custom-content-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
 </style>
 
 <script>
+import RichTextEditor from "@/components/RichTextEditor";
+
 import SitesService from "@/services/sites-service";
 
 export default {
+  components: {
+    RichTextEditor
+  },
   data() {
     return {
       page: {},
