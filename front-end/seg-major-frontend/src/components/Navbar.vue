@@ -46,8 +46,8 @@
         </div>
       </div>
     </nav>
-    <transition name="vertical-slide" appear>
-      <router-link class="link" :to="`/news/${urgentNews.slug}`" v-if="displayUrgentNews">
+    <transition name="vertical-slide" v-if="displayUrgentNews" appear>
+      <router-link class="link" :to="`/news/${urgentNews.slug}`">
         <div class="notification is-warning urgent-news">
           <button class="delete" @click.prevent="closeUrgentNews"></button>
           <strong>{{ urgentNews.title }}:</strong> {{ urgentNews.description }}
@@ -58,6 +58,8 @@
 </template>
 
 <script>
+import NewsService from '@/services/news-service';
+
 export default {
   name: "Navbar",
   props: {
@@ -71,7 +73,7 @@ export default {
     }
   },
   computed: {
-    displayUrgentNews() { return this.showUrgentNews && !this.localHiddenState && !this.getHiddenState(); }
+    displayUrgentNews() { return this.showUrgentNews && this.urgentNews && !this.localHiddenState && !this.getHiddenState(); }
   },
   methods: {
     closeUrgentNews() {
@@ -85,10 +87,17 @@ export default {
   },
   data () {
     return {
-      urgentNews: { title: "Coronavirus Information", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", content: "Content", slug: "20200114-lorem-ipsum", date: new Date("2020-01-14"), pinned: true, urgent: true },
+      urgentNews: undefined,
       localHiddenState: false
     }
-  }
+  },
+  async created() {
+    const items = await NewsService.getAllNews();
+    if (items.length > 0) {
+      const firstItem = items[0];
+      if (firstItem.urgent) this.urgentNews = firstItem;
+    }
+  },
 };
 </script>
 
