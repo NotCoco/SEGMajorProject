@@ -45,5 +45,21 @@ export default {
       "title": page.title,
       "content": page.content
     })
-  }
+  },
+
+  getAllNews() {
+    return api.get('/news')
+  },
+
+  createNews(data) {
+    return api.post('/news', data)
+  },
+
+  updateNews(data) {
+    return api.put('/news', data)
+  },
+
+  deleteNews(data) {
+    return api.delete(`/news/${data.slug}`)
+  },
 }
