@@ -20,7 +20,7 @@
             </g>
           </svg>
         </router-link>
-        <router-link to="/home" class="navbar-item">
+        <router-link to="/" class="navbar-item">
           <div class="brand-text">
             <h1 class="brand-top">King's College Hospital</h1>
             <h1 class="brand-bottom">Paediatric Liver Service</h1>
@@ -30,7 +30,7 @@
 
       <div class="navbar-menu">
         <div class="navbar-start" style="margin-left: 35px">
-          <router-link to="/home" class="navbar-item">Home</router-link>
+          <router-link to="/" class="navbar-item">Home</router-link>
           <router-link to="/news" class="navbar-item">News</router-link>
         </div>
 
