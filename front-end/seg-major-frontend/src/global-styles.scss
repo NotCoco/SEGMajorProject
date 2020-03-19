@@ -100,3 +100,11 @@ div.ProseMirror[contenteditable=true] {
         font-weight: bold;
     }
 }
+
+
+a .card {
+    transition: background-color 0.2s;
+    &:hover {
+        background-color: #f8f8f8;
+    }
+}

@@ -5,11 +5,20 @@
         <div class="custom-content-container">
           <h1 class="title">All Sites</h1>
 
-          <div class="card" v-for="site of sites" v-bind:key="site.primaryKey" style="margin-bottom: 20px">
-            <div class="card-content">
-              <h5 class="title is-5">{{site.name}}</h5>
+          <router-link
+            v-for="site of sites"
+            v-bind:key="site.primaryKey"
+            class="is-block"
+            style="margin-bottom: 20px"
+            v-bind:to="site.name"
+            append
+          >
+            <div class="card">
+              <div class="card-content">
+                <h5 class="title is-5">{{site.name}}</h5>
+              </div>
             </div>
-          </div>
+          </router-link>
         </div>
       </section>
     </div>
