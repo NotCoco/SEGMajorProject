@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+
 import Home from '../views/Home.vue'
+import News from '../views/News.vue'
 
 import AdminLayout from '../views/AdminLayout.vue'
 import AdminHome from '../views/AdminHome.vue'
@@ -17,6 +19,13 @@ const routes = [
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/news',
+    component: News,
+    props(route) {
+      if (route.query.page) return { currentPageNumber: Number(route.query.page) }
+    }
   },
   {
     path: '/admin',
