@@ -35,10 +35,10 @@ public class PageManagerTest {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         pageManager = PageManager.getPageManager();
         siteManager = SiteManager.getSiteManager();
-        siteManager.addSite("Disease1");
-        siteManager.addSite("Disease2");
-        testSiteA = siteManager.getBySiteName("Disease1");
-        testSiteB = siteManager.getBySiteName("Disease2");
+        siteManager.addSite("Disease1", "name");
+        siteManager.addSite("Disease2", "name2");
+        testSiteA = siteManager.getBySiteSlug("Disease1");
+        testSiteB = siteManager.getBySiteSlug("Disease2");
         connectionLeakUtil = new ConnectionLeakUtil();
     }
 
@@ -101,17 +101,17 @@ public class PageManagerTest {
 
     @Test
     public void testForeignKeyDelete() {
-        siteManager.addSite("toDeleteSite");
+        siteManager.addSite("toDeleteSite", "siteName");
         pageManager.addPage("toDeleteSite", "Slug", 3, "Title", "content");
-        siteManager.delete(siteManager.getBySiteName("toDeleteSite"));
+        siteManager.delete(siteManager.getBySiteSlug("toDeleteSite"));
         assertEquals(0, pageManager.getAllPages().size());
     }
 
     @Test
     public void testSiteUpdateEffectOnPage() {
-        siteManager.addSite("toUpdateSite");
+        siteManager.addSite("toUpdateSite", "siteName");
         pageManager.addPage("toUpdateSite", "Slug", 3, "title", "content");
-        Site updatedSite = siteManager.getBySiteName("toUpdateSite");
+        Site updatedSite = siteManager.getBySiteSlug("toUpdateSite");
         updatedSite.setName("UpdatedSite");
         siteManager.update(updatedSite);
         assertEquals("UpdatedSite", pageManager.getAllPages().get(0).getSite().getName());
@@ -202,9 +202,9 @@ public class PageManagerTest {
 
     @Test
     public void testUpdatePage() {
-        assertNotNull(siteManager.getBySiteName("Disease1"));
+        assertNotNull(siteManager.getBySiteSlug("Slug1"));
 
-        Page newPage = new Page("Disease1","Slug3", 10, "Title3", "New content!");
+        Page newPage = new Page("Slug1","Slug3", 10, "Title3", "New content!");
         pageManager.addPage(newPage);
         int assignedID = pageManager.getAllPages().get(0).getPrimaryKey();
         fillDatabase();

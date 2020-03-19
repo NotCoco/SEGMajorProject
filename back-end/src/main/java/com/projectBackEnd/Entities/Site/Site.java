@@ -21,6 +21,7 @@ public class Site implements TableEntity {
     public static final String TABLENAME = "Sites";
     public static final String ID = "ID";
     public static final String SITENAME = "Name";
+    public static final String SITESLUG = "Slug";
 
     // Private fields
     @Id
@@ -29,19 +30,25 @@ public class Site implements TableEntity {
     private Integer primaryKey;
 
     @Type(type="text")
-    @Column(name = SITENAME, nullable=false, unique=true)
+    @Column(name = SITENAME, nullable=false)
     private String name;
+
+    @Type(type="text")
+    @Column(name = SITESLUG, nullable=false, unique=true)
+    private String slug;
 
     public Site() {}
 
-    public Site(String siteName) {
+    public Site(String siteSlug, String siteName) {
         this.primaryKey = -1;
         this.name = siteName;
+        this.slug = siteSlug;
     }
 
-    public Site(int ID, String siteName) {
+    public Site(int ID, String siteSlug, String siteName) {
         this.primaryKey = ID;
         this.name = siteName;
+        this.slug = siteSlug;
     }
 
     /**
@@ -62,6 +69,9 @@ public class Site implements TableEntity {
         this.name = name;
     }
 
+    public void setSlug(String newSlug) { this.slug = newSlug; }
+    public String getSlug() { return slug; }
+
     @Override
     public String toString() {
         return "Site: " + primaryKey +", Name: " + name;
@@ -76,6 +86,7 @@ public class Site implements TableEntity {
     public TableEntity copy(TableEntity toCopy) {
         Site siteToCopy = (Site) toCopy;
         setName(siteToCopy.getName());
+        setSlug(siteToCopy.getSlug());
         return siteToCopy;
     }
 
