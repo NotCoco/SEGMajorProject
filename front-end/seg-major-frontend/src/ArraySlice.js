@@ -18,13 +18,13 @@ export default class ArraySlice {
   }
 
   [Symbol.iterator]() {
-    console.log(this);
-    var index = this.#from - 1;
+    let index = this.#from - 1;
+    const lastIndex = index + this.length;
 
     return {
       next: () => ({
         value: this.#array[++index],
-        done: index >= this.length
+        done: index > lastIndex
       })
     };
   }
