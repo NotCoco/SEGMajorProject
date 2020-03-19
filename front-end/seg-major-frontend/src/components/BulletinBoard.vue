@@ -5,6 +5,8 @@
       <p class="subtitle">Read our latest news and guidance</p>
     </div>
 
+    <div class="no-news-message has-text-centered" v-if="!loading && items.length === 0">No news items</div>
+
     <router-link v-for="item in displayItems" :key="item.slug" :to="`/news/${item.slug}`">
       <news-card :newsItem="item"></news-card>
     </router-link>
@@ -27,6 +29,7 @@ export default {
   },
   data () {
     return {
+      loading: false,
       items: []
     }
   },
@@ -36,7 +39,9 @@ export default {
     }
   },
   async created() {
+    this.loading = true;
     this.items = await NewsService.getAllNews();
+    this.loading = false;
   }
 };
 </script>
