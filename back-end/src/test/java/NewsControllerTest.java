@@ -65,15 +65,34 @@ public class NewsControllerTest {
 
     @Test
     public void testUpdateLegalNews(){
-        HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics",
-                true, "COVID-19 originated from Wuhan, China", "slug");
-
-        System.out.println(id + " 2222222");
+        HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug");
+        assertEquals("slug", getEUrl(response));
+        String slug = getEUrl(response);
+        News news = newsManager.getNewsBySlug(slug);
+        int id = news.getPrimaryKey();
         response = putNews(id, new Date(324189213L), true, "NewDescription", "NewTitle",true, "NewContent", "NewSlug");
-//        assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
     }
 
+    @Test
+    public void testDeleteNews(){
+        HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug");
+        assertEquals("slug", getEUrl(response));
+        String slug = getEUrl(response);
+        HttpRequest request = HttpRequest.DELETE("/news/"+slug);
+        response = client.toBlocking().exchange(request);
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
+    }
 
+    @Test
+    public void testNonExistingNewsReturns404() {
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.GET("/news"));
+        });
+
+        assertNotNull(thrown.getResponse());
+        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
+    }
 
     protected HttpResponse putNews(Integer primaryKey, Date date, boolean pinned, String description, String title,
                                    boolean urgent, String content, String slug) {
@@ -100,16 +119,6 @@ public class NewsControllerTest {
             return null;
         }
         return null;
-    }
-
-    protected Long getEId(HttpResponse response) {
-        String val = response.header(HttpHeaders.LOCATION);
-        if (val != null) {
-            int index = val.indexOf("/news/");
-            if (index != -1) return Long.valueOf(val.substring(index + "/news/".length()));
-            else return null;
-        }
-        else return null;
     }
 
 }
