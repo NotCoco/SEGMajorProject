@@ -182,6 +182,15 @@ public class PageControllerTest {
     }
 
     @Test
+    public void testCreateSameKeys() {
+        addSite("testSiteA");
+        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+        addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
+        });
+    }
+
+    @Test
     public void testDeletePage() {
         addSite("testSiteA");
         HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
