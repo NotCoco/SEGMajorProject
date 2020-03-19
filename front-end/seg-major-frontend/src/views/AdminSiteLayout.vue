@@ -17,7 +17,10 @@
 
           <nav class="sidebar-navigation">
             <div class="navigation-items">
-              <a class="navigation-item is-unselectable">Pages</a>
+              <router-link
+                v-bind:to="`/admin/sites/${this.site.name}/pages`"
+                class="navigation-item is-unselectable"
+              >Pages</router-link>
 
               <a class="navigation-item is-unselectable">Drug Chart</a>
             </div>
