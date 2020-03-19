@@ -5,11 +5,18 @@
         <h1 class="title">All Pages</h1>
 
         <div class="pages-list">
-          <div class="card" v-for="page of pages" v-bind:key="page.primaryKey">
-            <div class="card-content">
-              <p class="page-name">{{ page.title }}</p>
+          <router-link
+            v-bind:to="page.slug"
+            append
+            v-for="page of pages"
+            v-bind:key="page.primaryKey"
+          >
+            <div class="card">
+              <div class="card-content">
+                <p class="page-name">{{ page.title }}</p>
+              </div>
             </div>
-          </div>
+          </router-link>
         </div>
       </div>
     </section>
