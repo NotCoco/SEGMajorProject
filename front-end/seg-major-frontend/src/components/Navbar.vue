@@ -35,7 +35,7 @@
         </div>
 
         <div class="navbar-end">
-          <div class="searchbox-container">
+          <div class="searchbox-container" v-if="showSearchBar">
             <div class="control has-icons-left" style="height: 100%">
               <span class="icon is-small is-left" style="height: 100%;">
                 <i class="search-icon material-icons">search</i>
