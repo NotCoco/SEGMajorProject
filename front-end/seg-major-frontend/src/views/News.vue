@@ -12,7 +12,7 @@
 
     <div class="section">
       <div class="container">
-        <div v-if="paginatedItems.length === 0" class="has-text-dark has-text-centered">There are no news items at this time.</div>
+        <div v-if="!loading && paginatedItems.length === 0" class="has-text-dark has-text-centered">There are no news items at this time.</div>
         <div v-else>
           <router-link v-for="item in paginatedItems" :key="item.slug" :to="item.slug" append>
             <news-card :newsItem="item" class="news-card"></news-card>
@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import NewsService from '@/services/news-service';
 import Navbar from "@/components/Navbar.vue";
 import NewsCard from "@/components/NewsCard.vue";
 
@@ -106,26 +107,15 @@ export default {
   },
   data () {
     return {
-      items: [
-        { title: "Title1", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", slug: "20200310-lorem-ipsum", date: new Date("2020-03-10"), pinned: false, urgent: false },
-        { title: "Title2", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", slug: "20200214-lorem-ipsum", date: new Date("2020-02-14"), pinned: true, urgent: false },
-        { title: "Title3", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", slug: "20200311-lorem-ipsum", date: new Date("2020-03-11"), pinned: false, urgent: false },
-        { title: "Title4", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", slug: "20200114-lorem-ipsum", date: new Date("2020-01-14"), pinned: true, urgent: true },
-        { title: "Title5", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", slug: "20200313-lorem-ipsum", date: new Date("2020-03-13"), pinned: false, urgent: false },
-        { title: "Title6", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", slug: "20200414-lorem-ipsum", date: new Date("2020-04-14"), pinned: false, urgent: false },
-        { title: "Title7", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", slug: "20200312-lorem-ipsum", date: new Date("2020-03-12"), pinned: false, urgent: false },
-        { title: "Title8", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", slug: "20200514-lorem-ipsum", date: new Date("2020-05-14"), pinned: false, urgent: false },
-        { title: "Title8", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", slug: "20200514-lorem-ipsum1", date: new Date("2020-05-14"), pinned: false, urgent: false },
-        { title: "Title8", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", slug: "20200514-lorem-ipsum2", date: new Date("2020-05-14"), pinned: false, urgent: false },
-        { title: "Title8", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", slug: "20200514-lorem-ipsum3", date: new Date("2020-05-14"), pinned: false, urgent: false },
-        { title: "Title8", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", slug: "20200514-lorem-ipsum4", date: new Date("2020-05-14"), pinned: false, urgent: false },
-        { title: "Title8", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", slug: "20200514-lorem-ipsum5", date: new Date("2020-05-14"), pinned: false, urgent: false },
-        { title: "Title8", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", slug: "20200514-lorem-ipsum6", date: new Date("2020-05-14"), pinned: false, urgent: false },
-        { title: "Title8", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", slug: "20200514-lorem-ipsum7", date: new Date("2020-05-14"), pinned: false, urgent: false },
-        { title: "Title8", description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", slug: "20200514-lorem-ipsum8", date: new Date("2020-05-14"), pinned: false, urgent: false },
-      ],
+      loading: false,
+      items: [],
       pageSize: 10
     }
+  },
+  async created() {
+    this.loading = true;
+    this.items = await NewsService.getAllNews();
+    this.loading = false;
   },
 };
 </script>
