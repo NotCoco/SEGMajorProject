@@ -18,7 +18,7 @@
           <nav class="sidebar-navigation">
             <div class="navigation-items">
               <router-link
-                v-bind:to="`/admin/sites/${this.site.name}/pages`"
+                v-bind:to="`/admin/sites/${this.site.slug}/pages`"
                 class="navigation-item is-unselectable"
               >Pages</router-link>
 

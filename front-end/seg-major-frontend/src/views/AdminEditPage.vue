@@ -11,10 +11,10 @@
               <router-link to="/admin/sites">Sites</router-link>
             </li>
             <li>
-              <router-link v-bind:to="`/admin/sites/${page.site.name}`">{{page.site.name || ''}}</router-link>
+              <router-link v-bind:to="`/admin/sites/${page.site.slug}`">{{page.site.name || ''}}</router-link>
             </li>
             <li>
-              <router-link v-bind:to="`/admin/sites/${page.site.name}/pages`">Pages</router-link>
+              <router-link v-bind:to="`/admin/sites/${page.site.slug}/pages`">Pages</router-link>
             </li>
             <li class="is-active">
               <a href="#" aria-current="page">Page Editor</a>
@@ -107,7 +107,7 @@ export default {
     },
     async createNewPage() {
       // Generate Page index
-      const currentPages = await SitesService.getAllPages(this.page.site.name);
+      const currentPages = await SitesService.getAllPages(this.page.site.slug);
       if (currentPages && currentPages.length > 0) {
         this.page.index = currentPages[currentPages.length - 1].index + 1;
       } else {
@@ -119,7 +119,7 @@ export default {
       const res = await SitesService.createPage(this.page);
       this.page = res;
       this.$router.push(
-        `/admin/sites/${this.page.site.name}/pages/${this.page.slug}`
+        `/admin/sites/${this.page.site.slug}/pages/${this.page.slug}`
       );
     },
     async updatePage() {
@@ -130,14 +130,14 @@ export default {
       const currentSlug = this.$route.params.pageSlug;
       if (currentSlug != this.page.slug) {
         this.$router.push(
-          `/admin/sites/${this.page.site.name}/pages/${this.page.slug}`
+          `/admin/sites/${this.page.site.slug}/pages/${this.page.slug}`
         );
       }
     },
     async deletePage() {
       const res = await SitesService.deletePage(this.page);
       console.log(res);
-      this.$router.push(`/admin/sites/${this.page.site.name}/pages`);
+      this.$router.push(`/admin/sites/${this.page.site.slug}/pages`);
     }
   },
   async mounted() {

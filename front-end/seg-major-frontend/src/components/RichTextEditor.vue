@@ -1,6 +1,6 @@
 <template>
   <div id="rich-text-editor">
-    <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }">
+    <editor-menu-bar v-if="editable" :editor="editor" v-slot="{ commands, isActive }">
       <div class="rich-text-editor-menu">
         <button
           class="button is-light rte-menu-button"
@@ -140,6 +140,12 @@ export default {
     EditorMenuBar,
     EditorContent
   },
+  props: {
+    editable: {
+      type: Boolean,
+      default: true
+    }
+  },
   data() {
     return {
       editor: new Editor({
@@ -166,7 +172,8 @@ export default {
             notAfter: ["paragraph"]
           }),
           new Notification()
-        ]
+        ],
+        editable: this.editable,
       })
     };
   },
@@ -179,7 +186,9 @@ export default {
     }
   },
   beforeDestroy() {
-    this.editor.destroy();
+    setTimeout(() => {
+      this.editor.destroy();
+    }, 200)
   }
 };
 </script>

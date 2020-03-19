@@ -11,6 +11,8 @@ import AdminNewSite from '../views/AdminNewSite.vue'
 import AdminSiteLayout from '../views/AdminSiteLayout.vue'
 import AdminAllPages from '../views/AdminAllPages.vue'
 import AdminEditPage from '../views/AdminEditPage.vue'
+import SiteContentViewerLayout from '../views/SiteContentViewerLayout.vue'
+import PageViewer from '../views/PageViewer.vue'
 
 Vue.use(VueRouter)
 
@@ -66,6 +68,16 @@ const routes = [
             props: { newPage: false }
           }
         ]
+      }
+    ]
+  },
+  {
+    path: '/:siteName',
+    component: SiteContentViewerLayout,
+    children: [
+      {
+        path: ':pageSlug',
+        component: PageViewer
       }
     ]
   }

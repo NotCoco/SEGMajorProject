@@ -3,7 +3,7 @@
     <div class="notification" style="margin-bottom: 0;" v-bind:class="color">
       <div ref="content" :contenteditable="view.editable.toString()"></div>
     </div>
-    <div class="card" contenteditable="false">
+    <div class="card" v-if="view.editable" contenteditable="false">
       <div class="card-content">
         <div class="buttons">
           <button
