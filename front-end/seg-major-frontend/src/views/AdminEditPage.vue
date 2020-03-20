@@ -36,7 +36,7 @@
         <label class="label">URL Slug</label>
         <div class="field has-addons" style="margin-bottom: 35px;">
           <p class="control">
-            <a class="button is-static">/biliary-atresia/</a>
+            <a class="button is-static" v-if="page.site">/{{page.site.slug}}/</a>
           </p>
           <p class="control is-expanded">
             <input
