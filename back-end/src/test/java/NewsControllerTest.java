@@ -10,18 +10,13 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import main.java.com.projectBackEnd.*;
-import main.java.com.projectBackEnd.Entities.Medicine.*;
 
 import javax.inject.Inject;
 
+
 import main.java.com.projectBackEnd.Entities.News.*;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.*;
 
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -53,8 +48,11 @@ public class NewsControllerTest {
         newsManager.deleteAll();
     }
 
+    @AfterEach
+    public void cleanUp(){ newsManager.deleteAll(); }
+
     @Test
-    public void testAddAndGetNews(){
+    public void testAddNews(){
         HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics",
                 true, "COVID-19 originated from Wuhan, China", "slug");
         assertEquals(HttpStatus.CREATED, response.getStatus());
@@ -86,15 +84,43 @@ public class NewsControllerTest {
         assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
     }
 
-//    @Test
-//    public void testNonExistingNewsReturns404() {
-//        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-//            client.toBlocking().exchange(HttpRequest.GET("/news/nonsense"));
-//        });
-//
-//        assertNotNull(thrown.getResponse());
-//        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
-//    }
+    @Test
+    public void testAddAndUpdateNews(){
+        HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug");
+        assertEquals(HttpStatus.CREATED, response.getStatus());
+
+        String slug =  getEUrl(response);
+        int id = newsManager.getNewsBySlug(slug).getPrimaryKey();
+        response = putNews(id, new Date(34189213L) , true, "New description", "New title", true, "COVID-19 originated from Wuhan, China", "slug");
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
+        News news = newsManager.getNewsBySlug(slug);
+        assertEquals("New description", news.getDescription());
+        assertEquals("New title", news.getTitle());
+    }
+
+    @Test
+    public void testAddAndGetNews(){
+        HttpResponse response = addNews(new Date(34189213L) , true, "Test description", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug");
+        assertEquals(HttpStatus.CREATED, response.getStatus());
+        List<News> newsList = getAllNews();
+        assertEquals("Test description",newsList.get(0).getDescription());
+    }
+
+    @Test
+    public void testDeleteAndGetNews(){
+        HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "TestSlug");
+        assertEquals(HttpStatus.CREATED, response.getStatus());
+        String slug = getEUrl(response);
+        News news = newsManager.getNewsBySlug(slug);
+        int id = news.getPrimaryKey();
+
+        HttpRequest request = HttpRequest.DELETE("/news/"+"TestSlug");
+        response = client.toBlocking().exchange(request);
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.GET("/news/"+"TestSlug"));
+        });
+    }
+
 
     protected HttpResponse putNews(Integer primaryKey, Date date, boolean pinned, String description, String title,
                                    boolean urgent, String content, String slug) {
@@ -109,6 +135,11 @@ public class NewsControllerTest {
                 urgent, content, slug));
         HttpResponse response = client.toBlocking().exchange(request);
         return response;
+    }
+
+    protected List<News> getAllNews(){
+        HttpRequest request = HttpRequest.GET("/news");
+        return client.toBlocking().retrieve(request, Argument.of(List.class, News.class));
     }
 
     private String getEUrl(HttpResponse response) {
