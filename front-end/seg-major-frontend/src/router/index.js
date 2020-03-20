@@ -13,6 +13,7 @@ import AdminAllPages from '../views/AdminAllPages.vue'
 import AdminEditPage from '../views/AdminEditPage.vue'
 import SiteContentViewerLayout from '../views/SiteContentViewerLayout.vue'
 import PageViewer from '../views/PageViewer.vue'
+import NewsViewer from '../views/NewsViewer.vue'
 
 Vue.use(VueRouter)
 
@@ -28,6 +29,10 @@ const routes = [
     props(route) {
       if (route.query.page) return { currentPageNumber: Number(route.query.page) }
     }
+  },
+  {
+    path: '/news/:newsSlug',
+    component: NewsViewer
   },
   {
     path: '/admin',
