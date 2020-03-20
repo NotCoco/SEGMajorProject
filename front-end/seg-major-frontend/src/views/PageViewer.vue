@@ -11,6 +11,11 @@
 </template>
 
 <style lang="scss" scoped>
+@import '@/styles.scss';
+.title {
+  color: $primary-dark;
+  font-size: 35px;
+}
 </style>
 
 <script>
