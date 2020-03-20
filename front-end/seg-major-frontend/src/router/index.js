@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import VueMeta from 'vue-meta'
 
 import Home from '../views/Home.vue'
 import News from '../views/News.vue'
@@ -16,6 +17,7 @@ import PageViewer from '../views/PageViewer.vue'
 import NewsViewer from '../views/NewsViewer.vue'
 
 Vue.use(VueRouter)
+Vue.use(VueMeta)
 
 const routes = [
   {
