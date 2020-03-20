@@ -1,8 +1,13 @@
+runtime: java
+env: flex
+beta_settings:
+  cloud_sql_instances: even-kite-271719:europe-west2:segmedapp01773=tcp:3306
+
 datasources:
   default:
-    url: ${JDBC_URL:`jdbc:mysql://127.0.0.1:3306/testunittest`}
-    username: ${JDBC_USER:root}
-    password: ${JDBC_PASSWORD:}
+    url: ${JDBC_URL:`jdbc:mysql://127.0.0.1:3306/segmajor0105`}
+    username: ${JDBC_USER:client}
+    password: ${JDBC_PASSWORD:testClientPw}
     driverClassName: ${JDBC_DRIVER:com.mysql.jdbc.Driver}
     dialect: org.hibernate.dialect.MySQL8Dialect
 
