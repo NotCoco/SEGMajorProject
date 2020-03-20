@@ -146,17 +146,13 @@ export default {
     const siteSlug = this.$route.params.siteSlug;
     const pageSlug = this.$route.params.pageSlug;
 
-    console.log(siteSlug)
-
     if (!this.newPage) {
-      console.log("YOOOo")
       this.page = await SitesService.getPage(siteSlug, pageSlug);
       setTimeout(() => {
         this.$refs.rte.setContent(JSON.parse(this.page.content));
       });
     } else {
       this.page.site = { slug: siteSlug };
-      console.log(this.page)
     }
 
     this.showBreadcrumbs = true;

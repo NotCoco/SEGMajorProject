@@ -26,7 +26,6 @@ export default {
   },
 
   createPage(page) {
-    console.log(page)
     return api.post(`/sites/${page.site.slug}/pages`, {
       "site": page.site.slug,
       "slug": page.slug,
@@ -37,7 +36,6 @@ export default {
   },
 
   updatePage(page) {
-    console.log(page)
     return api.put(`/sites/${page.site.slug}/pages`, {
       "primaryKey": page.primaryKey,
       "site": page.site.slug,
