@@ -3,6 +3,7 @@
     <section class="section">
       <div class="custom-content-container">
         <loading-spinner class="loading-spinner" v-if="loading"></loading-spinner>
+        <http-status :httpStatusCode="404" v-else-if="news === null"></http-status>
         <div v-else>
           <h1 class="title">{{ news.title }}</h1>
           <rich-text-editor ref="rte" :editable="false"></rich-text-editor>
@@ -17,12 +18,14 @@
 
 <script>
 import LoadingSpinner from "@/components/LoadingSpinner";
+import HttpStatus from "@/components/HttpStatus";
 import RichTextEditor from "@/components/RichTextEditor";
 import NewsService from "@/services/news-service";
 
 export default {
   components: {
     LoadingSpinner,
+    HttpStatus,
     RichTextEditor
   },
   data() {
