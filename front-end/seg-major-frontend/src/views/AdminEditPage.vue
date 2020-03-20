@@ -48,7 +48,7 @@
           </p>
         </div>
 
-        <div>
+        <div style="flex-grow: 1;">
           <rich-text-editor ref="rte"></rich-text-editor>
         </div>
 
