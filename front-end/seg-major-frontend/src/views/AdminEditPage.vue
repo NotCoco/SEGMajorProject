@@ -53,7 +53,7 @@
         </div>
 
         <div class="buttons" style="justify-content: flex-end">
-          <button class="button is-light">Cancel</button>
+          <router-link to="../" class="button is-light">Cancel</router-link>
           <button class="button is-danger">Delete</button>
           <button class="button is-success" @click="save()">Save</button>
         </div>
