@@ -20,19 +20,19 @@ public class SiteAddCommand {
 
     public SiteAddCommand(){}
 
-    public SiteAddCommand(String slugName, String siteName){
-        this.slug = slugName;
-        this.name = siteName;
+    public SiteAddCommand(String slug, String site){
+        this.slug = slug;
+        this.name = site;
     }
 
     public String getName(){
         return name;
     }
 
-    public void setName(String newName) {
-        this.name = newName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getSlug() { return slug; }
-    public void setSlug(String newSlug) { this.slug = newSlug; }
+    public void setSlug(String slug) { this.slug = slug; }
 }
