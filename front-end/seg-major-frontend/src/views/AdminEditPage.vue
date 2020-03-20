@@ -48,7 +48,9 @@
           </p>
         </div>
 
-        <rich-text-editor ref="rte"></rich-text-editor>
+        <div>
+          <rich-text-editor ref="rte"></rich-text-editor>
+        </div>
 
         <div class="buttons" style="justify-content: flex-end">
           <button class="button is-light">Cancel</button>
@@ -126,7 +128,7 @@ export default {
       this.page.content = JSON.stringify(this.$refs.rte.getJSON());
 
       await SitesService.updatePage(this.page);
-      
+
       const currentSlug = this.$route.params.pageSlug;
       if (currentSlug != this.page.slug) {
         this.$router.push(
