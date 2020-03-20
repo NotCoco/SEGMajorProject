@@ -31,47 +31,7 @@
           </div>
 
           <div class="column is-narrow">
-            <div class="card bulletin-card">
-              <div class="section">
-                <p class="title is-5">Bulletin Board</p>
-                <p class="subtitle">Read the latest news!</p>
-              </div>
-
-              <router-link to>
-                <div class="card bulletin-item">
-                  <div class="card-content">
-                    <h1 class="bulletin-title">Weekly Newsletter #5</h1>
-                    <p
-                      class="bulletin-content-preview"
-                    >Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel veritatis in debitis eos eum quis suscipit doloremque corporis eveniet animi maxime voluptatem veniam neque incidunt ducimus sed, aliquid quos ipsa.</p>
-                  </div>
-                </div>
-              </router-link>
-
-              <router-link to>
-                <div class="card bulletin-item">
-                  <div class="card-content">
-                    <h1 class="bulletin-title">Updated Advice</h1>
-                    <p
-                      class="bulletin-content-preview"
-                    >Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid eos distinctio enim! Pariatur impedit atque eligendi, esse, dolorum numquam voluptates dolorem nostrum aliquam quaerat deleniti ipsam et incidunt quo nisi.</p>
-                  </div>
-                </div>
-              </router-link>
-
-              <router-link to>
-                <div class="card bulletin-item">
-                  <div class="card-content">
-                    <h1 class="bulletin-title">Important News</h1>
-                    <p
-                      class="bulletin-content-preview"
-                    >Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-                  </div>
-                </div>
-              </router-link>
-
-              <button class="button is-fullwidth is-light is-medium">View all</button>
-            </div>
+            <bulletin-board></bulletin-board>
           </div>
         </div>
       </div>
@@ -80,10 +40,14 @@
 </template>
 
 <script>
+import BulletinBoard from "@/components/BulletinBoard.vue";
 import SitesService from "@/services/sites-service";
 
 export default {
   name: "Home",
+  components: {
+    BulletinBoard: BulletinBoard
+  },
   data() {
     return {
       sites: []
@@ -97,30 +61,6 @@ export default {
 
 
 <style lang="scss" scoped>
-.bulletin-card {
-  width: 500px;
-  border-top: 5px solid #353535;
-}
-
-.bulletin-item {
-  transition: background-color 0.2s;
-  &:hover {
-    background-color: #f8f8f8;
-  }
-
-  .bulletin-title {
-    font-size: 18px;
-    font-weight: bold;
-  }
-
-  .bulletin-content-preview {
-    // Show ellipsis on text overflow
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-}
-
 .site-card {
   transition: background-color 0.2s;
   &:hover {
