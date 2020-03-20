@@ -34,16 +34,6 @@ export default {
     return {
       loading: false,
       items: []
-      // items: [
-      //   { title: "Title1", content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", slug: "20200310-lorem-ipsum", date: new Date("2020-03-10"), pinned: false, urgent: false },
-      //   { title: "Title2", content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", slug: "20200214-lorem-ipsum", date: new Date("2020-02-14"), pinned: true, urgent: false },
-      //   { title: "Title3", content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", slug: "20200311-lorem-ipsum", date: new Date("2020-03-11"), pinned: false, urgent: false },
-      //   { title: "Title4", content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", slug: "20200114-lorem-ipsum", date: new Date("2020-01-14"), pinned: true, urgent: true },
-      //   { title: "Title5", content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", slug: "20200313-lorem-ipsum", date: new Date("2020-03-13"), pinned: false, urgent: false },
-      //   { title: "Title6", content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", slug: "20200414-lorem-ipsum", date: new Date("2020-04-14"), pinned: false, urgent: false },
-      //   { title: "Title7", content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", slug: "20200312-lorem-ipsum", date: new Date("2020-03-12"), pinned: false, urgent: false },
-      //   { title: "Title8", content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", slug: "20200514-lorem-ipsum", date: new Date("2020-05-14"), pinned: false, urgent: false },
-      // ]
     }
   },
   computed: {
