@@ -13,11 +13,11 @@ public class SiteUpdateCommand extends SiteAddCommand {
 
     public SiteUpdateCommand(){}
 
-    public SiteUpdateCommand(Integer id, String siteSlug, String siteName){
-        super(siteSlug, siteName);
+    public SiteUpdateCommand(Integer id, String slug, String site){
+        super(slug, site);
         this.id = id;
     }
-    public void setId(Integer newId) { id = newId; }
+    public void setId(Integer id) { this.id = id; }
     public Integer getId() { return id; }
 
 }
