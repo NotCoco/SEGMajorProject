@@ -153,6 +153,7 @@ export default {
       });
     } else {
       this.page.site = { slug: siteSlug };
+      this.page.site = await SitesService.getSite(siteSlug);
     }
 
     this.showBreadcrumbs = true;
