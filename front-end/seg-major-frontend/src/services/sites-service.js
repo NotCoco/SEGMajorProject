@@ -11,18 +11,18 @@ export default {
         return res.data
     },
 
-    async getSite(siteName) {
-        const res = await BackendService.getSite(siteName)
+    async getSite(siteSlug) {
+        const res = await BackendService.getSite(siteSlug)
         return res.data
     },
 
-    async getAllPages(siteName) {
-        const res = await BackendService.getAllPages(siteName)
+    async getAllPages(siteSlug) {
+        const res = await BackendService.getAllPages(siteSlug)
         return res.data
     },
 
-    async getPage(siteName, pageSlug) {
-        const res = await BackendService.getPage(siteName, pageSlug)
+    async getPage(siteSlug, pageSlug) {
+        const res = await BackendService.getPage(siteSlug, pageSlug)
         return res.data
     },
 

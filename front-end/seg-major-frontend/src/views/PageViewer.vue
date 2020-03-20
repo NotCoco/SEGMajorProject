@@ -27,10 +27,10 @@ export default {
     }
   },
   async mounted() {
-    const siteName = this.$route.params.siteName;
+    const siteSlug = this.$route.params.siteSlug;
     const pageSlug = this.$route.params.pageSlug;
 
-    this.page = await SitesService.getPage(siteName, pageSlug);
+    this.page = await SitesService.getPage(siteSlug, pageSlug);
     setTimeout(() => {
       this.$refs.rte.setContent(JSON.parse(this.page.content));
     });

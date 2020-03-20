@@ -45,8 +45,8 @@ export default {
     };
   },
   async mounted() {
-    const siteName = this.$route.params.siteName;
-    this.site = await SitesService.getSite(siteName);
+    const siteSlug = this.$route.params.siteSlug;
+    this.site = await SitesService.getSite(siteSlug);
   }
 };
 </script>

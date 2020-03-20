@@ -46,7 +46,7 @@ const routes = [
         component: AdminNewSite
       },
       {
-        path: 'sites/:siteName',
+        path: 'sites/:siteSlug',
         component: AdminSiteLayout,
         children: [
           {
@@ -72,7 +72,7 @@ const routes = [
     ]
   },
   {
-    path: '/:siteName',
+    path: '/:siteSlug',
     component: SiteContentViewerLayout,
     children: [
       {

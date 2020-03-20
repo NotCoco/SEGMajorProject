@@ -143,16 +143,20 @@ export default {
     }
   },
   async mounted() {
-    const siteName = this.$route.params.siteName;
+    const siteSlug = this.$route.params.siteSlug;
     const pageSlug = this.$route.params.pageSlug;
 
+    console.log(siteSlug)
+
     if (!this.newPage) {
-      this.page = await SitesService.getPage(siteName, pageSlug);
+      console.log("YOOOo")
+      this.page = await SitesService.getPage(siteSlug, pageSlug);
       setTimeout(() => {
         this.$refs.rte.setContent(JSON.parse(this.page.content));
       });
     } else {
-      this.page.site = { name: siteName };
+      this.page.site = { slug: siteSlug };
+      console.log(this.page)
     }
 
     this.showBreadcrumbs = true;
