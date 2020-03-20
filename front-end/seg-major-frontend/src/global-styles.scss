@@ -66,7 +66,7 @@ html, body {
 
 
 // RICH TEXT EDITOR STYLES
-div.ProseMirror[contenteditable=true] {
+div.ProseMirror {
     outline: none; // prevent outline from showing in RTE
 }
   
