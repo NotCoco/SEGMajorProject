@@ -18,8 +18,8 @@ public class PageUpdateCommand extends PageAddCommand {
         super();
     }
 
-    public PageUpdateCommand(Integer primaryKey, String siteName, String slug, Integer index, String title, String content){
-        super(siteName, slug, index, title, content);
+    public PageUpdateCommand(Integer primaryKey, String site, String slug, Integer index, String title, String content){
+        super(site, slug, index, title, content);
         this.primaryKey = primaryKey;
     }
 
