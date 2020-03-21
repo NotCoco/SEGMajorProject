@@ -33,13 +33,13 @@ public class SiteController {
     public HttpResponse<Site> add(@Header("X-API-Key") String session,@Body SiteAddCommand command) {
 		if(!sessionManager.verifySession(session))
 			return HttpResponse.unauthorized();
-        Site s = siteManager.addSite(command.getName());
+        Site s = siteManager.addSite(command.getSlug(), command.getName());
         if(siteManager.getByPrimaryKey(s.getPrimaryKey()) == null){
             return HttpResponse.serverError();
         }
         return HttpResponse
                 .created(s)
-                .headers(headers -> headers.location(location(s.getName())));
+                .headers(headers -> headers.location(location(s.getSlug())));
     }
 
     // can delete if confirmed not needed
@@ -48,33 +48,35 @@ public class SiteController {
         return siteManager.getByPrimaryKey(id);
     }
 
-    @Get(value = "/{name}")
-    public Site list(String name){return siteManager.getBySiteName(name);}
+    @Get(value = "/{slug}")
+    public Site list(String slug){return siteManager.getBySiteSlug(slug);}
 
-    @Delete("/{name}")
-    public HttpResponse delete(@Header("X-API-Key") String session,String name){
+    @Delete("/{slug}")
+    public HttpResponse delete(@Header("X-API-Key") String session,String slug){
 		if(!sessionManager.verifySession(session))
 			return HttpResponse.unauthorized();
-        Site s = siteManager.getBySiteName(name);
+        Site s = siteManager.getBySiteSlug(slug);
         siteManager.delete(s);
         return HttpResponse.noContent();
     }
 
 
     @Put("/")
-    public HttpResponse update(@Header("X-API-Key") String session, @Body Site updatedSite) {
-		if(!sessionManager.verifySession(session))
-			return HttpResponse.unauthorized();
-        siteManager.update(updatedSite);
+    public HttpResponse update(@Header("X-API-Key") String session,@Body SiteUpdateCommand updatedSiteCommand) {
+  		  if(!sessionManager.verifySession(session))
+			    return HttpResponse.unauthorized();
+        System.out.println("+++++++++" + updatedSiteCommand.getId() + " " + updatedSiteCommand.getSlug() + " " + updatedSiteCommand.getName());
+        Site newSite = new Site(updatedSiteCommand.getId(), updatedSiteCommand.getSlug(), updatedSiteCommand.getName());
+        siteManager.update(newSite);
         return HttpResponse
                 .noContent()
-                .header(HttpHeaders.LOCATION, location(updatedSite.getName()).getPath());
+                .header(HttpHeaders.LOCATION, location(updatedSiteCommand.getSlug()).getPath());
     }
 
-    protected URI location(String siteName) {
+    protected URI location(String siteSlug) {
         String encodedSlug = null;
         try {
-            encodedSlug = URLEncoder.encode(siteName, java.nio.charset.StandardCharsets.UTF_8.toString());
+            encodedSlug = URLEncoder.encode(siteSlug, java.nio.charset.StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {
             return null;
         }

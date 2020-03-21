@@ -41,26 +41,26 @@ public class SiteManagerTest {
 
     @Test
     public void testCreateSite() {
-        Site site = new Site("Biliary Atresia");
+        Site site = new Site("slug1", "Biliary Atresia");
         assertEquals("Biliary Atresia", site.getName());
     }
 
     @Test
     public void testCreateAndSaveSite() {
-        siteManager.addSite("Biliary Atresia");
+        siteManager.addSite("slug1", "Biliary Atresia");
         assertEquals(1, siteManager.getAllSites().size());
     }
 
     @Test
     public void testCreateWithIllegalValue() {
         String name = null;
-        siteManager.addSite(name);
+        siteManager.addSite("slug2", name);
         assertEquals(0, siteManager.getAllSites().size());
     }
 
     @Test
     public void testEmptyName() {
-        siteManager.addSite("");
+        siteManager.addSite("slug1", "");
         //assertEquals("Unnamed", siteManager.getAllSites(),get(0).getName());
     }
 
@@ -72,15 +72,22 @@ public class SiteManagerTest {
 
     @Test
     public void testDuplicateName() {
-        siteManager.addSite("Biliary Atresia");
-        siteManager.addSite("Biliary Atresia");
+        siteManager.addSite("slug1", "Biliary Atresia");
+        siteManager.addSite("slug2", "Biliary Atresia");
+        assertEquals(2, siteManager.getAllSites().size());
+    }
+
+    @Test
+    public void testDuplicateSlug() {
+        siteManager.addSite("slug1", "Biliary Atresia");
+        siteManager.addSite("slug1", "Biliary Atresia");
         assertEquals(1, siteManager.getAllSites().size());
     }
 
     @Test
     public void testTwoEqualSites() {
-        Site site1 = new Site("Site1");
-        Site site2 = new Site("Site1");
+        Site site1 = new Site("s1", "Site1");
+        Site site2 = new Site("s1", "Site1");
         assertThat(site1, samePropertyValuesAs(site2));
     }
 
@@ -93,45 +100,46 @@ public class SiteManagerTest {
         Site foundSiteDB = siteManager.getByPrimaryKey(sitePK);
 
         assertThat(foundSite, samePropertyValuesAs(foundSiteDB));
-        assertThat(foundSite, samePropertyValuesAs(foundSiteDB));
-
     }
 
     @Test
     public void testGetIllegalPrimaryKey() {
-        assertNull(siteManager.getByPrimaryKey(-1));
+        assertNull(siteManager.getByPrimaryKey(-2));
     }
 
     @Test
     public void testGetByName() {
         fillDatabase();
-        Site site = siteManager.getBySiteName("Disease2");
+        Site site = siteManager.getBySiteSlug("Slug2");
         assertEquals("Disease2", site.getName());
     }
 
     @Test
     public void testGetByNameNotInDB() {
         fillDatabase();
-        Site site = siteManager.getBySiteName("Biliary Atresia");
+        Site site = siteManager.getBySiteSlug("Biliary Atresia213432");
         assertNull(site);
     }
 
     @Test
     public void testUpdateSite() {
         fillDatabase();
-        int id = siteManager.getAllSites().get(0).getPrimaryKey();
-        Site replacementSite = new Site(id, "New Disease Name");
+        Site oldSite = siteManager.getAllSites().get(0);
+        int id = oldSite.getPrimaryKey();
+        String oldSlug = oldSite.getSlug();
+        Site replacementSite = new Site(id, "newSlug", "New Disease Name");
         siteManager.update(replacementSite);
 
         Site siteInDB = siteManager.getAllSites().get(0);
         assertEquals(replacementSite.getName(), siteInDB.getName());
+        assertNull(siteManager.getBySiteSlug(oldSlug));
     }
 
     @Test
     public void testUpdateWithIllegalValues() {
         assertThrows(PersistenceException.class, () -> {
             fillDatabase();
-            Site site = new Site(siteManager.getAllSites().get(0).getPrimaryKey(), null);
+            Site site = new Site(siteManager.getAllSites().get(0).getPrimaryKey(),"slug1", null);
             siteManager.update(site);
         });
     }
@@ -178,7 +186,7 @@ public class SiteManagerTest {
 
     @Test
     public void testDeleteNotInDBObject() {
-        Site site = new Site("Not in db");
+        Site site = new Site("nop", "Not in db");
         int numberOfSites = siteManager.getAllSites().size();
         try {
             siteManager.delete(site);
@@ -198,14 +206,14 @@ public class SiteManagerTest {
 
         ArrayList<Site> listOfSites = new ArrayList<>();
 
-        listOfSites.add(new Site("Disease1"));
-        listOfSites.add(new Site("Disease2"));
-        listOfSites.add(new Site("Disease3"));
-        listOfSites.add(new Site("Disease4"));
-        listOfSites.add(new Site("Disease5"));
-        listOfSites.add(new Site("Disease6"));
-        listOfSites.add(new Site("Disease7"));
-        listOfSites.add(new Site("Disease8"));
+        listOfSites.add(new Site("Slug1", "Disease1"));
+        listOfSites.add(new Site("Slug2", "Disease2"));
+        listOfSites.add(new Site("Slug3", "Disease3"));
+        listOfSites.add(new Site("Slug4", "Disease4"));
+        listOfSites.add(new Site("Slug5", "Disease5"));
+        listOfSites.add(new Site("Slug6", "Disease6"));
+        listOfSites.add(new Site("Slug7", "Disease7"));
+        listOfSites.add(new Site("Slug8", "Disease8"));
 
         return listOfSites;
     }

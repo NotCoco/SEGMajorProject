@@ -27,12 +27,12 @@ public class PageAddCommand {
 
     }
 
-    public PageAddCommand(String siteName, String slug, Integer index, String title, String content){
+    public PageAddCommand(String site, String slug, Integer index, String title, String content){
         this.slug = slug;
         setIndex(index);
         this.title = title;
         this.content = content;
-        setSite(siteName);
+        setSite(site);
     }
 
     public String getSlug() {
@@ -74,9 +74,9 @@ public class PageAddCommand {
         return site;
     }
 
-    public void setSite(String siteName) {
-        SiteManagerInterface s = SiteManager.getSiteManager();
-        if (s.getBySiteName(siteName) != null) site = siteName;
+    public void setSite(String site) {
+        SiteManagerInterface siteManager = SiteManager.getSiteManager();
+        if (siteManager.getBySiteSlug(site) != null) this.site = site;
     }
 
 }

@@ -49,12 +49,14 @@ public class ImageControllerTest {
 	@AfterAll
 	public static void deleteCreatedImages() {
 		imageManager.deleteAll();
-	        try{
-        		UserManager.getUserManager().deleteUser("test@test.com" , "123");
-        	}
-        	catch(Exception e){
-        		fail();
-        	}    
+	   try{
+        UserManager.getUserManager().deleteUser("test@test.com" , "123");
+     }
+     catch(Exception e){
+        	fail();
+      }    
+
+		DirectoryHolder.getDirectoryHolder().setDefaultDir();
 	}
 
 	@Test
@@ -72,7 +74,6 @@ public class ImageControllerTest {
 		String imageName = getEUrl(response);
 		HttpRequest request = HttpRequest.DELETE("/images/"+imageName).header("X-API-Key",token);
 		HttpResponse response2 = client.toBlocking().exchange(request);
-
 		assertEquals(HttpStatus.NO_CONTENT, response2.getStatus());
 	}
 

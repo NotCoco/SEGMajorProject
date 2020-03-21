@@ -39,11 +39,10 @@ public class NewsController {
 
         if(newsManager.getByPrimaryKey(news.getPrimaryKey()) == null)return HttpResponse.serverError();
 
-        return HttpResponse
+        else return HttpResponse
                 .created(news)
                 .headers(headers -> headers.location(location(news.getSlug())));
     }
-
 
     @Put("/")
     public HttpResponse update(@Header("X-API-Key") String session,@Body NewsUpdateCommand command) {

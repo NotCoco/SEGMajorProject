@@ -15,11 +15,14 @@ public class SiteAddCommand {
 
     @NotNull
     private String name;
+    @NotNull
+    private String slug;
 
     public SiteAddCommand(){}
 
-    public SiteAddCommand(String name){
-        this.name = name;
+    public SiteAddCommand(String slug, String site){
+        this.slug = slug;
+        this.name = site;
     }
 
     public String getName(){
@@ -30,4 +33,6 @@ public class SiteAddCommand {
         this.name = name;
     }
 
+    public String getSlug() { return slug; }
+    public void setSlug(String slug) { this.slug = slug; }
 }
