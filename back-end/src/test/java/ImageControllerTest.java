@@ -20,7 +20,7 @@ import org.junit.jupiter.api.BeforeAll;
 import static org.junit.jupiter.api.Assertions.*;
 
 import main.java.com.projectBackEnd.Entities.User.UserManager;
-
+import main.java.com.projectBackEnd.HibernateUtility;
 @MicronautTest
 public class ImageControllerTest {
 	private static ImageManager imageManager;
@@ -35,6 +35,7 @@ public class ImageControllerTest {
 	public static void setUpBefore() {
 		DirectoryHolder.getDirectoryHolder().setDir(System.getProperty("user.dir")+"/src/test/resources/TestImages/");
         	try{
+				HibernateUtility.setResource("testhibernate.cfg.xml");
         		UserManager.getUserManager().addUser("test@test.com" , "123");
         		token = UserManager.getUserManager().verifyUser("test@test.com" , "123");
         	}
@@ -51,6 +52,7 @@ public class ImageControllerTest {
 		imageManager.deleteAll();
 	   try{
         UserManager.getUserManager().deleteUser("test@test.com" , "123");
+        HibernateUtility.shutdown();
      }
      catch(Exception e){
         	fail();
