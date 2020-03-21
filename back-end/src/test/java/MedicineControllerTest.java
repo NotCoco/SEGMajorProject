@@ -27,6 +27,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import main.java.com.projectBackEnd.Entities.User.UserManager;
 
 @MicronautTest
 public class MedicineControllerTest{
@@ -36,21 +39,35 @@ public class MedicineControllerTest{
     HttpClient client;
 
     static MedicineManagerInterface medicineManager;
-
+    private static String token;
     @BeforeAll
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         medicineManager = MedicineManager.getMedicineManager();
-    }
+        try{
+        	UserManager.getUserManager().addUser("test@test.com" , "123");
+        	token = UserManager.getUserManager().verifyUser("test@test.com" , "123");
+        }
+        catch(Exception e){
+        	fail();
+        }    
+}
 
     @AfterAll
     public static void closeDatabase() {
+        try{
+        	UserManager.getUserManager().deleteUser("test@test.com" , "123");
+        }
+        catch(Exception e){
+        	fail();
+        }    
         HibernateUtility.shutdown();
     }
 
     @BeforeEach
     public void setUp() {
         medicineManager.deleteAll();
+
     }
 
     @Test
@@ -97,7 +114,7 @@ public class MedicineControllerTest{
     public void testUpdateMedicineEmptyName() {
         HttpResponse response = addMedicine("Med1", "Liquid");
         int id =  getEId(response).intValue();
-        client.toBlocking().exchange(HttpRequest.PUT("/medicines", new MedicineUpdateCommand(id, "", "type")));
+        client.toBlocking().exchange(HttpRequest.PUT("/medicines", new MedicineUpdateCommand(id, "", "type")).header("X-API-Key",token));
         Medicine found = getMedicine(id);
         assertEquals("Unnamed", found.getName());
     }
@@ -120,7 +137,7 @@ public class MedicineControllerTest{
         // Asserting that we've added a medicine
         assertEquals(HttpStatus.CREATED, response.getStatus());
 
-        HttpRequest request = HttpRequest.DELETE("/medicines/"+id);
+        HttpRequest request = HttpRequest.DELETE("/medicines/"+id).header("X-API-Key",token);
         response = client.toBlocking().exchange(request);
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
             client.toBlocking().exchange(HttpRequest.GET("/medicines/"+id));
@@ -169,12 +186,12 @@ public class MedicineControllerTest{
     }
 
     protected HttpResponse putMedicine(int id, String name, String type){
-        HttpRequest request = HttpRequest.PUT("/medicines", new MedicineUpdateCommand(id, name, type));
+        HttpRequest request = HttpRequest.PUT("/medicines", new MedicineUpdateCommand(id, name, type)).header("X-API-Key",token);
         return client.toBlocking().exchange(request);
     }
 
     protected HttpResponse addMedicine(String name, String type){
-        HttpRequest request = HttpRequest.POST("/medicines", new MedicineAddCommand(name, type));
+        HttpRequest request = HttpRequest.POST("/medicines", new MedicineAddCommand(name, type)).header("X-API-Key",token);
         HttpResponse response = client.toBlocking().exchange(request);
         return response;
     }

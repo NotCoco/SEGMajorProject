@@ -9,7 +9,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.math.BigInteger;
 
-//import org.apache.commons.validator.routines.EmailValidator;
+import org.apache.commons.validator.routines.EmailValidator;
 
 
 
@@ -31,8 +31,8 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 			return new UserManager();
 	}
 	public void addUser(String email, String password) throws EmailExistsException,InvalidEmailException{
-//		if(!EmailValidator.getInstance().isValid(email))
-//			throw new InvalidEmailException("email: " + email + " is invalid");
+		if(!EmailValidator.getInstance().isValid(email))
+			throw new InvalidEmailException("email: " + email + " is invalid");
 		if(getAll().stream().filter(u->((User)u).getEmail().equals(email)).count() > 0)
 			throw new EmailExistsException("email: " + email + " already exsists");
 		User user = new User(email,hash(password));
@@ -59,18 +59,42 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 		update(user);
 		
 	}
-	public void deleteUser(String email) throws UserNotExistException{
-		List<User> users = getAll();
-		boolean found = false;
-		for(User u: users){
-			if(u.getEmail().equals(email)){
-				delete(u);
-				found = true;
-				break;
+	public void deleteUser(String email, String password) throws UserNotExistException{
+		String token = verifyUser(email,password) ;
+		if(token != null){
+			List<User> users = getAll();
+			boolean found = false;
+			SessionManager.getSessionManager().terminateSession(token);
+			for(User u: users){
+				if(u.getEmail().equals(email)){
+					delete(u);
+					found = true;
+					break;
+				}
 			}
+			if(!found)
+				throw new UserNotExistException("user details incorrect");
 		}
-		if(!found)
-			throw new UserNotExistException("there is no user with email: " + email);
+		else{
+				throw new UserNotExistException("user details incorrect");
+		}
+	}
+	public void changeEmail(String oldEmail, String newEmail) throws UserNotExistException,EmailExistsException { 
+		List<User> users = getAll();
+		User user = null;
+		for(User u:users){
+			if(u.getEmail().equals(oldEmail))
+				user = u;
+			if(u.getEmail().equals(newEmail))
+				throw new EmailExistsException("email: " + newEmail + " already exists");
+		}
+		if(user == null)
+			throw new UserNotExistException("there is no user with email: " + oldEmail);
+		user.setEmail(newEmail);
+		update(user);
+	}
+	public boolean verifyEmail(String email){ 
+		return (getAll().stream().filter(u->((User)u).getEmail().equals(email)).count() > 0);
 	}
 	private String hash(String in){
 		try{

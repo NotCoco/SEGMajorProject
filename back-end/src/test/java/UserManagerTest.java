@@ -23,6 +23,7 @@ public class UserManagerTest{
 
 	@BeforeClass
     public static void setUpDatabase() {
+
 		HibernateUtility.setResource("testhibernate.cfg.xml");
 		userManager = UserManager.getUserManager();
 		connectionLeakUtil = new ConnectionLeakUtil();
@@ -135,9 +136,9 @@ public class UserManagerTest{
 	public void testDeleteUser(){
 		fill();
 		try{
-			userManager.deleteUser("user1@email.com");
+			userManager.deleteUser("user1@email.com","password1");
 			List<User> users = (List<User>)((EntityManager)userManager).getAll();
-			assertEquals(0,users.stream().filter(u->(u.getEmail().equals("user1@email.com") && u.getPassword().equals(hash("password10")) == true)).count());
+			assertEquals(0,users.stream().filter(u->(u.getEmail().equals("user1@email.com") && u.getPassword().equals(hash("password1")) == true)).count());
 			assertEquals(users.size(),6);
 		}
 		catch(UserNotExistException e){
@@ -148,8 +149,46 @@ public class UserManagerTest{
 	@Test(expected = UserNotExistException.class)
 	public void testDeleteNotExistingUser() throws UserNotExistException{
 		fill();
-		userManager.deleteUser("user0@email.com");
+		userManager.deleteUser("user0@email.com","password0");
 
+	}
+	@Test(expected = UserNotExistException.class)
+	public void testDeleteWrongPasswordUser() throws UserNotExistException{
+		fill();
+		userManager.deleteUser("user1@email.com","password0");
+
+	}
+	@Test(expected = UserNotExistException.class)
+	public void testChangeEmailBadEmail() throws UserNotExistException,EmailExistsException{
+		fill();
+		userManager.changeEmail("user@email.com","user19@email.com");
+
+	}
+	@Test(expected = EmailExistsException.class)
+	public void testChangeEmailExisitngEmail() throws EmailExistsException,UserNotExistException{
+		fill();
+		
+		userManager.changeEmail("user1@email.com","user5@email.com");
+
+	}
+	@Test
+	public void testChangeEmail(){
+		fill();
+		try{
+		userManager.changeEmail("user1@email.com","user10@email.com");
+		assertNotNull(userManager.verifyUser("user10@email.com","password1"));
+		}
+		catch(Exception e){
+			fail();
+		}	
+	}
+	@Test	
+	public void testVerifyEmail(){
+		fill();
+		
+		assertTrue(userManager.verifyEmail("user1@email.com"));
+		assertFalse(userManager.verifyEmail("user0@email.com"));
+		
 	}
 	private String hash(String in){
 		try{
