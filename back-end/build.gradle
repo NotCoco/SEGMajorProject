@@ -37,6 +37,7 @@ dependencies {
     implementation 'javax.validation:validation-api:2.0.1.Final'
     implementation 'com.sun.mail:javax.mail:1.6.2'
     implementation 'com.google.apis:google-api-services-sqladmin:v1beta4-rev76-1.25.0'
+    implementation 'com.google.cloud.sql:mysql-socket-factory-connector-j-8:1.0.15'
 
 
     runtimeOnly "ch.qos.logback:logback-classic:1.2.3"
