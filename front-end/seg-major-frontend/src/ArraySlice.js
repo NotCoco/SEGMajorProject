@@ -3,13 +3,13 @@ export default class ArraySlice {
   #from;
   length;
 
-  constructor(array, from, length) {
+  constructor(array, from, maxLength) {
     if (!(array instanceof Array)) throw new Error("array must be array");
-    if (length < 0) throw new Error("length cannot be negative");
-    if (length !== 0 && (from < 0 || from >= array.length)) throw new Error("from out of bounds");
+    if (maxLength < 0) throw new Error("maxLength cannot be negative");
+    if (array.length !== 0 && (from < 0 || from >= array.length)) throw new Error("from out of bounds");
     this.#array = array;
     this.#from = from;
-    this.length = Math.min(length, array.length - from);
+    this.length = Math.min(maxLength, array.length - from);
   }
 
   get(i) {
