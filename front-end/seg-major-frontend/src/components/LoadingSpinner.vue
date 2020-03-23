@@ -1,6 +1,6 @@
 <template>
   <div class="loading-spinner has-text-centered">
-      Loading...
+    <font-awesome-icon icon="circle-notch" size="2x" spin title="Loading..." />
   </div>
 </template>
 
