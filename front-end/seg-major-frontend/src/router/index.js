@@ -29,7 +29,7 @@ const routes = [
     path: '/news',
     component: News,
     props(route) {
-      if (route.query.page) return { currentPageNumber: Number(route.query.page) }
+      if (route.query.page) return { currentPageNumber: /^\d+$/.test(route.query.page) ? +route.query.page : undefined }
     }
   },
   {

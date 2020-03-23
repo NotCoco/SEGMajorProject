@@ -119,6 +119,14 @@ export default {
   async created() {
     this.loading = true;
     this.items = await NewsService.getAllNews();
+
+    let newPageNumber;
+    if (this.currentPageNumber > this.pageCount) newPageNumber = Math.min(this.pageCount, this.currentPageNumber);
+    else if (this.currentPageNumber < 0) newPageNumber = 1;
+
+    if (newPageNumber === 1) this.$router.push('news');
+    else if (newPageNumber) this.$router.push({ path: 'news', query: { page: newPageNumber } });
+
     this.loading = false;
   },
 };
