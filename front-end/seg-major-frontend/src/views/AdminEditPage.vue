@@ -36,7 +36,7 @@
         <label class="label">URL Slug</label>
         <div class="field has-addons" style="margin-bottom: 35px;">
           <p class="control">
-            <a class="button is-static">/biliary-atresia/</a>
+            <a class="button is-static" v-if="page.site">/{{page.site.slug}}/</a>
           </p>
           <p class="control is-expanded">
             <input
@@ -48,12 +48,12 @@
           </p>
         </div>
 
-        <div>
+        <div style="flex-grow: 1;">
           <rich-text-editor ref="rte"></rich-text-editor>
         </div>
 
         <div class="buttons" style="justify-content: flex-end">
-          <button class="button is-light">Cancel</button>
+          <router-link to="../" class="button is-light">Cancel</router-link>
           <button class="button is-danger">Delete</button>
           <button class="button is-success" @click="save()">Save</button>
         </div>
@@ -153,6 +153,7 @@ export default {
       });
     } else {
       this.page.site = { slug: siteSlug };
+      this.page.site = await SitesService.getSite(siteSlug);
     }
 
     this.showBreadcrumbs = true;
