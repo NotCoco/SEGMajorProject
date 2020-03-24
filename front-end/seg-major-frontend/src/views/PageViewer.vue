@@ -3,15 +3,15 @@
     <section class="section">
       <div class="custom-content-container">
         <h1 class="title">{{ page.title }}</h1>
-        
-        <rich-text-editor ref="rte" v-bind:editable="false"></rich-text-editor>
+
+        <rich-text-editor v-bind:editable="false" v-model="page.content"></rich-text-editor>
       </div>
     </section>
   </div>
 </template>
 
 <style lang="scss" scoped>
-@import '@/styles.scss';
+@import "@/styles.scss";
 .title {
   color: $primary-dark;
   font-size: 35px;
@@ -29,16 +29,13 @@ export default {
   data() {
     return {
       page: {}
-    }
+    };
   },
   async mounted() {
     const siteSlug = this.$route.params.siteSlug;
     const pageSlug = this.$route.params.pageSlug;
 
     this.page = await SitesService.getPage(siteSlug, pageSlug);
-    setTimeout(() => {
-      this.$refs.rte.setContent(JSON.parse(this.page.content));
-    });
   }
 };
 </script>
