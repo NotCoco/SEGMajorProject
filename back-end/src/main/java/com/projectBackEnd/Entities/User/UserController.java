@@ -22,7 +22,7 @@ public class UserController {
     private final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
     
 	@Post("/create")//
-	public HttpResponse createUser(@Body User user){
+	public HttpResponse createUser(@Body UserInterface user){
 
 		try{
 			userManager.addUser(user.getEmail(),user.getPassword());
@@ -37,7 +37,7 @@ public class UserController {
 	}
 
 	@Post("/login")
-	public HttpResponse<String> login(@Body User user){
+	public HttpResponse<String> login(@Body UserInterface user){
 		String token = userManager.verifyUser(user.getEmail(),user.getPassword());
 		if(token != null)
 			return HttpResponse.ok(token);
@@ -46,7 +46,7 @@ public class UserController {
 	}
 
     	@Delete("/delete_user")
-	public HttpResponse deleteUser(@Body User user){
+	public HttpResponse deleteUser(@Body UserInterface user){
 		try{
 			userManager.deleteUser(user.getEmail(), user.getPassword());
 			return HttpResponse.ok();
@@ -57,7 +57,7 @@ public class UserController {
 	}
 
 	@Put("/change_password") 
-	public HttpResponse<String> changePassword(@Body PasswordResetBody body){
+	public HttpResponse<String> changePassword(@Body PasswordResetBodyInterface body){
 		try{
         	PasswordReset.getPasswordResetManager().changePassword(body.getToken(), body.getPassword());
 			return HttpResponse.ok();
@@ -70,7 +70,7 @@ public class UserController {
 		}	
 	}
 	@Post("/password_reset") 
-	public HttpResponse<String> getPasswordReset(@Body StringBody body){
+	public HttpResponse<String> getPasswordReset(@Body StringBodyInterface body){
 
 		try{
 
@@ -85,7 +85,7 @@ public class UserController {
 		}	
 	}
 	@Put("/change_email") 
-	public HttpResponse<String> changeEmail(@Header("X-API-Key") String session, @Body ChangeEmailBody body){
+	public HttpResponse<String> changeEmail(@Header("X-API-Key") String session, @Body ChangeEmailBodyInterface body){
 		if(sessionManager.verifySession(session))
 		{
 			try{

@@ -13,13 +13,13 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = User.TABLENAME)
-public class User implements TableEntity {
+public class User implements TableEntity,UserInterface{
 
 	public final static String TABLENAME = "Users";
 	private final static String KEY = "id";
 	private final static String EMAIL = "email";
 	private final static String PASSWORD = "password";
-
+	private final static String NAME = "name";
 	// Private fields
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = KEY)
@@ -33,6 +33,9 @@ public class User implements TableEntity {
 	@Type(type="text")
 	private String password;
 
+	@Column(name = NAME)
+	@Type(type="text")
+	private String name;
 	/**
 	 * Constructors
 	 * @param email
@@ -62,6 +65,12 @@ public class User implements TableEntity {
 	}
 	public void setPassword(String password){
 		this.password = password;
+	}
+	public String getName(){
+		return name;
+	}
+	public String setName(String name){
+		return name;
 	}
 
 	@Override

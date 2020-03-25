@@ -1,7 +1,7 @@
 package main.java.com.projectBackEnd.Entities.User;
 
 
-public class StringBody{
+public class StringBody implements StringBodyInterface{
 	private String string;
 	public StringBody(){}
 	public StringBody(String string){

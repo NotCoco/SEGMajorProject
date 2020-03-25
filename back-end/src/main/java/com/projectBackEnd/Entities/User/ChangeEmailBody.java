@@ -1,6 +1,6 @@
 package main.java.com.projectBackEnd.Entities.User;
 
-public class ChangeEmailBody{
+public class ChangeEmailBody implements ChangeEmailBodyInterface{
 	private String oldEmail;
 	private String newEmail;
 	public ChangeEmailBody(String oldEmail,String newEmail){

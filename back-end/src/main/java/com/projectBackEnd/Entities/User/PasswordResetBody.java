@@ -1,6 +1,6 @@
 package main.java.com.projectBackEnd.Entities.User;
 
-public class PasswordResetBody{
+public class PasswordResetBody implements PasswordResetBodyInterface{
 	private String password;
 	private String token;
 	public PasswordResetBody(String token, String password){
