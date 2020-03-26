@@ -47,21 +47,12 @@ public class PageController {
         return pageManager.getAllPagesOfSite(name);
     }
 
-<<<<<<< HEAD
     /**
      * Update a list pages with multiple changes
      * @param name of the site
      * @param patchCommandList
      * @return Http response with no content
      */
-=======
-   @Get("/{name}/pages/{page}")
-    public Page getPage(String name, String page) {
-        return pageManager.getPageBySiteAndSlug(name, page);
-    }
-
-
->>>>>>> ec6662a7bbbdb71cf8fb22028ee35f72839a1c52
     @Patch("/{name}/page-indices")
     public HttpResponse<Page> patchPage(@Header("X-API-Key") String session, String name, @Body List<PagePatchCommand> patchCommandList) {
 		if(!sessionManager.verifySession(session))

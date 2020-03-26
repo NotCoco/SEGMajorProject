@@ -40,7 +40,7 @@ public class UserController {
 	 * @return Http response with relevant information which depends on the result of
 	 * inserting a new user
 	 */
-	@Post("/create")//
+	@Post("/create")
 	public HttpResponse createUser(@Body UserBody user){
 
 		try{
@@ -128,7 +128,7 @@ public class UserController {
 			return HttpResponse.serverError();
 		}	
 	}
-	
+
 	/**
 	 * Change user's email with by Http PUT method
 	 * @param session
