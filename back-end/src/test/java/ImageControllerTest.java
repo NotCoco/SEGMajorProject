@@ -40,7 +40,7 @@ public class ImageControllerTest {
 	public static void setUpBefore() {
 		DirectoryHolder.getDirectoryHolder().setDir(System.getProperty("user.dir")+"/src/test/resources/TestImages/");
         	try{
-				HibernateUtility.setResource("testhibernate.cfg.xml");
+			HibernateUtility.setResource("testhibernate.cfg.xml");
         		UserManager.getUserManager().addUser("test@test.com" , "123","name");
         		token = UserManager.getUserManager().verifyUser("test@test.com" , "123");
         	}
@@ -55,13 +55,13 @@ public class ImageControllerTest {
 	@AfterAll
 	public static void deleteCreatedImages() {
 		imageManager.deleteAll();
-	   try{
-        UserManager.getUserManager().deleteUser("test@test.com" , "123");
-        HibernateUtility.shutdown();
-     }
-     catch(Exception e){
+	try{
+        	UserManager.getUserManager().deleteUser("test@test.com" , "123");
+        	HibernateUtility.shutdown();
+     	}
+     	catch(Exception e){
         	fail();
-      }    
+      	}    
 
 		DirectoryHolder.getDirectoryHolder().setDefaultDir();
 	}

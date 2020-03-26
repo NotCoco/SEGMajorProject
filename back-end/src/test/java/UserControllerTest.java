@@ -19,7 +19,7 @@ import main.java.com.projectBackEnd.Entities.ResetLinks.*;
 
 import javax.inject.Inject;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -86,7 +86,7 @@ public class UserControllerTest{
 		try{
 			userManager.addUser("username@mail.com","pa/?@ssword","name");
 		}
-		catch(InvalidEmailException|EmailExistsException e){
+		catch(InvalidEmailException|EmailExistsException|IncorrectNameException e){
 			fail();
 		}
 		HttpRequest request = HttpRequest.POST("/user/create",new UserBody("username@mail.com","pass/?@word","name"));
@@ -166,7 +166,7 @@ public class UserControllerTest{
 		try{
 			userManager.addUser("username@mail.com","password","name");
 		}
-		catch(InvalidEmailException|EmailExistsException e){
+		catch(InvalidEmailException|EmailExistsException|IncorrectNameException e){
 			fail();
 		}
 		String a = userManager.verifyUser("username@mail.com","password");
@@ -188,7 +188,7 @@ public class UserControllerTest{
 			userManager.addUser("username@mail.com","password","name");
 			userManager.addUser("username1@mail.com","password","name");
 		}
-		catch(InvalidEmailException|EmailExistsException e){
+		catch(InvalidEmailException|EmailExistsException|IncorrectNameException e){
 			fail();
 		} 
 		String a = userManager.verifyUser("username@mail.com","password");
@@ -214,7 +214,7 @@ public class UserControllerTest{
 		try{
 			userManager.addUser(email,"password","name");
 		}
-		catch(InvalidEmailException|EmailExistsException e){
+		catch(InvalidEmailException|EmailExistsException|IncorrectNameException e){
 			fail();
 		}
 		assertTrue(userManager.verifyEmail(email));
@@ -231,7 +231,7 @@ public class UserControllerTest{
 		try{
 			userManager.addUser("mail@mail.com","password","name");
 		}
-		catch(InvalidEmailException|EmailExistsException e){
+		catch(InvalidEmailException|EmailExistsException|IncorrectNameException e){
 			fail();
 		}
 

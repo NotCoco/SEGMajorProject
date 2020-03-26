@@ -6,6 +6,7 @@ import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManager;
 import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManagerInterface;
 import main.java.com.projectBackEnd.Entities.User.Hibernate.EmailExistsException;
 import main.java.com.projectBackEnd.Entities.User.Hibernate.InvalidEmailException;
+import main.java.com.projectBackEnd.Entities.User.Hibernate.IncorrectNameException;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -88,7 +89,7 @@ public class TestResetLinkManager{
                         userManager.addUser("test@test.com","pass","name");
                         userManager.addUser("test1@test.com","pass","name");
                 }
-                catch(EmailExistsException|InvalidEmailException e){
+                catch(EmailExistsException|InvalidEmailException|IncorrectNameException e){
 			System.out.println(e);                        
 			fail();
                 }

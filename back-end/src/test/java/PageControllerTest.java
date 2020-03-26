@@ -103,7 +103,7 @@ public class PageControllerTest {
             input.add(new PagePatchCommand(currentPage.getPrimaryKey(), currentPage.getSlug(), i));
         } //Will order all pages from 0-4;
 
-        HttpRequest request = HttpRequest.PATCH("/sites/"+ "testSiteA" +"/page-indices", input);
+        HttpRequest request = HttpRequest.PATCH("/sites/"+ "testSiteA" +"/page-indices", input).header("X-API-Key",token);
         client.toBlocking().exchange(request);
         //TODO Add the correct parameter for this!
         //Updates all the pages to have a new index.
@@ -166,7 +166,7 @@ public class PageControllerTest {
     @Test
     public void testDeleteNonExistentPage() {
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            client.toBlocking().exchange(HttpRequest.DELETE("nothing"));
+            client.toBlocking().exchange(HttpRequest.DELETE("nothing").header("X-API-Key",token));
         });
     }
 
@@ -175,7 +175,7 @@ public class PageControllerTest {
         addSite("testSiteA", "name1");
         HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
         URI pLoc = pageLocation("testSiteA", "nutrition/slu!#g");
-        HttpRequest request = HttpRequest.DELETE(pLoc.toString());
+        HttpRequest request = HttpRequest.DELETE(pLoc.toString()).header("X-API-Key",token);
         client.toBlocking().exchange(request);
         assertNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
     }
