@@ -11,6 +11,14 @@ import java.util.List;
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 
+/**
+ * News Controller class is used for the interactions between frontend and backend
+ * There are functionalites :
+ *    - get all the news
+ *    - update a news
+ *    - delete a news
+ *    - add news
+ */
 @Controller("/news")
 public class NewsController {
 

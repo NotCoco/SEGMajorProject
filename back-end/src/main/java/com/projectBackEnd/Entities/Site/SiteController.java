@@ -11,6 +11,15 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.util.List;
 
+/**
+ * Site Controller class is used for the interactions between frontend and backend
+ * There are functionalites :
+ *    - get all the sites
+ *    - add a new site
+ *    - get a site
+ *    - delete a site
+ *    - update a site
+ */
 @Controller("/sites")
 public class SiteController {
 
@@ -63,7 +72,7 @@ public class SiteController {
     }
 
     /**
-     * Get all the medicines by http GET method
+     * Get all the sites by http GET method
      * @param slug slug name
      * @return get the specified site
      */
@@ -71,7 +80,7 @@ public class SiteController {
     public Site list(String slug){return siteManager.getBySiteSlug(slug);}
 
     /**
-     * Delete a ite with specified slug name by http Delete method
+     * Delete a site with specified slug name by http Delete method
      * @param session
      * @param slug
      * @return Http response with no content

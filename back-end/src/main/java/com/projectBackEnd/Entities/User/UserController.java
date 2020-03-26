@@ -16,6 +16,16 @@ import main.java.com.projectBackEnd.Entities.ResetLinks.EmailNotExistException;
 
 import java.net.URI;
 
+/**
+ * User Controller class is used for the interactions between frontend and backend
+ * There are functionalites :
+ *    - add a new user
+ *    - login
+ *    - delete a user
+ *    - change password
+ *    - reset password
+ *    - change email
+ */
 @Controller("/user")
 public class UserController {
     private final UserManagerInterface userManager = UserManager.getUserManager();

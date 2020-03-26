@@ -17,6 +17,18 @@ import java.util.List;
 /**
  * PageController no longer affects Site Controller, they just share the same @Controller tag.
  */
+
+
+/**
+ * Page Controller class is used for the interactions between frontend and backend
+ * There are functionalites :
+ *    - get all the pages
+ *    - get one specific page
+ *    - update a page with multiple changes
+ *    - add a new page
+ *    - delete a page
+ *    - update a page
+ */
 @Controller("/sites")
 public class PageController {
     final PageManagerInterface pageManager = PageManager.getPageManager();

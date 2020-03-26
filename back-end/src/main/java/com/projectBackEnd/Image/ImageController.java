@@ -8,6 +8,12 @@ import java.net.URI;
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 
+/**
+ * Image Controller class is used for the interactions between frontend and backend
+ * There are functionalites :
+ *    - add an image to file system
+ *    - delete an image
+ */
 @Controller("/images")
 public class ImageController {
 

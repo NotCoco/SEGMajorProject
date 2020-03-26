@@ -13,6 +13,15 @@ import java.util.List;
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 
+/**
+ * Medicine Controller class is used for the interactions between frontend and backend
+ * There are functionalites :
+ *    - get all medicine
+ *    - get a medicine
+ *    - add a medicine
+ *    - delete a medicine
+ *    - update a medicine
+ */
 @Controller("/medicines")
 public class MedicineController {
 
