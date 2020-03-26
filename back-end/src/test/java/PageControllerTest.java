@@ -52,7 +52,7 @@ public class PageControllerTest {
         siteManager = SiteManager.getSiteManager();
         pageManager = PageManager.getPageManager();
         try{
-        	UserManager.getUserManager().addUser("test@test.com" , "123");
+        	UserManager.getUserManager().addUser("test@test.com" , "123","name");
         	token = UserManager.getUserManager().verifyUser("test@test.com" , "123");
         }
         catch(Exception e){

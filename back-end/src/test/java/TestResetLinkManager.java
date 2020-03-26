@@ -85,8 +85,8 @@ public class TestResetLinkManager{
         }
         public void fill(){
                 try{
-                        userManager.addUser("test@test.com","pass");
-                        userManager.addUser("test1@test.com","pass");
+                        userManager.addUser("test@test.com","pass","name");
+                        userManager.addUser("test1@test.com","pass","name");
                 }
                 catch(EmailExistsException|InvalidEmailException e){
 			System.out.println(e);                        

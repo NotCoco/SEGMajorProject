@@ -45,7 +45,7 @@ public class MedicineControllerTest{
         HibernateUtility.setResource("testhibernate.cfg.xml");
         medicineManager = MedicineManager.getMedicineManager();
         try{
-        	UserManager.getUserManager().addUser("test@test.com" , "123");
+        	UserManager.getUserManager().addUser("test@test.com" , "123","name");
         	token = UserManager.getUserManager().verifyUser("test@test.com" , "123");
         }
         catch(Exception e){

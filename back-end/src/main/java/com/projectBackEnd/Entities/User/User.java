@@ -13,7 +13,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = User.TABLENAME)
-public class User implements TableEntity,UserInterface{
+public class User implements TableEntity{
 
 	public final static String TABLENAME = "Users";
 	private final static String KEY = "id";
@@ -41,9 +41,10 @@ public class User implements TableEntity,UserInterface{
 	 * @param email
 	 * @param password
 	 */
-	public User(String email, String password) {
+	public User(String email, String password, String name) {
 		this.email = email;
 		this.password = password;
+		this.name = name;
 	}
 
 	public User(){};

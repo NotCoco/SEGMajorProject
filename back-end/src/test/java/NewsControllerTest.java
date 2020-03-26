@@ -40,7 +40,7 @@ public class NewsControllerTest {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         newsManager = NewsManager.getNewsManager();
         try{
-        	UserManager.getUserManager().addUser("test@test.com" , "123");
+        	UserManager.getUserManager().addUser("test@test.com" , "123","name");
         	token = UserManager.getUserManager().verifyUser("test@test.com" , "123");
         }
         catch(Exception e){
@@ -95,7 +95,7 @@ public class NewsControllerTest {
         HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug");
         assertEquals("slug", getEUrl(response));
         String slug = getEUrl(response);
-        HttpRequest request = HttpRequest.DELETE("/news/"+slug);
+        HttpRequest request = HttpRequest.DELETE("/news/"+slug).header("X-API-Key",token);
         response = client.toBlocking().exchange(request);
         assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
     }
@@ -130,7 +130,7 @@ public class NewsControllerTest {
         News news = newsManager.getNewsBySlug(slug);
         int id = news.getPrimaryKey();
 
-        HttpRequest request = HttpRequest.DELETE("/news/"+"TestSlug");
+        HttpRequest request = HttpRequest.DELETE("/news/"+"TestSlug").header("X-API-Key",token);
         response = client.toBlocking().exchange(request);
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
             client.toBlocking().exchange(HttpRequest.GET("/news/"+"TestSlug"));

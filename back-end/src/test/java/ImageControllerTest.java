@@ -36,7 +36,7 @@ public class ImageControllerTest {
 		DirectoryHolder.getDirectoryHolder().setDir(System.getProperty("user.dir")+"/src/test/resources/TestImages/");
         	try{
 				HibernateUtility.setResource("testhibernate.cfg.xml");
-        		UserManager.getUserManager().addUser("test@test.com" , "123");
+        		UserManager.getUserManager().addUser("test@test.com" , "123","name");
         		token = UserManager.getUserManager().verifyUser("test@test.com" , "123");
         	}
         	catch(Exception e){
