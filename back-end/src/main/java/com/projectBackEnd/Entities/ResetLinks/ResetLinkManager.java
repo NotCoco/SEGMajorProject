@@ -1,7 +1,7 @@
 package main.java.com.projectBackEnd.Entities.ResetLinks;
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
-import main.java.com.projectBackEnd.Entities.User.UserManager;
+import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManager;
 import java.util.List;
 public class ResetLinkManager extends EntityManager implements ResetLinkManagerInterface{
 	private static ResetLinkManagerInterface resetLinkManager;

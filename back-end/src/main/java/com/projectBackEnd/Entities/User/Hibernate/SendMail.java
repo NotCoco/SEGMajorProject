@@ -1,4 +1,4 @@
-package main.java.com.projectBackEnd.Entities.User;
+package main.java.com.projectBackEnd.Entities.User.Hibernate;
 
 import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;

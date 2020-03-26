@@ -10,8 +10,9 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
-import main.java.com.projectBackEnd.*;
-import main.java.com.projectBackEnd.Entities.User.*;
+
+import main.java.com.projectBackEnd.Entities.User.Hibernate.*;
+import main.java.com.projectBackEnd.Entities.User.Micronaut.*;
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.ResetLinks.*;
 
@@ -33,9 +34,17 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
+import main.java.com.projectBackEnd.HibernateUtility;
+import main.java.com.projectBackEnd.EntityManager;
+
 @MicronautTest
 public class UserControllerTest{
     
+
+	/**
+	*	TODO:
+ 	* 		 full revamp of this test class
+	*/
 
 	@Inject
     @Client("/")
@@ -59,15 +68,15 @@ public class UserControllerTest{
 
 	@Test
 	public void testCreateCorrectUser(){
-		HttpRequest request = HttpRequest.POST("/user/create",new User("username@mail.com","password"));
+		HttpRequest request = HttpRequest.POST("/user/create",new UserBody("username@mail.com","password","name"));
         	HttpResponse response = client.toBlocking().exchange(request);
 		assertEquals(HttpStatus.CREATED, response.getStatus());
 		assertNotNull(userManager.verifyUser("username@mail.com","password"));
-		request = HttpRequest.POST("/user/create",new User("name@mail.com","passw@/-ord"));
+		request = HttpRequest.POST("/user/create",new UserBody("name@mail.com","passw@/-ord","name"));
 		response = client.toBlocking().exchange(request);
 		assertEquals(HttpStatus.CREATED, response.getStatus());
 		assertNotNull(userManager.verifyUser("name@mail.com","passw@/-ord"));
-		request = HttpRequest.POST("/user/create",new User("nam123e@mail.com","pas321sw@/-ord"));
+		request = HttpRequest.POST("/user/create",new UserBody("nam123e@mail.com","pas321sw@/-ord","name"));
 		response = client.toBlocking().exchange(request);
 		assertEquals(HttpStatus.CREATED, response.getStatus());
 		assertNotNull(userManager.verifyUser("nam123e@mail.com","pas321sw@/-ord"));
@@ -75,12 +84,12 @@ public class UserControllerTest{
 	@Test
 	public void testCreateSameUser(){
 		try{
-			userManager.addUser("username@mail.com","pa/?@ssword");
+			userManager.addUser("username@mail.com","pa/?@ssword","name");
 		}
 		catch(InvalidEmailException|EmailExistsException e){
 			fail();
 		}
-		HttpRequest request = HttpRequest.POST("/user/create",new User("username@mail.com","pass/?@word"));
+		HttpRequest request = HttpRequest.POST("/user/create",new UserBody("username@mail.com","pass/?@word","name"));
         	HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
             		client.toBlocking().retrieve(request);
         	});
@@ -90,13 +99,13 @@ public class UserControllerTest{
 	@Test
 	public void testCreateWrongUser(){
         	HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            		client.toBlocking().retrieve(HttpRequest.POST("/user/create",new User("username@","password")));
+            		client.toBlocking().retrieve(HttpRequest.POST("/user/create",new UserBody("username@","password","name")));
         	});
 		assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatus());
 		assertEquals("invalid email address", thrown.getResponse().getBody().get());
 		assertNull(userManager.verifyUser("username@","password"));
         	thrown = assertThrows(HttpClientResponseException.class, () -> {
-            		client.toBlocking().retrieve(HttpRequest.POST("/user/create",new User("user name@","pas1234//--+sword")));
+            		client.toBlocking().retrieve(HttpRequest.POST("/user/create",new UserBody("user name@","pas1234//--+sword","name")));
         	});
 		assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatus());
 		assertEquals("invalid email address", thrown.getResponse().getBody().get());
@@ -107,15 +116,15 @@ public class UserControllerTest{
 	@Test
 	public void testLoginCorrect(){
 
-		assertEquals(HttpStatus.CREATED,client.toBlocking().exchange(HttpRequest.POST("/user/create",new User("username@mail.com","password"))).getStatus());
-		HttpResponse response = client.toBlocking().exchange(HttpRequest.POST("/user/login",new User("username@mail.com","password")));
+		assertEquals(HttpStatus.CREATED,client.toBlocking().exchange(HttpRequest.POST("/user/create",new UserBody("username@mail.com","password","name"))).getStatus());
+		HttpResponse response = client.toBlocking().exchange(HttpRequest.POST("/user/login",new UserBody("username@mail.com","password","name")));
 		assertEquals(HttpStatus.OK, response.getStatus());
-		String token = client.toBlocking().retrieve(HttpRequest.POST("/user/login",new User("username@mail.com","password")), String.class);
+		String token = client.toBlocking().retrieve(HttpRequest.POST("/user/login",new UserBody("username@mail.com","password","name")), String.class);
 		assertNotEquals("",token);
-		assertEquals(HttpStatus.CREATED,client.toBlocking().exchange(HttpRequest.POST("/user/create",new User("username1@mail.com","pass32//#@{}][12wor\\d"))).getStatus());
-		response = client.toBlocking().exchange(HttpRequest.POST("/user/login",new User("username1@mail.com","pass32//#@{}][12wor\\d")));
+		assertEquals(HttpStatus.CREATED,client.toBlocking().exchange(HttpRequest.POST("/user/create",new UserBody("username1@mail.com","pass32//#@{}][12wor\\d","name"))).getStatus());
+		response = client.toBlocking().exchange(HttpRequest.POST("/user/login",new UserBody("username1@mail.com","pass32//#@{}][12wor\\d","name")));
 		assertEquals(HttpStatus.OK, response.getStatus());
-		token = client.toBlocking().retrieve(HttpRequest.POST("/user/login",new User("username1@mail.com","pass32//#@{}][12wor\\d")), String.class);
+		token = client.toBlocking().retrieve(HttpRequest.POST("/user/login",new User("username1@mail.com","pass32//#@{}][12wor\\d","name")), String.class);
 		assertNotEquals("",token);
 		
 
@@ -123,7 +132,7 @@ public class UserControllerTest{
 
 	@Test
 	public void testLoginIncorrect(){
-		HttpRequest request = HttpRequest.POST("/user/login",new User("username@mail.com","password"));
+		HttpRequest request = HttpRequest.POST("/user/login",new UserBody("username@mail.com","password","name"));
         	HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
             		client.toBlocking().retrieve(request);
         	});
@@ -133,16 +142,16 @@ public class UserControllerTest{
 
 	@Test
 	public void testDeleteUserExisting(){
-		HttpResponse response = client.toBlocking().exchange(HttpRequest.POST("/user/create",new User("username@mail.com","password")));
+		HttpResponse response = client.toBlocking().exchange(HttpRequest.POST("/user/create",new UserBody("username@mail.com","password","name")));
 		assertEquals(HttpStatus.CREATED,response.getStatus());
-            	response = client.toBlocking().exchange(HttpRequest.DELETE("/user/delete_user",new User("username@mail.com","password")));
+            	response = client.toBlocking().exchange(HttpRequest.DELETE("/user/delete_user",new User("username@mail.com","password","name")));
 		assertEquals(HttpStatus.OK,response.getStatus());
 		assertNull(userManager.verifyUser("username@mail.com","password"));
 		
 	}
 	@Test
 	public void testDeleteUserNotExisting(){
-		HttpRequest request = HttpRequest.DELETE("/user/delete_user",new User("username@mail.com","password"));
+		HttpRequest request = HttpRequest.DELETE("/user/delete_user",new UserBody("username@mail.com","password","name"));
         	HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
             		client.toBlocking().retrieve(request);
         	});
@@ -155,7 +164,7 @@ public class UserControllerTest{
 	@Test
 	public void testChangeEmailExist(){
 		try{
-			userManager.addUser("username@mail.com","password");
+			userManager.addUser("username@mail.com","password","name");
 		}
 		catch(InvalidEmailException|EmailExistsException e){
 			fail();
@@ -176,8 +185,8 @@ public class UserControllerTest{
 	@Test
 	public void testChangeDuplicateEmail(){
 		try{
-			userManager.addUser("username@mail.com","password");
-			userManager.addUser("username1@mail.com","password");
+			userManager.addUser("username@mail.com","password","name");
+			userManager.addUser("username1@mail.com","password","name");
 		}
 		catch(InvalidEmailException|EmailExistsException e){
 			fail();
@@ -193,7 +202,7 @@ public class UserControllerTest{
 	@Test
 	public void testPasswordResetEmailNotExist(){
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            		client.toBlocking().retrieve(HttpRequest.POST("/user/password_reset",new StringBody("email@email.com")));
+            		client.toBlocking().retrieve(HttpRequest.POST("/user/password_reset_request",new StringBody("email@email.com")));
         	});
 		assertEquals(HttpStatus.NOT_FOUND , thrown.getStatus());
 		assertEquals("incorrect email",thrown.getResponse().getBody().get());
@@ -203,13 +212,13 @@ public class UserControllerTest{
 	public void testPasswordReset(){
 		String email = "test@gmail.com";
 		try{
-			userManager.addUser(email,"password");
+			userManager.addUser(email,"password","name");
 		}
 		catch(InvalidEmailException|EmailExistsException e){
 			fail();
 		}
 		assertTrue(userManager.verifyEmail(email));
-		HttpRequest request = HttpRequest.POST("/user/password_reset",new StringBody(email));
+		HttpRequest request = HttpRequest.POST("/user/password_reset_request",new StringBody(email));
 		HttpResponse response = client.toBlocking().exchange(request);
 		assertEquals(HttpStatus.OK , response.getStatus());
 
@@ -220,7 +229,7 @@ public class UserControllerTest{
 	@Test
 	public void testChangePasswordExisting(){
 		try{
-			userManager.addUser("mail@mail.com","password");
+			userManager.addUser("mail@mail.com","password","name");
 		}
 		catch(InvalidEmailException|EmailExistsException e){
 			fail();
@@ -231,7 +240,7 @@ public class UserControllerTest{
 		try{
 			String a = ResetLinkManager.getResetLinkManager().create("mail@mail.com");
 			assertTrue(ResetLinkManager.getResetLinkManager().exist(a));
-			HttpRequest request = HttpRequest.PUT("/user/change_password",new PasswordResetBody(a,"test"));
+			HttpRequest request = HttpRequest.PUT("/user/password_reset_change",new PasswordResetBody(a,"test"));
 			HttpResponse response = client.toBlocking().exchange(request);
 			assertEquals(HttpStatus.OK , response.getStatus());
 			assertFalse(ResetLinkManager.getResetLinkManager().exist(a));
@@ -245,17 +254,17 @@ public class UserControllerTest{
 	@Test
 	public void testChangePasswordNotExisting(){
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-				client.toBlocking().retrieve(HttpRequest.PUT("/user/change_password",new PasswordResetBody("VeryRandomString1123423budsadvaswitvdycioy23271g","test")));
+				client.toBlocking().retrieve(HttpRequest.PUT("/user/password_reset_change",new PasswordResetBody("VeryRandomString1123423budsadvaswitvdycioy23271g","test")));
 		 });
 		assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
 
 		thrown = assertThrows(HttpClientResponseException.class, () -> {
-				client.toBlocking().retrieve(HttpRequest.PUT("/user/change_password",new PasswordResetBody(null,"test")));
+				client.toBlocking().retrieve(HttpRequest.PUT("/user/password_reset_change",new PasswordResetBody(null,"test")));
 		 });
 		assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
 
 		thrown = assertThrows(HttpClientResponseException.class, () -> {
-				client.toBlocking().retrieve(HttpRequest.PUT("/user/change_password",new PasswordResetBody("","test")));
+				client.toBlocking().retrieve(HttpRequest.PUT("/user/password_reset_change",new PasswordResetBody("","test")));
 		 });
 		assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
 

@@ -1,4 +1,4 @@
-package main.java.com.projectBackEnd.Entities.User;
+package main.java.com.projectBackEnd.Entities.User.Micronaut;
 
 
 import io.micronaut.http.HttpHeaders;
@@ -8,6 +8,9 @@ import io.micronaut.http.annotation.*;
 
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
+import main.java.com.projectBackEnd.Entities.Session.NoSessionException;
+
+import main.java.com.projectBackEnd.Entities.User.Hibernate.*;
 
 import main.java.com.projectBackEnd.Entities.ResetLinks.ResetLinkManager;
 import main.java.com.projectBackEnd.Entities.ResetLinks.ResetLinkManagerInterface;
@@ -22,10 +25,10 @@ public class UserController {
     private final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
     
 	@Post("/create")//
-	public HttpResponse createUser(@Body User user){
+	public HttpResponse createUser(@Body UserBody user){
 
 		try{
-			userManager.addUser(user.getEmail(),user.getPassword());
+			userManager.addUser(user.getEmail(),user.getPassword(),user.getName());
 			return HttpResponse.created("user created"); 
 		}
 		catch(EmailExistsException e){
@@ -37,7 +40,7 @@ public class UserController {
 	}
 
 	@Post("/login")
-	public HttpResponse<String> login(@Body User user){
+	public HttpResponse<String> login(@Body UserBody user){
 		String token = userManager.verifyUser(user.getEmail(),user.getPassword());
 		if(token != null)
 			return HttpResponse.ok(token);
@@ -46,7 +49,7 @@ public class UserController {
 	}
 
     	@Delete("/delete_user")
-	public HttpResponse deleteUser(@Body User user){
+	public HttpResponse deleteUser(@Body UserBody user){
 		try{
 			userManager.deleteUser(user.getEmail(), user.getPassword());
 			return HttpResponse.ok();
@@ -56,8 +59,8 @@ public class UserController {
 		}
 	}
 
-	@Put("/change_password") 
-	public HttpResponse<String> changePassword(@Body PasswordResetBody body){
+	@Put("/password_reset_change") 
+	public HttpResponse<String> passwordReset(@Body PasswordResetBody body){
 		try{
         	PasswordReset.getPasswordResetManager().changePassword(body.getToken(), body.getPassword());
 			return HttpResponse.ok();
@@ -69,7 +72,7 @@ public class UserController {
 			return HttpResponse.notFound("token did not match any user");
 		}	
 	}
-	@Post("/password_reset") 
+	@Post("/password_reset_request") 
 	public HttpResponse<String> getPasswordReset(@Body StringBody body){
 
 		try{
@@ -84,8 +87,17 @@ public class UserController {
 			return HttpResponse.serverError();
 		}	
 	}
+
+	//
 	@Put("/change_email") 
 	public HttpResponse<String> changeEmail(@Header("X-API-Key") String session, @Body ChangeEmailBody body){
+		try{
+			if(!sessionManager.getEmail(session).equals(body.getOldEmail()))
+				return HttpResponse.unauthorized();	
+		}
+		catch(NoSessionException e){
+			return HttpResponse.unauthorized();
+		}
 		if(sessionManager.verifySession(session))
 		{
 			try{
@@ -103,7 +115,48 @@ public class UserController {
 			return HttpResponse.unauthorized();
 		
 	}
-	
+	@Put("/change_name") 
+	public HttpResponse<String> changeName(@Header("X-API-Key") String session, @Body ChangeEmailBody body){
+		try{
+			if(!sessionManager.getEmail(session).equals(body.getOldEmail()))
+				return HttpResponse.unauthorized();	
+		}
+		catch(NoSessionException e){
+			return HttpResponse.unauthorized();
+		}
+		if(sessionManager.verifySession(session))
+		{
+			try{
+				userManager.changeEmail(body.getOldEmail(), body.getNewEmail());
+				return HttpResponse.ok();
+			}
+			catch(UserNotExistException e){
+				return HttpResponse.notFound("no user with such email");
+			}
+			catch(EmailExistsException r){
+				return HttpResponse.badRequest("this email already exists");
+			}
+		}
+		else
+			return HttpResponse.unauthorized();
+		
+	}
+
+	@Put("/change_password") 
+	public HttpResponse<String> changePassword(@Header("X-API-Key") String session,@Body StringBody body){
+		if(!sessionManager.verifySession(session))
+			return HttpResponse.unauthorized();
+		try{
+        		userManager.changePassword(sessionManager.getEmail(session), body.getString());
+			return HttpResponse.ok();
+		}
+		catch(UserNotExistException e){
+			return HttpResponse.notFound("token did not match any user");
+		}	
+		catch(NoSessionException e){
+			return HttpResponse.unauthorized();
+		}
+	}
 
 
 }

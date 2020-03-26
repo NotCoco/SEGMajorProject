@@ -1,4 +1,4 @@
-package main.java.com.projectBackEnd.Entities.User;
+package main.java.com.projectBackEnd.Entities.User.Hibernate;
 import main.java.com.projectBackEnd.Entities.ResetLinks.ResetLinkManager;
 import main.java.com.projectBackEnd.Entities.ResetLinks.EmailNotExistException;
 

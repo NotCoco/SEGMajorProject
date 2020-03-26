@@ -1,4 +1,4 @@
-package main.java.com.projectBackEnd.Entities.User;
+package main.java.com.projectBackEnd.Entities.User.Hibernate;
 public class EmailExistsException extends Exception {
  
     public EmailExistsException(String message) {

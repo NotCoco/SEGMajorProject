@@ -39,29 +39,66 @@ public class SessionManager extends EntityManager implements SessionManagerInter
 		return s.getToken();
 	}
 
+	public String getEmail(String token) throws NoSessionException{
+		List<Session> sessions = getAll();
+		for (Session s: sessions) if(s.getToken().equals(token)) return s.getEmail();
+		throw new NoSessionException("no such session");
+	}
+
+
 
 	public boolean verifySession(String token) {
-
 		List<Session> sessions = getAll();
-		List<Session> correct = new ArrayList<Session>();
-
-		for (Session s: sessions) if(s.getToken().equals(token)) correct.add(s);
-	
-		if (correct.size() == 1) {
-			Session current = correct.get(0);
-			Timestamp now = new Timestamp(System.currentTimeMillis());
-			if(current.getTimeout().after(now)) return true;
-			delete(current);		
+		Session current = null;
+		Timestamp now;
+		for (Session s: sessions){
+			if(s.getToken().equals(token)){
+				now = new Timestamp(System.currentTimeMillis());
+				if(s.getTimeout().after(now)){
+					return true;
+				}
+				else{	
+					delete(s);
+					return false;	
+				}
+			}
+			
 		}
-
 		return false;
 	}
 
+
+
 	public void terminateSession(String token) {
-		if(getAll().stream().filter(s->((Session)s).getToken().equals(token)).count() == 1) {
-			Session s = (Session)getByPrimaryKey(token);
-			delete(s);	
-		}	
+		List<Session> sessions = getAll();
+		try{
+			String email = getEmail(token);
+			deleteAllPast(email); // delete the unused session for sake of performance
+		}
+		catch(NoSessionException e){ // when there is no session to delete 
+		}
+		//delete current session
+		for (Session s: sessions){
+			if(s.getToken().equals(token)){
+				delete(s);
+			}
+		}
+		
 	}
+	
+	public void deleteAllPast(String email){
+		List<Session> sessions = getAll();
+		Timestamp now;
+		for (Session s: sessions){
+			if(s.getEmail().equals(email)){
+				now = new Timestamp(System.currentTimeMillis());
+				if(!s.getTimeout().after(now)){
+					delete(s);
+				}
+			
+			}
+		}
+	}
+	
 
 }
