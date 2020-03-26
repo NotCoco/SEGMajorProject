@@ -37,6 +37,9 @@ public class UserController {
 		catch(InvalidEmailException e){
 			return HttpResponse.badRequest("invalid email address");
 		}
+		catch(IncorrectNameException e){
+			return HttpResponse.badRequest("invalid name");
+		}
 	}
 
 	@Post("/login")
@@ -87,6 +90,19 @@ public class UserController {
 			return HttpResponse.serverError();
 		}	
 	}
+
+	@Get("/name")
+	public HttpResponse<String> changeEmail(@Header("X-API-Key") String session){
+		if(!sessionManager.verifySession(session))
+			return HttpResponse.unauthorized();
+		try{
+			return HttpResponse.ok(sessionManager.getEmail(session));
+
+		}
+		catch(NoSessionException e){
+			return HttpResponse.unauthorized();
+		}
+	}	
 
 	//
 	@Put("/change_email") 

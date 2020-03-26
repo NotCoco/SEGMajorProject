@@ -30,11 +30,13 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 		else
 			return new UserManager();
 	}
-	public void addUser(String email, String password, String name) throws EmailExistsException,InvalidEmailException{
+	public void addUser(String email, String password, String name) throws EmailExistsException,InvalidEmailException,IncorrectNameException{
 		if(!EmailValidator.getInstance().isValid(email))
 			throw new InvalidEmailException("email: " + email + " is invalid");
 		if(getAll().stream().filter(u->((User)u).getEmail().equals(email)).count() > 0)
 			throw new EmailExistsException("email: " + email + " already exsists");
+		if(name == null || name.isEmpty())
+			throw new IncorrectNameException("incorrect name");
 		User user = new User(email,hash(password),name);
 		insertTuple(user);
 	}
@@ -104,6 +106,15 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 			throw new UserNotExistException("there is no user with email: " + email);
 		user.setName(name);
 		update(user);
+	}
+	public String getName(String email) throws UserNotExistException{
+		List<User> users = getAll();
+		for(User u:users){
+			if(u.getEmail().equals(email))
+				return u.getName();
+		}
+		throw new UserNotExistException("No such user");
+
 	}
 	public boolean verifyEmail(String email){ 
 		return (getAll().stream().filter(u->((User)u).getEmail().equals(email)).count() > 0);
