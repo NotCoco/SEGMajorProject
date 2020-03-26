@@ -1,6 +1,5 @@
 package test.java;
 
-
 import io.micronaut.test.annotation.MicronautTest;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
@@ -9,7 +8,6 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
-import main.java.com.projectBackEnd.*;
 
 import main.java.com.projectBackEnd.Entities.Page.*;
 import main.java.com.projectBackEnd.Entities.Site.*;
@@ -73,7 +71,15 @@ public class SiteControllerTest {
         //Automatically deletes all pages too due to cascade, but:
         pageManager.deleteAll();
     }
+    @Test
+    public void testNonExistingSiteReturns404() {
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.GET("/sites/IpsumLoremSite"));
+        });
 
+        assertNotNull(thrown.getResponse());
+        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
+    }
     @Test
     public void testPutLegalSite(){
         HttpResponse response= addSite("testSlug", "legalSite");
@@ -89,16 +95,6 @@ public class SiteControllerTest {
         assertEquals(HttpStatus.CREATED, response.getStatus());
     }
 
-    @Test
-    public void testUpdateToEmptyNameSite(){
-        HttpResponse response = addSite("testSlug","testSite");
-        String url =  getEUrl(response);
-        int id = getSitePKBySlug(url);
-        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            client.toBlocking().exchange(HttpRequest.PUT("/sites", new SiteUpdateCommand(id, "slug", "")).header("X-API-Key",token));
-        });
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
-    }
 
     @Test
     public void testAddEmptyNameSite(){
@@ -106,6 +102,15 @@ public class SiteControllerTest {
             client.toBlocking().exchange(HttpRequest.POST("/sites", new SiteAddCommand("slug", "")).header("X-API-Key",token));
         });
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
+    }
+    @Test
+    public void testAddAndGetSite(){
+        HttpResponse response = addSite("testSlug", "testSite");
+        String id =  getEUrl(response);
+
+        Site testSite = getSite(id);
+
+        assertEquals("testSite", testSite.getName());
     }
 
     @Test
@@ -124,25 +129,6 @@ public class SiteControllerTest {
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
     }
 
-    @Test
-    public void testAddAndGetSite(){
-        HttpResponse response = addSite("testSlug", "testSite");
-        String id =  getEUrl(response);
-
-        Site testSite = getSite(id);
-
-        assertEquals("testSite", testSite.getName());
-    }
-
-    @Test
-    public void testNonExistingSiteReturns404() {
-        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            client.toBlocking().exchange(HttpRequest.GET("/sites/IpsumLoremSite"));
-        });
-
-        assertNotNull(thrown.getResponse());
-        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
-    }
 
     @Test
     public void testAddAndUpdateSite(){
@@ -156,7 +142,16 @@ public class SiteControllerTest {
         assertEquals("newName", m.getName());
     }
 
-
+    @Test
+    public void testUpdateToEmptyNameSite(){
+        HttpResponse response = addSite("testSlug","testSite");
+        String url =  getEUrl(response);
+        int id = getSitePKBySlug(url);
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.PUT("/sites", new SiteUpdateCommand(id, "slug", "")).header("X-API-Key",token));
+        });
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
+    }
     protected HttpResponse putSite(int id, String newSlug, String newName) {
         HttpRequest request = HttpRequest.PUT("/sites", new SiteUpdateCommand(id, newSlug, newName)).header("X-API-Key",token);
         return client.toBlocking().exchange(request);

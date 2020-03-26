@@ -1,7 +1,7 @@
 package test.java;
 
-
 import io.micronaut.test.annotation.MicronautTest;
+import io.micronaut.core.type.Argument;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
