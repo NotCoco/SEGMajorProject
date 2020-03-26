@@ -1,12 +1,7 @@
 package test.java;
 
-import main.java.com.projectBackEnd.*;
-import main.java.com.projectBackEnd.Entities.User.User;
-import main.java.com.projectBackEnd.Entities.User.UserManager;
-import main.java.com.projectBackEnd.Entities.User.UserManagerInterface;
-import main.java.com.projectBackEnd.Entities.User.EmailExistsException;
-import main.java.com.projectBackEnd.Entities.User.UserNotExistException;
-import main.java.com.projectBackEnd.Entities.User.InvalidEmailException;
+import main.java.com.projectBackEnd.Entities.User.Hibernate.*;
+
 import org.junit.*;
 import java.security.MessageDigest;
 import java.nio.charset.StandardCharsets;
@@ -16,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.*;
 import java.math.BigInteger;
+
+import main.java.com.projectBackEnd.HibernateUtility;
+import main.java.com.projectBackEnd.EntityManager;
 
 public class UserManagerTest{
 	public static ConnectionLeakUtil connectionLeakUtil = null;
@@ -46,7 +44,7 @@ public class UserManagerTest{
 	@Test(expected = InvalidEmailException.class)
 	public void testAddUserInvalidEmail1() throws InvalidEmailException{
 		try{
-			userManager.addUser("email","password5");
+			userManager.addUser("email","password5","name");
 		}
 		catch(EmailExistsException e){
 			fail();
@@ -56,7 +54,7 @@ public class UserManagerTest{
 	@Test(expected = InvalidEmailException.class)
 	public void testAddUserInvalidEmail2() throws InvalidEmailException{
 		try{
-			userManager.addUser("ema il@email.com","password5");
+			userManager.addUser("ema il@email.com","password5","name");
 		}
 		catch(EmailExistsException e){
 			fail();
@@ -65,7 +63,7 @@ public class UserManagerTest{
 	@Test(expected = InvalidEmailException.class)
 	public void testAddUserInvalidEmail3() throws InvalidEmailException{
 		try{
-			userManager.addUser("email@email.","password5");
+			userManager.addUser("email@email.","password5","name");
 		}
 		catch(EmailExistsException e){
 			fail();
@@ -74,7 +72,7 @@ public class UserManagerTest{
 	@Test(expected = InvalidEmailException.class)
 	public void testAddUserInvalidEmail4() throws InvalidEmailException{
 		try{
-			userManager.addUser("@email.com","password5");
+			userManager.addUser("@email.com","password5","name");
 		}
 		catch(EmailExistsException e){
 			fail();
@@ -83,7 +81,7 @@ public class UserManagerTest{
 	@Test(expected = InvalidEmailException.class)
 	public void testAddUserInvalidEmail5() throws InvalidEmailException{
 		try{
-			userManager.addUser("@email.","password5");
+			userManager.addUser("@email.","password5","name");
 		}
 		catch(EmailExistsException e){
 			fail();
@@ -93,7 +91,7 @@ public class UserManagerTest{
 	public void testAddUser(){
 		fill();
 		try{
-			userManager.addUser("user8@email.com","password8");
+			userManager.addUser("user8@email.com","password8","name");
 		}
 		catch(EmailExistsException|InvalidEmailException e){
 			fail();
@@ -106,7 +104,7 @@ public class UserManagerTest{
 	public void testAddExistingUser()throws EmailExistsException{
 		fill();
 		try{
-			userManager.addUser("user5@email.com","password5");
+			userManager.addUser("user5@email.com","password5","name");
 		}
 		catch(InvalidEmailException e){
 			fail();
@@ -205,13 +203,13 @@ public class UserManagerTest{
 	}
 	private ArrayList<User> getTestUsers(){
 		ArrayList<User> users = new ArrayList<User>();
-		users.add(new User("user1@email.com",hash("password1")));
-		users.add(new User("user2@email.com",hash("password2")));
-		users.add(new User("user3@email.com",hash("password3")));
-		users.add(new User("user4@email.com",hash("password4")));
-		users.add(new User("user5@email.com",hash("password5")));
-		users.add(new User("user6@email.com",hash("password6")));
-		users.add(new User("user7@email.com",hash("password7")));
+		users.add(new User("user1@email.com",hash("password1"),"name"));
+		users.add(new User("user2@email.com",hash("password2"),"name"));
+		users.add(new User("user3@email.com",hash("password3"),"name"));
+		users.add(new User("user4@email.com",hash("password4"),"name"));
+		users.add(new User("user5@email.com",hash("password5"),"name"));
+		users.add(new User("user6@email.com",hash("password6"),"name"));
+		users.add(new User("user7@email.com",hash("password7"),"name"));
 
 
 		return users;
