@@ -13,8 +13,15 @@ public class ImageController {
 
 	protected final ImageManager imageManager;
 	protected final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
-	public ImageController(){
-		imageManager = new ImageManager();}
+	public ImageController(){imageManager = new ImageManager();}
+
+	/**
+	 * Add a new image by http POST method
+	 * @param session
+	 * @param imageBytes image bytes encoded with Base64
+	 * @return Http response with relevant information which depends on the result of
+	 * inserting new image
+	 */
 	@Post("/")
 	public HttpResponse<String> add(@Header("X-API-Key") String session,@Body String imageBytes) {
 		if(!sessionManager.verifySession(session))
@@ -30,6 +37,13 @@ public class ImageController {
 		}
 	}
 
+	/**
+	 * Delete an image with the image name by http Delete method
+	 * @param session
+	 * @param imageName
+	 * @return Http response with relevant information which depends on the result of
+	 * deleting the image
+	 */
 	@Delete("/{imageName}")
 	public HttpResponse delete(@Header("X-API-Key") String session,String imageName) {
 		if(!sessionManager.verifySession(session))

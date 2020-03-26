@@ -20,7 +20,13 @@ import java.net.URI;
 public class UserController {
     private final UserManagerInterface userManager = UserManager.getUserManager();
     private final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
-    
+
+	/**
+	 * Add a new user to the database with user by http POST method
+	 * @param user
+	 * @return Http response with relevant information which depends on the result of
+	 * inserting a new user
+	 */
 	@Post("/create")//
 	public HttpResponse createUser(@Body User user){
 
@@ -36,6 +42,12 @@ public class UserController {
 		}
 	}
 
+	/**
+	 * Login of user by http POST method
+	 * @param user
+	 * @return Http response with relevant information which depends on the result of
+	 * login
+	 */
 	@Post("/login")
 	public HttpResponse<String> login(@Body User user){
 		String token = userManager.verifyUser(user.getEmail(),user.getPassword());
@@ -45,7 +57,13 @@ public class UserController {
 			return HttpResponse.notFound("invalid credentials");
 	}
 
-    	@Delete("/delete_user")
+	/**
+	 * Delete a user by http Delete method
+	 * @param user
+	 * @return Http response with relevant information which depends on the result of
+	 * deleting
+	 */
+	@Delete("/delete_user")
 	public HttpResponse deleteUser(@Body User user){
 		try{
 			userManager.deleteUser(user.getEmail(), user.getPassword());
@@ -56,6 +74,12 @@ public class UserController {
 		}
 	}
 
+	/**
+	 * Change user's password with PasswordResetBody
+	 * @param body Dedicated PasswordResetBody class to update password
+	 * @return Http response with relevant information which depends on the result of
+	 * updating password
+	 */
 	@Put("/change_password") 
 	public HttpResponse<String> changePassword(@Body PasswordResetBody body){
 		try{
@@ -69,6 +93,13 @@ public class UserController {
 			return HttpResponse.notFound("token did not match any user");
 		}	
 	}
+
+	/**
+	 * Reset the password by http POST method
+	 * @param body
+	 * @return Http response with relevant information which depends on the result of
+	 * resetting a user's password
+	 */
 	@Post("/password_reset") 
 	public HttpResponse<String> getPasswordReset(@Body StringBody body){
 
@@ -84,6 +115,14 @@ public class UserController {
 			return HttpResponse.serverError();
 		}	
 	}
+
+	/**
+	 * Change user's email with by Http PUT method
+	 * @param session
+	 * @param body Dedicated ChangeEmailBody class to update email
+	 * @return Http response with relevant information which depends on the result of
+	 * updating email
+	 */
 	@Put("/change_email") 
 	public HttpResponse<String> changeEmail(@Header("X-API-Key") String session, @Body ChangeEmailBody body){
 		if(sessionManager.verifySession(session))

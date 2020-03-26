@@ -23,18 +23,32 @@ public class MedicineController {
 
     public MedicineController(){}
 
-
+    /**
+     * Get the specific medicine by http GET method
+     * @param id
+     * @return get the Medicine with the specified id
+     */
     @Get(value = "/{id}", produces = MediaType.TEXT_JSON)
     public Medicine list(int id) {
         return medicineManager.getByPrimaryKey(id);
     }
 
+    /**
+     * Get all the medicines by http GET method
+     * @return get a list of all the Medicines
+     */
     @Get("/")
     public List<Medicine> index(){
         return medicineManager.getAllMedicines();
     }
 
-
+    /**
+     * Add a new medicine to the database with MedicineAddCommand by http POST method
+     * @param session
+     * @param command Dedicated MedicineAddCommand class to add new medicine
+     * @return Http response with relevant information which depends on the result of
+     * inserting the new medicine
+     */
     @Post("/")
     public HttpResponse<Medicine> add(@Header("X-API-Key") String session,@Body MedicineAddCommand command) {
 		if(!sessionManager.verifySession(session))
@@ -47,7 +61,13 @@ public class MedicineController {
                 .created(med)
                 .headers(headers -> headers.location(location(med.getPrimaryKey())));
     }
-
+    /**
+     * Delete a medicine with specified id by http Delete method
+     * @param session
+     * @param id
+     * @return Http response with relevant information which depends on the result of
+     * the deleting medicine
+     */
     @Delete("/{id}")
     public HttpResponse delete(@Header("X-API-Key") String session,int id) {
 		if(!sessionManager.verifySession(session))
@@ -55,7 +75,12 @@ public class MedicineController {
         medicineManager.delete(id);
         return HttpResponse.noContent();
     }
-
+    /**
+     * Update a medicine with MedicineUpdateCommand
+     * @param session
+     * @param command Dedicated MedicineUpdateCommand class to update the medicine
+     * @return Http response with path
+     */
     @Put("/")
     public HttpResponse update(@Header("X-API-Key") String session,@Body MedicineUpdateCommand command) {
 		if(!sessionManager.verifySession(session))
@@ -67,11 +92,20 @@ public class MedicineController {
                 .noContent()
                 .header(HttpHeaders.LOCATION, location(command.getId()).getPath());
     }
-
+    /**
+     * Create URI with the specified id
+     * @param id medicine id
+     * @return created URI
+     */
     protected URI location(int id) {
         return URI.create("/medicines/" + id);
     }
 
+    /**
+     * Create URI with existing medicine object
+     * @param medicine medicine object
+     * @return created URI
+     */
     protected URI location(Medicine medicine) {
         return location(medicine.getPrimaryKey());
     }
