@@ -37,6 +37,11 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 public class UserControllerTest{
     
 
+	/**
+	*	TODO:
+ 	* 		 full revamp of this test class
+	*/
+
 	@Inject
     @Client("/")
     HttpClient client;
