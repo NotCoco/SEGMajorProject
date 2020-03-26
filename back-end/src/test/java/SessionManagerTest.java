@@ -4,10 +4,11 @@ import main.java.com.projectBackEnd.*;
 import main.java.com.projectBackEnd.Entities.Session.Session;
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
+import main.java.com.projectBackEnd.Entities.Session.NoSessionException;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -82,6 +83,31 @@ public class SessionManagerTest {
 		sessionManager.terminateSession(token);
 		assertEquals(0,((EntityManager)sessionManager).getAll().size());
 	}
+
+	@Test
+	public void testAddGetEmail(){
+		try{
+			String token = sessionManager.getNewSession("email@email.com",100);
+			assertEquals("email@email.com", sessionManager.getEmail(token));
+			sessionManager.terminateSession(token);
+		}
+		catch(NoSessionException e){
+			fail();
+		}	
+	}
+	@Test(expected = NoSessionException.class)
+	public void testGetEmailNotExistEmpty() throws NoSessionException{
+		sessionManager.getEmail("");
+	}
+	@Test(expected = NoSessionException.class)
+	public void testGetEmailNotExistIncorrect() throws NoSessionException{
+		sessionManager.getEmail("very incorrect token that does not work");
+	}
+	@Test(expected = NoSessionException.class)
+	public void testGetEmailNotExistNull() throws NoSessionException{
+		sessionManager.getEmail(null);
+	}
+
 
 
 	private ArrayList<Session> getTestSessions() {
