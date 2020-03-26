@@ -1,4 +1,4 @@
-package main.java.com.projectBackEnd.Entities.User;
+package main.java.com.projectBackEnd.Entities.User.Micronaut;
 
 
 import io.micronaut.http.HttpHeaders;
@@ -9,6 +9,8 @@ import io.micronaut.http.annotation.*;
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 import main.java.com.projectBackEnd.Entities.Session.NoSessionException;
+
+import main.java.com.projectBackEnd.Entities.User.Hibernate.*;
 
 import main.java.com.projectBackEnd.Entities.ResetLinks.ResetLinkManager;
 import main.java.com.projectBackEnd.Entities.ResetLinks.ResetLinkManagerInterface;
@@ -23,7 +25,7 @@ public class UserController {
     private final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
     
 	@Post("/create")//
-	public HttpResponse createUser(@Body User user){
+	public HttpResponse createUser(@Body UserBody user){
 
 		try{
 			userManager.addUser(user.getEmail(),user.getPassword(),user.getName());
@@ -38,7 +40,7 @@ public class UserController {
 	}
 
 	@Post("/login")
-	public HttpResponse<String> login(@Body User user){
+	public HttpResponse<String> login(@Body UserBody user){
 		String token = userManager.verifyUser(user.getEmail(),user.getPassword());
 		if(token != null)
 			return HttpResponse.ok(token);
@@ -47,7 +49,7 @@ public class UserController {
 	}
 
     	@Delete("/delete_user")
-	public HttpResponse deleteUser(@Body User user){
+	public HttpResponse deleteUser(@Body UserBody user){
 		try{
 			userManager.deleteUser(user.getEmail(), user.getPassword());
 			return HttpResponse.ok();

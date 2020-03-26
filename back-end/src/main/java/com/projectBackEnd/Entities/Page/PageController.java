@@ -7,7 +7,8 @@ import io.micronaut.http.annotation.*;
 
 import main.java.com.projectBackEnd.Entities.Site.*;
 import main.java.com.projectBackEnd.Entities.Page.*;
-
+import main.java.com.projectBackEnd.Entities.Session.SessionManager;
+import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -20,7 +21,7 @@ import java.util.List;
 @Controller("/sites")
 public class PageController {
     final PageManagerInterface pageManager = PageManager.getPageManager();
-
+	final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
     public PageController() {
     }
 

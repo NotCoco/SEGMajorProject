@@ -1,12 +1,7 @@
 package test.java;
 
-import main.java.com.projectBackEnd.*;
-import main.java.com.projectBackEnd.Entities.User.User;
-import main.java.com.projectBackEnd.Entities.User.UserManager;
-import main.java.com.projectBackEnd.Entities.User.UserManagerInterface;
-import main.java.com.projectBackEnd.Entities.User.EmailExistsException;
-import main.java.com.projectBackEnd.Entities.User.UserNotExistException;
-import main.java.com.projectBackEnd.Entities.User.InvalidEmailException;
+import main.java.com.projectBackEnd.Entities.User.Hibernate.*;
+
 import org.junit.*;
 import java.security.MessageDigest;
 import java.nio.charset.StandardCharsets;
@@ -16,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.*;
 import java.math.BigInteger;
+
+import main.java.com.projectBackEnd.HibernateUtility;
+import main.java.com.projectBackEnd.EntityManager;
 
 public class UserManagerTest{
 	public static ConnectionLeakUtil connectionLeakUtil = null;

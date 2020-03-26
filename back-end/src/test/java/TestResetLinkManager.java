@@ -2,10 +2,10 @@ package test.java;
 
 import main.java.com.projectBackEnd.*;
 import main.java.com.projectBackEnd.Entities.ResetLinks.*;
-import main.java.com.projectBackEnd.Entities.User.UserManager;
-import main.java.com.projectBackEnd.Entities.User.UserManagerInterface;
-import main.java.com.projectBackEnd.Entities.User.EmailExistsException;
-import main.java.com.projectBackEnd.Entities.User.InvalidEmailException;
+import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManager;
+import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManagerInterface;
+import main.java.com.projectBackEnd.Entities.User.Hibernate.EmailExistsException;
+import main.java.com.projectBackEnd.Entities.User.Hibernate.InvalidEmailException;
 import org.junit.*;
 import static org.junit.Assert.*;
 
