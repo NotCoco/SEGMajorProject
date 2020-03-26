@@ -2,7 +2,6 @@ package test.java;
 
 
 import io.micronaut.test.annotation.MicronautTest;
-import io.micronaut.core.type.Argument;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
@@ -10,7 +9,7 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
-import main.java.com.projectBackEnd.*;
+
 import main.java.com.projectBackEnd.Entities.Medicine.*;
 
 import javax.inject.Inject;
@@ -30,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import main.java.com.projectBackEnd.Entities.User.UserManager;
-//import main.java.com.projectBackEnd.HibernateUtility;
+import main.java.com.projectBackEnd.HibernateUtility;
 @MicronautTest
 public class MedicineControllerTest{
 
@@ -69,6 +68,15 @@ public class MedicineControllerTest{
         medicineManager.deleteAll();
 
     }
+    @Test
+    public void testNonExistingMedicineReturns404() {
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.GET("/medicines/3524"));
+        });
+
+        assertNotNull(thrown.getResponse());
+        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
+    }
 
     @Test
     public void testAddAndGetAll(){
@@ -85,66 +93,6 @@ public class MedicineControllerTest{
         for(int i=0; i<ids.size();i++) assertEquals(ids.get(i), medicineList.get(i).getPrimaryKey());
 
     }
-
-    @Test
-    public void testAddLegalMedicine(){
-        HttpResponse response= addMedicine("Med1", "Liquid");
-        assertEquals(HttpStatus.CREATED, response.getStatus());
-    }
-
-    @Test
-    public void testPutLegalMedicine(){
-        HttpResponse response= addMedicine("Med1", "Liquid");
-        int id =  getEId(response).intValue();
-        response = putMedicine(id, "NewName", "NewType");
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
-    }
-
-
-    @Test
-    public void testUpdateMedicineEmptyType() {
-        HttpResponse response = addMedicine("Med1", "Liquid");
-        int id =  getEId(response).intValue();
-        putMedicine(id, "name", "");
-        Medicine found = getMedicine(id);
-        assertEquals("Undefined", found.getType());
-    }
-
-    @Test
-    public void testUpdateMedicineEmptyName() {
-        HttpResponse response = addMedicine("Med1", "Liquid");
-        int id =  getEId(response).intValue();
-        client.toBlocking().exchange(HttpRequest.PUT("/medicines", new MedicineUpdateCommand(id, "", "type")).header("X-API-Key",token));
-        Medicine found = getMedicine(id);
-        assertEquals("Unnamed", found.getName());
-    }
-
-
-    @Test
-    public void testNonExistingMedicineReturns404() {
-        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            client.toBlocking().exchange(HttpRequest.GET("/medicines/3524"));
-        });
-
-        assertNotNull(thrown.getResponse());
-        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
-    }
-
-    @Test
-    public void testDeleteAndGetMedicine(){
-        HttpResponse response = addMedicine("Med1", "Liquid");
-        int id =  getEId(response).intValue();
-        // Asserting that we've added a medicine
-        assertEquals(HttpStatus.CREATED, response.getStatus());
-
-        HttpRequest request = HttpRequest.DELETE("/medicines/"+id).header("X-API-Key",token);
-        response = client.toBlocking().exchange(request);
-        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            client.toBlocking().exchange(HttpRequest.GET("/medicines/"+id));
-        });
-    }
-
-
     @Test
     public void testAddEmptyNameMedicine(){
         HttpResponse response = addMedicine("", "Topical");
@@ -170,8 +118,56 @@ public class MedicineControllerTest{
 
         assertEquals("Med1", testMed.getName());
     }
+    @Test
+    public void testAddLegalMedicine(){
+        HttpResponse response= addMedicine("Med1", "Liquid");
+        assertEquals(HttpStatus.CREATED, response.getStatus());
+    }
+
+    @Test
+    public void testPutLegalMedicine(){
+        HttpResponse response= addMedicine("Med1", "Liquid");
+        int id =  getEId(response).intValue();
+        response = putMedicine(id, "NewName", "NewType");
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
+    }
 
 
+
+    @Test
+    public void testDeleteAndGetMedicine(){
+        HttpResponse response = addMedicine("Med1", "Liquid");
+        int id =  getEId(response).intValue();
+        // Asserting that we've added a medicine
+        assertEquals(HttpStatus.CREATED, response.getStatus());
+
+        HttpRequest request = HttpRequest.DELETE("/medicines/"+id).header("X-API-Key",token);
+        response = client.toBlocking().exchange(request);
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.GET("/medicines/"+id));
+        });
+    }
+
+
+
+
+ @Test
+    public void testUpdateMedicineEmptyType() {
+        HttpResponse response = addMedicine("Med1", "Liquid");
+        int id =  getEId(response).intValue();
+        putMedicine(id, "name", "");
+        Medicine found = getMedicine(id);
+        assertEquals("Undefined", found.getType());
+    }
+
+    @Test
+    public void testUpdateMedicineEmptyName() {
+        HttpResponse response = addMedicine("Med1", "Liquid");
+        int id =  getEId(response).intValue();
+        client.toBlocking().exchange(HttpRequest.PUT("/medicines", new MedicineUpdateCommand(id, "", "type")).header("X-API-Key",token));
+        Medicine found = getMedicine(id);
+        assertEquals("Unnamed", found.getName());
+    }
 
     @Test
     public void testAddAndUpdateMedicine(){
