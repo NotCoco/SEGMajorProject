@@ -44,7 +44,6 @@ public class PageController {
     @Post("/{name}/pages")
     public HttpResponse<Page> addPage(String name, @Body PageAddCommand pageToAdd) {
         Page p = pageManager.addPage(pageToAdd.getSite(), pageToAdd.getSlug(), pageToAdd.getIndex(), pageToAdd.getTitle(), pageToAdd.getContent());
-        System.out.println(" ++++++"+ p.getPrimaryKey() + " " + p.getSite().getSlug());
         if (pageManager.getByPrimaryKey(p.getPrimaryKey()) == null) {
             return HttpResponse.serverError();
         }
@@ -67,7 +66,7 @@ public class PageController {
 
     @Put("{name}/pages/")
     public HttpResponse updatePage(String name, @Body PageUpdateCommand updatedPageCommand) {
-        Page updatedPage = new Page(updatedPageCommand.getPrimaryKey(), updatedPageCommand.getSite(), updatedPageCommand.getSlug(), updatedPageCommand.getIndex(), updatedPageCommand.getTitle(), updatedPageCommand.getContent());
+        Page updatedPage = new Page(updatedPageCommand.getId(), updatedPageCommand.getSite(), updatedPageCommand.getSlug(), updatedPageCommand.getIndex(), updatedPageCommand.getTitle(), updatedPageCommand.getContent());
 
         pageManager.update(updatedPage);
         return HttpResponse
