@@ -12,19 +12,18 @@ import main.java.com.projectBackEnd.Entities.Site.SiteManagerInterface;
 public class PageUpdateCommand extends PageAddCommand {
 
     @NotNull
-    private Integer primaryKey;
+    private int id;
+
 
     public PageUpdateCommand(){
         super();
     }
 
-    public PageUpdateCommand(Integer primaryKey, String site, String slug, Integer index, String title, String content){
+    public PageUpdateCommand(Integer id, String site, String slug, Integer index, String title, String content){
         super(site, slug, index, title, content);
-        this.primaryKey = primaryKey;
+        this.id = id;
     }
 
-    public Integer getPrimaryKey() {
-        return primaryKey;
-    }
+    public int getId() { return id; }
 
 }

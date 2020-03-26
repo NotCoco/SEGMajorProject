@@ -55,7 +55,6 @@ public class PageController {
 		if(!sessionManager.verifySession(session))
 			return HttpResponse.unauthorized();
         Page p = pageManager.addPage(pageToAdd.getSite(), pageToAdd.getSlug(), pageToAdd.getIndex(), pageToAdd.getTitle(), pageToAdd.getContent());
-        System.out.println(" ++++++"+ p.getPrimaryKey() + " " + p.getSite().getSlug());
         if (pageManager.getByPrimaryKey(p.getPrimaryKey()) == null) {
             return HttpResponse.serverError();
         }
@@ -74,10 +73,11 @@ public class PageController {
     }
 
     @Put("{name}/pages/")
-    public HttpResponse updatePage(@Header("X-API-Key") String session, String name, @Body PageUpdateCommand updatedPageCommand) {
+    public HttpResponse updatePage(@Header("X-API-Key") String session,String name, @Body PageUpdateCommand updatedPageCommand) {
 		if(!sessionManager.verifySession(session))
 			return HttpResponse.unauthorized();
-        Page updatedPage = new Page(updatedPageCommand.getPrimaryKey(), updatedPageCommand.getSite(), updatedPageCommand.getSlug(), updatedPageCommand.getIndex(), updatedPageCommand.getTitle(), updatedPageCommand.getContent());
+        Page updatedPage = new Page(updatedPageCommand.getId(), updatedPageCommand.getSite(), updatedPageCommand.getSlug(), updatedPageCommand.getIndex(), updatedPageCommand.getTitle(), updatedPageCommand.getContent());
+
 
         pageManager.update(updatedPage);
         return HttpResponse
