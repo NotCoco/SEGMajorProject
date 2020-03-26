@@ -19,12 +19,28 @@ import main.java.com.projectBackEnd.Entities.ResetLinks.EmailNotExistException;
 
 import java.net.URI;
 
+/**
+ * User Controller class is used for the interactions between frontend and backend
+ * There are functionalites :
+ *    - add a new user
+ *    - login
+ *    - delete a user
+ *    - change password
+ *    - reset password
+ *    - change email
+ */
 @Controller("/user")
 public class UserController {
     private final UserManagerInterface userManager = UserManager.getUserManager();
     private final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
-    
-	@Post("/create")//
+
+	/**
+	 * Add a new user to the database with user by http POST method
+	 * @param user
+	 * @return Http response with relevant information which depends on the result of
+	 * inserting a new user
+	 */
+	@Post("/create")
 	public HttpResponse createUser(@Body UserBody user){
 
 		try{
@@ -42,6 +58,12 @@ public class UserController {
 		}
 	}
 
+	/**
+	 * Login of user by http POST method
+	 * @param user
+	 * @return Http response with relevant information which depends on the result of
+	 * login
+	 */
 	@Post("/login")
 	public HttpResponse<String> login(@Body UserBody user){
 		String token = userManager.verifyUser(user.getEmail(),user.getPassword());
@@ -51,6 +73,12 @@ public class UserController {
 			return HttpResponse.notFound("invalid credentials");
 	}
 
+	/**
+	 * Delete a user by http Delete method
+	 * @param user
+	 * @return Http response with relevant information which depends on the result of
+	 * deleting
+	 */
     	@Delete("/delete_user")
 	public HttpResponse deleteUser(@Body UserBody user){
 		try{
@@ -62,6 +90,12 @@ public class UserController {
 		}
 	}
 
+	/**
+	 * Change user's password with PasswordResetBody
+	 * @param body Dedicated PasswordResetBody class to update password
+	 * @return Http response with relevant information which depends on the result of
+	 * updating password
+	 */
 	@Put("/password_reset_change") 
 	public HttpResponse<String> passwordReset(@Body PasswordResetBody body){
 		try{
@@ -75,7 +109,14 @@ public class UserController {
 			return HttpResponse.notFound("token did not match any user");
 		}	
 	}
-	@Post("/password_reset_request") 
+
+	/**
+	 * Reset the password by http POST method
+	 * @param body
+	 * @return Http response with relevant information which depends on the result of
+	 * resetting a user's password
+	 */
+	@Post("/password_reset_request")
 	public HttpResponse<String> getPasswordReset(@Body StringBody body){
 
 		try{
@@ -103,8 +144,13 @@ public class UserController {
 			return HttpResponse.unauthorized();
 		}
 	}	
-
-	//
+  /**
+	 * Change user's email with by Http PUT method
+	 * @param session
+	 * @param body Dedicated ChangeEmailBody class to update email
+	 * @return Http response with relevant information which depends on the result of
+	 * updating email
+	 */
 	@Put("/change_email") 
 	public HttpResponse<String> changeEmail(@Header("X-API-Key") String session, @Body ChangeEmailBody body){
 		try{
