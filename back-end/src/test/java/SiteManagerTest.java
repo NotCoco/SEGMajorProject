@@ -158,9 +158,9 @@ public class SiteManagerTest {
     @Test
     public void testDelete() {
         fillDatabase();
-        siteManager.delete(siteManager.getAllSites().get(0)); //Testing object deletion
+        siteManager.delete(siteManager.getAllSites().get(0).getPrimaryKey()); //Testing object deletion
         assertEquals(getListOfSites().size()-1, siteManager.getAllSites().size());
-        siteManager.delete(siteManager.getAllSites().get(0));
+        siteManager.delete(siteManager.getAllSites().get(0).getPrimaryKey());
         assertEquals(getListOfSites().size()-2, siteManager.getAllSites().size());
     }
 
@@ -189,7 +189,7 @@ public class SiteManagerTest {
         Site site = new Site("nop", "Not in db");
         int numberOfSites = siteManager.getAllSites().size();
         try {
-            siteManager.delete(site);
+            siteManager.delete(site.getPrimaryKey());
             fail();
         } catch (IllegalArgumentException e) {
             e.printStackTrace();

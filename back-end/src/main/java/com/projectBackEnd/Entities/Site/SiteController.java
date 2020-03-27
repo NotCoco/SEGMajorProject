@@ -90,7 +90,7 @@ public class SiteController {
 		if(!sessionManager.verifySession(session))
 			return HttpResponse.unauthorized();
         Site s = siteManager.getBySiteSlug(slug);
-        siteManager.delete(s);
+        siteManager.delete(s.getPrimaryKey());
         return HttpResponse.noContent();
     }
 

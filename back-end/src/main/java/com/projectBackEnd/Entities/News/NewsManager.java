@@ -36,6 +36,15 @@ public class NewsManager extends EntityManager implements NewsManagerInterface  
         else return new NewsManager();
     }
 
+    /**
+     * @return list of all News objects in database
+     */
+    public List<News> getAllNews() {
+        List<News> allNews = super.getAll();
+        return sort(allNews);
+    }
+
+
     /** Insert input News object into the database
      * @param news
      * @return added news
@@ -88,14 +97,6 @@ public class NewsManager extends EntityManager implements NewsManagerInterface  
     }
 
     /**
-     * Delete input News object
-     * @param news
-     */
-    public void delete(News news) {
-        super.delete(news);
-    }
-
-    /**
      * Delete News object by primary key
      * @param pk
      */
@@ -110,13 +111,6 @@ public class NewsManager extends EntityManager implements NewsManagerInterface  
         super.deleteAll();
     }
 
-    /**
-     * @return list of all News objects in database
-     */
-    public List<News> getAllNews() {
-        List<News> allNews = super.getAll();
-        return sort(allNews);
-    } //Sort by Pinned/date then date
 
     /**
      * Sort all the news by lowest date, in the following order :

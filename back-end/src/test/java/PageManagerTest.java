@@ -103,7 +103,7 @@ public class PageManagerTest {
     public void testForeignKeyDelete() {
         siteManager.addSite("toDeleteSite", "siteName");
         pageManager.addPage("toDeleteSite", "Slug", 3, "Title", "content");
-        siteManager.delete(siteManager.getBySiteSlug("toDeleteSite"));
+        siteManager.delete(siteManager.getBySiteSlug("toDeleteSite").getPrimaryKey());
         assertEquals(0, pageManager.getAllPages().size());
     }
 
@@ -128,7 +128,7 @@ public class PageManagerTest {
     public void testDeleteNotInDBObject() {
         assertThrows(IllegalArgumentException.class, () -> {
             Page pageNotInTable = new Page(testSiteB,"notaddedtotable", 0, "notaddedtoTable", "");
-            pageManager.delete(pageNotInTable);        });
+            pageManager.delete(pageNotInTable.getPrimaryKey());        });
     }
 
     @Test

@@ -132,12 +132,5 @@ public class PageManager extends EntityManager implements PageManagerInterface {
      */
     public Page update(Page updatedVersion) { super.update(updatedVersion); return updatedVersion; }
 
-    /**
-     * Remove input Page from database
-     * @param object
-     */
-    public void delete(Page object) {
-        super.delete(object);
-    }
 
 }

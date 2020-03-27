@@ -21,10 +21,6 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
         else return siteManager;
     }
 
-    public void delete(Site site) {
-        super.delete(site);
-    }
-
     public List<Site> getAllSites() {
         return (List<Site>) super.getAll();
     }

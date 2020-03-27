@@ -100,7 +100,7 @@ public class PageController {
 		if(!sessionManager.verifySession(session))
 			return HttpResponse.unauthorized();
         Page p = pageManager.getPageBySiteAndSlug(name, page);
-        pageManager.delete(p);
+        pageManager.delete(p.getPrimaryKey());
         return HttpResponse.noContent();
     }
     

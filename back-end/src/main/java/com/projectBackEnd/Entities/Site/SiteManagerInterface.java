@@ -14,7 +14,6 @@ public interface SiteManagerInterface {
     public Site addSite(Site newSite);
     public Site getByPrimaryKey(Integer pk);
     public Site getBySiteSlug(String slug);
-    public void delete(Site object);
     public Site update(Site updatedVersion);
     public Site addSite(String slug, String name);
     }

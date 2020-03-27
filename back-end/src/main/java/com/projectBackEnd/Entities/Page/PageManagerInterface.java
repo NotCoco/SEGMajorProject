@@ -12,7 +12,6 @@ public interface PageManagerInterface {
     public List<Page> getAllPages();
     public Page addPage(Page newPage);
     public Page getByPrimaryKey(Integer pk);
-    public void delete(Page object);
     public Page update(Page updatedVersion);
     public Page addPage(String siteName, String slug, Integer Index, String title, String content);
     public Page addPage(Site siteName, String slug, Integer Index, String title, String content);
