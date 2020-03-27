@@ -1,6 +1,5 @@
-package main.java.com.projectBackEnd.Entities.Medicine;
+package main.java.com.projectBackEnd.Entities.Medicine.Hibernate;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.io.Serializable;
 
 import main.java.com.projectBackEnd.EntityManager;
@@ -36,18 +35,6 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
      */
     public List<Medicine> getAllMedicines() {
         return (List<Medicine>) super.getAll();
-    }
-
-    /**
-     * Create and insert a medicine intto the database
-     * @param name
-     * @param type
-     * @return newly created medicine object, with its assigned ID from the database.
-     */
-    public Medicine addMedicine(String name, String type) {
-        Medicine newMedicine = new Medicine(name, type);
-        super.insertTuple(newMedicine);
-        return newMedicine;
     }
 
     /**

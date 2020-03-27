@@ -1,4 +1,6 @@
-package main.java.com.projectBackEnd.Entities.Medicine;
+package main.java.com.projectBackEnd.Entities.Medicine.Hibernate;
+
+import main.java.com.projectBackEnd.Entities.Medicine.Hibernate.Medicine;
 
 import java.io.Serializable;
 import java.util.List;

@@ -1,8 +1,8 @@
 package test.java;
 
-import main.java.com.projectBackEnd.Entities.News.News;
-import main.java.com.projectBackEnd.Entities.News.NewsManager;
-import main.java.com.projectBackEnd.Entities.News.NewsManagerInterface;
+import main.java.com.projectBackEnd.Entities.News.Hibernate.News;
+import main.java.com.projectBackEnd.Entities.News.Hibernate.NewsManager;
+import main.java.com.projectBackEnd.Entities.News.Hibernate.NewsManagerInterface;
 import main.java.com.projectBackEnd.HibernateUtility;
 
 import javax.persistence.PersistenceException;

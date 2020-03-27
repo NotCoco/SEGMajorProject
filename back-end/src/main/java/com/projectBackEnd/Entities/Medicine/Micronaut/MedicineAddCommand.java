@@ -1,4 +1,4 @@
-package main.java.com.projectBackEnd.Entities.Medicine;
+package main.java.com.projectBackEnd.Entities.Medicine.Micronaut;
 import javax.validation.constraints.NotNull;
 //import io.micronaut.core.annotation.Introspected;
 //TODO Reinsert tags as I couldn't get them to compile on IntelliJ Jars.

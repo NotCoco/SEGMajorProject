@@ -1,7 +1,8 @@
-package main.java.com.projectBackEnd.Entities.News;
+package main.java.com.projectBackEnd.Entities.News.Hibernate;
+
+import main.java.com.projectBackEnd.Entities.News.Hibernate.News;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 /**
  *  Methods used by NewsManager for database queries related to News objects

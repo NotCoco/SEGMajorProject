@@ -1,15 +1,12 @@
-package main.java.com.projectBackEnd.Entities.News;
+package main.java.com.projectBackEnd.Entities.News.Hibernate;
 
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
 
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static java.util.Collections.addAll;
 
 /**
  * NewsManager defines methods for News objects to interact with the database.
@@ -17,7 +14,7 @@ import static java.util.Collections.addAll;
  *
  * https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
-public class NewsManager extends EntityManager implements NewsManagerInterface  {
+public class NewsManager extends EntityManager implements NewsManagerInterface {
 
     private static NewsManagerInterface newsManager;
 
@@ -52,22 +49,6 @@ public class NewsManager extends EntityManager implements NewsManagerInterface  
     public News addNews(News news) {
         insertTuple(news);
         return news;
-    }
-
-    /** Insert a new News object into the database
-     * @param date
-     * @param pinned
-     * @param description
-     * @param title
-     * @param urgent
-     * @param content
-     * @param slug
-     * @return newly created News object added to db
-     */
-    public News addNews(Date date, boolean pinned, String description, String title, boolean urgent, String content, String slug) {
-        News newArticle = new News(date, pinned, description, title, urgent, content, slug);
-        addNews(newArticle);
-        return newArticle;
     }
 
     /** Retrieve news object from database using primary key

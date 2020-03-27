@@ -1,13 +1,15 @@
-package main.java.com.projectBackEnd.Entities.News;
+package main.java.com.projectBackEnd.Entities.News.Micronaut;
 
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
-import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
 
 import java.net.URI;
 import java.util.List;
 
+import main.java.com.projectBackEnd.Entities.News.Hibernate.News;
+import main.java.com.projectBackEnd.Entities.News.Hibernate.NewsManager;
+import main.java.com.projectBackEnd.Entities.News.Hibernate.NewsManagerInterface;
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 

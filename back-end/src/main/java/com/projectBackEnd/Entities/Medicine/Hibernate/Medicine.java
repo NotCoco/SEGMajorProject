@@ -1,4 +1,4 @@
-package main.java.com.projectBackEnd.Entities.Medicine;
+package main.java.com.projectBackEnd.Entities.Medicine.Hibernate;
 
 import main.java.com.projectBackEnd.TableEntity;
 import org.hibernate.annotations.Type;
@@ -8,7 +8,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.io.Serializable;
 
 import javax.validation.constraints.NotNull;
 

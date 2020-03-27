@@ -1,4 +1,4 @@
-package main.java.com.projectBackEnd.Entities.Page;
+package main.java.com.projectBackEnd.Entities.Page.Micronaut;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 //import io.micronaut.core.annotation.Introspected;

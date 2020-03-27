@@ -9,7 +9,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.math.BigInteger;
 
-import org.apache.commons.validator.routines.EmailValidator;
+//import org.apache.commons.validator.routines.EmailValidator;
 
 
 
@@ -31,8 +31,8 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 			return new UserManager();
 	}
 	public void addUser(String email, String password, String name) throws EmailExistsException,InvalidEmailException,IncorrectNameException{
-		if(!EmailValidator.getInstance().isValid(email))
-			throw new InvalidEmailException("email: " + email + " is invalid");
+		//if(!EmailValidator.getInstance().isValid(email))
+		//	throw new InvalidEmailException("email: " + email + " is invalid");
 		if(getAll().stream().filter(u->((User)u).getEmail().equals(email)).count() > 0)
 			throw new EmailExistsException("email: " + email + " already exsists");
 		if(name == null || name.isEmpty())

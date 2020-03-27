@@ -1,4 +1,4 @@
-package main.java.com.projectBackEnd.Entities.Medicine;
+package main.java.com.projectBackEnd.Entities.Medicine.Micronaut;
 
 import javax.validation.constraints.NotNull;
 //TODO Reinsert tags as I couldn't get them to compile on IntelliJ Jars.
@@ -15,7 +15,9 @@ public class MedicineUpdateCommand extends MedicineAddCommand {
     @NotNull
     private int id;
 
-    public MedicineUpdateCommand() {super();}
+    public MedicineUpdateCommand() {
+        super();
+    }
 
     public MedicineUpdateCommand(int id, String name, String type) {
         super(name, type);
