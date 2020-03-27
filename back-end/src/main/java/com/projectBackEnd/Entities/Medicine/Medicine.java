@@ -59,6 +59,7 @@ public class Medicine implements TableEntity {
         this.primaryKey = -1;
         setName(name);
         setType(type);
+
     }
 
     // Constructor taking id

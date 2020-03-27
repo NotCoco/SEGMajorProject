@@ -8,7 +8,7 @@ import main.java.com.projectBackEnd.HibernateUtility;
 
 /**
  * MedicineManager defines methods to interact with the Medicine table in the database.
- * This class extends the EntityManager.
+ * This class extends the EntityManager - supplying it with the rest of its interface methods.
  *
  * https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
@@ -32,10 +32,17 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
     }
 
     /**
+     * @return a list of all medicines in database
+     */
+    public List<Medicine> getAllMedicines() {
+        return (List<Medicine>) super.getAll();
+    }
+
+    /**
      * Create and insert a medicine intto the database
      * @param name
      * @param type
-     * @return newly created medicine object
+     * @return newly created medicine object, with its assigned ID from the database.
      */
     public Medicine addMedicine(String name, String type) {
         Medicine newMedicine = new Medicine(name, type);
@@ -46,11 +53,19 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
     /**
      * Insert input medicine object t/into database
      * @param med
-     * @return added object
+     * @return added object with a replaced ID.
      */
     public Medicine addMedicine(Medicine med) {
         super.insertTuple(med);
         return med;
+    }
+
+    /**
+     * @return primary key
+     */
+    @Override
+    public Medicine getByPrimaryKey(Serializable id) {
+        return (Medicine) super.getByPrimaryKey(id);
     }
 
     /**
@@ -61,24 +76,4 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
     public Medicine update(Medicine med) {
         return (Medicine) super.update(med);
     }
-
-
-    /**
-     * @return primary key
-     */
-    @Override
-    public Medicine getByPrimaryKey(Serializable id) {
-        return (Medicine) super.getByPrimaryKey(id);
-    }
-
-
-    /**
-     * @return a list of all medicines in database
-     */
-    public List<Medicine> getAllMedicines() {
-        return (List<Medicine>) super.getAll();
-    }
-
-
-
 }
