@@ -81,6 +81,9 @@ export default {
     showUrgentNews: {
       type: Boolean,
       default: true
+    },
+    pages: {
+      type: Array
     }
   },
   computed: {
@@ -103,8 +106,7 @@ export default {
     return {
       urgentNews: undefined,
       localHiddenState: false,
-      searchQuery: '',
-      pages: ['Hey', 'test', 'lorem ipsum', 'ipsum', 'lorem', 'this is a test', 'testing']
+      searchQuery: ''
     }
   },
   async created() {
@@ -114,6 +116,11 @@ export default {
       if (firstItem.urgent) this.urgentNews = firstItem;
     }
   },
+  watch: {
+    pages: function() {
+      console.log(this.pages)
+    }
+  }
 };
 </script>
 
