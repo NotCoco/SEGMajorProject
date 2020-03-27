@@ -10,7 +10,7 @@
           <h1 class="title">{{ news.title }}</h1>
           <h2 class="subtitle">{{ news.description }}</h2>
           <time class="subtitle" :datetime="news.date.toISOString().substring(0, 10)" pubdate>{{ news.date.toLocaleDateString("en-GB") }}</time>
-          <rich-text-editor ref="rte" :editable="false"></rich-text-editor>
+          <rich-text-editor v-model="news.content" :editable="false" class="content"></rich-text-editor>
         </article>
       </div>
     </section>
@@ -18,6 +18,9 @@
 </template>
 
 <style lang="scss" scoped>
+.content {
+  margin-top: 2rem;
+}
 </style>
 
 <script>

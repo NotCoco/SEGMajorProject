@@ -145,7 +145,9 @@ export default {
       type: Boolean,
       default: true
     },
-    value: {}
+    value: {
+      type: String
+    }
   },
   data() {
     return {
@@ -178,7 +180,7 @@ export default {
         onUpdate: ({getJSON}) => {
           this.$emit("input", JSON.stringify(getJSON()));
         },
-        content: this.value
+        content: JSON.parse(this.value)
       })
     };
   },
