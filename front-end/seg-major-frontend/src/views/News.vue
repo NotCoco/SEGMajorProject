@@ -12,40 +12,45 @@
 
     <div class="section">
       <div class="container">
-        <loading-spinner v-if="loading" class="loading-spinner"></loading-spinner>
-        <div v-else-if="paginatedItems.length === 0" class="has-text-dark has-text-centered">
-          <div style="margin-bottom: 1rem;"><font-awesome-icon :icon="['far', 'frown']" size="3x" /></div>
-          There are no news items at this time
-        </div>
-        <div v-else>
-          <router-link v-for="item in paginatedItems" :key="item.slug" :to="item.slug" append>
-            <news-card :newsItem="item" class="news-card"></news-card>
-          </router-link>
-
-          <nav class="pagination is-centered" role="navigation" aria-label="pagination">
-            <a class="pagination-previous" @click="navigatePrevious" :disabled="!hasPreviousPage">Newer</a>
-            <a class="pagination-next" @click="navigateNext" :disabled="!hasNextPage">Older</a>
-            <ul class="pagination-list">
-              <li>
-                <router-link to="news"
-                              class="pagination-link"
-                              v-bind="currentPageNumber === 1 ? {'aria-label': 'Page 1', 'aria-current': 'page', 'class': 'is-current'} : {'aria-label': 'Goto page 1'}">1</router-link>
-              </li>
-              <li v-if="pageCount > 5 && currentPageNumber > 3"><span class="pagination-ellipsis">&hellip;</span></li>
-              <li v-for="pageNumber in middlePageNumbers" :key="pageNumber">
-                  <router-link :to="{ path: 'news', query: { page: pageNumber } }"
+        <transition name="fade" mode="out-in">
+          <loading-spinner v-if="loading" class="loading-spinner"></loading-spinner>
+          <div v-else-if="paginatedItems.length === 0" class="has-text-dark has-text-centered">
+            <div style="margin-bottom: 1rem;"><font-awesome-icon :icon="['far', 'frown']" size="3x" /></div>
+            There are no news items at this time
+          </div>
+          <div v-else>
+            <transition name="fade" mode="out-in">
+              <div v-bind:key="currentPageNumber">
+                <router-link v-for="item in paginatedItems" :key="item.slug" :to="item.slug" append>
+                  <news-card :newsItem="item" class="news-card"></news-card>
+                </router-link>
+              </div>
+            </transition>
+            <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+              <a class="pagination-previous" @click="navigatePrevious" :disabled="!hasPreviousPage">Newer</a>
+              <a class="pagination-next" @click="navigateNext" :disabled="!hasNextPage">Older</a>
+              <ul class="pagination-list">
+                <li>
+                  <router-link to="news"
                                 class="pagination-link"
-                                v-bind="pageNumber === currentPageNumber ? {'aria-label': `Page ${pageNumber}`, 'aria-current': 'page', 'class': 'is-current'} : {'aria-label': `Goto page ${pageNumber}`}">{{ pageNumber }}</router-link>
-              </li>
-              <li v-if="pageCount > 5 && currentPageNumber < pageCount - 2"><span class="pagination-ellipsis">&hellip;</span></li>
-              <li v-if="pageCount > 1">
-                <router-link :to="{ path: 'news', query: { page: pageCount } }"
-                              class="pagination-link"
-                              v-bind="currentPageNumber === pageCount ? {'aria-label': `Page ${pageCount}`, 'aria-current': 'page', 'class': 'is-current'} : {'aria-label': `Goto page ${pageCount}`}">{{ pageCount }}</router-link>
-              </li>
-            </ul>
-          </nav>
-        </div>
+                                v-bind="currentPageNumber === 1 ? {'aria-label': 'Page 1', 'aria-current': 'page', 'class': 'is-current'} : {'aria-label': 'Goto page 1'}">1</router-link>
+                </li>
+                <li v-if="pageCount > 5 && currentPageNumber > 3"><span class="pagination-ellipsis">&hellip;</span></li>
+                <li v-for="pageNumber in middlePageNumbers" :key="pageNumber">
+                    <router-link :to="{ path: 'news', query: { page: pageNumber } }"
+                                  class="pagination-link"
+                                  v-bind="pageNumber === currentPageNumber ? {'aria-label': `Page ${pageNumber}`, 'aria-current': 'page', 'class': 'is-current'} : {'aria-label': `Goto page ${pageNumber}`}">{{ pageNumber }}</router-link>
+                </li>
+                <li v-if="pageCount > 5 && currentPageNumber < pageCount - 2"><span class="pagination-ellipsis">&hellip;</span></li>
+                <li v-if="pageCount > 1">
+                  <router-link :to="{ path: 'news', query: { page: pageCount } }"
+                                class="pagination-link"
+                                v-bind="currentPageNumber === pageCount ? {'aria-label': `Page ${pageCount}`, 'aria-current': 'page', 'class': 'is-current'} : {'aria-label': `Goto page ${pageCount}`}">{{ pageCount }}</router-link>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </transition>
       </div>
     </div>
   </div>
