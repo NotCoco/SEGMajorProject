@@ -40,7 +40,18 @@
               <span class="icon is-small is-left" style="height: 100%;">
                 <i class="search-icon material-icons">search</i>
               </span>
-              <input class="searchbox input" type="text" placeholder="Search" />
+              <input class="searchbox input" type="text" v-model="searchQuery" placeholder="Search" />
+
+              <transition name="fade" mode="out-in">
+              <div v-if="searchQuery.length > 2" class="card search-suggestions">
+                <div v-for="page in filtered" v-bind:key="page" class="card suggestion-item">
+                  {{page}}
+                </div>
+                <div v-if="filtered.length == 0" class="card suggestion-item">
+                <p><i>No search results found</i></p>
+                </div>
+              </div>
+              </transition>
             </div>
           </div>
         </div>
@@ -70,10 +81,16 @@ export default {
     showUrgentNews: {
       type: Boolean,
       default: true
+    },
+    pages: {
+      type: Array
     }
   },
   computed: {
-    displayUrgentNews() { return this.showUrgentNews && this.urgentNews && !this.localHiddenState && !this.getHiddenState(); }
+    displayUrgentNews() { return this.showUrgentNews && this.urgentNews && !this.localHiddenState && !this.getHiddenState(); },
+    filtered() {
+      return this.pages.filter(p => p.includes(this.searchQuery))
+    }
   },
   methods: {
     closeUrgentNews() {
@@ -88,7 +105,8 @@ export default {
   data () {
     return {
       urgentNews: undefined,
-      localHiddenState: false
+      localHiddenState: false,
+      searchQuery: ''
     }
   },
   async created() {
@@ -98,6 +116,11 @@ export default {
       if (firstItem.urgent) this.urgentNews = firstItem;
     }
   },
+  watch: {
+    pages: function() {
+      console.log(this.pages)
+    }
+  }
 };
 </script>
 
@@ -188,5 +211,13 @@ nav.navbar {
 
 .search-icon {
   color: #aaa;
+}
+
+.search-suggestions {
+  background: white;
+
+  .suggestion-item {
+    padding: 15px 20px;
+  }
 }
 </style>

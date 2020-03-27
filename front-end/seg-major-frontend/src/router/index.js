@@ -16,6 +16,7 @@ import SiteContentViewerLayout from '../views/SiteContentViewerLayout.vue'
 import PageViewer from '../views/PageViewer.vue'
 import NewsViewer from '../views/NewsViewer.vue'
 import AdminSiteSettings from '../views/AdminSiteSettings.vue'
+import SearchResults from '../views/SearchResults.vue'
 
 Vue.use(VueRouter)
 Vue.use(VueMeta)
@@ -87,6 +88,10 @@ const routes = [
     path: '/:siteSlug',
     component: SiteContentViewerLayout,
     children: [
+      {
+        path: 'search',
+        component: SearchResults
+      },
       {
         path: ':pageSlug',
         component: PageViewer

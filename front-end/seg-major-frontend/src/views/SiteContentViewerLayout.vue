@@ -1,6 +1,6 @@
 <template>
   <div id="site-content-viewer-layout">
-    <Navbar v-bind:showSearchBar="true"></Navbar>
+    <Navbar v-bind:pages="pages" v-bind:showSearchBar="true"></Navbar>
 
     <div class="flex-wrapper">
       <div class="sidebar is-hidden-mobile">
@@ -23,7 +23,7 @@
 
       <div class="page-content">
         <transition name="fade" mode="out-in">
-          <router-view v-bind:key="$route.path"></router-view>
+          <router-view v-bind:pages="pages" v-bind:key="$route.path"></router-view>
         </transition>
       </div>
     </div>
