@@ -1,4 +1,4 @@
-package main.java.com.projectBackEnd.Entities.Site;
+package main.java.com.projectBackEnd.Entities.Site.Micronaut;
 
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
@@ -6,6 +6,10 @@ import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
+import main.java.com.projectBackEnd.Entities.Site.Hibernate.Site;
+import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManager;
+import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManagerInterface;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;

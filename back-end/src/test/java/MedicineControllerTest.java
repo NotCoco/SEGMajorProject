@@ -10,10 +10,13 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 
-import main.java.com.projectBackEnd.Entities.Medicine.*;
-
 import javax.inject.Inject;
 
+import main.java.com.projectBackEnd.Entities.Medicine.Hibernate.Medicine;
+import main.java.com.projectBackEnd.Entities.Medicine.Hibernate.MedicineManager;
+import main.java.com.projectBackEnd.Entities.Medicine.Hibernate.MedicineManagerInterface;
+import main.java.com.projectBackEnd.Entities.Medicine.Micronaut.MedicineAddCommand;
+import main.java.com.projectBackEnd.Entities.Medicine.Micronaut.MedicineUpdateCommand;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;

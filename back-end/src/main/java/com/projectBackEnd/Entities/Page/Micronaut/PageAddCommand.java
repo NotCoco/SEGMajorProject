@@ -1,8 +1,8 @@
-package main.java.com.projectBackEnd.Entities.Page;
+package main.java.com.projectBackEnd.Entities.Page.Micronaut;
 
 import javax.validation.constraints.NotNull;
-import main.java.com.projectBackEnd.Entities.Site.SiteManager;
-import main.java.com.projectBackEnd.Entities.Site.SiteManagerInterface;
+import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManager;
+import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManagerInterface;
 //import io.micronaut.core.annotation.Introspected;
 
 /**

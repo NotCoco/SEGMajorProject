@@ -2,7 +2,6 @@ package test.java;
 
 
 import io.micronaut.test.annotation.MicronautTest;
-import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -10,11 +9,18 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 
-import main.java.com.projectBackEnd.Entities.Page.*;
-import main.java.com.projectBackEnd.Entities.Site.*;
+import main.java.com.projectBackEnd.Entities.Page.Hibernate.Page;
+import main.java.com.projectBackEnd.Entities.Page.Hibernate.PageManager;
+import main.java.com.projectBackEnd.Entities.Page.Hibernate.PageManagerInterface;
+import main.java.com.projectBackEnd.Entities.Page.Micronaut.PageAddCommand;
+import main.java.com.projectBackEnd.Entities.Page.Micronaut.PagePatchCommand;
+import main.java.com.projectBackEnd.Entities.Page.Micronaut.PageUpdateCommand;
 
 import javax.inject.Inject;
 
+import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManager;
+import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManagerInterface;
+import main.java.com.projectBackEnd.Entities.Site.Micronaut.SiteAddCommand;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;

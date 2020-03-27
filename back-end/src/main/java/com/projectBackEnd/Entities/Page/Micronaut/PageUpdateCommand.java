@@ -1,9 +1,6 @@
-package main.java.com.projectBackEnd.Entities.Page;
-import javax.validation.constraints.NotBlank;
+package main.java.com.projectBackEnd.Entities.Page.Micronaut;
 import javax.validation.constraints.NotNull;
-import main.java.com.projectBackEnd.Entities.Site.Site;
-import main.java.com.projectBackEnd.Entities.Site.SiteManager;
-import main.java.com.projectBackEnd.Entities.Site.SiteManagerInterface;
+
 //import io.micronaut.core.annotation.Introspected;
 /**
  * PageUpdateCommand is an implementation of the Command design pattern.

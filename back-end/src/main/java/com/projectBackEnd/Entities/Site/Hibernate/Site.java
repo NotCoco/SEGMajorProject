@@ -1,4 +1,4 @@
-package main.java.com.projectBackEnd.Entities.Site;
+package main.java.com.projectBackEnd.Entities.Site.Hibernate;
 
 import main.java.com.projectBackEnd.TableEntity;
 import org.hibernate.annotations.Type;
@@ -71,11 +71,6 @@ public class Site implements TableEntity {
 
     public void setSlug(String newSlug) { this.slug = newSlug; }
     public String getSlug() { return slug; }
-
-    @Override
-    public String toString() {
-        return "Site: " + primaryKey +", Name: " + name;
-    }
 
      /**
      * Copy the values of the input site object

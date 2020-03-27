@@ -1,12 +1,10 @@
 package test.java;
 
 import main.java.com.projectBackEnd.*;
-import main.java.com.projectBackEnd.Entities.Medicine.Medicine;
-import main.java.com.projectBackEnd.Entities.Medicine.MedicineManager;
+import main.java.com.projectBackEnd.Entities.Medicine.Hibernate.Medicine;
+import main.java.com.projectBackEnd.Entities.Medicine.Hibernate.MedicineManager;
 
-import main.java.com.projectBackEnd.Entities.Medicine.MedicineManagerInterface;
-
-import javax.persistence.PersistenceException;
+import main.java.com.projectBackEnd.Entities.Medicine.Hibernate.MedicineManagerInterface;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;

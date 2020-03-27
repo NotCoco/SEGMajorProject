@@ -1,6 +1,4 @@
-package main.java.com.projectBackEnd.Entities.Page;
-
-import main.java.com.projectBackEnd.Entities.Site.Site;
+package main.java.com.projectBackEnd.Entities.Page.Hibernate;
 
 import java.io.Serializable;
 import java.util.List;

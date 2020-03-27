@@ -1,6 +1,6 @@
-package main.java.com.projectBackEnd.Entities.Page;
+package main.java.com.projectBackEnd.Entities.Page.Hibernate;
 
-import main.java.com.projectBackEnd.Entities.Site.Site;
+import main.java.com.projectBackEnd.Entities.Site.Hibernate.Site;
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
 
@@ -45,20 +45,6 @@ public class PageManager extends EntityManager implements PageManagerInterface {
     }
 
     /**
-     * Create and insert a new Page object into the database
-     * Requires a site name parameter.
-     * @param siteName
-     * @param slug
-     * @param index
-     * @param title
-     * @param content
-     * @return
-     */
-    public Page addPage(String siteName, String slug, Integer index, String title, String content) {
-        return (Page) insertTuple(new Page(siteName, slug, index, title, content));
-    }
-
-    /**
      * Find Page object associated to input primary key in the database
      * @param pk
      * @return found Page
@@ -77,14 +63,7 @@ public class PageManager extends EntityManager implements PageManagerInterface {
 
     /**
      * Get all pages belonging to input site in database
-     * @param site
-     * @return List of pages
-     */
-    public List<Page> getAllPagesOfSite(Site site) { return getAllPagesOfSite(site.getSlug()); }
-
-    /**
-     * Get all pages belonging to input site in database
-     * @param siteName
+     * @param siteSlug
      * @return List of pages
      */
     public List<Page> getAllPagesOfSite(String siteSlug) {
@@ -93,17 +72,7 @@ public class PageManager extends EntityManager implements PageManagerInterface {
 
     /**
      * Find Page associated to input site and slug in the database
-     * @param site
-     * @param slug
-     * @return found Page
-     */
-    public Page getPageBySiteAndSlug(Site site, String slug) {
-        return getPageBySiteAndSlug(site.getSlug(), slug);
-    }
-
-    /**
-     * Find Page associated to input site and slug in the database
-     * @param siteName
+     * @param siteSlug
      * @param slug
      * @return found Page
      */

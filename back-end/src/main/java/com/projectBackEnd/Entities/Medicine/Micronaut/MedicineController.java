@@ -1,15 +1,16 @@
-package main.java.com.projectBackEnd.Entities.Medicine;
+package main.java.com.projectBackEnd.Entities.Medicine.Micronaut;
 
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
-import io.micronaut.validation.Validated;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
+import main.java.com.projectBackEnd.Entities.Medicine.Hibernate.Medicine;
+import main.java.com.projectBackEnd.Entities.Medicine.Hibernate.MedicineManager;
+import main.java.com.projectBackEnd.Entities.Medicine.Hibernate.MedicineManagerInterface;
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 

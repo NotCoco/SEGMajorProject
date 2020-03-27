@@ -1,12 +1,12 @@
-package main.java.com.projectBackEnd.Entities.Page;
+package main.java.com.projectBackEnd.Entities.Page.Micronaut;
 
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
-import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
 
-import main.java.com.projectBackEnd.Entities.Site.*;
-import main.java.com.projectBackEnd.Entities.Page.*;
+import main.java.com.projectBackEnd.Entities.Page.Hibernate.Page;
+import main.java.com.projectBackEnd.Entities.Page.Hibernate.PageManager;
+import main.java.com.projectBackEnd.Entities.Page.Hibernate.PageManagerInterface;
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 

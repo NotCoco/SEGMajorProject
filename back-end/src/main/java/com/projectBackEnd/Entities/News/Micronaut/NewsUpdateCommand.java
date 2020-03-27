@@ -1,4 +1,4 @@
-package main.java.com.projectBackEnd.Entities.News;
+package main.java.com.projectBackEnd.Entities.News.Micronaut;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;

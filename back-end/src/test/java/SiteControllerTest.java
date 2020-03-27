@@ -9,11 +9,16 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 
-import main.java.com.projectBackEnd.Entities.Page.*;
-import main.java.com.projectBackEnd.Entities.Site.*;
+import main.java.com.projectBackEnd.Entities.Page.Hibernate.PageManager;
+import main.java.com.projectBackEnd.Entities.Page.Hibernate.PageManagerInterface;
 
 import javax.inject.Inject;
 
+import main.java.com.projectBackEnd.Entities.Site.Hibernate.Site;
+import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManager;
+import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManagerInterface;
+import main.java.com.projectBackEnd.Entities.Site.Micronaut.SiteAddCommand;
+import main.java.com.projectBackEnd.Entities.Site.Micronaut.SiteUpdateCommand;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
