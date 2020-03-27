@@ -52,7 +52,7 @@ public class NewsManagerTest {
 
     @Test
     public void testCreateWithIllegalValues() {
-        newsManager.addNews(null,true, null, null, false, null, null);
+        newsManager.addNews(new News(null,true, null, null, false, null, null));
         assertEquals(0, newsManager.getAllNews().size());
     }
 

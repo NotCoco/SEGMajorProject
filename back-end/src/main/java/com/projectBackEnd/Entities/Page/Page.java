@@ -73,15 +73,6 @@ public class Page implements TableEntity {
         this.content = content;
     }
 
-    public Page(Site site, String slug, Integer index, String title, String content) {
-        this.primaryKey = -1;
-        setSite(site);
-        setSlug(slug);
-        this.index = index;
-        this.title = title;
-        this.content = content;
-    }
-
     public Page(Integer ID, String siteSlug, String slug, Integer index, String title, String content) {
         this.primaryKey = ID;
         SiteManagerInterface s = SiteManager.getSiteManager();

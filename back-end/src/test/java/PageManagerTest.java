@@ -35,8 +35,8 @@ public class PageManagerTest {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         pageManager = PageManager.getPageManager();
         siteManager = SiteManager.getSiteManager();
-        siteManager.addSite("Disease1", "name");
-        siteManager.addSite("Disease2", "name2");
+        siteManager.addSite(new Site("Disease1", "name"));
+        siteManager.addSite(new Site("Disease2", "name2"));
         testSiteA = siteManager.getBySiteSlug("Disease1");
         testSiteB = siteManager.getBySiteSlug("Disease2");
         connectionLeakUtil = new ConnectionLeakUtil();
@@ -57,8 +57,8 @@ public class PageManagerTest {
     @Test
     public void testNoDuplicateCompositeKey() {
         //Page(Site site, String slug, Integer index, String title, String content) {
-        Page page1 = new Page(testSiteA, "sameSlug", 1, "TitleA", "ContentA");
-        Page page2 = new Page(testSiteB, "sameSlug", 1, "TitleB", "ContentB");
+        Page page1 = new Page(testSiteA.getSlug(), "sameSlug", 1, "TitleA", "ContentA");
+        Page page2 = new Page(testSiteB.getSlug(), "sameSlug", 1, "TitleB", "ContentB");
         pageManager.addPage(page1);
         pageManager.addPage(page2);
 
@@ -66,9 +66,20 @@ public class PageManagerTest {
     }
 
     @Test
+    public void testPageCopy() {
+        Page page1 = new Page(testSiteA.getSlug(), "sameSlug", 1, "TitleA", "ContentA");
+        Page page2 = new Page(testSiteA.getSlug(), "Slug", 5, "newTitle", "newContent");
+        page1.copy(page2);
+        assertEquals(page2.getSlug(), page1.getSlug());
+        assertEquals(page2.getTitle(), page1.getTitle());
+        assertEquals(page2.getIndex(), page1.getIndex());
+        assertEquals(page2.getContent(), page1.getContent());
+    }
+
+    @Test
     public void testDuplicateCompositeKey() {
-        Page page1 = new Page(testSiteA, "sameSlug", 1, "TitleA", "ContentA");
-        Page page2 = new Page(testSiteA, "sameSlug", 1, "TitleB", "ContentB");
+        Page page1 = new Page(testSiteA.getSlug(), "sameSlug", 1, "TitleA", "ContentA");
+        Page page2 = new Page(testSiteA.getSlug(), "sameSlug", 1, "TitleB", "ContentB");
         pageManager.addPage(page1);
         pageManager.addPage(page2);
 
@@ -77,7 +88,7 @@ public class PageManagerTest {
 
     @Test
     public void testNullSlugIndexTitleContent() {
-        pageManager.addPage(new Page(testSiteA, null, null, null, null));
+        pageManager.addPage(new Page(testSiteA.getSlug(), null, null, null, null));
         assertEquals(0, pageManager.getAllPages().size());
     }
 
@@ -89,28 +100,28 @@ public class PageManagerTest {
 
     @Test
     public void testGetAllBySite() {
-        pageManager.addPage(testSiteA, "Slug1", 3, "TitleA","ContentA");
-        pageManager.addPage(testSiteA, "Slug6", 0, "TitleB","ContentB");
-        pageManager.addPage(testSiteA, "Slug3", 2, "TitleC","ContentC");
-        pageManager.addPage(testSiteA, "Slug9", 1, "TitleD","ContentD");
-        pageManager.addPage(testSiteA, "Slug12", 4, "TitleE","ContentE");
-        List<Page> all = pageManager.getAllPagesOfSite(testSiteA);
+        pageManager.addPage(new Page(testSiteA.getSlug(), "Slug1", 3, "TitleA","ContentA"));
+        pageManager.addPage(new Page(testSiteA.getSlug(), "Slug6", 0, "TitleB","ContentB"));
+        pageManager.addPage(new Page(testSiteA.getSlug(), "Slug3", 2, "TitleC","ContentC"));
+        pageManager.addPage(new Page(testSiteA.getSlug(), "Slug9", 1, "TitleD","ContentD"));
+        pageManager.addPage(new Page(testSiteA.getSlug(), "Slug12", 4, "TitleE","ContentE"));
+        List<Page> all = pageManager.getAllPagesOfSite(testSiteA.getSlug());
 
         for(int i = 0; i < all.size(); ++i) assertEquals(all.get(i).getIndex(),i);
     }
 
     @Test
     public void testForeignKeyDelete() {
-        siteManager.addSite("toDeleteSite", "siteName");
-        pageManager.addPage("toDeleteSite", "Slug", 3, "Title", "content");
+        siteManager.addSite(new Site("toDeleteSite", "siteName"));
+        pageManager.addPage(new Page("toDeleteSite", "Slug", 3, "Title", "content"));
         siteManager.delete(siteManager.getBySiteSlug("toDeleteSite").getPrimaryKey());
         assertEquals(0, pageManager.getAllPages().size());
     }
 
     @Test
     public void testSiteUpdateEffectOnPage() {
-        siteManager.addSite("toUpdateSite", "siteName");
-        pageManager.addPage("toUpdateSite", "Slug", 3, "title", "content");
+        siteManager.addSite(new Site("toUpdateSite", "siteName"));
+        pageManager.addPage(new Page("toUpdateSite", "Slug", 3, "title", "content"));
         Site updatedSite = siteManager.getBySiteSlug("toUpdateSite");
         updatedSite.setName("UpdatedSite");
         siteManager.update(updatedSite);
@@ -127,7 +138,7 @@ public class PageManagerTest {
     @Test
     public void testDeleteNotInDBObject() {
         assertThrows(IllegalArgumentException.class, () -> {
-            Page pageNotInTable = new Page(testSiteB,"notaddedtotable", 0, "notaddedtoTable", "");
+            Page pageNotInTable = new Page(testSiteB.getSlug(),"notaddedtotable", 0, "notaddedtoTable", "");
             pageManager.delete(pageNotInTable.getPrimaryKey());        });
     }
 
@@ -147,22 +158,22 @@ public class PageManagerTest {
 
     @Test
     public void testCreateAndSavePage() {
-        pageManager.addPage(testSiteA,"biliary_atresia", 0, "Biliary Atresia", ""
+        pageManager.addPage(new Page(testSiteA.getSlug(),"biliary_atresia", 0, "Biliary Atresia", ""
                 + "Lorem ipsum dolor sit amet, consectetur adipiscing elit,"
                 + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
-                "");
+                ""));
         assertEquals(pageManager.getAllPages().size(), 1);
     }
 
     @Test
     public void testSafeNames() {
-        pageManager.addPage(testSiteA,";DROP TABLE Pages", 2, "';'''", "sdafds");
+        pageManager.addPage(new Page(testSiteA.getSlug(),";DROP TABLE Pages", 2, "';'''", "sdafds"));
         assertEquals(pageManager.getAllPages().size(), 1);
     }
 
     @Test
     public void testEmptyContent() {
-        pageManager.addPage(testSiteB,"biliary_atresia", 0, "", "");
+        pageManager.addPage(new Page(testSiteB.getSlug(),"biliary_atresia", 0, "", ""));
         assertEquals(pageManager.getAllPages().size(), 1);
     }
 
@@ -170,20 +181,6 @@ public class PageManagerTest {
     public void testGetAll() {
         fillDatabase();
         assertEquals(pageManager.getAllPages().size(), getListOfPages().size());
-    }
-
-    @Test
-    public void testIdenticalPages() {
-        String slug = "biliary_atresia";
-        int index = 0;
-        String title = "Biliary Atresia";
-        String content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit,"
-                + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
-
-        Page page = new Page(testSiteB, slug, index, title, content);
-        Page page2 = new Page(testSiteB, slug, index, title, content);
-
-        assertThat(page, samePropertyValuesAs(page2));
     }
 
     @Test
@@ -195,7 +192,7 @@ public class PageManagerTest {
 
     @Test
     public void testDelete() {
-        Page replacementPage = pageManager.addPage(testSiteB,"Slug3", 10, "Title3", "New content!");
+        Page replacementPage = pageManager.addPage(new Page(testSiteB.getSlug(),"Slug3", 10, "Title3", "New content!"));
         pageManager.delete(pageManager.getAllPages().get(0).getPrimaryKey());
         assertEquals(pageManager.getAllPages().size(), 0);
     }
@@ -218,9 +215,9 @@ public class PageManagerTest {
 
     @Test
     public void testGetPageBySiteAndSlug() {
-        Page newPage = new Page(testSiteB,"Slug3", 10, "Title3", "New content!");
+        Page newPage = new Page(testSiteB.getSlug(),"Slug3", 10, "Title3", "New content!");
         pageManager.addPage(newPage);
-        assertNotNull(pageManager.getPageBySiteAndSlug(testSiteB, "Slug3"));
+        assertNotNull(pageManager.getPageBySiteAndSlug(testSiteB.getSlug(), "Slug3"));
     }
 
     @Test
@@ -246,15 +243,15 @@ public class PageManagerTest {
     private static ArrayList<Page> getListOfPages() {
         ArrayList<Page> listOfPages = new ArrayList<>();
 
-        listOfPages.add(new Page(testSiteA,"Slug1", 0, "Title1", "Content1"));
-        listOfPages.add(new Page(testSiteA,"Slug2", 8, "Title2", "Content2"));
-        listOfPages.add(new Page(testSiteA,"Slug3", 7, "Title3", "Content3"));
-        listOfPages.add(new Page(testSiteA,"Slug4", 5, "Title4", "Content4"));
-        listOfPages.add(new Page(testSiteA,"Slug5", 4, "Title5", "Content5"));
-        listOfPages.add(new Page(testSiteA,"Slug8", 4, "Title5", "Content5"));
-        listOfPages.add(new Page(testSiteA,"Slug9", 4, "Title5", "Content5"));
-        listOfPages.add(new Page(testSiteA,"Slug12", 4, "Title5", "Content5"));
-        listOfPages.add(new Page(testSiteA,"Slug17", 4, "Title5", "Content5"));
+        listOfPages.add(new Page(testSiteA.getSlug(),"Slug1", 0, "Title1", "Content1"));
+        listOfPages.add(new Page(testSiteA.getSlug(),"Slug2", 8, "Title2", "Content2"));
+        listOfPages.add(new Page(testSiteA.getSlug(),"Slug3", 7, "Title3", "Content3"));
+        listOfPages.add(new Page(testSiteA.getSlug(),"Slug4", 5, "Title4", "Content4"));
+        listOfPages.add(new Page(testSiteA.getSlug(),"Slug5", 4, "Title5", "Content5"));
+        listOfPages.add(new Page(testSiteA.getSlug(),"Slug8", 4, "Title5", "Content5"));
+        listOfPages.add(new Page(testSiteA.getSlug(),"Slug9", 4, "Title5", "Content5"));
+        listOfPages.add(new Page(testSiteA.getSlug(),"Slug12", 4, "Title5", "Content5"));
+        listOfPages.add(new Page(testSiteA.getSlug(),"Slug17", 4, "Title5", "Content5"));
 
         return listOfPages;
     }

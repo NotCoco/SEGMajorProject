@@ -62,7 +62,7 @@ public class MedicineController {
     public HttpResponse<Medicine> add(@Header("X-API-Key") String session,@Body MedicineAddCommand command) {
 		if(!sessionManager.verifySession(session))
 			return HttpResponse.unauthorized();
-        Medicine med = medicineManager.addMedicine(command.getName(), command.getType());
+        Medicine med = medicineManager.addMedicine(new Medicine(command.getName(), command.getType()));
         if(medicineManager.getByPrimaryKey(med.getPrimaryKey()) == null){
             return HttpResponse.serverError();
         }

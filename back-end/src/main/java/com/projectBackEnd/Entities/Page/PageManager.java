@@ -46,20 +46,6 @@ public class PageManager extends EntityManager implements PageManagerInterface {
 
     /**
      * Create and insert a new Page object into the database
-     * Requires a site object parameter.
-     * @param site
-     * @param slug
-     * @param index
-     * @param title
-     * @param content
-     * @return added object
-     */
-    public Page addPage(Site site, String slug, Integer index, String title, String content) {
-        return (Page) insertTuple(new Page(site, slug, index, title, content));
-    }
-
-    /**
-     * Create and insert a new Page object into the database
      * Requires a site name parameter.
      * @param siteName
      * @param slug
