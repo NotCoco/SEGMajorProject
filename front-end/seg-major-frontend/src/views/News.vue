@@ -12,12 +12,16 @@
 
     <div class="section">
       <div class="container">
+        <transition name="fade" tag="div" mode="out-in">
+
         <loading-spinner v-if="loading" class="loading-spinner"></loading-spinner>
         <div v-else-if="paginatedItems.length === 0" class="has-text-dark has-text-centered">There are no news items at this time.</div>
-        <div v-else>
-          <router-link v-for="item in paginatedItems" :key="item.slug" :to="item.slug" append>
+        <div v-else class="news-card-list">
+        <transition-group name="fade" tag="div">
+          <router-link class="is-block" v-for="item in paginatedItems" :key="item.slug" :to="item.slug" append>
             <news-card :newsItem="item" class="news-card"></news-card>
           </router-link>
+        </transition-group>
 
           <nav class="pagination is-centered" role="navigation" aria-label="pagination">
             <a class="pagination-previous" @click="navigatePrevious" :disabled="!hasPreviousPage">Newer</a>
@@ -43,6 +47,7 @@
             </ul>
           </nav>
         </div>
+        </transition>
       </div>
     </div>
   </div>
@@ -132,4 +137,12 @@ export default {
   .pagination {
     margin-top: 3rem;
   }
+
+ .news-card-list {
+   .fade-leave, .fade-leave-active {
+    display: none;
+    visibility:hidden;
+    transition: none;
+  }
+ }
 </style>
