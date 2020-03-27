@@ -70,13 +70,13 @@ public class User implements TableEntity{
 	public String getName(){
 		return name;
 	}
-	public String setName(String name){
-		return name;
+	public void setName(String name){
+		this.name = name;
 	}
 
 	@Override
 	public String toString() {
-		return "User: " + this.primaryKey + ", " + this.email + ", " + this.password;
+		return "User: " + this.primaryKey + ", " + this.email + ", " + this.password + "," + this.name;
 	}
 
 	public boolean equals(User user){
@@ -88,6 +88,7 @@ public class User implements TableEntity{
         if(newCopy instanceof User){
             setEmail(((User) newCopy).getEmail());
             setPassword(((User) newCopy).getPassword());
+			setName(((User) newCopy).getName());
         }
         return newCopy;
     }
