@@ -13,6 +13,7 @@ import AdminAllPages from '../views/AdminAllPages.vue'
 import AdminEditPage from '../views/AdminEditPage.vue'
 import SiteContentViewerLayout from '../views/SiteContentViewerLayout.vue'
 import PageViewer from '../views/PageViewer.vue'
+import AdminSiteSettings from '../views/AdminSiteSettings.vue'
 
 Vue.use(VueRouter)
 
@@ -52,6 +53,10 @@ const routes = [
           {
             path: '',
             redirect: 'pages'
+          },
+          {
+            path: 'settings',
+            component: AdminSiteSettings
           },
           {
             path: 'pages',
