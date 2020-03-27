@@ -66,7 +66,7 @@ public class Page implements TableEntity {
     public Page(String siteSlug, String slug, Integer index, String title, String content) {
         this.primaryKey = -1;
         SiteManagerInterface s = SiteManager.getSiteManager();
-        setSite(s.getBySiteSlug(siteSlug));
+        setSite(s.getSiteBySlug(siteSlug));
         setSlug(slug);
         this.index = index;
         this.title = title;
@@ -76,7 +76,7 @@ public class Page implements TableEntity {
     public Page(Integer ID, String siteSlug, String slug, Integer index, String title, String content) {
         this.primaryKey = ID;
         SiteManagerInterface s = SiteManager.getSiteManager();
-        setSite(s.getBySiteSlug(siteSlug));
+        setSite(s.getSiteBySlug(siteSlug));
         setSlug(slug);
         this.index = index;
         this.title = title;

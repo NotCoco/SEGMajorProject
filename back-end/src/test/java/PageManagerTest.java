@@ -36,8 +36,8 @@ public class PageManagerTest {
         siteManager = SiteManager.getSiteManager();
         siteManager.addSite(new Site("Disease1", "name"));
         siteManager.addSite(new Site("Disease2", "name2"));
-        testSiteA = siteManager.getBySiteSlug("Disease1");
-        testSiteB = siteManager.getBySiteSlug("Disease2");
+        testSiteA = siteManager.getSiteBySlug("Disease1");
+        testSiteB = siteManager.getSiteBySlug("Disease2");
         connectionLeakUtil = new ConnectionLeakUtil();
     }
 
@@ -113,7 +113,7 @@ public class PageManagerTest {
     public void testForeignKeyDelete() {
         siteManager.addSite(new Site("toDeleteSite", "siteName"));
         pageManager.addPage(new Page("toDeleteSite", "Slug", 3, "Title", "content"));
-        siteManager.delete(siteManager.getBySiteSlug("toDeleteSite").getPrimaryKey());
+        siteManager.delete(siteManager.getSiteBySlug("toDeleteSite").getPrimaryKey());
         assertEquals(0, pageManager.getAllPages().size());
     }
 
@@ -121,7 +121,7 @@ public class PageManagerTest {
     public void testSiteUpdateEffectOnPage() {
         siteManager.addSite(new Site("toUpdateSite", "siteName"));
         pageManager.addPage(new Page("toUpdateSite", "Slug", 3, "title", "content"));
-        Site updatedSite = siteManager.getBySiteSlug("toUpdateSite");
+        Site updatedSite = siteManager.getSiteBySlug("toUpdateSite");
         updatedSite.setName("UpdatedSite");
         siteManager.update(updatedSite);
         assertEquals("UpdatedSite", pageManager.getAllPages().get(0).getSite().getName());
@@ -198,7 +198,7 @@ public class PageManagerTest {
 
     @Test
     public void testUpdatePage() {
-        assertNotNull(siteManager.getBySiteSlug("Disease1"));
+        assertNotNull(siteManager.getSiteBySlug("Disease1"));
 
         Page newPage = new Page("Disease1","Slug3", 10, "Title3", "New content!");
         pageManager.addPage(newPage);

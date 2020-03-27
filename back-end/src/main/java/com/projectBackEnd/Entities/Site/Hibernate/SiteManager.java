@@ -33,7 +33,7 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
     public Site getByPrimaryKey(Integer pk) {
         return (Site) super.getByPrimaryKey(pk);
     }
-    public Site getBySiteSlug(String siteSlug) {
+    public Site getSiteBySlug(String siteSlug) {
         List<Site> matches = getAllSites().stream().filter(s -> s.getSlug().equals(siteSlug)).collect(Collectors.toList());
         if (matches.size() >= 1) return matches.get(0);
         else return null;

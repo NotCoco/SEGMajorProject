@@ -12,7 +12,7 @@ public interface SiteManagerInterface {
     public void delete(Serializable primaryKey);
 
     public Site getByPrimaryKey(Integer pk);
-    public Site getBySiteSlug(String slug);
+    public Site getSiteBySlug(String slug);
     public Site update(Site updatedVersion);
 
     }

@@ -144,7 +144,7 @@ public class NewsManagerTest {
         assertEquals("title4", allNews.get(1).getTitle());
     }
 
-    //Testing NewsManagerInterface: deletaAll
+    //Testing NewsManagerInterface: deleteAll
 
     /**
      * Testing a database can have deleteAll run on it, even if it is empty
@@ -254,7 +254,7 @@ public class NewsManagerTest {
     @Test
     public void testDelete() {
         fillDatabase(getListOfNews());
-        newsManager.delete(newsManager.getAllNews().get(1).getPrimaryKey()); //Testing object deletion
+        newsManager.delete(newsManager.getAllNews().get(1).getPrimaryKey());
         assertEquals( getListOfNews().size()-1, newsManager.getAllNews().size());
         newsManager.delete(newsManager.getAllNews().get(1).getPrimaryKey());
         assertEquals(getListOfNews().size()-2, newsManager.getAllNews().size());
@@ -265,7 +265,7 @@ public class NewsManagerTest {
      * Expected: The database remains unchanged and an error is thrown.
      */
     @Test
-    public void testWithDeleteUnfondPrimaryKey() {
+    public void testWithDeleteUnfoundPrimaryKey() {
         int previousSize = newsManager.getAllNews().size();
         try {
             newsManager.delete(-1);

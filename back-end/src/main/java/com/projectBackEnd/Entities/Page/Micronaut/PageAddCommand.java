@@ -76,7 +76,7 @@ public class PageAddCommand {
 
     public void setSite(String site) {
         SiteManagerInterface siteManager = SiteManager.getSiteManager();
-        if (siteManager.getBySiteSlug(site) != null) this.site = site;
+        if (siteManager.getSiteBySlug(site) != null) this.site = site;
     }
 
 }

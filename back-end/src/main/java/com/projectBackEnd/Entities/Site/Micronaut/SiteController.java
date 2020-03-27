@@ -81,7 +81,7 @@ public class SiteController {
      * @return get the specified site
      */
     @Get(value = "/{slug}")
-    public Site list(String slug){return siteManager.getBySiteSlug(slug);}
+    public Site list(String slug){return siteManager.getSiteBySlug(slug);}
 
     /**
      * Delete a site with specified slug name by http Delete method
@@ -93,7 +93,7 @@ public class SiteController {
     public HttpResponse delete(@Header("X-API-Key") String session,String slug){
 		if(!sessionManager.verifySession(session))
 			return HttpResponse.unauthorized();
-        Site s = siteManager.getBySiteSlug(slug);
+        Site s = siteManager.getSiteBySlug(slug);
         siteManager.delete(s.getPrimaryKey());
         return HttpResponse.noContent();
     }
