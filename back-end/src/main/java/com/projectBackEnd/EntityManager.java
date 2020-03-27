@@ -28,12 +28,7 @@ public class EntityManager <T extends TableEntity> {
     public void setSubclass(Class<T> subclass) {
         this.subclass = subclass;
     }
-
-    //TODO : The below two methods need to be combined into one single method as chaining @Transactional
-    // calls is not allowed
-
-
-    /**
+        /**
      * Open the session to get all the objects of type T from the database
      * Sources : https://stackoverflow.com/questions/43037814/how-to-get-all-data-in-the-table-with-hibernate/43067399
      * @return List of all objects of type T found in database
@@ -44,10 +39,7 @@ public class EntityManager <T extends TableEntity> {
         try (Session session = HibernateUtility.getSessionFactory().openSession()) {
             results = getAll(session);
         }
-        //HibernateUtility.getSessionFactory().close();
         return results;
-        //Doesn't close its own factory, will leak until factory is properly implemented.
-
     }
 
 
@@ -93,7 +85,8 @@ public class EntityManager <T extends TableEntity> {
     private void deleteAll(Session session) throws  HibernateException {
 
         session.beginTransaction();
-        for (Object tuple : getAll()) { //Deleting one by one is recommended to deal with cascading.
+        for (Object tuple : getAll()) {
+            //Deleting one by one is recommended to deal with cascading.
             session.delete(tuple);
         }
         session.getTransaction().commit();
@@ -243,9 +236,6 @@ public class EntityManager <T extends TableEntity> {
         session.getTransaction().commit();
 
     }
-
-    //TODO Might need to return back down if frontend send strings etc. I presume they will json and send the (page) back
-    //Methods are commented out already in the PageManager if they send a String primary key.
 
 
     /**

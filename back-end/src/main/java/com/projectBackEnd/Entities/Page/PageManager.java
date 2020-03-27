@@ -11,7 +11,6 @@ import java.util.stream.Collectors;
 /**
  * PageManager defines methods to interact with the Page table in the database.
  * This class extends the EntityManager.
- * //TODO Remove methods only used by testing.
  * https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
 public class PageManager extends EntityManager implements PageManagerInterface {
@@ -80,7 +79,7 @@ public class PageManager extends EntityManager implements PageManagerInterface {
      */
     public Page getByPrimaryKey(Integer pk) {
         return (Page) super.getByPrimaryKey(pk);
-    } //TODO Useless likely, aswell.
+    }
 
     /**
      * Get all objects from Page table stored in the database
@@ -139,6 +138,6 @@ public class PageManager extends EntityManager implements PageManagerInterface {
      */
     public void delete(Page object) {
         super.delete(object);
-    } //TODO Is unnecessary now, can be removed
+    }
 
 }

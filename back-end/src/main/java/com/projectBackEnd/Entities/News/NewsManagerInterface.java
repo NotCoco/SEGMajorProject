@@ -14,7 +14,7 @@ public interface NewsManagerInterface {
     public News getByPrimaryKey(Integer id);
     public News getNewsBySlug(String slug);
     public void deleteAll();
-    public void delete(News news); //TODO removable?
+    public void delete(News news);
     public void delete(Serializable pk);
     public List<News> getAllNews();
 

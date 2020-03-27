@@ -5,17 +5,14 @@ import main.java.com.projectBackEnd.Entities.Site.Site;
 import java.io.Serializable;
 import java.util.List;
 
-//TODO Remove methods not called by the API i.e. only called by testing
-
 public interface PageManagerInterface {
-    //TODO Technically these are shared two methods that could come from a super Interface.
     public void delete(Serializable primaryKey);
     public void deleteAll();
 
-    public List<Page> getAllPages(); //Probably never called/used?
+    public List<Page> getAllPages();
     public Page addPage(Page newPage);
-    public Page getByPrimaryKey(Integer pk); //TODO In the event that this is not used, we violate Interface Segregation
-    public void delete(Page object); //TODO Is unnecessary now, can be removed
+    public Page getByPrimaryKey(Integer pk);
+    public void delete(Page object);
     public Page update(Page updatedVersion);
     public Page addPage(String siteName, String slug, Integer Index, String title, String content);
     public Page addPage(Site siteName, String slug, Integer Index, String title, String content);

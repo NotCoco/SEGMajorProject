@@ -93,7 +93,7 @@ public class NewsManager extends EntityManager implements NewsManagerInterface  
      */
     public void delete(News news) {
         super.delete(news);
-    }//TODO removable?
+    }
 
     /**
      * Delete News object by primary key

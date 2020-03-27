@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public interface SiteManagerInterface {
-    //TODO Technically these are shared two methods that could come from a super Interface.
+
     public void delete(Serializable primaryKey);
     public void deleteAll();
 
@@ -14,9 +14,7 @@ public interface SiteManagerInterface {
     public Site addSite(Site newSite);
     public Site getByPrimaryKey(Integer pk);
     public Site getBySiteSlug(String slug);
-    public void delete(Site object); //TODO Is unnecessary now, can be removed
+    public void delete(Site object);
     public Site update(Site updatedVersion);
     public Site addSite(String slug, String name);
-    //public List<Page> getAllPagesOfSite(Site site); //TODO Think about this
-
-}
+    }
