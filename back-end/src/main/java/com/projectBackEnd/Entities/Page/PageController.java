@@ -79,7 +79,7 @@ public class PageController {
     public HttpResponse<Page> addPage(@Header("X-API-Key") String session, String name, @Body PageAddCommand pageToAdd) {
 		if(!sessionManager.verifySession(session))
 			return HttpResponse.unauthorized();
-        Page p = pageManager.addPage(pageToAdd.getSite(), pageToAdd.getSlug(), pageToAdd.getIndex(), pageToAdd.getTitle(), pageToAdd.getContent());
+        Page p = pageManager.addPage(new Page(pageToAdd.getSite(), pageToAdd.getSlug(), pageToAdd.getIndex(), pageToAdd.getTitle(), pageToAdd.getContent()));
         if (pageManager.getByPrimaryKey(p.getPrimaryKey()) == null) {
             return HttpResponse.serverError();
         }

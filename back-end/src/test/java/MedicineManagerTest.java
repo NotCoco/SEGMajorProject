@@ -191,7 +191,7 @@ public class MedicineManagerTest {
      */
     @Test
     public void testAddMedicines() {
-        medicineManager.addMedicine("Medicine for BA", "Topical");
+        medicineManager.addMedicine(new Medicine("Medicine for BA", "Topical"));
         medicineManager.addMedicine(new Medicine(1, "Medicine for BA", "Topical"));
         assertEquals(2, medicineManager.getAllMedicines().size());
 
@@ -206,7 +206,7 @@ public class MedicineManagerTest {
      */
     @Test
     public void testAddIdenticalMedicinesWithNullValues() {
-        medicineManager.addMedicine(null, null);
+        medicineManager.addMedicine(new Medicine(null, null));
         medicineManager.addMedicine(new Medicine(null, null, null));
         List<Medicine> addedMedicines = medicineManager.getAllMedicines();
         assertEquals(2, addedMedicines.size());
@@ -224,7 +224,7 @@ public class MedicineManagerTest {
      */
     @Test
     public void testAddMedicineWithEmptyValues() {
-        medicineManager.addMedicine("   ","     ");
+        medicineManager.addMedicine(new Medicine("   ","     "));
         medicineManager.addMedicine(new Medicine("     ", "            "));
         List<Medicine> addedMedicines = medicineManager.getAllMedicines();
         assertEquals(2, addedMedicines.size());
@@ -244,7 +244,7 @@ public class MedicineManagerTest {
     public void testAddMedicineWithWhitespaceInValues() {
         String name = "Me di ci ne";
         String type = "Ty     pe";
-        medicineManager.addMedicine(name, type);
+        medicineManager.addMedicine(new Medicine(name, type));
         assertEquals(1, medicineManager.getAllMedicines().size());
         Medicine foundMedicine = medicineManager.getAllMedicines().get(0);
         assertEquals(name, foundMedicine.getName());
@@ -259,7 +259,7 @@ public class MedicineManagerTest {
     public void testAddMedicineWithForbiddenCharactersInValues() {
         String forbiddenName = "''#~DROP TABLES';'\"@@";
         String forbiddenType = "''#^7%DROP TABLES;'";
-        medicineManager.addMedicine(forbiddenName, forbiddenType);
+        medicineManager.addMedicine(new Medicine(forbiddenName, forbiddenType));
         assertEquals(1, medicineManager.getAllMedicines().size());
         Medicine foundMedicine = medicineManager.getAllMedicines().get(0);
         assertEquals(forbiddenName, foundMedicine.getName());
@@ -328,8 +328,8 @@ public class MedicineManagerTest {
      */
     @Test
     public void testCorrectMedicineDeletedUsingPrimaryKey() {
-        Medicine toBeDeleted = medicineManager.addMedicine("I'll be deleted", "Delete me!");
-        Medicine alsoAdded = medicineManager.addMedicine("Another medicine", "Random");
+        Medicine toBeDeleted = medicineManager.addMedicine(new Medicine("I'll be deleted", "Delete me!"));
+        Medicine alsoAdded = medicineManager.addMedicine(new Medicine("Another medicine", "Random"));
         assertEquals(2, medicineManager.getAllMedicines().size());
         medicineManager.delete(toBeDeleted.getPrimaryKey());
         assertEquals(1, medicineManager.getAllMedicines().size());

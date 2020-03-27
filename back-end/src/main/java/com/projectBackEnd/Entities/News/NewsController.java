@@ -60,8 +60,8 @@ public class NewsController {
     public HttpResponse<News> add(@Header("X-API-Key") String session,@Body NewsAddCommand command) {
 		if(!sessionManager.verifySession(session))
 			return HttpResponse.unauthorized();
-        News news = newsManager.addNews(command.getDate(), command.isPinned(), command.getDescription(),
-                command.getTitle(), command.isUrgent(), command.getContent(), command.getSlug());
+        News news = newsManager.addNews(new News(command.getDate(), command.isPinned(), command.getDescription(),
+                command.getTitle(), command.isUrgent(), command.getContent(), command.getSlug()));
 
         if(newsManager.getByPrimaryKey(news.getPrimaryKey()) == null)return HttpResponse.serverError();
 

@@ -51,7 +51,7 @@ public class SiteController {
     public HttpResponse<Site> add(@Header("X-API-Key") String session,@Body SiteAddCommand command) {
 		if(!sessionManager.verifySession(session))
 			return HttpResponse.unauthorized();
-        Site s = siteManager.addSite(command.getSlug(), command.getName());
+        Site s = siteManager.addSite(new Site(command.getSlug(), command.getName()));
         if(siteManager.getByPrimaryKey(s.getPrimaryKey()) == null){
             return HttpResponse.serverError();
         }

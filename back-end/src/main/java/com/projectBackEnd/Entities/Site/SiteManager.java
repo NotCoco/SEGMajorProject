@@ -25,12 +25,6 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
         return (List<Site>) super.getAll();
     }
 
-    public Site addSite(String slug, String name) {
-        Site newSite = new Site(slug, name);
-        super.insertTuple(newSite);
-        return newSite;
-    }
-
     public Site addSite(Site newSite) {
         super.insertTuple(newSite);
         return newSite;

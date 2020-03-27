@@ -47,20 +47,20 @@ public class SiteManagerTest {
 
     @Test
     public void testCreateAndSaveSite() {
-        siteManager.addSite("slug1", "Biliary Atresia");
+        siteManager.addSite(new Site("slug1", "Biliary Atresia"));
         assertEquals(1, siteManager.getAllSites().size());
     }
 
     @Test
     public void testCreateWithIllegalValue() {
         String name = null;
-        siteManager.addSite("slug2", name);
+        siteManager.addSite(new Site("slug2", name));
         assertEquals(0, siteManager.getAllSites().size());
     }
 
     @Test
     public void testEmptyName() {
-        siteManager.addSite("slug1", "");
+        siteManager.addSite(new Site("slug1", ""));
         //assertEquals("Unnamed", siteManager.getAllSites(),get(0).getName());
     }
 
@@ -72,15 +72,15 @@ public class SiteManagerTest {
 
     @Test
     public void testDuplicateName() {
-        siteManager.addSite("slug1", "Biliary Atresia");
-        siteManager.addSite("slug2", "Biliary Atresia");
+        siteManager.addSite(new Site("slug1", "Biliary Atresia"));
+        siteManager.addSite(new Site("slug2", "Biliary Atresia"));
         assertEquals(2, siteManager.getAllSites().size());
     }
 
     @Test
     public void testDuplicateSlug() {
-        siteManager.addSite("slug1", "Biliary Atresia");
-        siteManager.addSite("slug1", "Biliary Atresia");
+        siteManager.addSite(new Site("slug1", "Biliary Atresia"));
+        siteManager.addSite(new Site("slug1", "Biliary Atresia"));
         assertEquals(1, siteManager.getAllSites().size());
     }
 
