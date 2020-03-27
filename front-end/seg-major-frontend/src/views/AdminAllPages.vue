@@ -4,20 +4,23 @@
       <div class="custom-content-container">
         <h1 class="title">All Pages</h1>
 
-        <div class="pages-list">
-          <router-link
-            v-bind:to="page.slug"
-            append
-            v-for="page of pages"
-            v-bind:key="page.primaryKey"
-          >
-            <div class="card">
-              <div class="card-content">
-                <p class="page-name">{{ page.title }}</p>
+        <transition name="fade" mode="out-in">
+          <loading-spinner v-if="!pages" style="margin-top: 50px;"></loading-spinner>
+          <div v-else class="pages-list">
+            <router-link
+              v-bind:to="page.slug"
+              append
+              v-for="page of pages"
+              v-bind:key="page.primaryKey"
+            >
+              <div class="card">
+                <div class="card-content">
+                  <p class="page-name">{{ page.title }}</p>
+                </div>
               </div>
-            </div>
-          </router-link>
-        </div>
+            </router-link>
+          </div>
+        </transition>
       </div>
     </section>
 
@@ -29,11 +32,15 @@
 
 <script>
 import SitesService from "@/services/sites-service";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default {
+  components: {
+    LoadingSpinner
+  },
   data() {
     return {
-      pages: []
+      pages: null
     };
   },
   async mounted() {
