@@ -19,10 +19,8 @@ import main.java.com.projectBackEnd.Entities.ResetLinks.*;
 
 import javax.inject.Inject;
 
-import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
+
+import org.junit.jupiter.api.*;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

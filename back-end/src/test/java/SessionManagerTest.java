@@ -8,13 +8,11 @@ import main.java.com.projectBackEnd.Entities.Session.NoSessionException;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 public class SessionManagerTest {
 
     public static ConnectionLeakUtil connectionLeakUtil = null;    
@@ -95,17 +93,18 @@ public class SessionManagerTest {
 			fail();
 		}	
 	}
-	@Test(expected = NoSessionException.class)
+	@Test
 	public void testGetEmailNotExistEmpty() throws NoSessionException{
-		sessionManager.getEmail("");
+		assertThrows(NoSessionException.class,() -> {sessionManager.getEmail("");});
 	}
-	@Test(expected = NoSessionException.class)
+	@Test
 	public void testGetEmailNotExistIncorrect() throws NoSessionException{
-		sessionManager.getEmail("very incorrect token that does not work");
+
+		assertThrows(NoSessionException.class,() -> {sessionManager.getEmail("very incorrect token that does not work");});
 	}
-	@Test(expected = NoSessionException.class)
+	@Test
 	public void testGetEmailNotExistNull() throws NoSessionException{
-		sessionManager.getEmail(null);
+		assertThrows(NoSessionException.class,() -> {sessionManager.getEmail(null);});
 	}
 
 
