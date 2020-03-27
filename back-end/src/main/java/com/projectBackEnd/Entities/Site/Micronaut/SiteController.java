@@ -1,4 +1,4 @@
-package main.java.com.projectBackEnd.Entities.Site;
+package main.java.com.projectBackEnd.Entities.Site.Micronaut;
 
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
@@ -6,6 +6,10 @@ import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
+import main.java.com.projectBackEnd.Entities.Site.Hibernate.Site;
+import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManager;
+import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManagerInterface;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
@@ -51,7 +55,7 @@ public class SiteController {
     public HttpResponse<Site> add(@Header("X-API-Key") String session,@Body SiteAddCommand command) {
 		if(!sessionManager.verifySession(session))
 			return HttpResponse.unauthorized();
-        Site s = siteManager.addSite(command.getSlug(), command.getName());
+        Site s = siteManager.addSite(new Site(command.getSlug(), command.getName()));
         if(siteManager.getByPrimaryKey(s.getPrimaryKey()) == null){
             return HttpResponse.serverError();
         }
@@ -90,7 +94,7 @@ public class SiteController {
 		if(!sessionManager.verifySession(session))
 			return HttpResponse.unauthorized();
         Site s = siteManager.getBySiteSlug(slug);
-        siteManager.delete(s);
+        siteManager.delete(s.getPrimaryKey());
         return HttpResponse.noContent();
     }
 

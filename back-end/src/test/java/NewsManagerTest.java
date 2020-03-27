@@ -1,8 +1,8 @@
 package test.java;
 
-import main.java.com.projectBackEnd.Entities.News.News;
-import main.java.com.projectBackEnd.Entities.News.NewsManager;
-import main.java.com.projectBackEnd.Entities.News.NewsManagerInterface;
+import main.java.com.projectBackEnd.Entities.News.Hibernate.News;
+import main.java.com.projectBackEnd.Entities.News.Hibernate.NewsManager;
+import main.java.com.projectBackEnd.Entities.News.Hibernate.NewsManagerInterface;
 import main.java.com.projectBackEnd.HibernateUtility;
 
 import javax.persistence.PersistenceException;
@@ -52,7 +52,7 @@ public class NewsManagerTest {
 
     @Test
     public void testCreateWithIllegalValues() {
-        newsManager.addNews(null,true, null, null, false, null, null);
+        newsManager.addNews(new News(null,true, null, null, false, null, null));
         assertEquals(0, newsManager.getAllNews().size());
     }
 
@@ -137,9 +137,9 @@ public class NewsManagerTest {
     @Test
     public void testDelete() {
         fillDatabase();
-        newsManager.delete(newsManager.getAllNews().get(1)); //Testing object deletion
+        newsManager.delete(newsManager.getAllNews().get(1).getPrimaryKey()); //Testing object deletion
         assertEquals( getListOfNews().size()-1, newsManager.getAllNews().size());
-        newsManager.delete(newsManager.getAllNews().get(1));
+        newsManager.delete(newsManager.getAllNews().get(1).getPrimaryKey());
         assertEquals(getListOfNews().size()-2, newsManager.getAllNews().size());
     }
     @Test
@@ -176,7 +176,7 @@ public class NewsManagerTest {
                 false, "content1", "slug123");
         int numberOfNews = newsManager.getAllNews().size();
         try {
-            newsManager.delete(news);
+            newsManager.delete(news.getPrimaryKey());
             fail();
         } catch (IllegalArgumentException e) {
             e.printStackTrace();

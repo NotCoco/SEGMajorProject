@@ -1,15 +1,16 @@
-package main.java.com.projectBackEnd.Entities.Medicine;
+package main.java.com.projectBackEnd.Entities.Medicine.Micronaut;
 
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
-import io.micronaut.validation.Validated;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
+import main.java.com.projectBackEnd.Entities.Medicine.Hibernate.Medicine;
+import main.java.com.projectBackEnd.Entities.Medicine.Hibernate.MedicineManager;
+import main.java.com.projectBackEnd.Entities.Medicine.Hibernate.MedicineManagerInterface;
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 
@@ -62,7 +63,7 @@ public class MedicineController {
     public HttpResponse<Medicine> add(@Header("X-API-Key") String session,@Body MedicineAddCommand command) {
 		if(!sessionManager.verifySession(session))
 			return HttpResponse.unauthorized();
-        Medicine med = medicineManager.addMedicine(command.getName(), command.getType());
+        Medicine med = medicineManager.addMedicine(new Medicine(command.getName(), command.getType()));
         if(medicineManager.getByPrimaryKey(med.getPrimaryKey()) == null){
             return HttpResponse.serverError();
         }

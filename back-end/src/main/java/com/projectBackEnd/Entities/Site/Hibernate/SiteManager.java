@@ -1,4 +1,4 @@
-package main.java.com.projectBackEnd.Entities.Site;
+package main.java.com.projectBackEnd.Entities.Site.Hibernate;
 
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
@@ -21,18 +21,8 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
         else return siteManager;
     }
 
-    public void delete(Site site) {
-        super.delete(site);
-    }
-
     public List<Site> getAllSites() {
         return (List<Site>) super.getAll();
-    }
-
-    public Site addSite(String slug, String name) {
-        Site newSite = new Site(slug, name);
-        super.insertTuple(newSite);
-        return newSite;
     }
 
     public Site addSite(Site newSite) {

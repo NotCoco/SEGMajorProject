@@ -1,8 +1,8 @@
 package test.java;
 
-import main.java.com.projectBackEnd.Entities.Site.Site;
-import main.java.com.projectBackEnd.Entities.Site.SiteManager;
-import main.java.com.projectBackEnd.Entities.Site.SiteManagerInterface;
+import main.java.com.projectBackEnd.Entities.Site.Hibernate.Site;
+import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManager;
+import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManagerInterface;
 import main.java.com.projectBackEnd.HibernateUtility;
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;
@@ -47,20 +47,20 @@ public class SiteManagerTest {
 
     @Test
     public void testCreateAndSaveSite() {
-        siteManager.addSite("slug1", "Biliary Atresia");
+        siteManager.addSite(new Site("slug1", "Biliary Atresia"));
         assertEquals(1, siteManager.getAllSites().size());
     }
 
     @Test
     public void testCreateWithIllegalValue() {
         String name = null;
-        siteManager.addSite("slug2", name);
+        siteManager.addSite(new Site("slug2", name));
         assertEquals(0, siteManager.getAllSites().size());
     }
 
     @Test
     public void testEmptyName() {
-        siteManager.addSite("slug1", "");
+        siteManager.addSite(new Site("slug1", ""));
         //assertEquals("Unnamed", siteManager.getAllSites(),get(0).getName());
     }
 
@@ -72,15 +72,15 @@ public class SiteManagerTest {
 
     @Test
     public void testDuplicateName() {
-        siteManager.addSite("slug1", "Biliary Atresia");
-        siteManager.addSite("slug2", "Biliary Atresia");
+        siteManager.addSite(new Site("slug1", "Biliary Atresia"));
+        siteManager.addSite(new Site("slug2", "Biliary Atresia"));
         assertEquals(2, siteManager.getAllSites().size());
     }
 
     @Test
     public void testDuplicateSlug() {
-        siteManager.addSite("slug1", "Biliary Atresia");
-        siteManager.addSite("slug1", "Biliary Atresia");
+        siteManager.addSite(new Site("slug1", "Biliary Atresia"));
+        siteManager.addSite(new Site("slug1", "Biliary Atresia"));
         assertEquals(1, siteManager.getAllSites().size());
     }
 
@@ -145,6 +145,17 @@ public class SiteManagerTest {
     }
 
     @Test
+    public void testUpdateToDuplicateSlug() {
+        assertThrows(PersistenceException.class, () -> {
+            fillDatabase();
+            Site firstFoundSite = siteManager.getAllSites().get(0);
+            Integer secondFoundSiteID = siteManager.getAllSites().get(1).getPrimaryKey();
+            Site site = new Site(secondFoundSiteID,firstFoundSite.getSlug(), "Random New Info");
+            siteManager.update(site);
+        });
+    }
+
+    @Test
     public void testDeleteAll() {
         // Delete all from filled database
         fillDatabase();
@@ -158,9 +169,9 @@ public class SiteManagerTest {
     @Test
     public void testDelete() {
         fillDatabase();
-        siteManager.delete(siteManager.getAllSites().get(0)); //Testing object deletion
+        siteManager.delete(siteManager.getAllSites().get(0).getPrimaryKey()); //Testing object deletion
         assertEquals(getListOfSites().size()-1, siteManager.getAllSites().size());
-        siteManager.delete(siteManager.getAllSites().get(0));
+        siteManager.delete(siteManager.getAllSites().get(0).getPrimaryKey());
         assertEquals(getListOfSites().size()-2, siteManager.getAllSites().size());
     }
 
@@ -189,7 +200,7 @@ public class SiteManagerTest {
         Site site = new Site("nop", "Not in db");
         int numberOfSites = siteManager.getAllSites().size();
         try {
-            siteManager.delete(site);
+            siteManager.delete(site.getPrimaryKey());
             fail();
         } catch (IllegalArgumentException e) {
             e.printStackTrace();

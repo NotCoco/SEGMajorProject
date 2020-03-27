@@ -1,12 +1,12 @@
-package main.java.com.projectBackEnd.Entities.Page;
+package main.java.com.projectBackEnd.Entities.Page.Micronaut;
 
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
-import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
 
-import main.java.com.projectBackEnd.Entities.Site.*;
-import main.java.com.projectBackEnd.Entities.Page.*;
+import main.java.com.projectBackEnd.Entities.Page.Hibernate.Page;
+import main.java.com.projectBackEnd.Entities.Page.Hibernate.PageManager;
+import main.java.com.projectBackEnd.Entities.Page.Hibernate.PageManagerInterface;
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 
@@ -79,7 +79,7 @@ public class PageController {
     public HttpResponse<Page> addPage(@Header("X-API-Key") String session, String name, @Body PageAddCommand pageToAdd) {
 		if(!sessionManager.verifySession(session))
 			return HttpResponse.unauthorized();
-        Page p = pageManager.addPage(pageToAdd.getSite(), pageToAdd.getSlug(), pageToAdd.getIndex(), pageToAdd.getTitle(), pageToAdd.getContent());
+        Page p = pageManager.addPage(new Page(pageToAdd.getSite(), pageToAdd.getSlug(), pageToAdd.getIndex(), pageToAdd.getTitle(), pageToAdd.getContent()));
         if (pageManager.getByPrimaryKey(p.getPrimaryKey()) == null) {
             return HttpResponse.serverError();
         }
@@ -100,7 +100,7 @@ public class PageController {
 		if(!sessionManager.verifySession(session))
 			return HttpResponse.unauthorized();
         Page p = pageManager.getPageBySiteAndSlug(name, page);
-        pageManager.delete(p);
+        pageManager.delete(p.getPrimaryKey());
         return HttpResponse.noContent();
     }
     

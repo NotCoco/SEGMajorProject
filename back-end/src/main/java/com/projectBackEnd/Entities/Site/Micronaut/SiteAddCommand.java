@@ -1,6 +1,5 @@
-package main.java.com.projectBackEnd.Entities.Site;
+package main.java.com.projectBackEnd.Entities.Site.Micronaut;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 //import io.micronaut.core.annotation.Introspected;
 
