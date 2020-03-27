@@ -15,9 +15,9 @@ import java.util.List;
  * EntityManager is the super class of managers, responsible for database queries.
  * It requires a subclass parameter using generic type to define which database table the manager is interacting with.
  * It is responsible for opening and closing the hibernate session.
- * @param <T>
+ * @param <T> The TableEntity class type this manager will represent (required for working, defined by inheriting classes)
  */
-public class EntityManager <T extends TableEntity> {
+public abstract class EntityManager <T extends TableEntity> {
 
     private Class<T> subclass;
 

@@ -8,13 +8,11 @@ import java.util.List;
  */
 
 public interface MedicineManagerInterface {
-
-    public Medicine addMedicine(String name, String type);
-    public Medicine addMedicine(Medicine med);
-    public Medicine update(Medicine med);
-    public Medicine getByPrimaryKey(Serializable id);
     public List<Medicine> getAllMedicines();
     public void deleteAll();
+    public Medicine addMedicine(String name, String type);
+    public Medicine addMedicine(Medicine med);
+    public Medicine getByPrimaryKey(Serializable id);
     public void delete(Serializable pk);
-
+    public Medicine update(Medicine med);
 }

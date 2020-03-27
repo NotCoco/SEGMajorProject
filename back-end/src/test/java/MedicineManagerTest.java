@@ -43,23 +43,64 @@ public class MedicineManagerTest {
         medicineManager.deleteAll();
     }
 
+//======================================================================================================================
+    //Testing Medicine Creation Constructors
 
+    /**
+     * Test the constructor constraints for naming with valid names
+     */
     @Test
-    public void testCreateMedicine() {
-        Medicine med = new Medicine("Medicine for BA", "Injection");
-        assertEquals("Medicine for BA", med.getName());
-        assertEquals("Injection", med.getType());
+    public void testCreateValidMedicine() {
+        Medicine validMedicine = new Medicine("Medicine for BA", "Injection");
+        assertEquals("Medicine for BA", validMedicine.getName());
+        assertEquals("Injection", validMedicine.getType());
     }
 
+    /**
+     * Test the constructor constraints for empty names
+     */
+    @Test
+    public void testCreateEmptyNameMedicine() {
+        Medicine emptyNameMedicine = new Medicine("", "Topical");
+        assertEquals("Unnamed", emptyNameMedicine.getName());
+    }
+
+    /**
+     * Test the constructor constraints for empty types
+     */
+    public void testCreateEmptyTypeMedicine() {
+        Medicine emptyTypeMedicine = new Medicine("Medicine for BA", "");
+        assertEquals("Undefined", emptyTypeMedicine.getType());
+    }
+
+    /**
+     * Test the constructor constraints for null types
+     */
+    public void testCreateNullTypeMedicine() {
+        Medicine nullTypeMedicine = new Medicine("Medicine for BA", null);
+        assertEquals("Undefined", nullTypeMedicine.getType());
+    }
+
+    /**
+     * Test the constructor constraints for null names
+     */
+    @Test
+    public void testCreateNullNameMedicine() {
+        Medicine nullNameMedicine = new Medicine(null, "Topical");
+        assertEquals("Unnamed", nullNameMedicine.getName());
+    }
+    //Testing MedicineManagerInterface: addMedicine
     @Test
     public void testCreateAndSaveMedicine() {
         medicineManager.addMedicine("Medicine for BA ", "Topical");
         assertEquals(1, medicineManager.getAllMedicines().size());
+        assertEquals("Topical", medicineManager.getAllMedicines().get(0).getType());
     }
 
     @Test
     public void testCreateWithIllegalValues() {
-        medicineManager.addMedicine(null,null);
+        Medicine m = medicineManager.addMedicine(null,null);
+        System.out.println("+++++++++++" + m);
         medicineManager.addMedicine(new Medicine(null, null, null));
         assertEquals(0, medicineManager.getAllMedicines().size());
     }
