@@ -22,6 +22,11 @@
                 class="navigation-item is-unselectable"
               >Pages</router-link>
 
+              <router-link
+                v-bind:to="`/admin/sites/${this.site.slug}/settings`"
+                class="navigation-item is-unselectable"
+              >Site Settings</router-link>
+
               <a class="navigation-item is-unselectable">Drug Chart</a>
             </div>
           </nav>
@@ -29,7 +34,7 @@
       </div>
 
       <div class="expanded-scrollable-area">
-        <router-view></router-view>
+        <router-view v-on:siteUpdate="setSite($event)"></router-view>
       </div>
     </div>
   </div>
@@ -43,6 +48,11 @@ export default {
     return {
       site: { name: "..." }
     };
+  },
+  methods: {
+    setSite(site) {
+      this.site = Object.assign({}, site);
+    }
   },
   async mounted() {
     const siteSlug = this.$route.params.siteSlug;

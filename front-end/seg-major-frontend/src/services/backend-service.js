@@ -17,6 +17,14 @@ export default {
     return api.get(`/sites/${siteSlug}`)
   },
 
+  updateSite(site) {
+    return api.put(`/sites`, {
+      "id": site.primaryKey,
+      "name": site.name,
+      "slug": site.slug
+    })
+  },
+
   getAllPages(siteSlug) {
     return api.get(`/sites/${siteSlug}/pages`)
   },

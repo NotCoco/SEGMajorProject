@@ -6,7 +6,7 @@
       <div class="sidebar is-hidden-mobile">
         <div class="section">
           <div class="container">
-            <p class="sidebar-label">Contents</p>
+            <p class="sidebar-label">{{ site.name }}</p>
             <nav class="sidebar-navigation">
               <div class="navigation-items">
                 <router-link
@@ -65,11 +65,13 @@ export default {
   },
   data() {
     return {
+      site: {name: '... '},
       pages: []
     };
   },
   async mounted() {
     const siteSlug = this.$route.params.siteSlug;
+    this.site = await SitesService.getSite(siteSlug);
     this.pages = await SitesService.getAllPages(siteSlug);
   }
 };

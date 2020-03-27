@@ -144,7 +144,8 @@ export default {
     editable: {
       type: Boolean,
       default: true
-    }
+    },
+    value: {}
   },
   data() {
     return {
@@ -174,21 +175,24 @@ export default {
           new Notification()
         ],
         editable: this.editable,
+        onUpdate: ({getJSON}) => {
+          this.$emit("input", JSON.stringify(getJSON()));
+        },
+        content: this.value
       })
     };
   },
-  methods: {
-    getJSON() {
-      return this.editor.getJSON();
-    },
-    setContent(content) {
-      this.editor.setContent(content);
+  watch: {
+    value: function(val) {
+      if (val !== JSON.stringify(this.editor.getJSON())) {
+        this.editor.setContent(JSON.parse(val));
+      }
     }
   },
   beforeDestroy() {
     setTimeout(() => {
       this.editor.destroy();
-    }, 200)
+    }, 200);
   }
 };
 </script>

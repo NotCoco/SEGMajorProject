@@ -16,6 +16,11 @@ export default {
         return res.data
     },
 
+    async updateSite(site) {
+        const res = await BackendService.updateSite(site)
+        return res.data
+    },
+
     async getAllPages(siteSlug) {
         const res = await BackendService.getAllPages(siteSlug)
         return res.data

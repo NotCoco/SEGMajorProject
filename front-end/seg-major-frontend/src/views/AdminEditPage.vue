@@ -49,7 +49,7 @@
         </div>
 
         <div style="flex-grow: 1;">
-          <rich-text-editor ref="rte"></rich-text-editor>
+          <rich-text-editor v-model="page.content"></rich-text-editor>
         </div>
 
         <div class="buttons" style="justify-content: flex-end">
@@ -116,8 +116,6 @@ export default {
         this.page.index = 0;
       }
 
-      this.page.content = JSON.stringify(this.$refs.rte.getJSON());
-
       const res = await SitesService.createPage(this.page);
       this.page = res;
       this.$router.push(
@@ -125,8 +123,6 @@ export default {
       );
     },
     async updatePage() {
-      this.page.content = JSON.stringify(this.$refs.rte.getJSON());
-
       await SitesService.updatePage(this.page);
 
       const currentSlug = this.$route.params.pageSlug;
@@ -148,9 +144,6 @@ export default {
 
     if (!this.newPage) {
       this.page = await SitesService.getPage(siteSlug, pageSlug);
-      setTimeout(() => {
-        this.$refs.rte.setContent(JSON.parse(this.page.content));
-      });
     } else {
       this.page.site = { slug: siteSlug };
       this.page.site = await SitesService.getSite(siteSlug);
