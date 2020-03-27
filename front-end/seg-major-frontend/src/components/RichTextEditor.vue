@@ -178,7 +178,7 @@ export default {
         onUpdate: ({getJSON}) => {
           this.$emit("input", JSON.stringify(getJSON()));
         },
-        content: this.value
+        content: JSON.parse(this.value)
       })
     };
   },
