@@ -1,6 +1,6 @@
 package main.java.com.projectBackEnd;
 import io.micronaut.runtime.Micronaut;
-
+import main.java.com.projectBackEnd.Entities.User.Hibernate.*;
 
 
 public class BackEndMain {
@@ -15,5 +15,7 @@ public class BackEndMain {
 		//Something albert did.
 
 		Micronaut.run(BackEndMain.class);
+	
+
 	}
 }

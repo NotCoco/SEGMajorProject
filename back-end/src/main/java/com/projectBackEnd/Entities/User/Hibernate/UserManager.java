@@ -95,7 +95,7 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 		user.setEmail(newEmail);
 		update(user);
 	}
-	public void changeName(String email,String name) throws UserNotExistException{
+	public void changeName(String email,String name) throws UserNotExistException,IncorrectNameException{
 		List<User> users = getAll();
 		User user = null;
 		for(User u:users){
@@ -104,6 +104,8 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 		}
 		if(user == null)
 			throw new UserNotExistException("there is no user with email: " + email);
+		if(name == null || name.isEmpty())
+			throw new IncorrectNameException("incorrect name");
 		user.setName(name);
 		update(user);
 	}

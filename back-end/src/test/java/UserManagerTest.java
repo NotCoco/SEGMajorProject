@@ -81,14 +81,14 @@ public class UserManagerTest{
 	@Test
 	public void testAddUserIncorrectNameEmpty() {
 		
-		assertThrows(InvalidEmailException.class,() -> {userManager.addUser("@email.","password5","");});
+		assertThrows(IncorrectNameException.class,() -> {userManager.addUser("email@email.com","password5","");});
 		
 	}
 	@Test
 	public void testAddUserIncorrectNameNull() throws IncorrectNameException{
 
 
-		assertThrows(InvalidEmailException.class,() -> {userManager.addUser("@email.","password5",null);});
+		assertThrows(IncorrectNameException.class,() -> {userManager.addUser("email@email.com","password5",null);});
 		
 	}
 
@@ -125,11 +125,13 @@ public class UserManagerTest{
 		List<User> users = (List<User>)((EntityManager)userManager).getAll();
 		assertEquals(1,users.stream().filter(u->(u.getEmail().equals("user1@email.com") && u.getPassword().equals(hash("password10")))).count());
 		assertEquals(users.size(),7);
+
+
 	}
 	@Test
 	public void testChangePasswordUserNotExsist() throws UserNotExistException{
 		fill();
-		userManager.changePassword("user20@email.com","password10");
+
 		assertThrows(UserNotExistException.class,() -> {userManager.changePassword("user20@email.com","password10");});
 	}
 	@Test
@@ -171,7 +173,6 @@ public class UserManagerTest{
 	public void testChangeEmailExisitngEmail() throws EmailExistsException,UserNotExistException{
 		fill();
 		
-		userManager.changeEmail("user1@email.com","user5@email.com");
 		assertThrows(EmailExistsException.class,() -> {userManager.changeEmail("user1@email.com","user5@email.com");});
 
 	}
@@ -199,8 +200,9 @@ public class UserManagerTest{
 	public void testChangeGetName() throws IncorrectNameException, UserNotExistException{
 		fill();
 		assertEquals("name",userManager.getName("user1@email.com"));
-		userManager.changeName("user1@email.com", "new name");
-		assertEquals("new name",userManager.getName("user1@email.com"));
+		userManager.changeName("user1@email.com", "n a me");
+		assertEquals("n a me",userManager.getName("user1@email.com"));
+
 	}
 	
 	@Test
@@ -213,14 +215,14 @@ public class UserManagerTest{
 	public void testIncorrectNameEmpty() throws IncorrectNameException, UserNotExistException{
 		fill();
 		assertEquals("name",userManager.getName("user1@email.com"));
-		assertThrows(UserNotExistException.class,() -> {userManager.changeName("user1@email.com", "");});
+		assertThrows(IncorrectNameException.class,() -> {userManager.changeName("user1@email.com", "");});
 	}
 
 	@Test
 	public void testIncorrectNameNull() throws IncorrectNameException, UserNotExistException{
 		fill();
 		assertEquals("name",userManager.getName("user1@email.com"));
-		assertThrows(UserNotExistException.class,() -> {userManager.changeName("user1@email.com", null);});
+		assertThrows(IncorrectNameException.class,() -> {userManager.changeName("user1@email.com", null);});
 
 	}
 

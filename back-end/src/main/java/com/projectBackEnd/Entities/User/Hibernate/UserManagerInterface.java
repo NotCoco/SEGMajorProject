@@ -10,7 +10,7 @@ public interface UserManagerInterface{
 	public void deleteUser(String email, String password) throws UserNotExistException;
 	public boolean verifyEmail(String email);
 	public void changeEmail(String oldEmail, String newEmail) throws UserNotExistException,EmailExistsException;
-	public void changeName(String email, String name) throws UserNotExistException;
+	public void changeName(String email, String name) throws UserNotExistException, IncorrectNameException;
 	public String getName(String email) throws UserNotExistException;
 }
 
