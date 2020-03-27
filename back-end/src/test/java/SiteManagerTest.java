@@ -145,6 +145,17 @@ public class SiteManagerTest {
     }
 
     @Test
+    public void testUpdateToDuplicateSlug() {
+        assertThrows(PersistenceException.class, () -> {
+            fillDatabase();
+            Site firstFoundSite = siteManager.getAllSites().get(0);
+            Integer secondFoundSiteID = siteManager.getAllSites().get(1).getPrimaryKey();
+            Site site = new Site(secondFoundSiteID,firstFoundSite.getSlug(), "Random New Info");
+            siteManager.update(site);
+        });
+    }
+
+    @Test
     public void testDeleteAll() {
         // Delete all from filled database
         fillDatabase();
