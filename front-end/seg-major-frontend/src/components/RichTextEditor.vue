@@ -180,7 +180,7 @@ export default {
         onUpdate: ({getJSON}) => {
           this.$emit("input", JSON.stringify(getJSON()));
         },
-        content: JSON.parse(this.value)
+        content: this.value ? JSON.parse(this.value) : null
       })
     };
   },
