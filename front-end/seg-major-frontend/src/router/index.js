@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import VueMeta from 'vue-meta'
 
 import Home from '../views/Home.vue'
 import News from '../views/News.vue'
@@ -13,10 +14,12 @@ import AdminAllPages from '../views/AdminAllPages.vue'
 import AdminEditPage from '../views/AdminEditPage.vue'
 import SiteContentViewerLayout from '../views/SiteContentViewerLayout.vue'
 import PageViewer from '../views/PageViewer.vue'
+import NewsViewer from '../views/NewsViewer.vue'
 import AdminSiteSettings from '../views/AdminSiteSettings.vue'
 import SearchResults from '../views/SearchResults.vue'
 
 Vue.use(VueRouter)
+Vue.use(VueMeta)
 
 const routes = [
   {
@@ -28,8 +31,12 @@ const routes = [
     path: '/news',
     component: News,
     props(route) {
-      if (route.query.page) return { currentPageNumber: Number(route.query.page) }
+      if (route.query.page) return { currentPageNumber: /^\d+$/.test(route.query.page) ? +route.query.page : undefined }
     }
+  },
+  {
+    path: '/news/:newsSlug',
+    component: NewsViewer
   },
   {
     path: '/admin',

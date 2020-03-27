@@ -14,5 +14,10 @@ export default {
     }
     
     return await this.newsPromise;
+  },
+
+  async getNews(slug) {
+    return (await this.getAllNews())
+            .find(elem => elem.slug === slug) ?? null;
   }
 }

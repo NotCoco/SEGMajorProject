@@ -145,7 +145,9 @@ export default {
       type: Boolean,
       default: true
     },
-    value: {}
+    value: {
+      type: String
+    }
   },
   data() {
     return {
