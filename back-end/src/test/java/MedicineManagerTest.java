@@ -72,7 +72,7 @@ public class MedicineManagerTest {
      * Expected: The empty name is replaced with Unnamed
      */
     @Test
-    public void testCreateEmptyNameMedicine() {
+    public void testCreateEmptyStringNameMedicine() {
         Medicine emptyNameMedicine = new Medicine("", "Topical");
         assertEquals("Unnamed", emptyNameMedicine.getName());
     }
@@ -81,7 +81,7 @@ public class MedicineManagerTest {
      * Test the constructor constraints for empty types
      * Expected: The empty type is replaced with Undefined
      */
-    public void testCreateEmptyTypeMedicine() {
+    public void testCreateEmptyStringTypeMedicine() {
         Medicine emptyTypeMedicine = new Medicine("Medicine for BA", "");
         assertEquals("Undefined", emptyTypeMedicine.getType());
     }
@@ -134,8 +134,9 @@ public class MedicineManagerTest {
      */
     @Test
     public void testFillingAndGetting() {
-        fillDatabase(getListOfMedicines());
-        assertEquals(getListOfMedicines().size(), medicineManager.getAllMedicines().size());
+        ArrayList<Medicine> addedMedicines = getListOfMedicines();
+        fillDatabase(addedMedicines);
+        assertEquals(addedMedicines.size(), medicineManager.getAllMedicines().size());
     }
 
     /**
@@ -144,8 +145,8 @@ public class MedicineManagerTest {
      */
     @Test
     public void testFillingAndGettingValues() {
-        fillDatabase(getListOfMedicines());
         ArrayList<Medicine> addedMedicines = getListOfMedicines();
+        fillDatabase(addedMedicines);
         List<Medicine> foundMedicines = medicineManager.getAllMedicines();
         for (int i =0; i < foundMedicines.size() ; ++i) {
             Medicine foundMedicine = foundMedicines.get(i);
@@ -163,7 +164,7 @@ public class MedicineManagerTest {
      * Expected: The number of entries in the database remains zero.
      */
     @Test
-    public void testDeleteAllFromEmptyDatabase() {
+    public void testDeleteAllEmptyDatabase() {
         medicineManager.deleteAll();
         assertEquals(0, medicineManager.getAllMedicines().size());
         medicineManager.deleteAll();
@@ -175,9 +176,10 @@ public class MedicineManagerTest {
      * Expected: The entries will disappear from the database.
      */
     @Test
-    public void testDeleteFromFilledDatabase() {
-        fillDatabase(getListOfMedicines());
-        assertEquals(getListOfMedicines().size(), medicineManager.getAllMedicines().size());
+    public void testDeleteAllFilledDatabase() {
+        ArrayList<Medicine> addedMedicines = getListOfMedicines();
+        fillDatabase(addedMedicines);
+        assertEquals(addedMedicines.size(), medicineManager.getAllMedicines().size());
         medicineManager.deleteAll();
         assertEquals(0, medicineManager.getAllMedicines().size());
     }
@@ -221,8 +223,8 @@ public class MedicineManagerTest {
      * Expected: The medicines' values are replaced and both added successfully.
      */
     @Test
-    public void testAddMedicineWithEmptyValues() {
-        medicineManager.addMedicine(new Medicine("   ","     "));
+    public void testAddMedicineWithEmptyStringValues() {
+        medicineManager.addMedicine(new Medicine("","     "));
         medicineManager.addMedicine(new Medicine("     ", "            "));
         List<Medicine> addedMedicines = medicineManager.getAllMedicines();
         assertEquals(2, addedMedicines.size());

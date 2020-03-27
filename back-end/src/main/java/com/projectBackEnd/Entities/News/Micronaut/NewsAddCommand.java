@@ -8,7 +8,7 @@ import java.util.Date;
 public class NewsAddCommand {
 
     @NotNull
-    private Date date;
+    private Date date; //Can be updated to take a long of the time!
 
     @NotNull
     private String description;

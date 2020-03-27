@@ -98,7 +98,7 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
      * Urgent and pinned, urgent only, pinned only, neither pinned nor urgent.
      * @return sorted list of news
      */
-    public List<News> sort(List<News> all) {
+    private static List<News> sort(List<News> all) {
 
         // Get pinned AND urgent
         Stream<News> pinnedAndUrgent = all.stream().filter(n -> n.isPinned() && n.isUrgent())
