@@ -2,10 +2,8 @@ package test.java;
 
 import main.java.com.projectBackEnd.Entities.User.Hibernate.*;
 
-import org.junit.Test;
-import org.junit.BeforeClass;
-import org.junit.AfterClass;
-import org.junit.Before;
+import org.junit.jupiter.api.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.security.MessageDigest;
 import java.nio.charset.StandardCharsets;
@@ -23,7 +21,7 @@ public class UserManagerTest{
 	public static ConnectionLeakUtil connectionLeakUtil = null;
 	public static UserManagerInterface userManager = null;
 
-	@BeforeClass
+	@BeforeAll
     public static void setUpDatabase() {
 
 		HibernateUtility.setResource("testhibernate.cfg.xml");
@@ -32,83 +30,66 @@ public class UserManagerTest{
 
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void assertNoLeaks() {
 		HibernateUtility.shutdown();
 		connectionLeakUtil.assertNoLeaks();
 	}
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		((EntityManager)userManager).deleteAll();
 	}
 
 
 	//replace with parametric maybe?
-	@Test(expected = InvalidEmailException.class)
+	@Test
 	public void testAddUserInvalidEmail1() throws InvalidEmailException{
-		try{
-			userManager.addUser("email","password5","name");
-		}
-		catch(EmailExistsException|IncorrectNameException e){
-			fail();
-		}
+
+
+		assertThrows(InvalidEmailException.class,() -> {userManager.addUser("email","password5","name");});
+		
 	}
 
-	@Test(expected = InvalidEmailException.class)
-	public void testAddUserInvalidEmail2() throws InvalidEmailException{
-		try{
-			userManager.addUser("ema il@email.com","password5","name");
-		}
-		catch(EmailExistsException|IncorrectNameException e){
-			fail();
-		}
+	@Test
+	public void testAddUserInvalidEmail2() {
+
+		assertThrows(InvalidEmailException.class,() -> {userManager.addUser("ema il@email.com","password5","name");});
+		
 	}
-	@Test(expected = InvalidEmailException.class)
-	public void testAddUserInvalidEmail3() throws InvalidEmailException{
-		try{
-			userManager.addUser("email@email.","password5","name");
-		}
-		catch(EmailExistsException|IncorrectNameException e){
-			fail();
-		}
+	@Test
+	public void testAddUserInvalidEmail3() {
+
+		assertThrows(InvalidEmailException.class,() -> {userManager.addUser("email@email.","password5","name");});
+		
 	}
-	@Test(expected = InvalidEmailException.class)
-	public void testAddUserInvalidEmail4() throws InvalidEmailException{
-		try{
-			userManager.addUser("@email.com","password5","name");
-		}
-		catch(EmailExistsException|IncorrectNameException e){
-			fail();
-		}
+	@Test
+	public void testAddUserInvalidEmail4() {
+
+		assertThrows(InvalidEmailException.class,() -> {userManager.addUser("@email.com","password5","name");});
+		
+
 	}
-	@Test(expected = InvalidEmailException.class)
-	public void testAddUserInvalidEmail5() throws InvalidEmailException{
-		try{
-			userManager.addUser("@email.","password5","name");
-		}
-		catch(EmailExistsException|IncorrectNameException e){
-			fail();
-		}
+	@Test
+	public void testAddUserInvalidEmail5() {
+	
+
+		assertThrows(InvalidEmailException.class,() -> {userManager.addUser("@email.","password5","name");});
+		
 	}
 
-	@Test(expected = IncorrectNameException.class)
-	public void testAddUserIncorrectNameEmpty() throws IncorrectNameException{
-		try{
-			userManager.addUser("@email.","password5","");
-		}
-		catch(EmailExistsException|InvalidEmailException e){
-			fail();
-		}
+	@Test
+	public void testAddUserIncorrectNameEmpty() {
+		
+		assertThrows(IncorrectNameException.class,() -> {userManager.addUser("email@email.com","password5","");});
+		
 	}
-	@Test(expected = IncorrectNameException.class)
+	@Test
 	public void testAddUserIncorrectNameNull() throws IncorrectNameException{
-		try{
-			userManager.addUser("@email.","password5",null);
-		}
-		catch(EmailExistsException|InvalidEmailException e){
-			fail();
-		}
+
+
+		assertThrows(IncorrectNameException.class,() -> {userManager.addUser("email@email.com","password5",null);});
+		
 	}
 
 	@Test
@@ -117,22 +98,18 @@ public class UserManagerTest{
 		try{
 			userManager.addUser("user8@email.com","password8","name");
 		}
-		catch(EmailExistsException|InvalidEmailException|IncorrectNameException e){
+		catch(EmailExistsException|InvalidEmailException|IncorrectNameException|InvalidPasswordException e){
 			fail();
 		}
 		List<User> users = (List<User>)((EntityManager)userManager).getAll();
 		assertEquals(users.size(),8);
 		assertEquals(1,users.stream().filter(u->(u.getEmail().equals("user8@email.com") && u.getPassword().equals(hash("password8")))).count());
 	}
-	@Test(expected = EmailExistsException.class)
+	@Test
 	public void testAddExistingUser()throws EmailExistsException{
 		fill();
-		try{
-			userManager.addUser("user5@email.com","password5","name");
-		}
-		catch(InvalidEmailException|IncorrectNameException e){
-			fail();
-		}
+		assertThrows(EmailExistsException.class,() -> {userManager.addUser("user5@email.com","password5","name");});
+		
 	}
 	@Test
 	public void testVerifyUser(){
@@ -144,15 +121,30 @@ public class UserManagerTest{
 	@Test
 	public void testChangePassword() throws UserNotExistException{
 		fill();
-		userManager.changePassword("user1@email.com","password10");
+		try{
+			userManager.changePassword("user1@email.com","password10");
+		}
+		catch(InvalidPasswordException e){
+			fail();
+		}
 		List<User> users = (List<User>)((EntityManager)userManager).getAll();
 		assertEquals(1,users.stream().filter(u->(u.getEmail().equals("user1@email.com") && u.getPassword().equals(hash("password10")))).count());
 		assertEquals(users.size(),7);
+
+
 	}
-	@Test(expected = UserNotExistException.class)
-	public void testChangePasswordUserNotExsist() throws UserNotExistException{
+	@Test
+	public void testChangePasswordUserNotExsist() {
 		fill();
-		userManager.changePassword("user20@email.com","password10");
+
+		assertThrows(UserNotExistException.class,() -> {userManager.changePassword("user20@email.com","password10");});
+	}
+	@Test
+	public void testChangePasswordUserWrongPassword() {
+		fill();
+
+		assertThrows(InvalidPasswordException.class,() -> {userManager.changePassword("user6@email.com","");});
+		assertThrows(InvalidPasswordException.class,() -> {userManager.changePassword("user6@email.com",null);});
 	}
 	@Test
 	public void testDeleteUser(){
@@ -168,29 +160,32 @@ public class UserManagerTest{
 		}
 	}
 
-	@Test(expected = UserNotExistException.class)
+	@Test
 	public void testDeleteNotExistingUser() throws UserNotExistException{
 		fill();
-		userManager.deleteUser("user0@email.com","password0");
+
+		assertThrows(UserNotExistException.class,() -> {userManager.deleteUser("user0@email.com","password0");});
 
 	}
-	@Test(expected = UserNotExistException.class)
+	@Test
 	public void testDeleteWrongPasswordUser() throws UserNotExistException{
 		fill();
-		userManager.deleteUser("user1@email.com","password0");
+
+		assertThrows(UserNotExistException.class,() -> {userManager.deleteUser("user1@email.com","password0");});
 
 	}
-	@Test(expected = UserNotExistException.class)
+	@Test
 	public void testChangeEmailBadEmail() throws UserNotExistException,EmailExistsException{
 		fill();
-		userManager.changeEmail("user@email.com","user19@email.com");
+
+		assertThrows(UserNotExistException.class,() -> {userManager.changeEmail("user@email.com","user19@email.com");});
 
 	}
-	@Test(expected = EmailExistsException.class)
+	@Test
 	public void testChangeEmailExisitngEmail() throws EmailExistsException,UserNotExistException{
 		fill();
 		
-		userManager.changeEmail("user1@email.com","user5@email.com");
+		assertThrows(EmailExistsException.class,() -> {userManager.changeEmail("user1@email.com","user5@email.com");});
 
 	}
 	@Test
@@ -217,27 +212,30 @@ public class UserManagerTest{
 	public void testChangeGetName() throws IncorrectNameException, UserNotExistException{
 		fill();
 		assertEquals("name",userManager.getName("user1@email.com"));
-		userManager.changeName("user1@email.com", "new name");
-		assertEquals("new name",userManager.getName("user1@email.com"));
+		userManager.changeName("user1@email.com", "n a me");
+		assertEquals("n a me",userManager.getName("user1@email.com"));
+
 	}
 	
-	@Test(expected = UserNotExistException.class)
+	@Test
 	public void testChangeGetNameIncorrectUser() throws IncorrectNameException, UserNotExistException{
-		userManager.changeName("user1@email.com", "new name");
+
+		assertThrows(UserNotExistException.class,() -> {userManager.changeName("user1@email.com", "new name");});
 	}
 
-	@Test(expected = UserNotExistException.class)
+	@Test
 	public void testIncorrectNameEmpty() throws IncorrectNameException, UserNotExistException{
 		fill();
 		assertEquals("name",userManager.getName("user1@email.com"));
-		userManager.changeName("user1@email.com", "");
+		assertThrows(IncorrectNameException.class,() -> {userManager.changeName("user1@email.com", "");});
 	}
 
-	@Test(expected = UserNotExistException.class)
+	@Test
 	public void testIncorrectNameNull() throws IncorrectNameException, UserNotExistException{
 		fill();
 		assertEquals("name",userManager.getName("user1@email.com"));
-		userManager.changeName("user1@email.com", null);
+		assertThrows(IncorrectNameException.class,() -> {userManager.changeName("user1@email.com", null);});
+
 	}
 
 	private String hash(String in){

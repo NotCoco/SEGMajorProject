@@ -7,15 +7,16 @@ import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManagerInterface
 import main.java.com.projectBackEnd.Entities.User.Hibernate.EmailExistsException;
 import main.java.com.projectBackEnd.Entities.User.Hibernate.InvalidEmailException;
 import main.java.com.projectBackEnd.Entities.User.Hibernate.IncorrectNameException;
-import org.junit.*;
+import main.java.com.projectBackEnd.Entities.User.Hibernate.InvalidPasswordException;
+import org.junit.jupiter.api.*;
 import static org.junit.Assert.*;
-
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TestResetLinkManager{
         public static ConnectionLeakUtil connectionLeakUtil = null;
         public static ResetLinkManagerInterface linkManager = null;
         public static UserManagerInterface userManager = null;;
-        @BeforeClass
+        @BeforeAll
         public static void setUpDatabase() {
                 HibernateUtility.setResource("testhibernate.cfg.xml");
                 linkManager = ResetLinkManager.getResetLinkManager();
@@ -24,13 +25,13 @@ public class TestResetLinkManager{
 
         }
 
-        @AfterClass
+        @AfterAll
         public static void assertNoLeaks() {
                 HibernateUtility.shutdown();
                 //connectionLeakUtil.assertNoLeaks();
         }
 
-        @Before
+        @BeforeEach
         public void setUp() {
                 ((EntityManager)linkManager).deleteAll();                
 		((EntityManager)userManager).deleteAll();
@@ -47,10 +48,11 @@ public class TestResetLinkManager{
 			fail();
 		}
 	}
-        @Test(expected = EmailNotExistException.class)
+        @Test
         public void testCreateEmailNotExist() throws EmailNotExistException{
                 fill();
-		String a = linkManager.create("test2@test.com");
+		assertThrows(EmailNotExistException.class,() -> {linkManager.create("test2@test.com");});
+
         }
         @Test
         public void testGetEmail(){
@@ -89,7 +91,7 @@ public class TestResetLinkManager{
                         userManager.addUser("test@test.com","pass","name");
                         userManager.addUser("test1@test.com","pass","name");
                 }
-                catch(EmailExistsException|InvalidEmailException|IncorrectNameException e){
+                catch(EmailExistsException|InvalidEmailException|IncorrectNameException|InvalidPasswordException e){
 			System.out.println(e);                        
 			fail();
                 }
