@@ -1,5 +1,6 @@
 <template>
   <div id="login">
+    <div id="bg"></div>
     <Navbar></Navbar>
 
     <div class="custom-content-container">
@@ -61,12 +62,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/styles';
+
 #login {
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: rgb(55, 255, 175);
   overflow: auto;
+
+  #bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(52, 243, 167);
+    background-image: linear-gradient(45deg, rgb(55, 255, 175) 25%, transparent 25%, transparent 75%, rgb(37, 247, 163) 75%, rgb(82, 247, 181)),
+                      linear-gradient(45deg, rgb(43, 238, 160) 25%, transparent 25%, transparent 75%, rgb(62, 250, 175) 75%, rgb(55, 255, 175));
+    background-size: 200px 200px;
+    background-position: 0 0, 100px 100px;
+    filter: blur(1px);
+  }
 }
 
 .custom-content-container {
