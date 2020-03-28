@@ -11,6 +11,11 @@ public class UserBody{
 		this.password = password;
 		this.name = name;	
 	}
+	public UserBody(String email, String password){
+		this.email = email;
+		this.password = password;
+	}
+
 
 	public String getEmail(){
 		return email;
@@ -27,8 +32,8 @@ public class UserBody{
 	public String getName(){
 		return name;
 	}
-	public String setName(String name){
-		return name;
+	public void setName(String name){
+		this.name = name;
 	}
 
 

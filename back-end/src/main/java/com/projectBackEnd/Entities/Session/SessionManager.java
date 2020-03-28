@@ -48,6 +48,8 @@ public class SessionManager extends EntityManager implements SessionManagerInter
 
 
 	public boolean verifySession(String token) {
+		if(token == null || token.length() != 26)
+			return false;
 		List<Session> sessions = getAll();
 		Session current = null;
 		Timestamp now;

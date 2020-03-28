@@ -23,7 +23,9 @@ public static PasswordResetInterface passwordResetManager;
 			throw new ServerErrorException("error has occured");
 	
 	}
-	public void changePassword(String token, String password) throws TokenNotExistException,UserNotExistException{
+	public void changePassword(String token, String password) throws TokenNotExistException,UserNotExistException,InvalidPasswordException{
+		if(password == null || password.isEmpty())
+			throw new InvalidPasswordException("invalid password");	
 		String email = ResetLinkManager.getResetLinkManager().getEmail(token);
 		if(ResetLinkManager.getResetLinkManager().exist(token)){
 			ResetLinkManager.getResetLinkManager().delete(token);
