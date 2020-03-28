@@ -7,6 +7,7 @@ import News from '../views/News.vue'
 
 import AdminLayout from '../views/AdminLayout.vue'
 import AdminHome from '../views/AdminHome.vue'
+import AdminDrugChart from '../views/AdminDrugChart.vue'
 import AdminAllSites from '../views/AdminAllSites.vue'
 import AdminNewSite from '../views/AdminNewSite.vue'
 import AdminSiteLayout from '../views/AdminSiteLayout.vue'
@@ -49,6 +50,10 @@ const routes = [
       {
         path: '',
         component: AdminHome
+      },   
+      {
+        path: 'drug-chart',
+        component: AdminDrugChart,
       },
       {
         path: 'sites',

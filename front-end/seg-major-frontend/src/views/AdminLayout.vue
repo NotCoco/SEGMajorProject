@@ -6,6 +6,7 @@
           <router-link to="/admin" class="navbar-item text-brand">Admin</router-link>
 
           <router-link to="/admin/sites" class="navbar-item">Sites</router-link>
+          <router-link to="/admin/drug-chart" class="navbar-item">Drug Chart</router-link>
 
           <a class="navbar-item">News</a>
 

@@ -26,8 +26,6 @@
                 v-bind:to="`/admin/sites/${this.site.slug}/settings`"
                 class="navigation-item is-unselectable"
               >Site Settings</router-link>
-
-              <a class="navigation-item is-unselectable">Drug Chart</a>
             </div>
           </nav>
         </div>
