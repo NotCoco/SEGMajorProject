@@ -14,31 +14,37 @@ public class HibernateUtility {
 
     private static SessionFactory sessionFactory;
     private static String resourceName="hibernate.cfg.xml";
-    private static HashSet<Class> annotationedClasses;
+    private static HashSet<Class> annotatedClasses;
 
     /**
      * Builds a session factory using the annotated class list from which sessions can be
      * created. Also closes any previous ones if necessary so only one is in use.
      * @return The session factory made, default open.
      */
-    public synchronized static SessionFactory buildSessionFactory() {
+    private synchronized static SessionFactory getOpenSessionFactory() {
         if (sessionFactory != null) {
             if (sessionFactory.isOpen()) sessionFactory.close();
         }
         try {
-            Configuration cfg = new Configuration();
-            for(Class entityClass : annotationedClasses) {
-                cfg.addAnnotatedClass(entityClass);
-            }
-            sessionFactory = cfg.configure(resourceName).buildSessionFactory();
-            return sessionFactory;
-
+            return createFactory(new Configuration());
         } catch (Throwable ex) {
             System.err.println("SF creation failure." + ex);
             throw new ExceptionInInitializerError(ex);
         }
     }
 
+    /**
+     * Creates a factory using a configuration and the list of AnnotatedClasses
+     * @param cfg The configuration to be used
+     * @return A newly built, open session factory.
+     */
+    private synchronized static SessionFactory createFactory(Configuration cfg) {
+        for(Class entityClass : annotatedClasses) {
+            cfg.addAnnotatedClass(entityClass);
+        }
+        sessionFactory = cfg.configure(resourceName).buildSessionFactory();
+        return sessionFactory;
+    }
     /**
      * Set the location of the hibernate config file which contains database information
      * @param location The location and name of the config file
@@ -52,10 +58,10 @@ public class HibernateUtility {
      * @param tableEntity The class that will be added to the factory for table access
      */
     public static void addAnnotation(Class tableEntity) {
-        if (annotationedClasses == null) annotationedClasses = new HashSet<>();
-        if (annotationedClasses.contains(tableEntity)) return;
-        annotationedClasses.add(tableEntity);
-        buildSessionFactory();
+        if (annotatedClasses == null) annotatedClasses = new HashSet<>();
+        if (annotatedClasses.contains(tableEntity)) return;
+        annotatedClasses.add(tableEntity);
+        getOpenSessionFactory();
     }
 
     /**
@@ -64,7 +70,7 @@ public class HibernateUtility {
      */
     public static SessionFactory getSessionFactory() {
         if (sessionFactory != null && !sessionFactory.isClosed()) return sessionFactory;
-        else return buildSessionFactory();
+        else return getOpenSessionFactory();
     }
 
     /**
