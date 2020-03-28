@@ -1,10 +1,49 @@
 import axios from 'axios'
+import router from '@/router'
 
 const api = axios.create({
   baseURL: 'http://localhost:8080'
 })
 
+// request interceptor
+api.interceptors.request.use(function (config) {
+  const apiKey = localStorage.getItem('api-key');
+  config.headers['X-API-Key'] = apiKey;
+  return config;
+}, function (error) {
+  return Promise.reject(error);
+});
+
+// response interceptor
+api.interceptors.response.use(function (response) {
+  return response;
+}, function (error) {
+  if (error.response.status === 401) {
+    // session has expired, api key no longer valid so LOG OUT
+    const apiKey = localStorage.getItem('api-key')
+    if (apiKey != null) {
+      // if apiKey had a value, session has expired
+      router.push('/login?exp=true')
+    } else {
+      router.push('/login')
+    }
+
+    localStorage.removeItem('api-key')
+  }
+  
+  return Promise.reject(error);
+});
+
+
 export default {
+  async login(email, password) {
+    return api.post('/user/login', { email, password })
+  },
+
+  async getUserName() {
+    return api.get('/user/name')
+  },
+
   createSite(site) {
     return api.post('/sites', site)
   },

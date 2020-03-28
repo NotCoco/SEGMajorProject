@@ -17,6 +17,10 @@ import PageViewer from '../views/PageViewer.vue'
 import NewsViewer from '../views/NewsViewer.vue'
 import AdminSiteSettings from '../views/AdminSiteSettings.vue'
 import SearchResults from '../views/SearchResults.vue'
+import Login from '../views/Login.vue'
+
+import UserService from "@/services/user-service";
+
 
 Vue.use(VueRouter)
 Vue.use(VueMeta)
@@ -85,6 +89,11 @@ const routes = [
     ]
   },
   {
+    path: '/login',
+    component: Login,
+    props: route => ({ sessionExpired: route.query.exp == "true" })
+  },
+  {
     path: '/:siteSlug',
     component: SiteContentViewerLayout,
     children: [
@@ -104,6 +113,12 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+// Authentication Navigation Guard 
+router.beforeEach((to, from, next) => {
+  if (to.path.startsWith('/admin') && !UserService.isAuthenticated()) next('/login')
+  else next()
 })
 
 export default router

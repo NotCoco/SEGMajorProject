@@ -17,7 +17,7 @@
             <div class="navbar-item has-dropdown is-hoverable">
               <a class="navbar-link">
                 <i class="material-icons" style="margin-right: 12px; opacity: 0.92;">person</i>
-                Username
+                {{username}}
               </a>
 
               <div class="navbar-dropdown is-right">
@@ -40,7 +40,18 @@
 </template>
 
 <script>
-export default {};
+import UserService from "@/services/user-service";
+
+export default {
+  data() {
+    return {
+      username: "..."
+    };
+  },
+  async mounted() {
+    this.username = await UserService.getUserName();
+  }
+};
 </script>
 
 <style lang="scss">
