@@ -77,4 +77,20 @@ export default {
   deleteNews(data) {
     return api.delete(`/news/${data.slug}`)
   },
+
+  getAllMedicines() {
+    return api.get('/medicines')
+  },
+
+  createMedicine(data) {
+    return api.post('/medicines', data)
+  },
+
+  updateMedicine(data) {
+    return api.put('/medicines', data)
+  },
+
+  deleteMedicine(data) {
+    return api.delete(`/medicines/${data.id}`)
+  },
 }
