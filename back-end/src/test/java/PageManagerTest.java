@@ -54,7 +54,7 @@ public class PageManagerTest {
     }
 
     @Test
-    public void testNoDuplicateCompositeKey() {
+    public void testAddRegularPagesKey() {
         //Page(Site site, String slug, Integer index, String title, String content) {
         Page page1 = new Page(testSiteA.getSlug(), "sameSlug", 1, "TitleA", "ContentA");
         Page page2 = new Page(testSiteB.getSlug(), "sameSlug", 1, "TitleB", "ContentB");
@@ -76,7 +76,7 @@ public class PageManagerTest {
     }
 
     @Test
-    public void testDuplicateCompositeKey() {
+    public void testViolateDuplicateCompositeKey() {
         Page page1 = new Page(testSiteA.getSlug(), "sameSlug", 1, "TitleA", "ContentA");
         Page page2 = new Page(testSiteA.getSlug(), "sameSlug", 1, "TitleB", "ContentB");
         pageManager.addPage(page1);
@@ -86,31 +86,32 @@ public class PageManagerTest {
     }
 
     @Test
-    public void testNullSlugIndexTitleContent() {
+    public void testAddPageWithNullValues() {
         pageManager.addPage(new Page(testSiteA.getSlug(), null, null, null, null));
         assertEquals(0, pageManager.getAllPages().size());
     }
 
     @Test
-    public void testInvalidSite() {
+    public void testAddPageWithInvalidSite() {
         pageManager.addPage(new Page("", "",2, "", ""));
         assertEquals(0, pageManager.getAllPages().size());
     }
 
     @Test
-    public void testGetAllBySite() {
+    public void testGetAllBySiteOrder() {
+        pageManager.addPage(new Page(testSiteB.getSlug(), "I'm from a different site!", 3, "TitleA","ContentA"));
         pageManager.addPage(new Page(testSiteA.getSlug(), "Slug1", 3, "TitleA","ContentA"));
         pageManager.addPage(new Page(testSiteA.getSlug(), "Slug6", 0, "TitleB","ContentB"));
         pageManager.addPage(new Page(testSiteA.getSlug(), "Slug3", 2, "TitleC","ContentC"));
         pageManager.addPage(new Page(testSiteA.getSlug(), "Slug9", 1, "TitleD","ContentD"));
         pageManager.addPage(new Page(testSiteA.getSlug(), "Slug12", 4, "TitleE","ContentE"));
         List<Page> all = pageManager.getAllPagesOfSite(testSiteA.getSlug());
-
+        assertEquals(5, all.size());
         for(int i = 0; i < all.size(); ++i) assertEquals(all.get(i).getIndex(),i);
     }
 
     @Test
-    public void testForeignKeyDelete() {
+    public void testEffectOfSiteDelete() {
         siteManager.addSite(new Site("toDeleteSite", "siteName"));
         pageManager.addPage(new Page("toDeleteSite", "Slug", 3, "Title", "content"));
         siteManager.delete(siteManager.getSiteBySlug("toDeleteSite").getPrimaryKey());
@@ -130,15 +131,8 @@ public class PageManagerTest {
     @Test
     public void testDeleteNonexistentPrimaryKey() {
         assertThrows(IllegalArgumentException.class, () -> {
-            pageManager.delete("");
+            pageManager.delete(-1);
         });
-    }
-
-    @Test
-    public void testDeleteNotInDBObject() {
-        assertThrows(IllegalArgumentException.class, () -> {
-            Page pageNotInTable = new Page(testSiteB.getSlug(),"notaddedtotable", 0, "notaddedtoTable", "");
-            pageManager.delete(pageNotInTable.getPrimaryKey());        });
     }
 
     @Test
