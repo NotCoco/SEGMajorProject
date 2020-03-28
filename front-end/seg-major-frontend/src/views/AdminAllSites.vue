@@ -4,21 +4,25 @@
       <section class="section">
         <div class="custom-content-container">
           <h1 class="title">All Sites</h1>
-
-          <router-link
-            v-for="site of sites"
-            v-bind:key="site.primaryKey"
-            class="is-block"
-            style="margin-bottom: 20px"
-            v-bind:to="site.slug"
-            append
-          >
-            <div class="card">
-              <div class="card-content">
-                <h5 class="title is-5">{{site.name}}</h5>
-              </div>
+          <transition name="fade" mode="out-in">
+            <loading-spinner v-if="!sites" style="margin-top: 50px;"></loading-spinner>
+            <div v-else>
+              <router-link
+                v-for="site of sites"
+                v-bind:key="site.primaryKey"
+                class="is-block"
+                style="margin-bottom: 20px"
+                v-bind:to="site.slug"
+                append
+              >
+                <div class="card">
+                  <div class="card-content">
+                    <h5 class="title is-5">{{site.name}}</h5>
+                  </div>
+                </div>
+              </router-link>
             </div>
-          </router-link>
+          </transition>
         </div>
       </section>
     </div>
@@ -31,11 +35,15 @@
 
 <script>
 import SitesService from "@/services/sites-service";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default {
+  components: {
+    LoadingSpinner
+  },
   data() {
     return {
-      sites: []
+      sites: null
     };
   },
   async mounted() {
