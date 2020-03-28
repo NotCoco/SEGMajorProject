@@ -54,6 +54,10 @@ export default {
     })
   },
 
+  deletePage(page) {
+    return api.delete(`/sites/${page.site.slug}/pages/${page.slug}`)
+  },
+
   getAllNews() {
     return api.get('/news')
   },

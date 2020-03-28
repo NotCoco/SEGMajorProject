@@ -54,7 +54,7 @@
 
         <div class="buttons" style="justify-content: flex-end">
           <router-link to="../" class="button is-light">Cancel</router-link>
-          <button class="button is-danger">Delete</button>
+          <button class="button is-danger" @click="deletePage()">Delete</button>
           <button class="button is-success" @click="save()">Save</button>
         </div>
       </div>
@@ -133,8 +133,7 @@ export default {
       }
     },
     async deletePage() {
-      const res = await SitesService.deletePage(this.page);
-      console.log(res);
+      await SitesService.deletePage(this.page);
       this.$router.push(`/admin/sites/${this.page.site.slug}/pages`);
     }
   },

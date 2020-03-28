@@ -39,5 +39,10 @@ export default {
     async updatePage(page) {
         const res = await BackendService.updatePage(page)
         return res.data
+    },
+
+    async deletePage(page) {
+        const res = await BackendService.deletePage(page)
+        return res.data
     }
 }
