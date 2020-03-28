@@ -1,4 +1,4 @@
-package main.java.com.projectBackEnd.Entities.Medicine;
+package main.java.com.projectBackEnd.Entities.Medicine.Hibernate;
 
 import main.java.com.projectBackEnd.TableEntity;
 import org.hibernate.annotations.Type;
@@ -8,7 +8,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.io.Serializable;
 
 import javax.validation.constraints.NotNull;
 
@@ -57,15 +56,16 @@ public class Medicine implements TableEntity {
 
     public Medicine(String name, String type) {
         this.primaryKey = -1;
-        this.name = (name != null && "".equals(name.trim())) ? "Unnamed" : name;
-        this.type = (type != null && "".equals(type.trim())) ? "Undefined" : type;
+        setName(name);
+        setType(type);
+
     }
 
     // Constructor taking id
     public Medicine(Integer id, String name, String type) {
         this.primaryKey = id;
-        this.name = (name != null && "".equals(name.trim())) ? "Unnamed" : name;
-        this.type = (type != null && "".equals(type.trim())) ? "Undefined" : type;
+        setName(name);
+        setType(type);
     }
 
 
@@ -82,7 +82,7 @@ public class Medicine implements TableEntity {
     }
 
     public void setName(String name) {
-        this.name = (name != null && "".equals(name.trim())) ? "Unnamed" : name;
+        this.name = (name == null || "".equals(name.trim())) ? "Unnamed" : name;
     }
 
     public String getType() {
@@ -90,7 +90,8 @@ public class Medicine implements TableEntity {
     }
 
     public void setType(String type) {
-        this.type = (type != null && "".equals(type.trim())) ? "Undefined" : type;    }
+        this.type = (type == null || "".equals(type.trim())) ? "Undefined" : type;
+    }
 
     /**
      * Copy the values of the input TableEntity object

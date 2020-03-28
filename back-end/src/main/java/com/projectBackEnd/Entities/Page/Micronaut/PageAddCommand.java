@@ -1,8 +1,8 @@
-package main.java.com.projectBackEnd.Entities.Page;
+package main.java.com.projectBackEnd.Entities.Page.Micronaut;
 
 import javax.validation.constraints.NotNull;
-import main.java.com.projectBackEnd.Entities.Site.SiteManager;
-import main.java.com.projectBackEnd.Entities.Site.SiteManagerInterface;
+import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManager;
+import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManagerInterface;
 //import io.micronaut.core.annotation.Introspected;
 
 /**
@@ -76,7 +76,7 @@ public class PageAddCommand {
 
     public void setSite(String site) {
         SiteManagerInterface siteManager = SiteManager.getSiteManager();
-        if (siteManager.getBySiteSlug(site) != null) this.site = site;
+        if (siteManager.getSiteBySlug(site) != null) this.site = site;
     }
 
 }

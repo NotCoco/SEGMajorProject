@@ -1,15 +1,15 @@
-package main.java.com.projectBackEnd.Entities.Page;
+package main.java.com.projectBackEnd.Entities.Page.Hibernate;
 
-import main.java.com.projectBackEnd.Entities.Site.Site;
-import main.java.com.projectBackEnd.Entities.Site.SiteManager;
-import main.java.com.projectBackEnd.Entities.Site.SiteManagerInterface;
+import main.java.com.projectBackEnd.Entities.Site.Hibernate.Site;
+import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManager;
+import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManagerInterface;
 import main.java.com.projectBackEnd.TableEntity;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.io.Serializable;
+
 /**
  * Page objects are database entities for the table 'Page' defined in this class.
  * The have an auto-increment 'ID', a site to which they belong, a slug, an index for their position
@@ -66,16 +66,7 @@ public class Page implements TableEntity {
     public Page(String siteSlug, String slug, Integer index, String title, String content) {
         this.primaryKey = -1;
         SiteManagerInterface s = SiteManager.getSiteManager();
-        setSite(s.getBySiteSlug(siteSlug));
-        setSlug(slug);
-        this.index = index;
-        this.title = title;
-        this.content = content;
-    }
-
-    public Page(Site site, String slug, Integer index, String title, String content) {
-        this.primaryKey = -1;
-        setSite(site);
+        setSite(s.getSiteBySlug(siteSlug));
         setSlug(slug);
         this.index = index;
         this.title = title;
@@ -85,7 +76,7 @@ public class Page implements TableEntity {
     public Page(Integer ID, String siteSlug, String slug, Integer index, String title, String content) {
         this.primaryKey = ID;
         SiteManagerInterface s = SiteManager.getSiteManager();
-        setSite(s.getBySiteSlug(siteSlug));
+        setSite(s.getSiteBySlug(siteSlug));
         setSlug(slug);
         this.index = index;
         this.title = title;

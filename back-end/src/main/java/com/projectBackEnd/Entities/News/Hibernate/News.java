@@ -1,4 +1,4 @@
-package main.java.com.projectBackEnd.Entities.News;
+package main.java.com.projectBackEnd.Entities.News.Hibernate;
 
 import main.java.com.projectBackEnd.TableEntity;
 import org.hibernate.annotations.Type;

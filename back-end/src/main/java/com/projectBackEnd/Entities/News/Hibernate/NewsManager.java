@@ -1,15 +1,12 @@
-package main.java.com.projectBackEnd.Entities.News;
+package main.java.com.projectBackEnd.Entities.News.Hibernate;
 
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
 
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static java.util.Collections.addAll;
 
 /**
  * NewsManager defines methods for News objects to interact with the database.
@@ -17,7 +14,7 @@ import static java.util.Collections.addAll;
  *
  * https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
-public class NewsManager extends EntityManager implements NewsManagerInterface  {
+public class NewsManager extends EntityManager implements NewsManagerInterface {
 
     private static NewsManagerInterface newsManager;
 
@@ -36,6 +33,15 @@ public class NewsManager extends EntityManager implements NewsManagerInterface  
         else return new NewsManager();
     }
 
+    /**
+     * @return list of all News objects in database
+     */
+    public List<News> getAllNews() {
+        List<News> allNews = super.getAll();
+        return sort(allNews);
+    }
+
+
     /** Insert input News object into the database
      * @param news
      * @return added news
@@ -43,22 +49,6 @@ public class NewsManager extends EntityManager implements NewsManagerInterface  
     public News addNews(News news) {
         insertTuple(news);
         return news;
-    }
-
-    /** Insert a new News object into the database
-     * @param date
-     * @param pinned
-     * @param description
-     * @param title
-     * @param urgent
-     * @param content
-     * @param slug
-     * @return newly created News object added to db
-     */
-    public News addNews(Date date, boolean pinned, String description, String title, boolean urgent, String content, String slug) {
-        News newArticle = new News(date, pinned, description, title, urgent, content, slug);
-        addNews(newArticle);
-        return newArticle;
     }
 
     /** Retrieve news object from database using primary key
@@ -88,14 +78,6 @@ public class NewsManager extends EntityManager implements NewsManagerInterface  
     }
 
     /**
-     * Delete input News object
-     * @param news
-     */
-    public void delete(News news) {
-        super.delete(news);
-    }//TODO removable?
-
-    /**
      * Delete News object by primary key
      * @param pk
      */
@@ -110,20 +92,13 @@ public class NewsManager extends EntityManager implements NewsManagerInterface  
         super.deleteAll();
     }
 
-    /**
-     * @return list of all News objects in database
-     */
-    public List<News> getAllNews() {
-        List<News> allNews = super.getAll();
-        return sort(allNews);
-    } //Sort by Pinned/date then date
 
     /**
      * Sort all the news by lowest date, in the following order :
      * Urgent and pinned, urgent only, pinned only, neither pinned nor urgent.
      * @return sorted list of news
      */
-    public List<News> sort(List<News> all) {
+    private static List<News> sort(List<News> all) {
 
         // Get pinned AND urgent
         Stream<News> pinnedAndUrgent = all.stream().filter(n -> n.isPinned() && n.isUrgent())

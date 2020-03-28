@@ -1,4 +1,4 @@
-package main.java.com.projectBackEnd.Entities.News;
+package main.java.com.projectBackEnd.Entities.News.Micronaut;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -8,7 +8,7 @@ import java.util.Date;
 public class NewsAddCommand {
 
     @NotNull
-    private Date date;
+    private Date date; //Can be updated to take a long of the time!
 
     @NotNull
     private String description;
