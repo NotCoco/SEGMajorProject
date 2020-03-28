@@ -33,7 +33,15 @@
 
             <div class="level is-mobile">
               <div class="level-left">
-                <router-link v-bind:to="`/admin/sites/${site.slug}`" class="button is-light">Cancel</router-link>
+                <div class="level-item">
+                  <router-link
+                    v-bind:to="`/admin/sites/${site.slug}`"
+                    class="button is-light"
+                  >Cancel</router-link>
+                </div>
+                <div class="level-item">
+                  <button class="button is-danger" @click="deleteSite()">Delete</button>
+                </div>
               </div>
               <div class="level-right">
                 <button class="button is-success is-medium" @click="save()">Save</button>
@@ -74,6 +82,11 @@ export default {
       this.$emit("siteUpdate", this.site);
 
       this.loading = false;
+    },
+    async deleteSite() {
+      this.loading = true;
+      await SitesService.deleteSite(this.site);
+      this.$router.push("/admin/sites");
     }
   },
   async mounted() {

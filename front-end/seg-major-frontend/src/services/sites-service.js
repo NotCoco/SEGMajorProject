@@ -21,6 +21,11 @@ export default {
         return res.data
     },
 
+    async deleteSite(site) {
+        const res = await BackendService.deleteSite(site)
+        return res.data
+    },
+
     async getAllPages(siteSlug) {
         const res = await BackendService.getAllPages(siteSlug)
         return res.data

@@ -25,6 +25,10 @@ export default {
     })
   },
 
+  deleteSite(site) {
+    return api.delete(`/sites/${site.slug}`)
+  },
+
   getAllPages(siteSlug) {
     return api.get(`/sites/${siteSlug}/pages`)
   },
