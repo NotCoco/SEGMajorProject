@@ -1,10 +1,42 @@
 <template>
   <div id="page-viewer">
-    <section class="section">
+    <section class="section" style="height: 100%;">
       <div class="custom-content-container" v-if="page">
         <h1 class="title">{{ page.title }}</h1>
 
-        <rich-text-editor v-bind:editable="false" v-model="page.content"></rich-text-editor>
+        <div class="page-content-container">
+          <rich-text-editor v-bind:editable="false" v-model="page.content"></rich-text-editor>
+        </div>
+
+        <div class="bottom-nav-buttons">
+          <div class="level">
+            <div class="level-left">
+              <div class="level-item">
+                <!-- Previous Button-->
+                <router-link v-bind:to="previousPage.slug" v-if="previousPage">
+                  <div class="button is-light is-large bottom-nav-btn">
+                    <i class="material-icons" style="margin-right: 5px">arrow_back_ios</i>
+                    {{ previousPage.title }}
+                  </div>
+                </router-link>
+              </div>
+            </div>
+            <div class="level-right">
+              <div class="level-item">
+                <!-- Next Button -->
+                <router-link v-bind:to="nextPage.slug" v-if="nextPage">
+                  <div class="button is-light is-large bottom-nav-btn">
+                    {{ nextPage.title }}
+                    <i
+                      class="material-icons"
+                      style="margin-left: 12px; margin-right: -3px;"
+                    >arrow_forward_ios</i>
+                  </div>
+                </router-link>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </div>
@@ -12,15 +44,43 @@
 
 <style lang="scss" scoped>
 @import "@/styles.scss";
+#page-viewer {
+  height: 100%;
+}
+
+.custom-content-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-content-container {
+  flex-grow: 1;
+}
+
 .title {
   color: $primary-dark;
   font-size: 35px;
+}
+
+.bottom-nav-buttons {
+  padding: 50px 0;
+}
+
+.bottom-nav-btn {
+  transition: background-color 0.12s, color 0.12s;
+  font-size: 20px;
+  i {
+    font-size: 18px;
+  }
+  &:hover {
+    color: #222;
+  }
 }
 </style>
 
 <script>
 import RichTextEditor from "@/components/RichTextEditor";
-// import SitesService from "@/services/sites-service";
 
 export default {
   components: {
@@ -31,16 +91,24 @@ export default {
       type: Array
     }
   },
-  async mounted() {
-    // const siteSlug = this.$route.params.siteSlug;
-    // const pageSlug = this.$route.params.pageSlug;
-
-    // this.page = await SitesService.getPage(siteSlug, pageSlug);
-  },
   computed: {
     page() {
       const pageSlug = this.$route.params.pageSlug;
-      return this.pages.find(p => p.slug === pageSlug)
+      return this.pages.find(p => p.slug === pageSlug);
+    },
+    nextPage() {
+      const currentIndex = this.pages.indexOf(this.page);
+      if (currentIndex < this.pages.length) {
+        return this.pages[currentIndex + 1];
+      }
+      return null;
+    },
+    previousPage() {
+      const currentIndex = this.pages.indexOf(this.page);
+      if (currentIndex > 0) {
+        return this.pages[currentIndex - 1];
+      }
+      return null;
     }
   }
 };
