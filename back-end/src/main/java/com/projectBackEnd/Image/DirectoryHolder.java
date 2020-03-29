@@ -1,5 +1,6 @@
 package main.java.com.projectBackEnd.Image;
 
+import java.io.File;
 
 public class DirectoryHolder {
 
@@ -13,6 +14,14 @@ public class DirectoryHolder {
 		else return holder;
 	}
 	public void setDir(String newDir) {
+		File locationOfImageStorage = new File(newDir);
+		if (!locationOfImageStorage.exists()) {
+			if (locationOfImageStorage.mkdir()) {
+				System.out.println("Directory is created!");
+			} else {
+				System.out.println("Failed to create directory!");
+			}
+		}
 		this.dir = newDir;
 	}
 	public void setDefaultDir(){dir = System.getProperty("user.dir")+"\\back-end\\src\\main\\resources\\images\\";}

@@ -1,7 +1,7 @@
 package main.java.com.projectBackEnd;
 import io.micronaut.runtime.Micronaut;
 
-import main.java.com.projectBackEnd.Entities.User.SendMail;
+
 
 public class BackEndMain {
 	public static void main(String []args){
@@ -15,5 +15,8 @@ public class BackEndMain {
 		//Something albert did.
 
 		Micronaut.run(BackEndMain.class);
+		
+
+
 	}
 }

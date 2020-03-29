@@ -1,6 +1,5 @@
 package test.java;
 
-
 import io.micronaut.test.annotation.MicronautTest;
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
@@ -9,13 +8,17 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
-import main.java.com.projectBackEnd.*;
 
-import main.java.com.projectBackEnd.Entities.Page.*;
-import main.java.com.projectBackEnd.Entities.Site.*;
+import main.java.com.projectBackEnd.Entities.Page.Hibernate.PageManager;
+import main.java.com.projectBackEnd.Entities.Page.Hibernate.PageManagerInterface;
 
 import javax.inject.Inject;
 
+import main.java.com.projectBackEnd.Entities.Site.Hibernate.Site;
+import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManager;
+import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManagerInterface;
+import main.java.com.projectBackEnd.Entities.Site.Micronaut.SiteAddCommand;
+import main.java.com.projectBackEnd.Entities.Site.Micronaut.SiteUpdateCommand;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
@@ -28,6 +31,10 @@ import java.net.URLEncoder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManager;
+import main.java.com.projectBackEnd.HibernateUtility;
 
 @MicronautTest
 public class SiteControllerTest {
@@ -38,16 +45,29 @@ public class SiteControllerTest {
 
     static SiteManagerInterface siteManager;
     static PageManagerInterface pageManager;
-
+    private static String token;
     @BeforeAll
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         siteManager = SiteManager.getSiteManager();
         pageManager = PageManager.getPageManager();
+        try{
+        	UserManager.getUserManager().addUser("test@test.com" , "123","name");
+        	token = UserManager.getUserManager().verifyUser("test@test.com" , "123");
+        }
+        catch(Exception e){
+        	fail();
+        }  
     }
 
     @AfterAll
     public static void closeDatabase() {
+        try{
+        	UserManager.getUserManager().deleteUser("test@test.com" , "123");
+        }
+        catch(Exception e){
+        	fail();
+        }    
         HibernateUtility.shutdown();
     }
 
@@ -57,7 +77,15 @@ public class SiteControllerTest {
         //Automatically deletes all pages too due to cascade, but:
         pageManager.deleteAll();
     }
+    @Test
+    public void testNonExistingSiteReturns404() {
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.GET("/sites/IpsumLoremSite"));
+        });
 
+        assertNotNull(thrown.getResponse());
+        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
+    }
     @Test
     public void testPutLegalSite(){
         HttpResponse response= addSite("testSlug", "legalSite");
@@ -73,41 +101,14 @@ public class SiteControllerTest {
         assertEquals(HttpStatus.CREATED, response.getStatus());
     }
 
-    @Test
-    public void testUpdateToEmptyNameSite(){
-        HttpResponse response = addSite("testSlug","testSite");
-        String url =  getEUrl(response);
-        int id = getSitePKBySlug(url);
-        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            client.toBlocking().exchange(HttpRequest.PUT("/sites", new SiteUpdateCommand(id, "slug", "")));
-        });
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
-    }
 
     @Test
     public void testAddEmptyNameSite(){
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            client.toBlocking().exchange(HttpRequest.POST("/sites", new SiteAddCommand("slug", "")));
+            client.toBlocking().exchange(HttpRequest.POST("/sites", new SiteAddCommand("slug", "")).header("X-API-Key",token));
         });
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
     }
-
-    @Test
-    public void testDeleteAndGetSite(){
-        HttpResponse response = addSite("testSlug", "testSite");
-        String url =  getEUrl(response);
-        int id = getSitePKBySlug(url);
-        // Asserting that we've added a site
-        assertEquals(HttpStatus.CREATED, response.getStatus());
-
-        HttpRequest request = HttpRequest.DELETE("/sites/"+url);
-        response = client.toBlocking().exchange(request);
-        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            client.toBlocking().exchange(HttpRequest.GET("/sites/"+url));
-        });
-        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
-    }
-
     @Test
     public void testAddAndGetSite(){
         HttpResponse response = addSite("testSlug", "testSite");
@@ -119,14 +120,21 @@ public class SiteControllerTest {
     }
 
     @Test
-    public void testNonExistingSiteReturns404() {
-        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            client.toBlocking().exchange(HttpRequest.GET("/sites/IpsumLoremSite"));
-        });
+    public void testDeleteAndGetSite(){
+        HttpResponse response = addSite("testSlug", "testSite");
+        String url =  getEUrl(response);
+        int id = getSitePKBySlug(url);
+        // Asserting that we've added a site
+        assertEquals(HttpStatus.CREATED, response.getStatus());
 
-        assertNotNull(thrown.getResponse());
+        HttpRequest request = HttpRequest.DELETE("/sites/"+url).header("X-API-Key",token);
+        response = client.toBlocking().exchange(request);
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.GET("/sites/"+url));
+        });
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
     }
+
 
     @Test
     public void testAddAndUpdateSite(){
@@ -140,13 +148,23 @@ public class SiteControllerTest {
         assertEquals("newName", m.getName());
     }
 
+    @Test
+    public void testUpdateToEmptyNameSite(){
+        HttpResponse response = addSite("testSlug","testSite");
+        String url =  getEUrl(response);
+        int id = getSitePKBySlug(url);
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.PUT("/sites", new SiteUpdateCommand(id, "slug", "")).header("X-API-Key",token));
+        });
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
+    }
     protected HttpResponse putSite(int id, String newSlug, String newName) {
-        HttpRequest request = HttpRequest.PUT("/sites", new SiteUpdateCommand(id, newSlug, newName));
+        HttpRequest request = HttpRequest.PUT("/sites", new SiteUpdateCommand(id, newSlug, newName)).header("X-API-Key",token);
         return client.toBlocking().exchange(request);
     }
 
     protected HttpResponse addSite(String slug, String name) {
-        HttpRequest request = HttpRequest.POST("/sites", new SiteAddCommand(slug, name));
+        HttpRequest request = HttpRequest.POST("/sites", new SiteAddCommand(slug, name)).header("X-API-Key",token);
         HttpResponse response = client.toBlocking().exchange(request);
         return response;
     }

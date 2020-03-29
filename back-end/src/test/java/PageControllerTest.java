@@ -2,20 +2,25 @@ package test.java;
 
 
 import io.micronaut.test.annotation.MicronautTest;
-import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
-import main.java.com.projectBackEnd.*;
 
-import main.java.com.projectBackEnd.Entities.Page.*;
-import main.java.com.projectBackEnd.Entities.Site.*;
+import main.java.com.projectBackEnd.Entities.Page.Hibernate.Page;
+import main.java.com.projectBackEnd.Entities.Page.Hibernate.PageManager;
+import main.java.com.projectBackEnd.Entities.Page.Hibernate.PageManagerInterface;
+import main.java.com.projectBackEnd.Entities.Page.Micronaut.PageAddCommand;
+import main.java.com.projectBackEnd.Entities.Page.Micronaut.PagePatchCommand;
+import main.java.com.projectBackEnd.Entities.Page.Micronaut.PageUpdateCommand;
 
 import javax.inject.Inject;
 
+import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManager;
+import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManagerInterface;
+import main.java.com.projectBackEnd.Entities.Site.Micronaut.SiteAddCommand;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
@@ -25,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -32,7 +38,9 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManager;
 
+import main.java.com.projectBackEnd.HibernateUtility;
 
 @MicronautTest
 public class PageControllerTest {
@@ -43,17 +51,30 @@ public class PageControllerTest {
 
     static SiteManagerInterface siteManager;
     static PageManagerInterface pageManager;
-
+    private static String token;
     @BeforeAll
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         siteManager = SiteManager.getSiteManager();
         pageManager = PageManager.getPageManager();
+        try{
+        	UserManager.getUserManager().addUser("test@test.com" , "123","name");
+        	token = UserManager.getUserManager().verifyUser("test@test.com" , "123");
+        }
+        catch(Exception e){
+        	fail();
+        }    
     }
 
     @AfterAll
     public static void closeDatabase() {
         HibernateUtility.shutdown();
+        try{
+        	UserManager.getUserManager().deleteUser("test@test.com" , "123");
+        }
+        catch(Exception e){
+        	fail();
+        }    
     }
 
     @BeforeEach
@@ -61,6 +82,37 @@ public class PageControllerTest {
         siteManager.deleteAll();
         //Automatically deletes all pages too due to cascade, but:
         pageManager.deleteAll();
+    }
+
+    @Test
+    public void testNonExistingPageReturns404() {
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.GET("nothing"));
+        });
+        assertNotNull(thrown.getResponse());
+        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
+    }
+
+    @Test
+    public void testPatchingPageIndex() {
+        addSite("testSiteA", "name1");
+        addPage("testSiteA", "nutrition/slu!#g", 9, "Title", "nutri!tion/information");
+        addPage("testSiteA", "anotherPage", 12, "Title", "nutri!tion/information");
+        addPage("testSiteA", "coolPage", 20, "Title", "nutri!tion/information");
+        addPage("testSiteA", "Paaage", 13, "Title", "nutri!tion/information");
+        //public PagePatchCommand(int id, String slug, int index) {
+        List<Page> allPagesWithID = pageManager.getAllPages();
+        List<PagePatchCommand> input = new ArrayList<>();
+
+        for(int i = 0; i < allPagesWithID.size(); ++i) {
+            Page currentPage = allPagesWithID.get(i);
+            input.add(new PagePatchCommand(currentPage.getPrimaryKey(), currentPage.getSlug(), i));
+        }
+        HttpRequest request = HttpRequest.PATCH("/sites/"+ "testSiteA" +"/page-indices", input).header("X-API-Key",token);
+        client.toBlocking().exchange(request);
+        allPagesWithID = pageManager.getAllPages();
+        for(int i = 0; i < allPagesWithID.size(); ++i) assertEquals(i, allPagesWithID.get(i).getIndex());
+
     }
 
     @Test
@@ -102,6 +154,46 @@ public class PageControllerTest {
             client.toBlocking().exchange(request);
         }); //Shouldn't be allowed!
     }
+
+    @Test
+    public void testCreateSameKeys() {
+        addSite("testSiteA", "name1");
+        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+        addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
+        });
+    }
+
+    @Test
+    public void testDeleteNonExistentPage() {
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.DELETE("nothing").header("X-API-Key",token));
+        });
+    }
+
+    @Test
+    public void testDeletePage() {
+        addSite("testSiteA", "name1");
+        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
+        URI pLoc = pageLocation("testSiteA", "nutrition/slu!#g");
+        HttpRequest request = HttpRequest.DELETE(pLoc.toString()).header("X-API-Key",token);
+        client.toBlocking().exchange(request);
+        assertNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
+    }
+
+
+    @Test
+    public void updateToDuplicateKeysPage() {
+        addSite("testSiteA", "name1");
+        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
+        response = addPage("testSiteA", "sameKey", 1, "Title", "nutri!tion/information");
+        int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            putPage(idOfMadePage, "notvalid", "sameKey", 1, "newTitle", "nutri!tion/information");
+        });
+        assertNotNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
+    }
+
     @Test
     public void testUpdatePageTitle() {
         addSite("testSiteA", "name1");
@@ -144,20 +236,7 @@ public class PageControllerTest {
         });
         assertNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
     }
-    @Test
-    public void testNonExistingPageReturns404() {
-        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            client.toBlocking().exchange(HttpRequest.GET("nothing"));
-        });
-        assertNotNull(thrown.getResponse());
-        assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
-    }
-    @Test
-    public void testDeleteNonExistentPage() {
-        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            client.toBlocking().exchange(HttpRequest.DELETE("nothing"));
-        });
-    }
+
     @Test
     public void testUpdatePageToInvalid() {
         addSite("testSiteA", "name1");
@@ -169,73 +248,17 @@ public class PageControllerTest {
         assertNotNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
     }
 
-    @Test
-    public void updateToDuplicateKeysPage() {
-        addSite("testSiteA", "name1");
-        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
-        response = addPage("testSiteA", "sameKey", 1, "Title", "nutri!tion/information");
-        int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
-        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            putPage(idOfMadePage, "notvalid", "sameKey", 1, "newTitle", "nutri!tion/information");
-        });
-        assertNotNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
-    }
 
-    @Test
-    public void testCreateSameKeys() {
-        addSite("testSiteA", "name1");
-        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
-        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-        addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
-        });
-    }
-
-    @Test
-    public void testDeletePage() {
-        addSite("testSiteA", "name1");
-        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
-        URI pLoc = pageLocation("testSiteA", "nutrition/slu!#g");
-        HttpRequest request = HttpRequest.DELETE(pLoc.toString());
-        client.toBlocking().exchange(request);
-        assertNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
-    }
-
-    @Test
-    public void testPatchingPageIndex() {
-        addSite("testSiteA", "name1");
-        addPage("testSiteA", "nutrition/slu!#g", 9, "Title", "nutri!tion/information");
-        addPage("testSiteA", "anotherPage", 12, "Title", "nutri!tion/information");
-        addPage("testSiteA", "coolPage", 20, "Title", "nutri!tion/information");
-        addPage("testSiteA", "Paaage", 13, "Title", "nutri!tion/information");
-        //public PagePatchCommand(int id, String slug, int index) {
-        List<Page> allPagesWithID = pageManager.getAllPages();
-        List<PagePatchCommand> input = new ArrayList<>();
-
-        for(int i = 0; i < allPagesWithID.size(); ++i) {
-            Page currentPage = allPagesWithID.get(i);
-            input.add(new PagePatchCommand(currentPage.getPrimaryKey(), currentPage.getSlug(), i));
-        } //Will order all pages from 0-4;
-
-        HttpRequest request = HttpRequest.PATCH("/sites/"+ "testSiteA" +"/page-indices", input);
-        client.toBlocking().exchange(request);
-        //TODO Add the correct parameter for this!
-        //Updates all the pages to have a new index.
-        //@Patch("/{name}/page-indices")
-        //public HttpResponse<Page> patchPage(String name, @Body List<PagePatchCommand> patchCommandList){
-        allPagesWithID = pageManager.getAllPages();
-        for(int i = 0; i < allPagesWithID.size(); ++i) assertEquals(i, allPagesWithID.get(i).getIndex());
-
-    }
 
     protected HttpResponse putPage(int id, String siteName, String slug, int index, String title, String content) {
         URI pLoc = location(siteName);
-        HttpRequest request = HttpRequest.PUT(pLoc+"/pages", new PageUpdateCommand(id, siteName, slug, index, title, content));
+        HttpRequest request = HttpRequest.PUT(pLoc+"/pages", new PageUpdateCommand(id, siteName, slug, index, title, content)).header("X-API-Key",token);
         return client.toBlocking().exchange(request);
     }
 
     protected HttpResponse addPage(String siteSlug, String slug, Integer index, String title, String content) {
         URI sLoc = location(siteSlug);
-        HttpRequest request = HttpRequest.POST((sLoc +"/pages"), new PageAddCommand(siteSlug, slug, index, title, content));
+        HttpRequest request = HttpRequest.POST((sLoc +"/pages"), new PageAddCommand(siteSlug, slug, index, title, content)).header("X-API-Key",token);
         HttpResponse response = client.toBlocking().exchange(request);
         return response;
     }
@@ -261,7 +284,7 @@ public class PageControllerTest {
 
     //Adding and locating Site methods
     protected HttpResponse addSite(String slug, String name) {
-        HttpRequest request = HttpRequest.POST("/sites", new SiteAddCommand(slug,name));
+        HttpRequest request = HttpRequest.POST("/sites", new SiteAddCommand(slug,name)).header("X-API-Key",token);
         HttpResponse response = client.toBlocking().exchange(request);
         return response;
     }
@@ -278,3 +301,4 @@ public class PageControllerTest {
 
 
 }
+
