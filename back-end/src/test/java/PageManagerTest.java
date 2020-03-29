@@ -487,7 +487,7 @@ public class PageManagerTest {
     //Testing PageManagerInterface: update
 
     /**
-     * Test that updating a page works
+     * Test that updating a page works - including changing unique slug
      */
     @Test
     public void testUpdatePage() {
@@ -497,7 +497,7 @@ public class PageManagerTest {
         pageManager.addPage(newPage);
         int assignedID = pageManager.getAllPages().get(0).getPrimaryKey();
         fillDatabase(getListOfPages());
-        Page updatedPage = new Page(assignedID, "Disease1","Slug3", 14, "Title3",
+        Page updatedPage = new Page(assignedID, testSiteB.getSlug(),"Slug3", 14, "Title3",
                 "New conwishwashchangedtent!");
         pageManager.update(updatedPage);
         Page foundPage = pageManager.getByPrimaryKey(assignedID);
