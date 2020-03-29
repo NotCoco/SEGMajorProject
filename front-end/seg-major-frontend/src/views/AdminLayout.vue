@@ -35,7 +35,7 @@
     </nav>
 
     <div class="expanded-scrollable-area">
-      <transition name="fade" mode="out-in" duration="50">
+      <transition name="fade" mode="out-in" v-bind:duration="{ leave: 50 }">
         <router-view v-bind:username="username"></router-view>
       </transition>
     </div>
