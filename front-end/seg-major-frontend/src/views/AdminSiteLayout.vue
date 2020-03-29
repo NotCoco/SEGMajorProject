@@ -32,7 +32,10 @@
       </div>
 
       <div class="expanded-scrollable-area">
+      <transition name="fade" mode="out-in" duration="50">
+
         <router-view v-on:siteUpdate="setSite($event)"></router-view>
+      </transition>
       </div>
     </div>
   </div>
