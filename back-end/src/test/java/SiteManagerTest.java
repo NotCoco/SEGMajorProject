@@ -109,7 +109,7 @@ public class SiteManagerTest {
 
     /**
      * Test the fill database method below, and the getAllSites method to show that all are successfully added.
-     * Expected: All the medicines from the list are added successfully.
+     * Expected: All the sites from the list are added successfully.
      */
     @Test
     public void testFillingAndGetting() {
@@ -135,6 +135,13 @@ public class SiteManagerTest {
         }
     }
 
+    /**
+     * Test that an empty table returns no sites
+     */
+    @Test
+    public void testGetAllOnEmptyTable() {
+        assertEquals(0, siteManager.getAllSites().size());
+    }
     //Testing SiteManagerInterface: deleteAll
 
     /**
@@ -280,7 +287,22 @@ public class SiteManagerTest {
             // Check that nothing has been removed
         }
     }
-
+    /**
+     * Test deleting a primary key which is null.
+     * Expected: The database remains unchanged and an error is thrown.
+     */
+    @Test
+    public void testWithDeleteNullPrimaryKey() {
+        int previousSize = siteManager.getAllSites().size();
+        try {
+            siteManager.delete(null);
+            fail();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            assertEquals(siteManager.getAllSites().size(), previousSize);
+            // Check that nothing has been removed
+        }
+    }
 
     /**
      * Test the correct article was infact deleted when using delete

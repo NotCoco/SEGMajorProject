@@ -156,7 +156,13 @@ public class MedicineManagerTest {
             assertNotNull(foundMedicine.getPrimaryKey());
         }
     }
-
+    /**
+     * Test that an empty table returns no medicine
+     */
+    @Test
+    public void testGetAllOnEmptyTable() {
+        assertEquals(0, medicineManager.getAllMedicines().size());
+    }
     //Testing MedicineManagerInterface: deleteAll
 
     /**
@@ -286,7 +292,7 @@ public class MedicineManagerTest {
      * Testing that attempting to obtain a medicine using a primary key that doesn't exist returns null
      */
     @Test
-    public void testGetIllegalPrimaryKey() {
+    public void testGetUnfoundPrimaryKey() {
         assertNull(medicineManager.getByPrimaryKey(-1));
     }
 
@@ -331,6 +337,24 @@ public class MedicineManagerTest {
 
         try {
             medicineManager.delete(-1);
+            fail();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            assertEquals(medicineManager.getAllMedicines().size(), previousSize);
+            // Check that nothing has been removed
+        }
+    }
+    /**
+     * Test deleting a primary key which is null.
+     * Expected: The database remains unchanged and an error is thrown.
+     */
+    @Test
+    public void testDeleteNullPrimaryKey() {
+        fillDatabase(getListOfMedicines());
+        int previousSize = medicineManager.getAllMedicines().size();
+
+        try {
+            medicineManager.delete(null);
             fail();
         } catch (IllegalArgumentException e) {
             e.printStackTrace();

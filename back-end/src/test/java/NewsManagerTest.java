@@ -125,7 +125,7 @@ public class NewsManagerTest {
     /**
      * Test the fill database method below, and the getAllNews method to show that all are
      * successfully added.
-     * Expected: All the medicines from the list are added successfully.
+     * Expected: All the news articles from the list are added successfully.
      */
     @Test
     public void testFillingAndGetting() {
@@ -142,6 +142,14 @@ public class NewsManagerTest {
         List<News> allNews = newsManager.getAllNews();
         assertEquals("title6", allNews.get(0).getTitle());
         assertEquals("title4", allNews.get(1).getTitle());
+    }
+
+    /**
+     * Test that an empty table returns no news
+     */
+    @Test
+    public void testGetAllOnEmptyTable() {
+        assertEquals(0, newsManager.getAllNews().size());
     }
 
     //Testing NewsManagerInterface: deleteAll
@@ -241,7 +249,7 @@ public class NewsManagerTest {
      * Testing that attempting to obtain a news article with a primary key that doesn't exist returns null
      */
     @Test
-    public void testGetIllegalPrimaryKey() {
+    public void testGetUnfoundPrimaryKey() {
         assertNull(newsManager.getByPrimaryKey(-1));
     }
 
@@ -292,7 +300,22 @@ public class NewsManagerTest {
             // Check that nothing has been removed
         }
     }
-
+    /**
+     * Test deleting a primary key which is null.
+     * Expected: The database remains unchanged and an error is thrown.
+     */
+    @Test
+    public void testWithDeleteNullPrimaryKey() {
+        int previousSize = newsManager.getAllNews().size();
+        try {
+            newsManager.delete(null);
+            fail();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            assertEquals(newsManager.getAllNews().size(), previousSize);
+            // Check that nothing has been removed
+        }
+    }
     /**
      * Test the correct article was infact deleted when using delete
      */
