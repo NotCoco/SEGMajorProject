@@ -71,6 +71,7 @@ export default {
   overflow: auto;
 
   #bg {
+    z-index: -1;
     position: absolute;
     width: 100%;
     height: 100%;
