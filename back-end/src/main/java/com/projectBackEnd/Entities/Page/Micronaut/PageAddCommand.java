@@ -1,8 +1,7 @@
 package main.java.com.projectBackEnd.Entities.Page.Micronaut;
 
 import javax.validation.constraints.NotNull;
-import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManager;
-import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManagerInterface;
+
 //import io.micronaut.core.annotation.Introspected;
 
 /**
@@ -14,11 +13,11 @@ import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManagerInterface
 //TODO Reinsert tags as I couldn't get them to compile on IntelliJ Jars.
 //@Introspected
 public class PageAddCommand {
-
+    @NotNull
     private String site;
     @NotNull
     private String slug;
-    @NotNull
+
     private String index;
     private String title;
     private String content;
@@ -32,7 +31,7 @@ public class PageAddCommand {
         setIndex(index);
         this.title = title;
         this.content = content;
-        setSite(site);
+        this.site = site;
     }
 
     public String getSlug() {
@@ -75,8 +74,7 @@ public class PageAddCommand {
     }
 
     public void setSite(String site) {
-        SiteManagerInterface siteManager = SiteManager.getSiteManager();
-        if (siteManager.getSiteBySlug(site) != null) this.site = site;
+        this.site = site;
     }
 
 }
