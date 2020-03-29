@@ -123,3 +123,7 @@ a .card {
 .fade-enter {
     transform: translateY(-12px);
 }
+
+.content blockquote {
+    color: $dark;
+}
