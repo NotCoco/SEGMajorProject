@@ -13,10 +13,10 @@
 
 <script>
 export default {
-  data() {
-    return {
-      username: "Andy"
-    };
+  props: {
+    username: {
+      type: String
+    }
   }
 };
 </script>

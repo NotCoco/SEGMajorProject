@@ -36,7 +36,7 @@
 
     <div class="expanded-scrollable-area">
       <transition name="fade" mode="out-in" duration="50">
-        <router-view></router-view>
+        <router-view v-bind:username="username"></router-view>
       </transition>
     </div>
   </div>
