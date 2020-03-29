@@ -19,6 +19,7 @@ import NewsViewer from '../views/NewsViewer.vue'
 import AdminSiteSettings from '../views/AdminSiteSettings.vue'
 import SearchResults from '../views/SearchResults.vue'
 import Login from '../views/Login.vue'
+import DrugChartCreator from '../views/DrugChartCreator.vue'
 
 import UserService from "@/services/user-service";
 
@@ -42,6 +43,10 @@ const routes = [
   {
     path: '/news/:newsSlug',
     component: NewsViewer
+  },
+  {
+    path: '/drug-chart',
+    component: DrugChartCreator
   },
   {
     path: '/admin',

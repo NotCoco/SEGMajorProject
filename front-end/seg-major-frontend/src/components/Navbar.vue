@@ -32,6 +32,7 @@
         <div class="navbar-start" style="margin-left: 35px">
           <router-link to="/" class="navbar-item">Home</router-link>
           <router-link to="/news" class="navbar-item">News</router-link>
+          <router-link to="/drug-chart" class="navbar-item">Drug Chart</router-link>
         </div>
 
         <div class="navbar-end">
