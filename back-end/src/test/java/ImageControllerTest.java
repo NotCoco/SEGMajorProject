@@ -7,6 +7,8 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
+import io.micronaut.http.client.exceptions.HttpClientResponseException;
+
 import main.java.com.projectBackEnd.Image.*;
 
 import javax.inject.Inject;
@@ -68,15 +70,27 @@ public class ImageControllerTest {
 
 	@Test
 	public void testAddLegalImage(){
-		HttpResponse response = addImage(image);
+		HttpResponse response = addImage(image,token);
 		assertEquals(HttpStatus.CREATED, response.getStatus());
 		String imageName = getEUrl(response);
 		assertTrue(imageManager.getImageUrls().contains(imageManager.getDir()+imageName));
 	}
+	@Test
+	public void testAddUnauthorized(){
+        	HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+			addImage(image,"");
+        	});
+		assertEquals(HttpStatus.UNAUTHORIZED, thrown.getStatus());
 
+
+        	HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
+			addImage(image,"Ve2R7y5Co3215r8re7CtTok5En13");
+        	});
+		assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
+	}
 	@Test
 	public void testDeleteImage(){
-		HttpResponse response = addImage(image);
+		HttpResponse response = addImage(image,token);
 		assertEquals(HttpStatus.CREATED, response.getStatus());
 		String imageName = getEUrl(response);
 		HttpRequest request = HttpRequest.DELETE("/images/"+imageName).header("X-API-Key",token);
@@ -84,6 +98,24 @@ public class ImageControllerTest {
 		assertEquals(HttpStatus.NO_CONTENT, response2.getStatus());
 	}
 
+	@Test
+	public void testDeleteUnautorized(){
+		HttpResponse response = addImage(image,token);
+		assertEquals(HttpStatus.CREATED, response.getStatus());
+		String imageName = getEUrl(response);
+
+        	HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+			client.toBlocking().exchange(HttpRequest.DELETE("/images/"+imageName).header("X-API-Key",""));
+        	});
+		assertEquals(HttpStatus.UNAUTHORIZED, thrown.getStatus());
+
+
+        	HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
+			client.toBlocking().exchange(HttpRequest.DELETE("/images/"+imageName).header("X-API-Key","Ve2R7y5Co3215r8re7CtTok5En13"));
+        	});
+		assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
+	
+	}
 	private String getEUrl(HttpResponse response) {
 		String val = response.header(HttpHeaders.LOCATION);
 		if (val != null) {
@@ -96,7 +128,7 @@ public class ImageControllerTest {
 		return null;
 	}
 
-	protected HttpResponse addImage(String imageBytes){
+	protected HttpResponse addImage(String imageBytes,String token){
 		HttpRequest request = HttpRequest.POST("/images", imageBytes).header("X-API-Key",token);
 		HttpResponse response = client.toBlocking().exchange(request);
 		return response;
