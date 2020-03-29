@@ -35,7 +35,7 @@ public class SiteManagerTest {
     }
 
     /**
-     * After the test, the factory is shut down and we can see if any connections were leaked with the Database.
+     * After the tests, the factory is shut down and we can see if any connections were leaked with the Database.
      */
     @AfterAll
     public static void assertNoLeaks() {
@@ -233,6 +233,22 @@ public class SiteManagerTest {
         assertNull(siteManager.getByPrimaryKey(-1));
     }
 
+    /**
+     * Testing an error is thrown if a primary key searched for is null
+     */
+    @Test
+    public void testGetNullPrimaryKey() {
+        fillDatabase(getListOfSites());
+        int previousSize = siteManager.getAllSites().size();
+        try {
+            siteManager.getByPrimaryKey(null);
+            fail();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            assertEquals(siteManager.getAllSites().size(), previousSize);
+        }
+    }
+
     //Testing SiteManagerInterface: delete
 
     /**
@@ -264,6 +280,7 @@ public class SiteManagerTest {
             // Check that nothing has been removed
         }
     }
+
 
     /**
      * Test the correct article was infact deleted when using delete
@@ -362,7 +379,26 @@ public class SiteManagerTest {
         assertNotNull(found);
         assertEquals("f", found.getName());
     }
+    /**
+     * Test searching for a slug that doesn't exist in the table.
+     */
+    @Test
+    public void testGetNewsByUnfoundSlug() {
+        fillDatabase(getListOfSites());
+        Site found = siteManager.getSiteBySlug("not a slug in the database sorry");
+        assertNull(found);
+    }
 
+    /**
+     * Testing an error is thrown if a slug searched for is null
+     */
+    @Test
+    public void testGetNewsByNullSlug() {
+        fillDatabase(getListOfSites());
+        Site found = siteManager.getSiteBySlug(null);
+        assertNull(found);
+
+    }
     /**
      * @return array list of example site objects for database filling
      */

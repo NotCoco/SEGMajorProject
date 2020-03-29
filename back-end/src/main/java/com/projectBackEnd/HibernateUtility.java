@@ -6,7 +6,7 @@ import org.hibernate.cfg.Configuration;
 import java.util.HashSet;
 
 /**
- * A Hibernate Utility to monitor session factories and ensure no connectinos leak. This class
+ * A Hibernate Utility to monitor session factories have correct table classes and ensure no connectinos leak. This class
  * is the connection point to the configuration xml for a database.
  * http://www.jcombat.com/hibernate/introduction-to-hibernateutil-and-the-sessionfactory-interface
  */

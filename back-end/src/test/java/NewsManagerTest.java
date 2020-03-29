@@ -38,7 +38,7 @@ public class NewsManagerTest {
     }
 
     /**
-     * After the test, the factory is shut down and we can see if any connections were leaked with the Database.
+     * After the tests, the factory is shut down and we can see if any connections were leaked with the Database.
      */
     @AfterAll
     public static void assertNoLeaks() {
@@ -245,6 +245,22 @@ public class NewsManagerTest {
         assertNull(newsManager.getByPrimaryKey(-1));
     }
 
+    /**
+     * Testing an error is thrown if a primary key searched for is null
+     */
+    @Test
+    public void testGetNullPrimaryKey() {
+        fillDatabase(getListOfNews());
+        int previousSize = newsManager.getAllNews().size();
+        try {
+            newsManager.getByPrimaryKey(null);
+            fail();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            assertEquals(newsManager.getAllNews().size(), previousSize);
+        }
+    }
+
     //Testing NewsManagerInterface: delete
 
     /**
@@ -379,6 +395,25 @@ public class NewsManagerTest {
         News found = newsManager.getNewsBySlug("unique-slug");
         assertNotNull(found);
         assertEquals("getting deleted", found.getDescription());
+    }
+
+    /**
+     * Test searching for a slug that doesn't exist in the table.
+     */
+    @Test
+    public void testGetNewsByUnfoundSlug() {
+        fillDatabase(getListOfNews());
+        News found = newsManager.getNewsBySlug("not a slug in the database sorry");
+        assertNull(found);
+    }
+
+    /**
+     * Testing an error is thrown if a slug searched for is null
+     */
+    @Test
+    public void testGetNewsByNullSlug() {
+        fillDatabase(getListOfNews());
+        assertNull(newsManager.getNewsBySlug(null));
     }
 
     /**

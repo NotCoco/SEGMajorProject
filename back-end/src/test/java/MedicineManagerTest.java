@@ -37,7 +37,7 @@ public class MedicineManagerTest {
     }
 
     /**
-     * After the test, the factory is shut down and the LeakUtil can tell us whether any connections leaked.
+     * After the tests, the factory is shut down and the LeakUtil can tell us whether any connections leaked.
      */
     @AfterAll
     public static void assertNoLeaks() {
@@ -288,6 +288,22 @@ public class MedicineManagerTest {
     @Test
     public void testGetIllegalPrimaryKey() {
         assertNull(medicineManager.getByPrimaryKey(-1));
+    }
+
+    /**
+     * Testing an error is thrown if a primary key searched for is null
+     */
+    @Test
+    public void testGetNullPrimaryKey() {
+        fillDatabase(getListOfMedicines());
+        int previousSize = medicineManager.getAllMedicines().size();
+        try {
+            medicineManager.getByPrimaryKey(null);
+            fail();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            assertEquals(medicineManager.getAllMedicines().size(), previousSize);
+        }
     }
 
     //Testing MedicineManagerInterface: delete

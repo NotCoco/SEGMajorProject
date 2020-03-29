@@ -20,7 +20,9 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 
-
+/**
+ * Test class to extensively unit test interactions between software and the Pages table
+ */
 public class PageManagerTest {
 
     private static ConnectionLeakUtil connectionLeakUtil = null;
@@ -29,18 +31,33 @@ public class PageManagerTest {
     private static Site testSiteA = null;
     private static Site testSiteB = null;
 
+    /**
+     * Prior to running, databaste information location is set and siteManagers and pageManagers are intialised
+     *
+     */
     @BeforeAll
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         pageManager = PageManager.getPageManager();
+        assignSites();
+        connectionLeakUtil = new ConnectionLeakUtil();
+    }
+
+    /**
+     * Pages require an existing site foreign key to be created so we'll create some sites for use.
+     */
+    private static void assignSites() {
         siteManager = SiteManager.getSiteManager();
         siteManager.addSite(new Site("Disease1", "name"));
         siteManager.addSite(new Site("Disease2", "name2"));
         testSiteA = siteManager.getSiteBySlug("Disease1");
         testSiteB = siteManager.getSiteBySlug("Disease2");
-        connectionLeakUtil = new ConnectionLeakUtil();
     }
 
+    /**
+     * After the tests, the factory is shut down and we can see if any connections were leaked with the Database.
+     * The created sites are cleansed too.
+     */
     @AfterAll
     public static void assertNoLeaks() {
         siteManager.deleteAll();
@@ -48,10 +65,27 @@ public class PageManagerTest {
         connectionLeakUtil.assertNoLeaks();
     }
 
+    /**
+     * Prior to each test, we delete all the existing pages.
+     */
     @BeforeEach
     public void setUp() {
         pageManager.deleteAll();
     }
+
+//======================================================================================================================
+    //Testing Page Creation constructors
+    @Test
+    public void testPageCopy() {
+        Page page1 = new Page(testSiteA.getSlug(), "sameSlug", 1, "TitleA", "ContentA");
+        Page page2 = new Page(testSiteA.getSlug(), "Slug", 5, "newTitle", "newContent");
+        page1.copy(page2);
+        assertEquals(page2.getSlug(), page1.getSlug());
+        assertEquals(page2.getTitle(), page1.getTitle());
+        assertEquals(page2.getIndex(), page1.getIndex());
+        assertEquals(page2.getContent(), page1.getContent());
+    }
+
 
     @Test
     public void testAddRegularPagesKey() {
@@ -64,16 +98,7 @@ public class PageManagerTest {
         assertEquals(2, pageManager.getAllPages().size());
     }
 
-    @Test
-    public void testPageCopy() {
-        Page page1 = new Page(testSiteA.getSlug(), "sameSlug", 1, "TitleA", "ContentA");
-        Page page2 = new Page(testSiteA.getSlug(), "Slug", 5, "newTitle", "newContent");
-        page1.copy(page2);
-        assertEquals(page2.getSlug(), page1.getSlug());
-        assertEquals(page2.getTitle(), page1.getTitle());
-        assertEquals(page2.getIndex(), page1.getIndex());
-        assertEquals(page2.getContent(), page1.getContent());
-    }
+
 
     @Test
     public void testViolateDuplicateCompositeKey() {
@@ -150,7 +175,7 @@ public class PageManagerTest {
     }
 
     @Test
-    public void testCreateAndSavePage() {
+    public void testAddPage() {
         pageManager.addPage(new Page(testSiteA.getSlug(),"biliary_atresia", 0, "Biliary Atresia", ""
                 + "Lorem ipsum dolor sit amet, consectetur adipiscing elit,"
                 + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." +
@@ -219,15 +244,7 @@ public class PageManagerTest {
         assertNull(pageManager.getByPrimaryKey(-100));
     }
 
-    @Test
-    public void testNullPrimaryKey() throws IllegalStateException {
 
-        assertThrows(IllegalArgumentException.class, () -> {
-            fillDatabase();
-            assertNull(pageManager.getByPrimaryKey(null));
-        });
-
-    }
 
     /**
      * List to fill in database with example Page objects
