@@ -35,7 +35,9 @@
     </nav>
 
     <div class="expanded-scrollable-area">
-      <router-view></router-view>
+      <transition name="fade" mode="out-in" duration="50">
+        <router-view></router-view>
+      </transition>
     </div>
   </div>
 </template>
