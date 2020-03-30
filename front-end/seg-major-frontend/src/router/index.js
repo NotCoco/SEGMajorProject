@@ -21,6 +21,7 @@ import SearchResults from '../views/SearchResults.vue'
 import Login from '../views/Login.vue'
 import DrugChartCreator from '../views/DrugChartCreator.vue'
 import AllPages from '../views/AllPages.vue'
+import PageEmptyState from '../views/PageEmptyState.vue'
 
 import UserService from "@/services/user-service";
 
@@ -115,6 +116,10 @@ const routes = [
       {
         path: 'all-pages',
         component: AllPages
+      },
+      {
+        path: '',
+        component: PageEmptyState
       },
       {
         path: ':pageSlug',
