@@ -3,7 +3,7 @@ package main.java.com.projectBackEnd.Entities.Page.Hibernate;
 import main.java.com.projectBackEnd.Entities.Site.Hibernate.Site;
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
-
+import javax.persistence.PersistenceException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -88,7 +88,7 @@ public class PageManager extends EntityManager implements PageManagerInterface {
      */
     public Page update(Page updatedVersion) {
         Page pageMatch = getPageBySiteAndSlug(updatedVersion.getSite().getSlug(), updatedVersion.getSlug());
-        if (pageMatch != null && pageMatch.getPrimaryKey() != updatedVersion.getPrimaryKey()) return new Page();
+        if (pageMatch != null && !pageMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey())) throw new PersistenceException();
         super.update(updatedVersion); return updatedVersion;
     }
 

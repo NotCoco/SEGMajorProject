@@ -4,7 +4,7 @@ import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import javax.persistence.PersistenceException;
 public class SiteManager extends EntityManager implements SiteManagerInterface {
 
     private static SiteManagerInterface siteManager;
@@ -43,7 +43,7 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
     public Site update(Site updatedVersion) {
 
         Site foundSiteMatch = getSiteBySlug(updatedVersion.getSlug());
-        if (foundSiteMatch != null && foundSiteMatch.getPrimaryKey() != updatedVersion.getPrimaryKey()) return new Site();
+        if (foundSiteMatch != null && !foundSiteMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey())) throw new PersistenceException();
         return (Site) super.update(updatedVersion);
     }
 

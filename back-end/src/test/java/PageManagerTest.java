@@ -311,7 +311,12 @@ public class PageManagerTest {
      */
     @Test
     public void testAddPageWithInvalidSite() {
-        pageManager.addPage(new Page("", "",2, "", ""));
+        try {
+            pageManager.addPage(new Page("", "",2, "", ""));
+            fail();
+        } catch (NullPointerException n) {
+            n.printStackTrace();
+        }
         assertEquals(0, pageManager.getAllPages().size());
     }
 
@@ -512,8 +517,11 @@ public class PageManagerTest {
     public void testUpdateNullPage() {
         try {
             pageManager.update(new Page());
+            fail();
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
+        } catch (NullPointerException n) {
+            n.printStackTrace();
         }
     }
 
@@ -553,10 +561,23 @@ public class PageManagerTest {
      */
     @Test
     public void testUpdateToViolateDuplicateSlugs() {
-        Page page1 = new Page(testSiteA.getSlug(), "sameSlug", 1, "TitleA", "ContentA");
+        Page page1 = pageManager.addPage(new Page(testSiteA.getSlug(), "sameSlug", 1, "TitleA", "ContentA"));
         Page page2 = pageManager.addPage(new Page(testSiteB.getSlug(), "sameSlug", 1, "TitleB", "ContentB"));
         Page replacement = new Page(page2.getPrimaryKey(), testSiteA.getSlug(), "sameSlug", 1, "TitleB", "ContentB");
-        pageManager.update(page2);
+        try {
+            System.out.println();
+            pageManager.update(replacement);
+            fail();
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+        }
+        int count = 0;
+        List<Page> allFound = pageManager.getAllPages();
+        for (int i =0; i <allFound.size(); ++i) {
+            if (allFound.get(i).getSite().getSlug().equals(testSiteA.getSlug()) && allFound.get(i).getSlug().equals("sameSlug")) ++count;
+        }
+        assertEquals(1, count);
+
     }
 
     /**
