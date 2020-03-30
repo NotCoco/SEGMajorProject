@@ -47,5 +47,8 @@ export default {
                       page: page,
                       weight: searchPage(page, regex)
                      }))
+                .filter(result => result.weight > 0)
+                .sort((a, b) => b.weight - a.weight)
+                .map(result => result.page);
   }
 }
