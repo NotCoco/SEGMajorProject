@@ -36,7 +36,11 @@
         </div>
 
         <div class="navbar-end">
-          <div class="searchbox-container" v-if="showSearchBar">
+          <div class="searchbox-container"
+               v-if="showSearchBar"
+               @focusin="searchFocusGained"
+               @focusout="searchFocusLost"
+               ref="search">
             <div class="control has-icons-left" style="height: 100%">
               <span class="icon is-small is-left" style="height: 100%;">
                 <i class="search-icon material-icons">search</i>
@@ -44,8 +48,8 @@
               <input class="searchbox input" type="text" v-model="searchQuery" placeholder="Search" />
 
               <transition name="fade" mode="out-in">
-                <div v-if="searchQuery.length > 2" class="card search-suggestions">
-                  <router-link v-for="page in searchResults" v-bind:key="page.slug" :to="`/${page.site.slug}/${page.slug}`">
+                <div v-if="displaySearchResults" class="card search-suggestions">
+                  <router-link v-for="page in searchResults" v-bind:key="page.slug" :to="`/${page.site.slug}/${page.slug}`" @click.native="displaySearchResults = false">
                     <div class="card suggestion-item">{{ page.title }}</div>
                   </router-link>
                   <div v-if="searchResults.length == 0" class="card suggestion-item">
@@ -99,7 +103,15 @@ export default {
     getHiddenState() {
       const savedState = localStorage.getItem('hide-urgent-news');
       return savedState && JSON.parse(savedState) === this.urgentNews.slug;
-    }
+    },
+    searchFocusGained() {
+      if (this.searchResults.length > 0 || this.searchQuery.length >= 3) this.displaySearchResults = true;
+    },
+    searchFocusLost(e) {
+      // Check if focus has moved somewhere else inside the search area first
+      if (this.$refs.search.contains(e.relatedTarget)) return;
+      this.displaySearchResults = false
+    },
   },
   data () {
     return {
@@ -107,6 +119,7 @@ export default {
       localHiddenState: false,
       searchQuery: '',
       searchResults: [],
+      displaySearchResults: false,
     }
   },
   async created() {
@@ -122,6 +135,7 @@ export default {
     },
     searchQuery: function(newQuery, oldQuery) {
       if (newQuery.length < 3) {
+        this.displaySearchResults = false;
         this.searchResults = [];
       } else {
         // Reuse existing search results if new query only appends to existing query
@@ -129,6 +143,7 @@ export default {
                             ? this.searchResults
                             : this.pages;
         this.searchResults = SearchService.search(searchSpace, newQuery);
+        this.displaySearchResults = true;
       }
     },
   }
