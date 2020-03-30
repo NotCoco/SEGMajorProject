@@ -35,33 +35,8 @@
           <router-link to="/drug-chart" class="navbar-item">Drug Chart</router-link>
         </div>
 
-        <div class="navbar-end">
-          <div class="searchbox-container"
-               v-if="showSearchBar"
-               @focusin="searchFocusGained"
-               @focusout="searchFocusLost"
-               ref="search">
-            <div class="control has-icons-left" style="height: 100%">
-              <span class="icon is-small is-left" style="height: 100%;">
-                <i class="search-icon material-icons">search</i>
-              </span>
-              <input class="searchbox input" type="text" v-model="searchQuery" @keyup.enter="searchBoxSubmit" placeholder="Search" />
-
-              <transition name="fade" mode="out-in">
-                <div v-if="displaySearchResults" class="card search-suggestions">
-                  <router-link v-for="page in searchResults"
-                               :key="page.slug"
-                               :to="`/${page.site.slug}/${page.slug}`"
-                               @click.native="displaySearchResults = false">
-                    <div class="card suggestion-item">{{ page.title }}</div>
-                  </router-link>
-                  <div v-if="searchResults.length == 0" class="card suggestion-item">
-                    <p><i>No pages matched your search</i></p>
-                  </div>
-                </div>
-              </transition>
-            </div>
-          </div>
+        <div class="navbar-end search">
+          <search-bar v-if="showSearchBar" :pages="pages" />
         </div>
       </div>
     </nav>
@@ -78,8 +53,7 @@
 
 <script>
 import NewsService from '@/services/news-service';
-import SearchService from '@/services/search-service';
-import ArraySlice from '@/array-slice.js';
+import SearchBar from '@/components/SearchBar.vue';
 
 export default {
   name: "Navbar",
@@ -95,6 +69,9 @@ export default {
     pages: {
       type: Array
     }
+  },
+  components: {
+    SearchBar
   },
   computed: {
     displayUrgentNews() {
@@ -113,37 +90,11 @@ export default {
       const savedState = localStorage.getItem('hide-urgent-news');
       return savedState && JSON.parse(savedState) === this.urgentNews.slug;
     },
-    searchFocusGained() {
-      if (this.searchResults.length > 0 || this.searchQuery.length >= 3) this.displaySearchResults = true;
-    },
-    searchFocusLost(e) {
-      // Check if focus has moved somewhere else inside the search area first
-      if (this.$refs.search.contains(e.relatedTarget)) return;
-      this.displaySearchResults = false
-    },
-    searchBoxSubmit() {
-      if (!this.displaySearchResults && this.searchQuery.length > 0) {
-        this.doSearch(this.searchQuery);
-      }
-    },
-    doSearch(query, oldQuery) {
-      // Reuse existing search results if new query only appends to existing query
-      const searchSpace = this.searchResults.length > 0 && oldQuery && query.startsWith(oldQuery)
-                          ? this.fullSearchResults
-                          : this.pages;
-      this.fullSearchResults = SearchService.search(searchSpace, query);
-      this.searchResults = new ArraySlice(this.fullSearchResults, 0, 6);
-      this.displaySearchResults = true;
-    },
   },
   data () {
     return {
       urgentNews: undefined,
       localHiddenState: false,
-      searchQuery: '',
-      fullSearchResults: [],
-      searchResults: [],
-      displaySearchResults: false,
     }
   },
   async created() {
@@ -156,14 +107,6 @@ export default {
   watch: {
     pages: function() {
       console.log(this.pages)
-    },
-    searchQuery: function(newQuery, oldQuery) {
-      if (newQuery.length < 3) {
-        this.displaySearchResults = false;
-        this.fullSearchResults = this.searchResults = [];
-      } else {
-        this.doSearch(newQuery, oldQuery);
-      }
     },
   }
 };
@@ -231,38 +174,8 @@ nav.navbar {
       margin-bottom: 0px;
     }
   }
-}
-
-.input.searchbox {
-  height: 100%;
-  width: 400px;
-  border: 0;
-  box-shadow: none;
-  background-color: #fbfbfb;
-
-  &:hover {
-    background-color: #f9f9f9;
-  }
-
-  &:focus {
-    background-color: #f5f5f7;
-  }
-
-  &::placeholder {
-    opacity: 1;
-    color: #888;
-  }
-}
-
-.search-icon {
-  color: #aaa;
-}
-
-.search-suggestions {
-  background: white;
-
-  .suggestion-item {
-    padding: 15px 20px;
+  .search {
+    width: 400px;
   }
 }
 </style>
