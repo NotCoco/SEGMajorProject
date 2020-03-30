@@ -2,7 +2,7 @@
   <div>
     <nav class="navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-        <router-link to="/home" class="navbar-item">
+        <router-link to="/" class="navbar-item">
           <svg
             height="35px"
             version="1.1"
