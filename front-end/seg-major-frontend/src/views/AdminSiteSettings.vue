@@ -15,8 +15,10 @@
                   v-model="site.name"
                   type="text"
                   placeholder="Enter site name..."
+                  v-on:change="$v.$touch()"
                 />
               </div>
+              <p class="help is-danger" v-if="!$v.site.name.required">This field is required</p>
             </div>
 
             <label class="label">URL Slug</label>
@@ -27,8 +29,10 @@
                   type="text"
                   v-model="site.slug"
                   placeholder="Enter URL Slug here..."
+                  v-on:keyup="$v.$touch()"
                 />
               </p>
+              <p class="help is-danger" v-if="!$v.site.slug.required">This field is required</p>
             </div>
 
             <div class="level is-mobile">
@@ -44,7 +48,11 @@
                 </div>
               </div>
               <div class="level-right">
-                <button class="button is-success is-medium" @click="save()">Save</button>
+                <button
+                  class="button is-success is-medium"
+                  @click="save()"
+                  v-bind:disabled="$v.$anyError || !site.name || !site.slug"
+                >Save</button>
               </div>
             </div>
           </div>
@@ -57,6 +65,7 @@
 <script>
 import SitesService from "@/services/sites-service";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { required } from "vuelidate/lib/validators";
 
 export default {
   components: {
@@ -68,20 +77,35 @@ export default {
       loading: true
     };
   },
+  validations: {
+    site: {
+      name: {
+        required
+      },
+      slug: {
+        required
+      }
+    }
+  },
   methods: {
     async save() {
-      this.loading = true;
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        console.log("Form invalid. Not attempting to save site settings.")
+      } else {
+        this.loading = true;
 
-      await SitesService.updateSite(this.site);
+        await SitesService.updateSite(this.site);
 
-      const currentSlug = this.$route.params.siteSlug;
-      if (currentSlug != this.site.slug) {
-        this.$router.push(`/admin/sites/${this.site.slug}/settings`);
+        const currentSlug = this.$route.params.siteSlug;
+        if (currentSlug != this.site.slug) {
+          this.$router.push(`/admin/sites/${this.site.slug}/settings`);
+        }
+
+        this.$emit("siteUpdate", this.site);
+
+        this.loading = false;
       }
-
-      this.$emit("siteUpdate", this.site);
-
-      this.loading = false;
     },
     async deleteSite() {
       this.loading = true;

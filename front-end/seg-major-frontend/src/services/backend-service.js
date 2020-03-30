@@ -25,22 +25,28 @@ api.interceptors.response.use(function (response) {
       // if apiKey had a value, session has expired
       router.push('/login?exp=true')
     } else {
-      router.push('/login')
+      if (window.location.pathname != '/login') {
+        router.push('/login')
+      }
     }
 
     localStorage.removeItem('api-key')
   }
-  
+
   return Promise.reject(error);
 });
 
 
 export default {
-  async login(email, password) {
+  login(email, password) {
     return api.post('/user/login', { email, password })
   },
 
-  async getUserName() {
+  logout() {
+    return api.get('/user/logout')
+  },
+
+  getUserName() {
     return api.get('/user/name')
   },
 
