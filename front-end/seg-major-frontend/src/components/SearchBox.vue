@@ -15,9 +15,8 @@
 </template>
 <script></script>
 <script type="text/javascript">
-import DrugList from "./DrugList.vue"
+import medicineService from '../services/medicine-service.js'
 export default {
-    el:".custom-content-container",
 	name:"SearchBox",
     data :function(){ 
         return {
@@ -26,17 +25,24 @@ export default {
         }
     },
 	components: {
-		DrugList
+		
+	},
+	async mounted(){
+		this.Medicines = await this.getDrug()
 	},
     computed: {
 		filteredBlogs: function(){
-		this.Medicines = DrugList.data().Medicines;
+		//this.Medicines = DrugList.data().Medicines;
 		return this.Medicines.filter(
 		(Medicines) => {return Medicines.name.match(this.search);}
 		);
 		}
     },
 	methods:{
+		getDrug: function(){
+			//get medicine files from backend
+			return medicineService.getAllMedicines();
+		},
 		getcube:function(id){
 			this.search = id
 		},
