@@ -45,7 +45,7 @@
           </div>
         </div>
         <div class="notification is-danger" v-if="loginError">
-          <strong>Error:</strong>Please re-enter your credentials and try again.
+          <strong>Error:</strong> Please re-enter your credentials and try again.
         </div>
         <button
           class="button is-primary is-medium"
