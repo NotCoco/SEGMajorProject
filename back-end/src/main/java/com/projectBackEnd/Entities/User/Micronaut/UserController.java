@@ -16,7 +16,7 @@ import main.java.com.projectBackEnd.Entities.ResetLinks.ResetLinkManager;
 import main.java.com.projectBackEnd.Entities.ResetLinks.ResetLinkManagerInterface;
 import main.java.com.projectBackEnd.Entities.ResetLinks.EmailNotExistException;
 
-
+import java.util.List;
 import java.net.URI;
 
 /**
@@ -81,8 +81,17 @@ public class UserController {
 
 	@Get("/logout")
 	public HttpResponse logout(@Header("X-API-Key") String session){
+		if(!sessionManager.verifySession(session))
+			return HttpResponse.unauthorized();
 		sessionManager.terminateSession(session);
 		return HttpResponse.ok();
+	}
+
+	@Get("/")
+	public HttpResponse<List<User>> index(@Header("X-API-Key") String session){
+		if(!sessionManager.verifySession(session))
+			return HttpResponse.unauthorized();
+		return HttpResponse.ok(userManager.getUsers());
 	}
 
 

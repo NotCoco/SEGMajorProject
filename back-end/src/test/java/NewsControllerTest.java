@@ -99,6 +99,19 @@ public class NewsControllerTest {
             client.toBlocking().exchange(HttpRequest.GET("/news/"+"TestSlug"));
         });
     }
+
+	@Test
+	public void testDeleteIncorrect(){
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+			client.toBlocking().exchange(HttpRequest.DELETE("/news/"+"TestSlug").header("X-API-Key",token));
+        });
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
+        HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
+			client.toBlocking().exchange(HttpRequest.DELETE("/news/").header("X-API-Key",token));
+        });
+		assertEquals(HttpStatus.METHOD_NOT_ALLOWED, thrown1.getStatus());
+
+	}
 	@Test
 	public void testDeleteUnauthorized(){
         HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug",token);
@@ -137,6 +150,42 @@ public class NewsControllerTest {
         assertNotNull(testNews);
         assertEquals("Corona virus pandemics", testNews.getTitle());
     }
+	@Test
+	public void testAddIncorrect(){
+		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
+			addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics",true, "COVID-19 originated from Wuhan, China", "",token);
+        });
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown1.getStatus());
+ 		HttpClientResponseException thrown2 = assertThrows(HttpClientResponseException.class, () -> {
+			addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics",true, "", "slug",token);
+        });
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown2.getStatus());
+ 		HttpClientResponseException thrown3 = assertThrows(HttpClientResponseException.class, () -> {
+			addNews(new Date(34189213L) , true, "Health Alert", "",true, "COVID-19 originated from Wuhan, China", "slug",token);
+        });
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown3.getStatus());
+		HttpClientResponseException thrown4 = assertThrows(HttpClientResponseException.class, () -> {
+        	addNews(new Date(34189213L) , true, "", "Corona virus pandemics",true, "COVID-19 originated from Wuhan, China", "slug",token);
+        });
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown4.getStatus());
+		HttpClientResponseException thrown5 = assertThrows(HttpClientResponseException.class, () -> {
+			addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics",true, "COVID-19 originated from Wuhan, China", null,token);
+        });
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown5.getStatus());
+ 		HttpClientResponseException thrown6 = assertThrows(HttpClientResponseException.class, () -> {
+			addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics",true, null, "slug",token);
+        });
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown6.getStatus());
+ 		HttpClientResponseException thrown7 = assertThrows(HttpClientResponseException.class, () -> {
+			addNews(new Date(34189213L) , true, "Health Alert", null,true, "COVID-19 originated from Wuhan, China", "slug",token);
+        });
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown7.getStatus());
+		HttpClientResponseException thrown8 = assertThrows(HttpClientResponseException.class, () -> {
+        	addNews(new Date(34189213L) , true, null, "Corona virus pandemics",true, "COVID-19 originated from Wuhan, China", "slug",token);
+        });
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown8.getStatus());
+	}
+
     @Test
     public void testAddAndUpdateNews(){
         HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug",token);
@@ -172,6 +221,48 @@ public class NewsControllerTest {
         response = putNews(id, new Date(324189213L), true, "NewDescription", "NewTitle",true, "NewContent", "NewSlug",token);
         assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
     }
+
+	@Test
+	public void testUpdateIncorrect(){
+        HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug",token);
+        assertEquals("slug", getEUrl(response));
+        String slug = getEUrl(response);
+        News news = newsManager.getNewsBySlug(slug);
+        int id = news.getPrimaryKey();
+
+		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
+			putNews(id, new Date(324189213L), true, "NewDescription", "NewTitle",true, "NewContent", "",token);
+        });
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown1.getStatus());
+ 		HttpClientResponseException thrown2 = assertThrows(HttpClientResponseException.class, () -> {
+			addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics",true, "", "slug",token);
+        });
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown2.getStatus());
+ 		HttpClientResponseException thrown3 = assertThrows(HttpClientResponseException.class, () -> {
+			putNews(id, new Date(324189213L), true, "NewDescription", "",true, "NewContent", "NewSlug",token);
+        });
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown3.getStatus());
+		HttpClientResponseException thrown4 = assertThrows(HttpClientResponseException.class, () -> {
+			putNews(id, new Date(324189213L), true, "", "NewTitle",true, "NewContent", "NewSlug",token);
+        });
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown4.getStatus());
+		HttpClientResponseException thrown5 = assertThrows(HttpClientResponseException.class, () -> {
+			putNews(id, new Date(324189213L), true, "NewDescription", "NewTitle",true, "NewContent", null,token);
+        });
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown5.getStatus());
+ 		HttpClientResponseException thrown6 = assertThrows(HttpClientResponseException.class, () -> {
+			putNews(id, new Date(324189213L), true, "NewDescription", "NewTitle",true, null, "NewSlug",token);
+        });
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown6.getStatus());
+ 		HttpClientResponseException thrown7 = assertThrows(HttpClientResponseException.class, () -> {
+			putNews(id, new Date(324189213L), true, "NewDescription", null,true, "NewContent", "NewSlug",token);
+        });
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown7.getStatus());
+		HttpClientResponseException thrown8 = assertThrows(HttpClientResponseException.class, () -> {
+			putNews(id, new Date(324189213L), true, null, "NewTitle",true, "NewContent", "NewSlug",token);
+        });
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown8.getStatus());
+	}
 
 	@Test
 	public void testUpdateUnauthorized(){

@@ -139,6 +139,25 @@ public class MedicineControllerTest{
         assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
 	}
 
+	@Test
+	public void testAddMedicineNull(){
+        HttpResponse response = addMedicine(null, null);
+        int id =  getEId(response).intValue();
+        Medicine testMed = getMedicine(id);
+        assertEquals("Undefined", testMed.getType());
+        assertEquals("Unnamed", testMed.getName());
+
+        HttpResponse response1 = addMedicine("Med1", null);
+        int id1 =  getEId(response1).intValue();
+        Medicine testMed1 = getMedicine(id1);
+        assertEquals("Undefined", testMed1.getType());
+
+        HttpResponse response2 = addMedicine(null, "type");
+        int id2 =  getEId(response2).intValue();
+        Medicine testMed2 = getMedicine(id2);
+        assertEquals("Unnamed", testMed2.getName());
+	}
+
 	
 
 
@@ -164,10 +183,21 @@ public class MedicineControllerTest{
         });
         assertEquals(HttpStatus.UNAUTHORIZED, thrown.getStatus());
 
-		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
+	HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
 			client.toBlocking().exchange(HttpRequest.DELETE("/medicines/0").header("X-API-Key","SOmeVeryCo2rr45ECt231TokEN1"));
         });
         assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
+	}
+	@Test
+	public void testDeleteMedicineNotExist(){
+		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+			client.toBlocking().exchange(HttpRequest.DELETE("/medicines/-1").header("X-API-Key",token));
+        });
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
+		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
+			client.toBlocking().exchange(HttpRequest.DELETE("/medicines/").header("X-API-Key",token));
+        });
+        assertEquals(HttpStatus.METHOD_NOT_ALLOWED, thrown1.getStatus());
 	}
 
     @Test
@@ -195,6 +225,25 @@ public class MedicineControllerTest{
         Medicine found = getMedicine(id);
         assertEquals("Unnamed", found.getName());
     }
+	@Test
+	public void testUpdateMedicineNull(){
+        HttpResponse response = addMedicine("Med1", "Liquid");
+        int id =  getEId(response).intValue();
+
+        client.toBlocking().exchange(HttpRequest.PUT("/medicines", new MedicineUpdateCommand(id, null, "type")).header("X-API-Key",token));
+        Medicine found = getMedicine(id);
+        assertEquals("Unnamed", found.getName());
+
+        client.toBlocking().exchange(HttpRequest.PUT("/medicines", new MedicineUpdateCommand(id, null, null)).header("X-API-Key",token));
+        Medicine found1 = getMedicine(id);
+        assertEquals("Unnamed", found1.getName());
+        assertEquals("Undefined", found1.getType());
+
+		client.toBlocking().exchange(HttpRequest.PUT("/medicines", new MedicineUpdateCommand(id, "name", null)).header("X-API-Key",token));
+        Medicine found2 = getMedicine(id);
+        assertEquals("Undefined", found2.getType());
+
+	}
 	@Test
 	public void testUpdateMedicinieUnauthorised(){
         int id =  getEId(addMedicine("name", "type")).intValue();

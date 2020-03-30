@@ -36,6 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import main.java.com.projectBackEnd.HibernateUtility;
 import main.java.com.projectBackEnd.EntityManager;
+import java.util.List;
 
 @MicronautTest
 public class UserControllerTest{
@@ -100,11 +101,16 @@ public class UserControllerTest{
 		});
 		assertEquals(HttpStatus.BAD_REQUEST, thrown2.getStatus());
 
-     	HttpClientResponseException thrown3 = assertThrows(HttpClientResponseException.class, () -> {
+		HttpClientResponseException thrown3 = assertThrows(HttpClientResponseException.class,()->{
+			addUser("name@name.pl","	 ","name");
+		});
+		assertEquals(HttpStatus.BAD_REQUEST, thrown3.getStatus());
+
+     	HttpClientResponseException thrown4 = assertThrows(HttpClientResponseException.class, () -> {
             	client.toBlocking().retrieve(HttpRequest.POST("/user/create",new UserBody("name@name.pl","","lmao")));
         });
-		assertEquals(HttpStatus.BAD_REQUEST, thrown3.getStatus());
-		assertEquals("invalid password", thrown3.getResponse().getBody().get());
+		assertEquals(HttpStatus.BAD_REQUEST, thrown4.getStatus());
+		assertEquals("invalid password", thrown4.getResponse().getBody().get());
 	}
 
 	
@@ -120,6 +126,11 @@ public class UserControllerTest{
 			addUser("name@name.pl","password",null);
 		});
 		assertEquals(HttpStatus.BAD_REQUEST, thrown2.getStatus());
+
+		HttpClientResponseException thrown4 = assertThrows(HttpClientResponseException.class,()->{
+			addUser("name@name.pl","password"," 	");
+		});
+		assertEquals(HttpStatus.BAD_REQUEST, thrown4.getStatus());
 
      	HttpClientResponseException thrown3 = assertThrows(HttpClientResponseException.class, () -> {
             	client.toBlocking().retrieve(HttpRequest.POST("/user/create",new UserBody("name@name.pl","password",null)));
@@ -248,10 +259,48 @@ public class UserControllerTest{
 	}
 	@Test
 	public void testLogout(){
-			addUser("admin@admin.com","admin","not me");
-			String token = getToken("admin@admin.com","admin");
-			assertEquals(HttpStatus.OK, client.toBlocking().exchange(HttpRequest.GET("/user/logout").header("X-API-Key", token)).getStatus());
-			assertFalse(sessionManager.verifySession(token));
+		addUser("admin@admin.com","admin","not me");
+		String token = getToken("admin@admin.com","admin");
+		assertEquals(HttpStatus.OK, client.toBlocking().exchange(HttpRequest.GET("/user/logout").header("X-API-Key", token)).getStatus());
+		assertFalse(sessionManager.verifySession(token));
+	}
+	@Test
+	public void testLogoutUnauthorized(){
+		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+			client.toBlocking().exchange(HttpRequest.GET("/user/logout").header("X-API-Key", "321bYUdsd36782F14ASd3DSa12vbuyds"));
+		});
+		assertEquals(HttpStatus.UNAUTHORIZED , thrown.getStatus());
+
+		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
+			client.toBlocking().exchange(HttpRequest.GET("/user/logout").header("X-API-Key", ""));
+		});
+		assertEquals(HttpStatus.UNAUTHORIZED , thrown1.getStatus());
+	}
+	@Test
+	public void testGetAll(){
+
+		assertEquals(HttpStatus.CREATED,addUser("admin@admin.com","admin","not me").getStatus());
+		assertEquals(HttpStatus.CREATED,addUser("admin1@admin.com","admin","not me").getStatus());
+		assertEquals(HttpStatus.CREATED,addUser("admin2@admin.com","admin","not me").getStatus());
+		String token = getToken("admin@admin.com","admin");
+		List<User> users = client.toBlocking().retrieve(HttpRequest.GET("/user").header("X-API-Key", token), Argument.of(List.class, User.class));
+		assertEquals(users.size(),3);
+		for(User u:users){
+			assertEquals(u.getName(),"not me");
+		}
+		
+	}
+	@Test
+	public void testGetAllUnauthorized(){
+		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+			client.toBlocking().exchange(HttpRequest.GET("/user").header("X-API-Key", ""));
+		});
+		assertEquals(HttpStatus.UNAUTHORIZED , thrown.getStatus());
+
+		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
+			client.toBlocking().exchange(HttpRequest.GET("/user").header("X-API-Key", "321bYUdsd36782F14ASd3DSa12vbuyds"));
+		});
+		assertEquals(HttpStatus.UNAUTHORIZED , thrown1.getStatus());
 	}
  	@Test
 	public void testDeleteCorrect(){
@@ -389,6 +438,7 @@ public class UserControllerTest{
 		assertEquals(HttpStatus.NOT_FOUND , thrown3.getStatus());
 
 
+
 		try{
 			userManager.addUser("mail@mail.com","password","name");
 		}
@@ -408,6 +458,10 @@ public class UserControllerTest{
 				client.toBlocking().exchange(HttpRequest.PUT("/user/password_reset_change",new PasswordResetBody(token,null)));
 			});
 			assertEquals(HttpStatus.BAD_REQUEST , thrown5.getStatus());
+			HttpClientResponseException thrown6 = assertThrows(HttpClientResponseException.class, () -> {
+				client.toBlocking().exchange(HttpRequest.PUT("/user/password_reset_change",new PasswordResetBody(token,"	 ")));
+			});
+			assertEquals(HttpStatus.BAD_REQUEST , thrown6.getStatus());
 			assertNull(userManager.verifyUser("mail@mail.com","test"));
 
 
@@ -520,10 +574,16 @@ public class UserControllerTest{
 		});
 		assertEquals(HttpStatus.BAD_REQUEST , thrown.getStatus());	
 
+
 		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
 				client.toBlocking().exchange(HttpRequest.PUT("/user/change_name",new StringBody(null)).header("X-API-Key",token));
 		});
-		assertEquals(HttpStatus.BAD_REQUEST , thrown1.getStatus());	
+		assertEquals(HttpStatus.BAD_REQUEST , thrown1.getStatus());
+
+		HttpClientResponseException thrown2 = assertThrows(HttpClientResponseException.class, () -> {
+				client.toBlocking().exchange(HttpRequest.PUT("/user/change_name",new StringBody(" 	")).header("X-API-Key",token));
+		});
+		assertEquals(HttpStatus.BAD_REQUEST , thrown2.getStatus());		
 		sessionManager.terminateSession(token);
 	}
 
@@ -579,6 +639,12 @@ public class UserControllerTest{
 				client.toBlocking().exchange(HttpRequest.PUT("/user/change_password",new StringBody("")).header("X-API-Key",token));
 		});
 		assertEquals(HttpStatus.BAD_REQUEST , thrown1.getStatus());	
+
+
+		HttpClientResponseException thrown2 = assertThrows(HttpClientResponseException.class, () -> {
+				client.toBlocking().exchange(HttpRequest.PUT("/user/change_password",new StringBody(" 	")).header("X-API-Key",token));
+		});
+		assertEquals(HttpStatus.BAD_REQUEST , thrown2.getStatus());	
 		sessionManager.terminateSession(token);
 	}
 
