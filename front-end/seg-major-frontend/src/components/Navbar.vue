@@ -120,9 +120,16 @@ export default {
     pages: function() {
       console.log(this.pages)
     },
-    searchQuery: function() {
-      if (this.searchQuery === '') this.searchResults = [];
-      else this.searchResults = SearchService.search(this.pages, this.searchQuery);
+    searchQuery: function(newQuery, oldQuery) {
+      if (newQuery.length < 3) {
+        this.searchResults = [];
+      } else {
+        // Reuse existing search results if new query only appends to existing query
+        const searchSpace = this.searchResults.length > 0 && newQuery.startsWith(oldQuery)
+                            ? this.searchResults
+                            : this.pages;
+        this.searchResults = SearchService.search(searchSpace, newQuery);
+      }
     },
   }
 };
