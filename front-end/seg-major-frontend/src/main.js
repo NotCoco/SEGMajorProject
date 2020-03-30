@@ -3,11 +3,11 @@ import App from './App.vue'
 import router from './router'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faCircleNotch } from '@fortawesome/free-solid-svg-icons'
+import { faCircleNotch, faStream, faMapSigns } from '@fortawesome/free-solid-svg-icons'
 import { faFrown } from '@fortawesome/free-regular-svg-icons'
 import Vuelidate from 'vuelidate'
 
-library.add(faCircleNotch, faFrown)
+library.add(faCircleNotch, faFrown, faStream, faMapSigns)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.use(Vuelidate)
 

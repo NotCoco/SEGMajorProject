@@ -20,6 +20,7 @@ import AdminSiteSettings from '../views/AdminSiteSettings.vue'
 import SearchResults from '../views/SearchResults.vue'
 import Login from '../views/Login.vue'
 import DrugChartCreator from '../views/DrugChartCreator.vue'
+import AllPages from '../views/AllPages.vue'
 
 import UserService from "@/services/user-service";
 
@@ -110,6 +111,10 @@ const routes = [
       {
         path: 'search',
         component: SearchResults
+      },
+      {
+        path: 'all-pages',
+        component: AllPages
       },
       {
         path: ':pageSlug',

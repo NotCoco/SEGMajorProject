@@ -1,5 +1,9 @@
 <template>
   <div id="page-viewer">
+    <router-link to="all-pages" class="button is-light view-pages-button">
+      <font-awesome-icon icon="stream" size="1x" style="margin-right: 12px; opacity: 0.85" />View all pages
+    </router-link>
+    
     <section class="section" style="height: 100%;">
       <div class="custom-content-container" v-if="page">
         <h1 class="title">{{ page.title }}</h1>
@@ -76,6 +80,11 @@
   &:hover {
     color: #222;
   }
+}
+
+.view-pages-button {
+  margin: 18px;
+  margin-bottom: 0;
 }
 </style>
 
