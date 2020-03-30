@@ -152,5 +152,9 @@ export default{
 	}
 };
 </script>
-<style lang="scss" scoped>
+<style >
+	html, body {
+		height: 100%;
+		overflow: unset;
+	}
 </style>

@@ -6,7 +6,7 @@
 					<!-- Buttons for adding/ changing drugs info -->
 					<tr>
 						<td>
-							<input type="text"   id="searchBox" v-model="search" style="width:357px;height:40px;" class="form-control" placeholder="Search"  aria-describedby="basic-addon1">
+							<input type="text"   id="searchBox" v-model="search" style="width:350px;height:40px;" class="form-control" placeholder="Search"  aria-describedby="basic-addon1">
 						&nbsp;
 						<button type="button" class="btn btn-outline-primary" style="height:35px;" v-on:click="addInfo()" id = "addButton">ADD</button></td>
 					</tr>
@@ -29,10 +29,10 @@
 								</thead>
 								<tr>
 									<td v-if="this.ChangeDrug">
-										<input  class="form-control" id = "id" disabled/>
+										<input  class="form-control" style="height: 38px;" id = "id" disabled/>
 									</td>
 									<td>
-										<input  class="form-control" id = "name" />
+										<input  class="form-control" style="height: 38px;" id = "name" />
 									</td>
 									<td >
 										<!-- multiSelect dropdown -->
