@@ -45,10 +45,10 @@
 
               <transition name="fade" mode="out-in">
               <div v-if="searchQuery.length > 2" class="card search-suggestions">
-                <div v-for="page in filtered" v-bind:key="page" class="card suggestion-item">
-                  {{page}}
+                <div v-for="page in searchResults" v-bind:key="page.slug" class="card suggestion-item">
+                  {{ page.title }}
                 </div>
-                <div v-if="filtered.length == 0" class="card suggestion-item">
+                <div v-if="searchResults.length == 0" class="card suggestion-item">
                 <p><i>No search results found</i></p>
                 </div>
               </div>
@@ -71,6 +71,7 @@
 
 <script>
 import NewsService from '@/services/news-service';
+import SearchService from '@/services/search-service';
 
 export default {
   name: "Navbar",
@@ -89,9 +90,6 @@ export default {
   },
   computed: {
     displayUrgentNews() { return this.showUrgentNews && this.urgentNews && !this.localHiddenState && !this.getHiddenState(); },
-    filtered() {
-      return this.pages.filter(p => p.includes(this.searchQuery))
-    }
   },
   methods: {
     closeUrgentNews() {
@@ -107,7 +105,8 @@ export default {
     return {
       urgentNews: undefined,
       localHiddenState: false,
-      searchQuery: ''
+      searchQuery: '',
+      searchResults: [],
     }
   },
   async created() {
@@ -120,7 +119,11 @@ export default {
   watch: {
     pages: function() {
       console.log(this.pages)
-    }
+    },
+    searchQuery: function() {
+      if (this.searchQuery === '') this.searchResults = [];
+      else this.searchResults = SearchService.search(this.pages, this.searchQuery);
+    },
   }
 };
 </script>
