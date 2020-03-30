@@ -45,7 +45,7 @@ const routes = [
     component: NewsViewer
   },
   {
-    path: '/drugChart',
+    path: '/drug-chart',
     component: DrugChartCreator
   },
   {
@@ -57,7 +57,7 @@ const routes = [
         component: AdminHome
       },   
       {
-        path: 'drugChart',
+        path: 'drug-chart',
         component: AdminDrugChart,
       },
       {
