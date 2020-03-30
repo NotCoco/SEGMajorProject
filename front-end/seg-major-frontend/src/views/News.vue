@@ -61,7 +61,7 @@ import NewsService from '@/services/news-service';
 import Navbar from "@/components/Navbar.vue";
 import NewsCard from "@/components/NewsCard.vue";
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
-import ArraySlice from '@/ArraySlice.js';
+import ArraySlice from '@/array-slice.js';
 
 export default {
   props: {

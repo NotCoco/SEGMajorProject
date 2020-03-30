@@ -22,7 +22,7 @@
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import NewsCard from '@/components/NewsCard.vue';
 import NewsService from '@/services/news-service';
-import ArraySlice from '@/ArraySlice.js';
+import ArraySlice from '@/array-slice.js';
 
 export default {
   name: "BulletinBoard",
