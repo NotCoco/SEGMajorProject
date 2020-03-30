@@ -79,7 +79,7 @@
 <script>
 import NewsService from '@/services/news-service';
 import SearchService from '@/services/search-service';
-import ArraySlice from '@/ArraySlice.js';
+import ArraySlice from '@/array-slice.js';
 
 export default {
   name: "Navbar",
