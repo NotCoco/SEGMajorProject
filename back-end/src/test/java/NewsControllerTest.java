@@ -78,7 +78,7 @@ public class NewsControllerTest {
     public void cleanUp(){ newsManager.deleteAll(); }
    @Test
     public void testDeleteNews(){
-        HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug");
+        HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug",token);
         assertEquals("slug", getEUrl(response));
         String slug = getEUrl(response);
         HttpRequest request = HttpRequest.DELETE("/news/"+slug).header("X-API-Key",token);
@@ -87,7 +87,7 @@ public class NewsControllerTest {
     }
     @Test
     public void testDeleteAndGetNews(){
-        HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "TestSlug");
+        HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "TestSlug",token);
         assertEquals(HttpStatus.CREATED, response.getStatus());
         String slug = getEUrl(response);
         News news = newsManager.getNewsBySlug(slug);
@@ -99,9 +99,28 @@ public class NewsControllerTest {
             client.toBlocking().exchange(HttpRequest.GET("/news/"+"TestSlug"));
         });
     }
+	@Test
+	public void testDeleteUnauthorized(){
+        HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug",token);
+        assertEquals(HttpStatus.CREATED, response.getStatus());
+        String slug =  getEUrl(response);
+        int id = newsManager.getNewsBySlug(slug).getPrimaryKey();
+		
+		 HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.DELETE("/news/"+slug).header("X-API-Key",""));
+        });
+		assertEquals(HttpStatus.UNAUTHORIZED, thrown.getStatus());
+
+
+		 HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.DELETE("/news/"+slug).header("X-API-Key","SOmeVeryCo2rr45ECt231TokEN1"));
+        });
+		assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
+	}
+	
     @Test
     public void testAddAndGetNews(){
-        HttpResponse response = addNews(new Date(34189213L) , true, "Test description", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug");
+        HttpResponse response = addNews(new Date(34189213L) , true, "Test description", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug",token);
         assertEquals(HttpStatus.CREATED, response.getStatus());
         List<News> newsList = getAllNews();
         assertEquals("Test description",newsList.get(0).getDescription());
@@ -110,7 +129,7 @@ public class NewsControllerTest {
     @Test
     public void testAddNews(){
         HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics",
-                true, "COVID-19 originated from Wuhan, China", "slug");
+                true, "COVID-19 originated from Wuhan, China", "slug",token);
         assertEquals(HttpStatus.CREATED, response.getStatus());
 
         assertEquals("slug", getEUrl(response));
@@ -120,39 +139,66 @@ public class NewsControllerTest {
     }
     @Test
     public void testAddAndUpdateNews(){
-        HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug");
+        HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug",token);
         assertEquals(HttpStatus.CREATED, response.getStatus());
 
         String slug =  getEUrl(response);
         int id = newsManager.getNewsBySlug(slug).getPrimaryKey();
-        response = putNews(id, new Date(34189213L) , true, "New description", "New title", true, "COVID-19 originated from Wuhan, China", "slug");
+        response = putNews(id, new Date(34189213L) , true, "New description", "New title", true, "COVID-19 originated from Wuhan, China", "slug",token);
         assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
         News news = newsManager.getNewsBySlug(slug);
         assertEquals("New description", news.getDescription());
         assertEquals("New title", news.getTitle());
     }
+	@Test
+	public void testAddUnauthorized(){
+		 HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+			addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug","");
+        });
+		assertEquals(HttpStatus.UNAUTHORIZED, thrown.getStatus());
+		 HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
+			addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug","SOmeVeryCo2rr45ECt231TokEN1");
+        });
+		assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
+	}
 
     @Test
     public void testUpdateLegalNews(){
-        HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug");
+        HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug",token);
         assertEquals("slug", getEUrl(response));
         String slug = getEUrl(response);
         News news = newsManager.getNewsBySlug(slug);
         int id = news.getPrimaryKey();
-        response = putNews(id, new Date(324189213L), true, "NewDescription", "NewTitle",true, "NewContent", "NewSlug");
+        response = putNews(id, new Date(324189213L), true, "NewDescription", "NewTitle",true, "NewContent", "NewSlug",token);
         assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
     }
 
+	@Test
+	public void testUpdateUnauthorized(){
+        HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug",token);
+        assertEquals(HttpStatus.CREATED, response.getStatus());
+        String slug =  getEUrl(response);
+        int id = newsManager.getNewsBySlug(slug).getPrimaryKey();
+
+		 HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+			putNews(id, new Date(324189213L), true, "NewDescription", "NewTitle",true, "NewContent", "NewSlug","");
+        });
+		assertEquals(HttpStatus.UNAUTHORIZED, thrown.getStatus());
+		 HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
+			putNews(id, new Date(324189213L), true, "NewDescription", "NewTitle",true, "NewContent", "NewSlug","SOmeVeryCo2rr45ECt231TokEN1");
+        });
+		assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
+	}
 
     protected HttpResponse putNews(Integer primaryKey, Date date, boolean pinned, String description, String title,
-                                   boolean urgent, String content, String slug) {
+                                   boolean urgent, String content, String slug,String token) {
         HttpRequest request = HttpRequest.PUT("/news", new NewsUpdateCommand(primaryKey, date, pinned, description,
                 title, urgent, content,slug)).header("X-API-Key",token);
         return client.toBlocking().exchange(request);
     }
 
     protected HttpResponse addNews(Date date, boolean pinned, String description, String title, boolean urgent,
-                                   String content, String slug){
+                                   String content, String slug,String token){
         HttpRequest request = HttpRequest.POST("/news", new NewsAddCommand(date, pinned, description, title,
                 urgent, content, slug)).header("X-API-Key",token);
         HttpResponse response = client.toBlocking().exchange(request);

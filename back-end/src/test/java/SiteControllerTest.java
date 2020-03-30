@@ -118,6 +118,25 @@ public class SiteControllerTest {
 
         assertEquals("testSite", testSite.getName());
     }
+	@Test
+	public void testAddUnauthorized(){
+		String correctToken = token;
+		token = "";
+
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+			addSite("testSlug", "testSite");
+        });
+		assertEquals(HttpStatus.UNAUTHORIZED,thrown.getStatus());
+		token = "SOmeVeryCo2rr45ECt231TokEN1";
+
+		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
+			addSite("testSlug", "testSite");
+        });
+		assertEquals(HttpStatus.UNAUTHORIZED,thrown1.getStatus());
+
+
+		token = correctToken;
+	}	
 
     @Test
     public void testDeleteAndGetSite(){
@@ -134,7 +153,21 @@ public class SiteControllerTest {
         });
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
     }
+	@Test
+	public void testDeleteUnauthorized(){
+        HttpResponse response = addSite("testSlug", "testSite");
+        String url =  getEUrl(response);
+        assertEquals(HttpStatus.CREATED, response.getStatus());
+  		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.DELETE("/sites/"+url).header("X-API-Key",""));
+        });
+		assertEquals(HttpStatus.UNAUTHORIZED,thrown.getStatus());
 
+  		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.DELETE("/sites/"+url).header("X-API-Key","SOmeVeryCo2rr45ECt231TokEN1"));
+        });
+		assertEquals(HttpStatus.UNAUTHORIZED,thrown1.getStatus());
+	}
 
     @Test
     public void testAddAndUpdateSite(){
@@ -158,6 +191,25 @@ public class SiteControllerTest {
         });
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
     }
+
+	@Test
+	public void testUpdateUnauthorized(){
+        HttpResponse response = addSite("testSlug","testSite");
+        String url =  getEUrl(response);
+        int id = getSitePKBySlug(url);
+        assertEquals(HttpStatus.CREATED, response.getStatus());
+
+
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.PUT("/sites", new SiteUpdateCommand(id, "slug", "")).header("X-API-Key",""));
+        });
+		assertEquals(HttpStatus.UNAUTHORIZED,thrown.getStatus());
+        HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.PUT("/sites", new SiteUpdateCommand(id, "slug", "")).header("X-API-Key","SOmeVeryCo2rr45ECt231TokEN1"));
+        });
+		assertEquals(HttpStatus.UNAUTHORIZED,thrown1.getStatus());
+	}
+
     protected HttpResponse putSite(int id, String newSlug, String newName) {
         HttpRequest request = HttpRequest.PUT("/sites", new SiteUpdateCommand(id, newSlug, newName)).header("X-API-Key",token);
         return client.toBlocking().exchange(request);
