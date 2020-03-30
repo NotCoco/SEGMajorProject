@@ -33,6 +33,10 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManager;
 import main.java.com.projectBackEnd.HibernateUtility;
+
+/**
+* class to unit test interactions between rest calls and system with respect to medicine functionality
+*/
 @MicronautTest
 public class MedicineControllerTest{
 

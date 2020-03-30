@@ -37,7 +37,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import main.java.com.projectBackEnd.HibernateUtility;
 import main.java.com.projectBackEnd.EntityManager;
 import java.util.List;
-
+/**
+* class to unit test interactions between rest calls and system with respect to user functionality
+*/
 @MicronautTest
 public class UserControllerTest{
     
