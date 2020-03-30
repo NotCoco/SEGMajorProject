@@ -121,6 +121,15 @@ export default {
       if (this.$refs.search.contains(e.relatedTarget)) return;
       this.displaySearchResults = false
     },
+    doSearch(query, oldQuery) {
+      // Reuse existing search results if new query only appends to existing query
+      const searchSpace = this.searchResults.length > 0 && oldQuery && query.startsWith(oldQuery)
+                          ? this.searchResults
+                          : this.pages;
+      const results = SearchService.search(searchSpace, query);
+      this.searchResults = new ArraySlice(results, 0, 6);
+      this.displaySearchResults = true;
+    },
   },
   data () {
     return {
@@ -147,13 +156,7 @@ export default {
         this.displaySearchResults = false;
         this.searchResults = [];
       } else {
-        // Reuse existing search results if new query only appends to existing query
-        const searchSpace = this.searchResults.length > 0 && newQuery.startsWith(oldQuery)
-                            ? this.searchResults
-                            : this.pages;
-        const results = SearchService.search(searchSpace, newQuery);
-        this.searchResults = new ArraySlice(results, 0, 6);
-        this.displaySearchResults = true;
+        this.doSearch(newQuery, oldQuery);
       }
     },
   }
