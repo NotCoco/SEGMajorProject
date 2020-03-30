@@ -141,20 +141,21 @@ public class MedicineControllerTest{
 
 	@Test
 	public void testAddMedicineNull(){
-        HttpResponse response = addMedicine(null, "123");
+        HttpResponse response = addMedicine(null, null);
         int id =  getEId(response).intValue();
         Medicine testMed = getMedicine(id);
         assertEquals("Undefined", testMed.getType());
+        assertEquals("Unnamed", testMed.getName());
 
         HttpResponse response1 = addMedicine("Med1", null);
         int id1 =  getEId(response1).intValue();
         Medicine testMed1 = getMedicine(id1);
         assertEquals("Undefined", testMed1.getType());
 
-        HttpResponse response2 = addMedicine(null, null);
+        HttpResponse response2 = addMedicine(null, "type");
         int id2 =  getEId(response2).intValue();
         Medicine testMed2 = getMedicine(id2);
-        assertEquals("Undefined", testMed2.getType());
+        assertEquals("Unnamed", testMed2.getName());
 	}
 
 	
@@ -233,14 +234,14 @@ public class MedicineControllerTest{
         Medicine found = getMedicine(id);
         assertEquals("Unnamed", found.getName());
 
-
-        client.toBlocking().exchange(HttpRequest.PUT("/medicines", new MedicineUpdateCommand(id, "med", null)).header("X-API-Key",token));
+        client.toBlocking().exchange(HttpRequest.PUT("/medicines", new MedicineUpdateCommand(id, null, null)).header("X-API-Key",token));
         Medicine found1 = getMedicine(id);
         assertEquals("Unnamed", found1.getName());
+        assertEquals("Undefined", found1.getType());
 
-		client.toBlocking().exchange(HttpRequest.PUT("/medicines", new MedicineUpdateCommand(id, null, null)).header("X-API-Key",token));
+		client.toBlocking().exchange(HttpRequest.PUT("/medicines", new MedicineUpdateCommand(id, "name", null)).header("X-API-Key",token));
         Medicine found2 = getMedicine(id);
-        assertEquals("Unnamed", found2.getName());
+        assertEquals("Undefined", found2.getType());
 
 	}
 	@Test
