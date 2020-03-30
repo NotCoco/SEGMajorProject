@@ -13,6 +13,31 @@ function searchPage(page, regex) {
 }
 
 function searchNode(node, regex) {
+  switch(node.type) {
+    case "paragraph": { // Base case
+      const text = getCombinedContent(node);
+      return regex.test(text) ? 1 : 0;
+    }
+    case "heading": { // Base case
+      const text = getCombinedContent(node);
+      return regex.test(text) ? (5 - node.attrs.level) : 0;
+    }
+    default: { // Recursive case
+      if (!node.content) return 0;
+      return node.content
+                 .map(child => searchNode(child, regex))
+                 .reduce((a, b) => a + b, 0);
+    }
+  }
+}
+
+function getCombinedContent(node) {
+  if (!node.content) return '';
+  let result = "";
+  node.content.forEach(contentNode => {
+    if (contentNode.type === "text") result += contentNode.text;
+  });
+  return result;
 }
 
 export default {
