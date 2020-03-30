@@ -125,7 +125,7 @@ public class PageController {
     public HttpResponse updatePage(@Header("X-API-Key") String session,String name, @Body PageUpdateCommand updatedPageCommand) {
 		if(!sessionManager.verifySession(session))
 			return HttpResponse.unauthorized();
-        Page updatedPage = new Page(updatedPageCommand.getId(), updatedPageCommand.getSite(), updatedPageCommand.getSlug(), updatedPageCommand.getIndex(), updatedPageCommand.getTitle(), updatedPageCommand.getContent());
+        Page updatedPage = new Page(updatedPageCommand.getPrimaryKey(), updatedPageCommand.getSite(), updatedPageCommand.getSlug(), updatedPageCommand.getIndex(), updatedPageCommand.getTitle(), updatedPageCommand.getContent());
 
 
         pageManager.update(updatedPage);

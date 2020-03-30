@@ -8,16 +8,16 @@ public class NewsUpdateCommand extends NewsAddCommand {
 
 
     @NotNull
-    private Integer id;
+    private int primaryKey;
 
     public NewsUpdateCommand() {super();}
 
     public NewsUpdateCommand(Integer id, Date date, boolean pinned, String description, String title, boolean urgent,
                              String content, String slug) {
         super(date, pinned, description, title, urgent, content, slug);
-        this.id = id;
+        this.primaryKey = id;
     }
 
-    public int getId() { return id; }
+    public int getPrimaryKey() { return primaryKey; }
 
 }

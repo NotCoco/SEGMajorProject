@@ -95,12 +95,12 @@ public class MedicineController {
     public HttpResponse update(@Header("X-API-Key") String session,@Body MedicineUpdateCommand command) {
 		if(!sessionManager.verifySession(session))
 			return HttpResponse.unauthorized();
-        Medicine medObject = new Medicine(command.getId(), command.getName(), command.getType());
+        Medicine medObject = new Medicine(command.getPrimaryKey(), command.getName(), command.getType());
         medicineManager.update(medObject);
 
         return HttpResponse
                 .noContent()
-                .header(HttpHeaders.LOCATION, location(command.getId()).getPath());
+                .header(HttpHeaders.LOCATION, location(command.getPrimaryKey()).getPath());
     }
     /**
      * Create URI with the specified id

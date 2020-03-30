@@ -82,7 +82,7 @@ public class NewsController {
     public HttpResponse update(@Header("X-API-Key") String session,@Body NewsUpdateCommand command) {
 		if(!sessionManager.verifySession(session))
 			return HttpResponse.unauthorized();
-        News news= new News(command.getId(), command.getDate(), command.isPinned(), command.getDescription(),
+        News news= new News(command.getPrimaryKey(), command.getDate(), command.isPinned(), command.getDescription(),
                 command.getTitle(), command.isUrgent(), command.getContent(), command.getSlug());
         newsManager.update(news);
 
