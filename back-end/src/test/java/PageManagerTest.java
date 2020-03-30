@@ -292,7 +292,11 @@ public class PageManagerTest {
         Page page1 = new Page(testSiteA.getSlug(), "sameSlug", 1, "TitleA", "ContentA");
         Page page2 = new Page(testSiteA.getSlug(), "sameSlug", 1, "TitleB", "ContentB");
         pageManager.addPage(page1);
-        pageManager.addPage(page2);
+        try {
+            pageManager.addPage(page2);
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+        }
 
         assertEquals(1, pageManager.getAllPages().size());
     }
@@ -311,7 +315,12 @@ public class PageManagerTest {
      */
     @Test
     public void testAddPageWithInvalidSite() {
-        pageManager.addPage(new Page("", "",2, "", ""));
+        try {
+            pageManager.addPage(new Page("", "",2, "", ""));
+            fail();
+        } catch (NullPointerException n) {
+            n.printStackTrace();
+        }
         assertEquals(0, pageManager.getAllPages().size());
     }
 
@@ -492,17 +501,32 @@ public class PageManagerTest {
     @Test
     public void testUpdatePage() {
         assertNotNull(siteManager.getSiteBySlug("Disease1"));
-
-        Page newPage = new Page("Disease1","Slug3", 10, "Title3", "New content!");
-        pageManager.addPage(newPage);
-        int assignedID = pageManager.getAllPages().get(0).getPrimaryKey();
         fillDatabase(getListOfPages());
-        Page updatedPage = new Page(assignedID, testSiteB.getSlug(),"Slug3", 14, "Title3",
+        int assignedID = pageManager.getAllPages().get(0).getPrimaryKey();
+        Page updatedPage = new Page(assignedID, testSiteB.getSlug(),"fancy=new=slug", 14, "new Cool title!",
                 "New conwishwashchangedtent!");
         pageManager.update(updatedPage);
         Page foundPage = pageManager.getByPrimaryKey(assignedID);
 
         assertEquals(foundPage.getContent(), updatedPage.getContent());
+        assertEquals(foundPage.getSlug(), updatedPage.getSlug());
+    }
+
+    /**
+     * Test that updating a page works without changing the unique slug
+     */
+    @Test
+    public void testUpdatePageNotSlug() {
+        assertNotNull(siteManager.getSiteBySlug("Disease1"));
+        fillDatabase(getListOfPages());
+        Page existingPage = pageManager.getAllPages().get(0);
+        Page updatedPage = new Page(existingPage.getPrimaryKey(), existingPage.getSite().getSlug(),existingPage.getSlug(), 14, "new Cool title!",
+                "New conwishwashchangedtent!");
+        pageManager.update(updatedPage);
+        Page foundPage = pageManager.getByPrimaryKey(updatedPage.getPrimaryKey());
+
+        assertEquals(foundPage.getContent(), updatedPage.getContent());
+        assertEquals(foundPage.getSlug(), updatedPage.getSlug());
     }
 
     /**
@@ -512,8 +536,11 @@ public class PageManagerTest {
     public void testUpdateNullPage() {
         try {
             pageManager.update(new Page());
+            fail();
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
+        } catch (NullPointerException n) {
+            n.printStackTrace();
         }
     }
 
@@ -553,10 +580,23 @@ public class PageManagerTest {
      */
     @Test
     public void testUpdateToViolateDuplicateSlugs() {
-        Page page1 = new Page(testSiteA.getSlug(), "sameSlug", 1, "TitleA", "ContentA");
+        Page page1 = pageManager.addPage(new Page(testSiteA.getSlug(), "sameSlug", 1, "TitleA", "ContentA"));
         Page page2 = pageManager.addPage(new Page(testSiteB.getSlug(), "sameSlug", 1, "TitleB", "ContentB"));
         Page replacement = new Page(page2.getPrimaryKey(), testSiteA.getSlug(), "sameSlug", 1, "TitleB", "ContentB");
-        pageManager.update(page2);
+        try {
+            System.out.println();
+            pageManager.update(replacement);
+            fail();
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+        }
+        int count = 0;
+        List<Page> allFound = pageManager.getAllPages();
+        for (int i =0; i <allFound.size(); ++i) {
+            if (allFound.get(i).getSite().getSlug().equals(testSiteA.getSlug()) && allFound.get(i).getSlug().equals("sameSlug")) ++count;
+        }
+        assertEquals(1, count);
+
     }
 
     /**

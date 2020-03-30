@@ -224,8 +224,13 @@ public class NewsManagerTest {
         int sizeBefore = newsManager.getAllNews().size();
         newsManager.addNews(new News(new Date(12343212L), false,
                 "desc213ription1", "ti321t      le1", false, "con321tent1", "slug1"));
-        newsManager.addNews(new News(new Date(12343212L), false,
-                "desc213ription1", "ti321tle1", false, "con321tent1", "slug1"));
+        try {
+            newsManager.addNews(new News(new Date(12343212L), false,
+                    "desc213ription1", "ti321tle1", false, "con321tent1", "slug1"));
+            fail();
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+        }
         assertEquals(sizeBefore+1, newsManager.getAllNews().size());
     }
 
@@ -351,23 +356,41 @@ public class NewsManagerTest {
         assertEquals(replacementNews.getTitle(), newsInDB.getTitle());
     }
 
+    @Test
+    public void testUpdateNewsNotSlug() {
+        News first = newsManager.addNews(new News(new Date(12343212L), false,
+                "changedDescription", "newTitle", false, "content2", "slug9"));
+        int id = first.getPrimaryKey();
+        News replacementNews = new News(id, new Date(12343212L), true,
+                "changedDescription", "newTitle", false, "content1", "slug9");
+        newsManager.update(replacementNews);
+
+        News newsInDB = newsManager.getByPrimaryKey(id);
+        assertEquals(replacementNews.getDescription(), newsInDB.getDescription());
+        assertEquals(replacementNews.getTitle(), newsInDB.getTitle());
+    }
+
     /**
      * Testing updating a news article so it violates the unique - it should throw an error!
      */
     @Test
     public void testUpdateNewsWithDupeSlug() {
         fillDatabase(getListOfNews());
-        int previousSize = newsManager.getAllNews().size();
         int id = newsManager.getAllNews().get(0).getPrimaryKey();
         News replacementNews = new News(id ,new Date(12343212L), true, "changedDescrption",
                 "newTitle", false, "content1", "slug1");
         try {
-            newsManager.update(replacementNews);
+            News n = newsManager.update(replacementNews);
             fail();
         } catch (PersistenceException e) {
             e.printStackTrace();
-            assertEquals(newsManager.getAllNews().size(), previousSize);
         }
+        int count = 0;
+        List<News> allFound = newsManager.getAllNews();
+        for (int i =0; i <allFound.size(); ++i) {
+            if (allFound.get(i).getSlug().equals("slug1")) ++count;
+        }
+        assertEquals(1, count);
     }
 
     /**

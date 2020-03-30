@@ -211,8 +211,15 @@ public class SiteManagerTest {
     @Test
     public void testDuplicateSlugAddition() {
         int sizeBefore = siteManager.getAllSites().size();
-        siteManager.addSite(new Site("identicalSlug!", "differentName"));
-        siteManager.addSite(new Site("identicalSlug!", "sameName"));
+        String slug = "identicalSlug!";
+        siteManager.addSite(new Site(slug, "differentName"));
+        assertNotNull(siteManager.getSiteBySlug(slug));
+        try {
+            siteManager.addSite(new Site(slug, "sameName"));
+            fail();
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+        }
         assertEquals(sizeBefore+1, siteManager.getAllSites().size());
     }
 
