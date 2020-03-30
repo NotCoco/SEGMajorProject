@@ -1,7 +1,7 @@
 export default class ArraySlice {
   #array;
   #from;
-  length;
+  #length;
 
   constructor(array, from, maxLength) {
     if (!(array instanceof Array)) throw new Error("array must be array");
@@ -9,17 +9,21 @@ export default class ArraySlice {
     this.#array = array;
     if (array.length === 0) {
       this.#from = -1;
-      this.length = 0;
+      this.#length = 0;
     } else {
       if (from < 0 || from >= array.length) throw new Error("from out of bounds");
       this.#from = from;
-      this.length = Math.min(maxLength, array.length - from);
+      this.#length = Math.min(maxLength, array.length - from);
     }
   }
 
   get(i) {
     if (i < 0 || i >= this.length) throw new Error("Index out of bounds");
     return this.#array[i + this.#from];
+  }
+
+  get length() {
+    return this.#length;
   }
 
   [Symbol.iterator]() {
