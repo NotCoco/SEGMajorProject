@@ -501,17 +501,32 @@ public class PageManagerTest {
     @Test
     public void testUpdatePage() {
         assertNotNull(siteManager.getSiteBySlug("Disease1"));
-
-        Page newPage = new Page("Disease1","Slug3", 10, "Title3", "New content!");
-        pageManager.addPage(newPage);
-        int assignedID = pageManager.getAllPages().get(0).getPrimaryKey();
         fillDatabase(getListOfPages());
-        Page updatedPage = new Page(assignedID, testSiteB.getSlug(),"Slug3", 14, "Title3",
+        int assignedID = pageManager.getAllPages().get(0).getPrimaryKey();
+        Page updatedPage = new Page(assignedID, testSiteB.getSlug(),"fancy=new=slug", 14, "new Cool title!",
                 "New conwishwashchangedtent!");
         pageManager.update(updatedPage);
         Page foundPage = pageManager.getByPrimaryKey(assignedID);
 
         assertEquals(foundPage.getContent(), updatedPage.getContent());
+        assertEquals(foundPage.getSlug(), updatedPage.getSlug());
+    }
+
+    /**
+     * Test that updating a page works without changing the unique slug
+     */
+    @Test
+    public void testUpdatePageNotSlug() {
+        assertNotNull(siteManager.getSiteBySlug("Disease1"));
+        fillDatabase(getListOfPages());
+        Page existingPage = pageManager.getAllPages().get(0);
+        Page updatedPage = new Page(existingPage.getPrimaryKey(), existingPage.getSite().getSlug(),existingPage.getSlug(), 14, "new Cool title!",
+                "New conwishwashchangedtent!");
+        pageManager.update(updatedPage);
+        Page foundPage = pageManager.getByPrimaryKey(updatedPage.getPrimaryKey());
+
+        assertEquals(foundPage.getContent(), updatedPage.getContent());
+        assertEquals(foundPage.getSlug(), updatedPage.getSlug());
     }
 
     /**
