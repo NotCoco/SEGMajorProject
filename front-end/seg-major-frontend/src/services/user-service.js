@@ -8,6 +8,11 @@ export default {
         return res.data
     },
 
+    async logout() {
+        await BackendService.logout()
+        localStorage.removeItem('api-key')
+    },
+
     async getUserName() {
         const res = await BackendService.getUserName()
         return res.data
