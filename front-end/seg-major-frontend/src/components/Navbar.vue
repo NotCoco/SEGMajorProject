@@ -44,14 +44,14 @@
               <input class="searchbox input" type="text" v-model="searchQuery" placeholder="Search" />
 
               <transition name="fade" mode="out-in">
-              <div v-if="searchQuery.length > 2" class="card search-suggestions">
-                <div v-for="page in searchResults" v-bind:key="page.slug" class="card suggestion-item">
-                  {{ page.title }}
+                <div v-if="searchQuery.length > 2" class="card search-suggestions">
+                  <router-link v-for="page in searchResults" v-bind:key="page.slug" :to="`/${page.site.slug}/${page.slug}`">
+                    <div class="card suggestion-item">{{ page.title }}</div>
+                  </router-link>
+                  <div v-if="searchResults.length == 0" class="card suggestion-item">
+                    <p><i>No pages matched your search</i></p>
+                  </div>
                 </div>
-                <div v-if="searchResults.length == 0" class="card suggestion-item">
-                <p><i>No search results found</i></p>
-                </div>
-              </div>
               </transition>
             </div>
           </div>
