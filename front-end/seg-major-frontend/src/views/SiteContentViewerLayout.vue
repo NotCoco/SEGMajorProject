@@ -81,7 +81,7 @@ export default {
   data() {
     return {
       site: { name: "... " },
-      pages: [],
+      pages: null,
       loading: true
     };
   },
