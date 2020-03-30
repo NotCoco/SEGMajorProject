@@ -26,19 +26,27 @@
             <h1 class="brand-bottom">Paediatric Liver Service</h1>
           </div>
         </router-link>
+
+        <div class="navbar-burger is-hidden-desktop" @click="mobileNavActive=!mobileNavActive">
+          <font-awesome-icon icon="bars" size="2x" />
+        </div>
+
+
       </div>
 
-      <div class="navbar-menu">
+<transition name="fade" mode="out-in">
+      <div class="navbar-menu" ref="navMenu" :class="{ 'is-active': mobileNavActive }" v-bind:key="mobileNavActive">
         <div class="navbar-start" style="margin-left: 35px">
           <router-link to="/" class="navbar-item">Home</router-link>
           <router-link to="/news" class="navbar-item">News</router-link>
           <router-link to="/drug-chart" class="navbar-item">Drug Chart</router-link>
         </div>
 
-        <div class="navbar-end search">
+        <div class="navbar-end search is-hidden-touch">
           <search-bar v-if="showSearchBar" :pages="pages" />
         </div>
       </div>
+</transition>
     </nav>
     <transition name="vertical-slide" v-if="displayUrgentNews" appear>
       <router-link class="link" :to="`/news/${urgentNews.slug}`">
@@ -95,6 +103,7 @@ export default {
     return {
       urgentNews: undefined,
       localHiddenState: false,
+      mobileNavActive: false
     }
   },
   async created() {
@@ -159,6 +168,14 @@ nav.navbar {
 
   .navbar-brand {
     padding-left: 14px;
+    height: 100%;
+  }
+
+  .navbar-burger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
   }
 
   .brand-text {
