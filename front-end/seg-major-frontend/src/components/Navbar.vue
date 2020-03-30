@@ -124,10 +124,10 @@ export default {
     doSearch(query, oldQuery) {
       // Reuse existing search results if new query only appends to existing query
       const searchSpace = this.searchResults.length > 0 && oldQuery && query.startsWith(oldQuery)
-                          ? this.searchResults
+                          ? this.fullSearchResults
                           : this.pages;
-      const results = SearchService.search(searchSpace, query);
-      this.searchResults = new ArraySlice(results, 0, 6);
+      this.fullSearchResults = SearchService.search(searchSpace, query);
+      this.searchResults = new ArraySlice(this.fullSearchResults, 0, 6);
       this.displaySearchResults = true;
     },
   },
@@ -136,6 +136,7 @@ export default {
       urgentNews: undefined,
       localHiddenState: false,
       searchQuery: '',
+      fullSearchResults: [],
       searchResults: [],
       displaySearchResults: false,
     }
@@ -154,7 +155,7 @@ export default {
     searchQuery: function(newQuery, oldQuery) {
       if (newQuery.length < 3) {
         this.displaySearchResults = false;
-        this.searchResults = [];
+        this.fullSearchResults = this.searchResults = [];
       } else {
         this.doSearch(newQuery, oldQuery);
       }
