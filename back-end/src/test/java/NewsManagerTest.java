@@ -405,6 +405,31 @@ public class NewsManagerTest {
         assertEquals(replacementNews.getTitle(), newsInDB.getTitle());
     }
 
+    /**
+     * Test what happens if a null article is updated
+     */
+    @Test
+    public void testUpdateNullNews() {
+        try {
+            newsManager.update(new News());
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Test updating an article that doesn't exist
+     */
+    @Test
+    public void testUpdateUnfoundNews() {
+        int previousSize = newsManager.getAllNews().size();
+        assertNull(newsManager.getByPrimaryKey(-100));
+        News fakeNews = new News(-100, new Date(12343212L), true,
+                "changedDescription", "newTitle", false, "content1", "slug9");
+        newsManager.update(fakeNews);
+        assertEquals(newsManager.getAllNews().size(), previousSize);
+    }
+
     //Testing NewsManagerInterface: getNewsBySlug
 
     /**

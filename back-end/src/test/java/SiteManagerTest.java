@@ -387,7 +387,29 @@ public class SiteManagerTest {
         assertEquals(replacementSite.getName(), siteInDB.getName());
         assertEquals(replacementSite.getSlug(), siteInDB.getSlug());
     }
+    /**
+     * Test what happens if a null site is updated
+     */
+    @Test
+    public void testUpdateNullSite() {
+        try {
+            siteManager.update(new Site());
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
 
+    /**
+     * Test updating a site that doesn't exist
+     */
+    @Test
+    public void testUpdateUnfoundSite() {
+        int previousSize = siteManager.getAllSites().size();
+        assertNull(siteManager.getByPrimaryKey(-100));
+        Site newSite = new Site("slug", "Spicy name!");
+        siteManager.update(newSite);
+        assertEquals(siteManager.getAllSites().size(), previousSize);
+    }
     //Testing SiteManagerInterface: getSiteBySlug
 
     /**

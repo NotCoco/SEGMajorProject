@@ -506,6 +506,30 @@ public class PageManagerTest {
     }
 
     /**
+     * Test what happens if a null page is updated
+     */
+    @Test
+    public void testUpdateNullPage() {
+        try {
+            pageManager.update(new Page());
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Test updating a page that doesn't exist
+     */
+    @Test
+    public void testUpdateUnfoundPage() {
+        int previousSize = pageManager.getAllPages().size();
+        assertNull(pageManager.getByPrimaryKey(-100));
+        Page newPage = new Page(-100, "Disease1","Slug3", 10, "Title3", "New content!");
+        pageManager.update(newPage);
+        assertEquals(pageManager.getAllPages().size(), previousSize);
+    }
+
+    /**
      * Test updating with null data throws an error
      */
     @Test

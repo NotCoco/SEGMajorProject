@@ -410,6 +410,18 @@ public class MedicineManagerTest {
     }
 
     /**
+     * Test what happens if a null medicine is updated
+     */
+    @Test
+    public void testUpdateNullMedicine() {
+        try {
+            medicineManager.update(new Medicine());
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Testing updating a medicine that doesn't exist
      */
     @Test
