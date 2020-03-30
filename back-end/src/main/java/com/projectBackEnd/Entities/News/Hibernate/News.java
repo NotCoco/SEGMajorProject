@@ -87,7 +87,7 @@ public class News implements TableEntity {
         this.title = title;
         this.urgent = urgent;
         this.content = content;
-        this.slug = slug;
+        setSlug(slug);
     }
 
     // Constructor taking id
@@ -98,8 +98,8 @@ public class News implements TableEntity {
         this.title = title;
         this.urgent = urgent;
         this.content = content;
-        this.slug = slug;
         this.primaryKey = primaryKey;
+        setSlug(slug);
     }
 
     /**
@@ -142,6 +142,9 @@ public class News implements TableEntity {
 
     public void setSlug(String slug) {
         this.slug = slug;
+        NewsManagerInterface checker = NewsManager.getNewsManager();
+        News found = checker.getNewsBySlug(slug);
+        if (found != null && checker.getByPrimaryKey(primaryKey) == null ) this.slug = null;
     }
 
     public String getTitle() {
