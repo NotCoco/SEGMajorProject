@@ -20,6 +20,7 @@ import AdminSiteSettings from '../views/AdminSiteSettings.vue'
 import SearchResults from '../views/SearchResults.vue'
 import Login from '../views/Login.vue'
 import DrugChartCreator from '../views/DrugChartCreator.vue'
+import AdminPasswordReset from "../views/AdminPasswordReset.vue"
 
 import UserService from "@/services/user-service";
 
@@ -45,7 +46,7 @@ const routes = [
     component: NewsViewer
   },
   {
-    path: '/drugChart',
+    path: '/drug-chart',
     component: DrugChartCreator
   },
   {
@@ -57,8 +58,12 @@ const routes = [
         component: AdminHome
       },   
       {
-        path: 'drugChart',
+        path: 'drug-chart',
         component: AdminDrugChart,
+      },
+      {
+        path: 'password-reset',
+        component: AdminPasswordReset,
       },
       {
         path: 'sites',

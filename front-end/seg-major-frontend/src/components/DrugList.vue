@@ -1,24 +1,18 @@
 <template>
 	
  <div class="root"  >
-	
-    <!-- Compiled and minified CSS -->
-
-     
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    
-            <form class = "form-inline">
+		<form class = "form-inline">
 				<table  style="border-collapse:separate; border-spacing:0px 3px;">
 					<!-- Buttons for adding/ changing drugs info -->
 					<tr>
 						<td>
-							<input type="text"   id="searchBox" v-model="search" style="width:335px;" class="form-control" placeholder="Search"  aria-describedby="basic-addon1">
+							<input type="text"   id="searchBox" v-model="search" style="width:357px;height:40px;" class="form-control" placeholder="Search"  aria-describedby="basic-addon1">
 						&nbsp;
-						<button type="button" class="btn btn-outline-primary" style="height:37px;" v-on:click="addInfo()" id = "addButton">ADD</button></td>
+						<button type="button" class="btn btn-outline-primary" style="height:35px;" v-on:click="addInfo()" id = "addButton">ADD</button></td>
 					</tr>
 					<tr>
 						<td>
-							<select  style="width:400px;height: 750px;" name="users-out" id="students-out"  multiple="multiple" size="10">
+							<select  style="width:400px;height: 450px;" name="users-out" id="students-out"  multiple="multiple" size="10">
 								<option type="button"  @click="changeInfo(medicine)" v-for="medicine in filteredBlogs" :key='medicine' class='list-group-item'>{{medicine.name}}</option>
 							</select>
 							
@@ -62,14 +56,12 @@
 						</td>		
 					</tr>
 				</table>
-               
-                </form>
+		</form>
   </div>	
 </template>
 
 
 <script type="text/javascript" >
-	//import multiselect dropdown
 	import Multiselect from 'vue-multiselect'
 	export default{
 		name:"DrugList",
