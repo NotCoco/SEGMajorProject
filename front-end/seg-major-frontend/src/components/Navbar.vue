@@ -45,7 +45,7 @@
               <span class="icon is-small is-left" style="height: 100%;">
                 <i class="search-icon material-icons">search</i>
               </span>
-              <input class="searchbox input" type="text" v-model="searchQuery" placeholder="Search" />
+              <input class="searchbox input" type="text" v-model="searchQuery" @keyup.enter="searchBoxSubmit" placeholder="Search" />
 
               <transition name="fade" mode="out-in">
                 <div v-if="displaySearchResults" class="card search-suggestions">
@@ -120,6 +120,11 @@ export default {
       // Check if focus has moved somewhere else inside the search area first
       if (this.$refs.search.contains(e.relatedTarget)) return;
       this.displaySearchResults = false
+    },
+    searchBoxSubmit() {
+      if (!this.displaySearchResults && this.searchQuery.length > 0) {
+        this.doSearch(this.searchQuery);
+      }
     },
     doSearch(query, oldQuery) {
       // Reuse existing search results if new query only appends to existing query
