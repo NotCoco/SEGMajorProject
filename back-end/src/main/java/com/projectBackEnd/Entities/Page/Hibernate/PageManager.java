@@ -41,6 +41,7 @@ public class PageManager extends EntityManager implements PageManagerInterface {
      * @return added object
      */
     public Page addPage(Page newPage) {
+        if (getPageBySiteAndSlug(newPage.getSite().getSlug(), newPage.getSlug()) != null) return new Page();
         return (Page) super.insertTuple(newPage);
     }
 
@@ -85,7 +86,11 @@ public class PageManager extends EntityManager implements PageManagerInterface {
      * Update attributes of the object
      * @return updated object
      */
-    public Page update(Page updatedVersion) { super.update(updatedVersion); return updatedVersion; }
+    public Page update(Page updatedVersion) {
+        Page pageMatch = getPageBySiteAndSlug(updatedVersion.getSite().getSlug(), updatedVersion.getSlug());
+        if (pageMatch != null && pageMatch.getPrimaryKey() != updatedVersion.getPrimaryKey()) return new Page();
+        super.update(updatedVersion); return updatedVersion;
+    }
 
 
 }

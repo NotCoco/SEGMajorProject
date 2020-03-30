@@ -26,6 +26,7 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
     }
 
     public Site addSite(Site newSite) {
+        if (getSiteBySlug(newSite.getSlug()) != null) return new Site();
         super.insertTuple(newSite);
         return newSite;
     }
@@ -40,6 +41,9 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
     }
 
     public Site update(Site updatedVersion) {
+
+        Site foundSiteMatch = getSiteBySlug(updatedVersion.getSlug());
+        if (foundSiteMatch != null && foundSiteMatch.getPrimaryKey() != updatedVersion.getPrimaryKey()) return new Site();
         return (Site) super.update(updatedVersion);
     }
 

@@ -47,6 +47,7 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
      * @return added news
      */
     public News addNews(News news) {
+        if (getNewsBySlug(news.getSlug()) != null) return new News();
         insertTuple(news);
         return news;
     }
@@ -70,11 +71,13 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
 
     /**
      * Update input News object
-     * @param news
+     * @param updatedVersion
      * @return updated object
      */
-    public News update(News news) {
-        return (News) super.update(news);
+    public News update(News updatedVersion) {
+        News n = getNewsBySlug(updatedVersion.getSlug());
+        if (n != null && n.getPrimaryKey() != updatedVersion.getPrimaryKey()) return new News();
+        return (News) super.update(updatedVersion);
     }
 
     /**
