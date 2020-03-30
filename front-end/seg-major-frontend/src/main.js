@@ -9,6 +9,7 @@ import { faFrown } from '@fortawesome/free-regular-svg-icons'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
 Vue.config.productionTip = false
+
 Vue.use(Print)
 // Install BootstrapVue
 Vue.use(BootstrapVue)

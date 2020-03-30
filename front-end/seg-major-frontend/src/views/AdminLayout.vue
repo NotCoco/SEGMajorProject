@@ -24,7 +24,7 @@
               <div class="navbar-dropdown is-right">
                 <a class="navbar-item">User Settings</a>
                 <a class="navbar-item">Change Email</a>
-                <a class="navbar-item">Change Password</a>
+                <router-link to="/admin/password-reset" class="navbar-item">Change Password</router-link>
                 <hr class="navbar-divider" />
                 <a class="navbar-item log-out">Log out</a>
               </div>
