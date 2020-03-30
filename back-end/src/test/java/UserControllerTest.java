@@ -100,11 +100,16 @@ public class UserControllerTest{
 		});
 		assertEquals(HttpStatus.BAD_REQUEST, thrown2.getStatus());
 
-     	HttpClientResponseException thrown3 = assertThrows(HttpClientResponseException.class, () -> {
+		HttpClientResponseException thrown3 = assertThrows(HttpClientResponseException.class,()->{
+			addUser("name@name.pl","	 ","name");
+		});
+		assertEquals(HttpStatus.BAD_REQUEST, thrown3.getStatus());
+
+     	HttpClientResponseException thrown4 = assertThrows(HttpClientResponseException.class, () -> {
             	client.toBlocking().retrieve(HttpRequest.POST("/user/create",new UserBody("name@name.pl","","lmao")));
         });
-		assertEquals(HttpStatus.BAD_REQUEST, thrown3.getStatus());
-		assertEquals("invalid password", thrown3.getResponse().getBody().get());
+		assertEquals(HttpStatus.BAD_REQUEST, thrown4.getStatus());
+		assertEquals("invalid password", thrown4.getResponse().getBody().get());
 	}
 
 	
@@ -120,6 +125,11 @@ public class UserControllerTest{
 			addUser("name@name.pl","password",null);
 		});
 		assertEquals(HttpStatus.BAD_REQUEST, thrown2.getStatus());
+
+		HttpClientResponseException thrown4 = assertThrows(HttpClientResponseException.class,()->{
+			addUser("name@name.pl","password"," 	");
+		});
+		assertEquals(HttpStatus.BAD_REQUEST, thrown4.getStatus());
 
      	HttpClientResponseException thrown3 = assertThrows(HttpClientResponseException.class, () -> {
             	client.toBlocking().retrieve(HttpRequest.POST("/user/create",new UserBody("name@name.pl","password",null)));
@@ -389,6 +399,7 @@ public class UserControllerTest{
 		assertEquals(HttpStatus.NOT_FOUND , thrown3.getStatus());
 
 
+
 		try{
 			userManager.addUser("mail@mail.com","password","name");
 		}
@@ -408,6 +419,10 @@ public class UserControllerTest{
 				client.toBlocking().exchange(HttpRequest.PUT("/user/password_reset_change",new PasswordResetBody(token,null)));
 			});
 			assertEquals(HttpStatus.BAD_REQUEST , thrown5.getStatus());
+			HttpClientResponseException thrown6 = assertThrows(HttpClientResponseException.class, () -> {
+				client.toBlocking().exchange(HttpRequest.PUT("/user/password_reset_change",new PasswordResetBody(token,"	 ")));
+			});
+			assertEquals(HttpStatus.BAD_REQUEST , thrown6.getStatus());
 			assertNull(userManager.verifyUser("mail@mail.com","test"));
 
 
@@ -520,10 +535,16 @@ public class UserControllerTest{
 		});
 		assertEquals(HttpStatus.BAD_REQUEST , thrown.getStatus());	
 
+
 		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
 				client.toBlocking().exchange(HttpRequest.PUT("/user/change_name",new StringBody(null)).header("X-API-Key",token));
 		});
-		assertEquals(HttpStatus.BAD_REQUEST , thrown1.getStatus());	
+		assertEquals(HttpStatus.BAD_REQUEST , thrown1.getStatus());
+
+		HttpClientResponseException thrown2 = assertThrows(HttpClientResponseException.class, () -> {
+				client.toBlocking().exchange(HttpRequest.PUT("/user/change_name",new StringBody(" 	")).header("X-API-Key",token));
+		});
+		assertEquals(HttpStatus.BAD_REQUEST , thrown2.getStatus());		
 		sessionManager.terminateSession(token);
 	}
 
@@ -579,6 +600,12 @@ public class UserControllerTest{
 				client.toBlocking().exchange(HttpRequest.PUT("/user/change_password",new StringBody("")).header("X-API-Key",token));
 		});
 		assertEquals(HttpStatus.BAD_REQUEST , thrown1.getStatus());	
+
+
+		HttpClientResponseException thrown2 = assertThrows(HttpClientResponseException.class, () -> {
+				client.toBlocking().exchange(HttpRequest.PUT("/user/change_password",new StringBody(" 	")).header("X-API-Key",token));
+		});
+		assertEquals(HttpStatus.BAD_REQUEST , thrown2.getStatus());	
 		sessionManager.terminateSession(token);
 	}
 
