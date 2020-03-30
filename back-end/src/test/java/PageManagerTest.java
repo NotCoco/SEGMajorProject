@@ -292,7 +292,11 @@ public class PageManagerTest {
         Page page1 = new Page(testSiteA.getSlug(), "sameSlug", 1, "TitleA", "ContentA");
         Page page2 = new Page(testSiteA.getSlug(), "sameSlug", 1, "TitleB", "ContentB");
         pageManager.addPage(page1);
-        pageManager.addPage(page2);
+        try {
+            pageManager.addPage(page2);
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+        }
 
         assertEquals(1, pageManager.getAllPages().size());
     }

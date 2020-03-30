@@ -71,10 +71,6 @@ public class Site implements TableEntity {
 
     public void setSlug(String slug) {
         this.slug = slug;
-        SiteManagerInterface checker = SiteManager.getSiteManager();
-        Site found = checker.getSiteBySlug(slug);
-        if (found != null && checker.getByPrimaryKey(primaryKey) == null ) this.slug = null;
-
     }
 
     public String getSlug() { return slug; }

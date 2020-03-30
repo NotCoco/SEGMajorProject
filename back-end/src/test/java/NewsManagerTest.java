@@ -224,8 +224,13 @@ public class NewsManagerTest {
         int sizeBefore = newsManager.getAllNews().size();
         newsManager.addNews(new News(new Date(12343212L), false,
                 "desc213ription1", "ti321t      le1", false, "con321tent1", "slug1"));
-        newsManager.addNews(new News(new Date(12343212L), false,
-                "desc213ription1", "ti321tle1", false, "con321tent1", "slug1"));
+        try {
+            newsManager.addNews(new News(new Date(12343212L), false,
+                    "desc213ription1", "ti321tle1", false, "con321tent1", "slug1"));
+            fail();
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+        }
         assertEquals(sizeBefore+1, newsManager.getAllNews().size());
     }
 

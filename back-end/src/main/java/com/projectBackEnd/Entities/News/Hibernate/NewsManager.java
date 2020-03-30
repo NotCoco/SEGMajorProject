@@ -47,7 +47,7 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
      * @return added news
      */
     public News addNews(News news) {
-        if (getNewsBySlug(news.getSlug()) != null) return new News();
+        if (getNewsBySlug(news.getSlug()) != null) throw new PersistenceException();;
         insertTuple(news);
         return news;
     }
