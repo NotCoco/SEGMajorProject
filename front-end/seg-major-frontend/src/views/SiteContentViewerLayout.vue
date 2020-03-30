@@ -10,7 +10,7 @@
             <nav class="sidebar-navigation">
               <transition name="fade" mode="out-in">
                 <span v-if="loading">
-                  <loading-spinner style="margin-top: 50px; opacity: 0.2"></loading-spinner>
+                  <loading-spinner style="margin-top: 50px; opacity: 0.4"></loading-spinner>
                 </span>
                 <div class="navigation-items" v-else>
                   <router-link
