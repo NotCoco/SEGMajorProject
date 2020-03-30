@@ -1,8 +1,23 @@
+/**
+ * Convert a search query retrieved from the user into a regular expression
+ * that can be used to search page content.
+ *
+ * @param {string} query The search query
+ * @returns {RegExp} A new regular expression that will match the search query
+ */
 function getSearchRegex(query) {
   const escapedQuery = query.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
   return new RegExp(escapedQuery, 'i');
 }
 
+/**
+ * Search a page against a given regular expression.
+ *
+ * @param {Object} page The page to search
+ * @param {RegExp} regex The regular expression to match
+ * @returns {number} A weighting indicating to what extent the page matches
+ *                   the search
+ */
 function searchPage(page, regex) {
   if (page.content) {
     let weight = searchNode(JSON.parse(page.content), regex);
@@ -12,6 +27,14 @@ function searchPage(page, regex) {
   else return 0;
 }
 
+/**
+ * Search a content node recursively against a given regular expression.
+ *
+ * @param {Object} node The node to search
+ * @param {RegExp} regex The regular expression to match
+ * @returns {number} A weighting indicating to what extent the node (and its
+ *                   children) matches the search
+ */
 function searchNode(node, regex) {
   switch(node.type) {
     case "paragraph": { // Base case
@@ -31,6 +54,13 @@ function searchNode(node, regex) {
   }
 }
 
+/**
+ * Combine the text content of the immediate children of a node into a single string.
+ *
+ * @param {Object} node The parent node
+ * @returns {string} The combined text content, or the empty string if there
+ *                   is no content
+ */
 function getCombinedContent(node) {
   if (!node.content) return '';
   let result = "";
@@ -41,6 +71,14 @@ function getCombinedContent(node) {
 }
 
 export default {
+  /**
+   * Search an array of pages against a given query.
+   *
+   * @param {Object[]} pages The pages to search
+   * @param {string} query The search query
+   * @returns {Object[]} All pages that contain the search query, ordered from
+   *                     best to worst match
+   */
   search(pages, query) {
     const regex = getSearchRegex(query);
     return pages.map(page => ({
