@@ -79,6 +79,7 @@
 <script>
 import NewsService from '@/services/news-service';
 import SearchService from '@/services/search-service';
+import ArraySlice from '@/ArraySlice.js';
 
 export default {
   name: "Navbar",
@@ -150,7 +151,8 @@ export default {
         const searchSpace = this.searchResults.length > 0 && newQuery.startsWith(oldQuery)
                             ? this.searchResults
                             : this.pages;
-        this.searchResults = SearchService.search(searchSpace, newQuery);
+        const results = SearchService.search(searchSpace, newQuery);
+        this.searchResults = new ArraySlice(results, 0, 6);
         this.displaySearchResults = true;
       }
     },

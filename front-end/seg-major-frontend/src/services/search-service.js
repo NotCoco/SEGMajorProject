@@ -81,10 +81,10 @@ export default {
    */
   search(pages, query) {
     const regex = getSearchRegex(query);
-    return pages.map(page => ({
-                      page: page,
-                      weight: searchPage(page, regex)
-                     }))
+    return Array.from(pages, page => ({
+                  page: page,
+                  weight: searchPage(page, regex)
+                }))
                 .filter(result => result.weight > 0)
                 .sort((a, b) => b.weight - a.weight)
                 .map(result => result.page);
