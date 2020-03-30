@@ -190,11 +190,13 @@ public class MedicineControllerTest{
 	@Test
 	public void testDeleteMedicineNotExist(){
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-			client.toBlocking().exchange(HttpRequest.DELETE("/medicines/0").header("X-API-Key",token));
+			client.toBlocking().exchange(HttpRequest.DELETE("/medicines/-1").header("X-API-Key",token));
         });
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
 		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
-			client.toBlocking().exchange(HttpRequest.DELETE("/medicines/123").header("X-API-Key",token));
+			client.toBlocking().exchange(HttpRequest.DELETE("/medicines/").header("X-API-Key",token));
         });
+        assertEquals(HttpStatus.METHOD_NOT_ALLOWED, thrown1.getStatus());
 	}
 
     @Test

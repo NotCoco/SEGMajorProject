@@ -10,7 +10,7 @@ import java.util.List;
 import java.math.BigInteger;
 
 import org.apache.commons.validator.routines.EmailValidator;
-
+import java.util.List;
 
 
 
@@ -122,6 +122,9 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 		}
 		throw new UserNotExistException("No such user");
 
+	}
+	public List<User> getUsers(){
+		return getAll();
 	}
 	public boolean verifyEmail(String email){ 
 		return (getAll().stream().filter(u->((User)u).getEmail().equals(email)).count() > 0);

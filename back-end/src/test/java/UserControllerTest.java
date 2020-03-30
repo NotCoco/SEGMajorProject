@@ -36,6 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import main.java.com.projectBackEnd.HibernateUtility;
 import main.java.com.projectBackEnd.EntityManager;
+import java.util.List;
 
 @MicronautTest
 public class UserControllerTest{
@@ -258,10 +259,48 @@ public class UserControllerTest{
 	}
 	@Test
 	public void testLogout(){
-			addUser("admin@admin.com","admin","not me");
-			String token = getToken("admin@admin.com","admin");
-			assertEquals(HttpStatus.OK, client.toBlocking().exchange(HttpRequest.GET("/user/logout").header("X-API-Key", token)).getStatus());
-			assertFalse(sessionManager.verifySession(token));
+		addUser("admin@admin.com","admin","not me");
+		String token = getToken("admin@admin.com","admin");
+		assertEquals(HttpStatus.OK, client.toBlocking().exchange(HttpRequest.GET("/user/logout").header("X-API-Key", token)).getStatus());
+		assertFalse(sessionManager.verifySession(token));
+	}
+	@Test
+	public void testLogoutUnauthorized(){
+		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+			client.toBlocking().exchange(HttpRequest.GET("/user/logout").header("X-API-Key", "321bYUdsd36782F14ASd3DSa12vbuyds"));
+		});
+		assertEquals(HttpStatus.UNAUTHORIZED , thrown.getStatus());
+
+		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
+			client.toBlocking().exchange(HttpRequest.GET("/user/logout").header("X-API-Key", ""));
+		});
+		assertEquals(HttpStatus.UNAUTHORIZED , thrown1.getStatus());
+	}
+	@Test
+	public void testGetAll(){
+
+		assertEquals(HttpStatus.CREATED,addUser("admin@admin.com","admin","not me").getStatus());
+		assertEquals(HttpStatus.CREATED,addUser("admin1@admin.com","admin","not me").getStatus());
+		assertEquals(HttpStatus.CREATED,addUser("admin2@admin.com","admin","not me").getStatus());
+		String token = getToken("admin@admin.com","admin");
+		List<User> users = client.toBlocking().retrieve(HttpRequest.GET("/user").header("X-API-Key", token), Argument.of(List.class, User.class));
+		assertEquals(users.size(),3);
+		for(User u:users){
+			assertEquals(u.getName(),"not me");
+		}
+		
+	}
+	@Test
+	public void testGetAllUnauthorized(){
+		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+			client.toBlocking().exchange(HttpRequest.GET("/user").header("X-API-Key", ""));
+		});
+		assertEquals(HttpStatus.UNAUTHORIZED , thrown.getStatus());
+
+		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
+			client.toBlocking().exchange(HttpRequest.GET("/user").header("X-API-Key", "321bYUdsd36782F14ASd3DSa12vbuyds"));
+		});
+		assertEquals(HttpStatus.UNAUTHORIZED , thrown1.getStatus());
 	}
  	@Test
 	public void testDeleteCorrect(){
