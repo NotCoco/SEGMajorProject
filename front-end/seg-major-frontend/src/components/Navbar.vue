@@ -49,7 +49,10 @@
 
               <transition name="fade" mode="out-in">
                 <div v-if="displaySearchResults" class="card search-suggestions">
-                  <router-link v-for="page in searchResults" v-bind:key="page.slug" :to="`/${page.site.slug}/${page.slug}`" @click.native="displaySearchResults = false">
+                  <router-link v-for="page in searchResults"
+                               :key="page.slug"
+                               :to="`/${page.site.slug}/${page.slug}`"
+                               @click.native="displaySearchResults = false">
                     <div class="card suggestion-item">{{ page.title }}</div>
                   </router-link>
                   <div v-if="searchResults.length == 0" class="card suggestion-item">
@@ -93,7 +96,12 @@ export default {
     }
   },
   computed: {
-    displayUrgentNews() { return this.showUrgentNews && this.urgentNews && !this.localHiddenState && !this.getHiddenState(); },
+    displayUrgentNews() {
+      return this.showUrgentNews
+          && this.urgentNews
+          && !this.localHiddenState
+          && !this.getHiddenState();
+    },
   },
   methods: {
     closeUrgentNews() {
