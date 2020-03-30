@@ -36,6 +36,7 @@
               type="password"
               placeholder="Enter password here..."
               v-on:change="$v.password.$touch()"
+              v-on:keyup.enter="login()"
             />
           </div>
           <div v-if="$v.password.$dirty">
