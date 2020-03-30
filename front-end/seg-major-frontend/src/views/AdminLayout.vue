@@ -26,7 +26,7 @@
                 <a class="navbar-item">Change Email</a>
                 <a class="navbar-item">Change Password</a>
                 <hr class="navbar-divider" />
-                <a class="navbar-item log-out">Log out</a>
+                <a class="navbar-item log-out" @click="logout()">Log out</a>
               </div>
             </div>
           </div>
@@ -50,6 +50,13 @@ export default {
     return {
       username: "..."
     };
+  },
+  methods: {
+    async logout() {
+      await UserService.logout();
+      console.log("Logged out... redirecting to home page");
+      this.$router.push("/");
+    }
   },
   async mounted() {
     this.username = await UserService.getUserName();

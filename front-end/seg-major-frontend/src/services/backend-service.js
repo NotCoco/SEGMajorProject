@@ -36,11 +36,15 @@ api.interceptors.response.use(function (response) {
 
 
 export default {
-  async login(email, password) {
+  login(email, password) {
     return api.post('/user/login', { email, password })
   },
 
-  async getUserName() {
+  logout() {
+    return api.get('/user/logout')
+  },
+
+  getUserName() {
     return api.get('/user/name')
   },
 
