@@ -18,7 +18,15 @@ jpa:
 
 micronaut:
   server:
-    maxRequestSize: 1MB
+    cors: 
+      enabled: true
+      configurations:
+        web:
+          allowedOrigins:
+            - http://localhost:8081
+    maxRequestSize: 10MB
+    multipart:
+      maxFileSize: 10MB
     host: localhost
     netty:
       maxHeaderSize: 500KB
