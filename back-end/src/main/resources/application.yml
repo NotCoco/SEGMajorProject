@@ -26,7 +26,3 @@ micronaut:
         threads: 8
       childOptions:
         autoRead: true
-aws:
-  s3:
-    multipart-upload-threshold: 5248000
-    max-upload-threads: 5
