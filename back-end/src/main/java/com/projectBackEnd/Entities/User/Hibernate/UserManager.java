@@ -130,10 +130,13 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 		return (getAll().stream().filter(u->((User)u).getEmail().equals(email)).count() > 0);
 	}
 	private String hash(String in){
+		String salt = "fX66CeuGKjmdkguhPEzp";
+		int split = in.length()/3;
+		String withSalt = in.substring(0,split) + salt + in.substring(split,in.length());
 		try{
 			MessageDigest alg = MessageDigest.getInstance("SHA-512"); 
 			alg.reset();
-			alg.update(in.getBytes(StandardCharsets.UTF_8));
+			alg.update(withSalt.getBytes(StandardCharsets.UTF_8));
 			return String.format("%0128x", new BigInteger(1, alg.digest()));
 		}
         catch (NoSuchAlgorithmException e) { 

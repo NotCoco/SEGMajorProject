@@ -48,18 +48,15 @@ public class UserControllerTest{
 	@Inject
     @Client("/")
     HttpClient client;
-	private static final UserManagerInterface userManager;
-	private static final ResetLinkManagerInterface linkManager;	
-	private static final SessionManagerInterface sessionManager;
+	private static final UserManagerInterface userManager = UserManager.getUserManager();
+	private static final ResetLinkManagerInterface linkManager = ResetLinkManager.getResetLinkManager();	
+	private static final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
 	/**
-	*gets user, resetLink and session managers and set db to test db
+	* set database to test database
 	*/
     @BeforeAll
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
-		userManager = UserManager.getUserManager();
-		linkManager = ResetLinkManager.getResetLinkManager();	
-		sessionManager = SessionManager.getSessionManager();
 
     }
 	/**
