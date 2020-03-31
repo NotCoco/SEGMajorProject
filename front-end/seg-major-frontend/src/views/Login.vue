@@ -2,7 +2,7 @@
   <div id="login">
     <div id="bg"></div>
     <Navbar></Navbar>
-
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <div class="custom-content-container">
       <div class="card login-box">
         <div class="notification" v-if="sessionExpired">
@@ -34,10 +34,41 @@
               class="input"
               v-model="password"
               type="password"
+				style="height: 38px;width: 321px;" 
+				v-show="!showPw" 
               placeholder="Enter password here..."
               v-on:change="$v.password.$touch()"
               v-on:keyup.enter="login()"
             />
+			<input
+				class="input"
+				v-model="password"
+				type="text"
+				style="height: 38px;width: 321px;" 
+				v-show="showPw" 
+				placeholder="Enter password here..."
+				v-on:change="$v.password.$touch()"
+				v-on:keyup.enter="login()"
+			/>
+			&nbsp;
+			<button 
+					id = "saveButton" 
+					class="button" 
+					style="height: 38px;width: 20px;" 
+					@click="showPasswd()" 
+					v-show="!showPw" 
+			>
+				<i class="fa fa-eye"></i>
+			</button>
+			<button 
+					class="button"
+					style="height: 38px;width: 20px;"
+					@click="showPasswd()"
+					id = "saveButton" 
+					v-show="showPw"  
+			>
+				<i class="fa fa-eye-slash"></i>
+			</button>
           </div>
           <div v-if="$v.password.$dirty">
             <p class="help is-danger" v-if="!$v.password.required">This field is required</p>
@@ -76,7 +107,8 @@ export default {
     return {
       email: "",
       password: "",
-      loginError: false
+      loginError: false,
+		showPw: false
     };
   },
   validations: {
@@ -90,6 +122,9 @@ export default {
     }
   },
   methods: {
+	showPasswd: function(){
+		this.showPw = !this.showPw
+	},
     async login() {
       this.$v.$touch();
       if (this.$v.$invalid) {
