@@ -1,7 +1,8 @@
 <template>
   <div id="drug-chart-creator">
     <Navbar></Navbar>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"> -->
+<link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <section class="hero is-primary">
       <div class="hero-body">
         <div class="container">
@@ -16,17 +17,17 @@
 		<table  style="border-collapse:separate; border-spacing:15px 10px;">
 		<tr>
 			<!-- Header of the Drug chart -->
-			<td><br><br><b>Time:</b><br><br><br><b>Name:</b><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><b>Dose:</b></td>
+			<td><br><b>Time:</b><br><br><br><b>Name:</b><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><b>Dose:</b></td>
 			<td>
-				<table style="border-collapse:separate; border-spacing:15px 30px;">
+				<table style="border-collapse:separate; border-spacing:15px 25px;">
 						<!-- input time -->
 						<tr>
-						<input style="width:180px;" type="time" id="time" name="appt" min="00:00" max="24:00" required>
+						<input class="input" style="width:180px;" type="time" id="time" name="appt" min="00:00" max="24:00" required>
 						</tr>
 						<!-- Drug search box -->
 						<tr><SearchBox ref="drug"></SearchBox></tr>
 						<!-- input dozen -->
-						<tr><input style="width:60px;" type="number" id="dose" name="appt"
+						<tr><input style="width:60px;height: 26px;" type="number" id="dose" name="appt"
 						min="0.0" step=".1" required>
 						<select style="width:50px;height: 26px;" id="unit">
 								<option value="mg">mg</option>
@@ -48,9 +49,9 @@
 					<tr>
 						<!-- buttons of the drug chart -->
 						<td>
-							<button valign="left" @click="addCard()">Add</button>
+							<button valign="left" class="button is-success" @click="addCard()">Add</button>
 							&nbsp;
-							<button valign="right"  v-print ="printObj" >Print</button>
+							<button valign="right"  class="button is-success" v-print ="printObj" >Print</button>
 						</td>
 					</tr>
 				</table>
@@ -157,4 +158,5 @@ export default{
 		height: 100%;
 		overflow: unset;
 	}
+
 </style>

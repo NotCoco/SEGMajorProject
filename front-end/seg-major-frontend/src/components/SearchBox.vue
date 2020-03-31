@@ -3,10 +3,10 @@
  <div class="root" >
             <form class = "form-inline">
 				<table>
-					<tr><input type="text"  style="width:180px;" v-model="search" placeholder="searchBox">
+					<tr><input class="input" type="text"  style="width:180px;" v-model="search" placeholder="searchBox">
 					<tr>
-					<select  style="width:180px;" name="users-out" id="students-out"  multiple="multiple" size="10">			           
-						<option  v-on:click="getcube(medicine.name)"  v-for="medicine in filteredBlogs" :key='medicine' class='list-group-item'>{{medicine.name}}</option>
+					<select class="select" style="width:180px;height: 350px;" name="users-out" id="students-out"  multiple="multiple" size="10">			           
+						<option style="height: 30px;" v-on:click="getcube(medicine.name)"  v-for="medicine in filteredBlogs" :key='medicine' class='list-group-item'>{{medicine.name}}</option>
 					</select>
 					</tr>
 				</table>

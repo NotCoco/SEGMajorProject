@@ -1,4 +1,5 @@
 <template>
+
   <div id="admin-all-pages">
     <section class="section">
       <div class="custom-content-container">

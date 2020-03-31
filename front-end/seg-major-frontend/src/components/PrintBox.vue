@@ -1,4 +1,5 @@
 <template>
+	
 	<div class="print" id="printableTable">
 		<div class="header" >
 			<!-- Header of printbox -->
@@ -6,19 +7,19 @@
 					<tr>
 						<th>
 							<p>Patient Name</p>
-							<input style="height: 25px;" size="45"/>
+							<input class="input" style="height: 25px;" size="45"/>
 						</th>
 						<th>
 							<p>Hospital Number</p>
-							<input style="height: 25px;" size="25"/>
+							<input class="input" style="height: 25px;" size="25"/>
 						</th>
 						<th>
 							<p>DOB</p>
-							<input style="height: 25px;" type="date" value="2000-01-01"/>
+							<input class="input" style="height: 25px;" type="date" value="2000-01-01"/>
 						</th>
 						<th>
 							<p>Drug Allergies</p>
-							<input style="height: 25px;"  size="45"/>
+							<input class="input" style="height: 25px;"  size="45"/>
 						</th>
 
 					</tr>
@@ -50,7 +51,7 @@
 									<td class="print" v-if="item.Bold=='As per warining regime'"><b>{{item.Bold}}&nbsp;</b></td>
 									<td class="print" v-else><b>{{item.Dose}}{{item.Unit}}</b><br>{{item.Freq}}&nbsp;</td>
 									<!-- delete items -->
-									<td class="print-hide" align="absmiddle"><button @click="delCard(item)">X</button><br></td>
+									<td class="print-hide" align="absmiddle"><button class="button" style="width: 10px;height: 30px;" @click="delCard(item)"><i class="fa fa-close"></i></button><br></td>
 							</tr>
 							
 						</tbody>
