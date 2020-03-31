@@ -1,43 +1,52 @@
 <template>
   <div id="page-viewer">
+    <router-link to="all-pages" class="button is-light view-pages-button is-hidden-tablet">
+      <font-awesome-icon icon="stream" size="1x" style="margin-right: 12px; opacity: 0.85" />View all pages
+    </router-link>
+
     <section class="section" style="height: 100%;">
-      <div class="custom-content-container" v-if="page">
-        <h1 class="title">{{ page.title }}</h1>
+      <transition name="fade" mode="out-in">
+        <loading-spinner v-if="!pages" style="padding-top: 68px"></loading-spinner>
+        <http-status :httpStatusCode="404" v-else-if="!page"></http-status>
 
-        <div class="page-content-container">
-          <rich-text-editor v-bind:editable="false" v-model="page.content"></rich-text-editor>
-        </div>
+        <div class="custom-content-container" v-else>
+          <h1 class="title">{{ page.title }}</h1>
 
-        <div class="bottom-nav-buttons">
-          <div class="level">
-            <div class="level-left">
-              <div class="level-item">
-                <!-- Previous Button-->
-                <router-link v-bind:to="previousPage.slug" v-if="previousPage">
-                  <div class="button is-light is-large bottom-nav-btn">
-                    <i class="material-icons" style="margin-right: 5px">arrow_back_ios</i>
-                    {{ previousPage.title }}
-                  </div>
-                </router-link>
+          <div class="page-content-container">
+            <rich-text-editor v-bind:editable="false" v-model="page.content"></rich-text-editor>
+          </div>
+
+          <div class="bottom-nav-buttons">
+            <div class="level">
+              <div class="level-left">
+                <div class="level-item">
+                  <!-- Previous Button-->
+                  <router-link v-bind:to="previousPage.slug" v-if="previousPage">
+                    <div class="button is-light is-large bottom-nav-btn">
+                      <i class="material-icons" style="margin-right: 5px">arrow_back_ios</i>
+                      {{ previousPage.title }}
+                    </div>
+                  </router-link>
+                </div>
               </div>
-            </div>
-            <div class="level-right">
-              <div class="level-item">
-                <!-- Next Button -->
-                <router-link v-bind:to="nextPage.slug" v-if="nextPage">
-                  <div class="button is-light is-large bottom-nav-btn">
-                    {{ nextPage.title }}
-                    <i
-                      class="material-icons"
-                      style="margin-left: 12px; margin-right: -3px;"
-                    >arrow_forward_ios</i>
-                  </div>
-                </router-link>
+              <div class="level-right">
+                <div class="level-item">
+                  <!-- Next Button -->
+                  <router-link v-bind:to="nextPage.slug" v-if="nextPage">
+                    <div class="button is-light is-large bottom-nav-btn">
+                      {{ nextPage.title }}
+                      <i
+                        class="material-icons"
+                        style="margin-left: 12px; margin-right: -3px;"
+                      >arrow_forward_ios</i>
+                    </div>
+                  </router-link>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </transition>
     </section>
   </div>
 </template>
@@ -77,14 +86,23 @@
     color: #222;
   }
 }
+
+.view-pages-button {
+  margin: 18px;
+  margin-bottom: 0;
+}
 </style>
 
 <script>
 import RichTextEditor from "@/components/RichTextEditor";
+import HttpStatus from "@/components/HttpStatus";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default {
   components: {
-    RichTextEditor
+    RichTextEditor,
+    HttpStatus,
+    LoadingSpinner
   },
   props: {
     pages: {
