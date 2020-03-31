@@ -4,17 +4,28 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+/**
+ * ImageManager class is used to handle image related executions:
+ * - Upload images
+ * - Delete images
+ * - Get images
+ */
 public class ImageManager {
+
 	//Random name related variables
 	final String lexicon = "ABCDEFGHIJKLMNOPQRSTUVWXYZ12345674890";
 	final java.util.Random rand = new java.util.Random();
 	final Set<String> identifiers = new HashSet<String>();
+	//Directory of the folder where the images are saved
 	final String dir;
+	//Constructor
 	public ImageManager() {
 		dir = DirectoryHolder.getDir();
 	}
-	//public ImageHandler(String dir) { this.dir = dir; }
-
+	/**
+	 * Return a random name
+	 * @retunn random name
+	 */
 	public String randomIdentifier() {
 		StringBuilder builder = new StringBuilder();
 		while(builder.toString().length() == 0) {
@@ -38,7 +49,12 @@ public class ImageManager {
 		}
 		return data;
 	}
-
+	/**
+	 * Save a image with bytes and its extension
+	 * @param imageBytes
+	 * @param extension
+	 * @retunn random name
+	 */
 	public String saveImage(String imageBytes, String extension)
 	{
 		if(extension == null){ return "Failed"; }
@@ -61,7 +77,11 @@ public class ImageManager {
 		return (randomName + "." + extension);
 	}
 
-
+	/**
+	 * Delete image
+	 * @param imageName
+	 * @retunn boolean value to check if its deleted
+	 */
 	public boolean deleteImage(String imageName)
 	{
 		File folder = new File(dir);
@@ -77,6 +97,9 @@ public class ImageManager {
 		return false;
 	}
 
+	/**
+	 * Delete all the images
+	 */
 	public void deleteAll()
 	{
 		List<String> listOfImageUrls = getImageUrls();
@@ -86,6 +109,23 @@ public class ImageManager {
 				deleteImage(imageUrl.substring(imageUrl.lastIndexOf("/") + 1));
 			}
 		}
+	}
+
+	/**
+	 * Get the image by image name
+	 * @param imageName
+	 * @return
+	 */
+	public File getImage(String imageName){
+		File folder = new File(dir);
+		File targetFile = null;
+		File[] listOfFiles = folder.listFiles();
+		for (File f: listOfFiles) {
+			if(f.getName().equals(imageName)){
+				targetFile = f;
+			}
+		}
+		return targetFile;
 	}
 
 	public  List<String> getImageUrls()
@@ -107,17 +147,5 @@ public class ImageManager {
 	public String getDir()
 	{
 		return dir;
-	}
-
-	public File getImage(String imageName){
-		File folder = new File(dir);
-		File targetFile = null;
-		File[] listOfFiles = folder.listFiles();
-		for (File f: listOfFiles) {
-			if(f.getName().equals(imageName)){
-				targetFile = f;
-			}
-		}
-		return targetFile;
 	}
 }

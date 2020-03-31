@@ -1,5 +1,6 @@
 package test.java;
 
+import io.micronaut.core.type.Argument;
 import io.micronaut.http.*;
 import io.micronaut.http.client.multipart.MultipartBody;
 import io.micronaut.test.annotation.MicronautTest;
@@ -7,6 +8,7 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 
+import main.java.com.projectBackEnd.Entities.Medicine.Hibernate.Medicine;
 import main.java.com.projectBackEnd.Image.*;
 
 import javax.inject.Inject;
@@ -17,10 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 
 import static io.micronaut.http.MediaType.MULTIPART_FORM_DATA_TYPE;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManager;
@@ -28,6 +27,8 @@ import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManager;
 import main.java.com.projectBackEnd.HibernateUtility;
 
 import java.io.File;
+import java.util.List;
+import java.util.Optional;
 
 @MicronautTest
 public class ImageControllerTest {
@@ -142,10 +143,16 @@ public class ImageControllerTest {
 	}
 
 	@Test
-	public void getImage(){
-		HttpRequest request = HttpRequest.GET("/medicines")
+	public void testAddAndGetImage(){
+		HttpResponse response = addImage(file,token);
+		assertEquals(HttpStatus.CREATED, response.getStatus());
+		String imageName = getEUrl(response);
+		assertTrue(imageManager.getImageUrls().contains(imageManager.getDir()+imageName));
+		HttpRequest request = HttpRequest.GET("/images/"+imageName)
+				.header("X-API-Key",token)
 				.contentType(MediaType.MULTIPART_FORM_DATA_TYPE);
-
+		File targetImage = client.toBlocking().retrieve(request, Argument.of(File.class));
+		assertNotNull(targetImage);
 	}
 
 	private String getEUrl(HttpResponse response) {

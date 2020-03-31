@@ -81,14 +81,15 @@ public class ImageController {
 		}
 	}
 
-//	@Get(value = "/{imageName}", produces = MediaType.MULTIPART_FORM_DATA)
-//	public File get(@Header("X-API-Key") String session, String imageName) {
-//		if(!sessionManager.verifySession(session)){return null;}
-//		return imageManager.getImage(imageName);
-//	}
-
-	@Get(value = "/{imageName}")
-	public File get( String imageName) {
+	/**
+	 * Get an image with the image name by http Get method
+	 * @param session
+	 * @param imageName
+	 * @return the image file
+	 */
+	@Get(value = "/{imageName}", produces = MediaType.MULTIPART_FORM_DATA)
+	public File get(@Header("X-API-Key") String session, String imageName) {
+		if(!sessionManager.verifySession(session)){return null;}
 		return imageManager.getImage(imageName);
 	}
 
