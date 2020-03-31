@@ -3,6 +3,7 @@ package main.java.com.projectBackEnd.Image;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -11,8 +12,8 @@ import java.util.Base64;
 
 import io.micronaut.http.MediaType;
 
-import io.micronaut.http.client.multipart.MultipartBody;
 import io.micronaut.http.multipart.CompletedFileUpload;
+import main.java.com.projectBackEnd.Entities.Medicine.Hibernate.Medicine;
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 
@@ -32,7 +33,7 @@ public class ImageController {
 	/**
 	 * Add a new image by http POST method
 	 * @param session
-
+	 * @param file
 	 * @return Http response with relevant information which depends on the result of
 	 * inserting new image
 	 */
@@ -41,7 +42,8 @@ public class ImageController {
 		if(!sessionManager.verifySession(session))
 			return HttpResponse.unauthorized();
 		try {
-			String extension = file.getFilename().split("\\.")[1];
+			String[] strings = file.getFilename().split("\\.");
+			String extension = strings[strings.length-1];
 			byte[] encoded = Base64.getEncoder().encode(file.getBytes());
 			String msg = imageManager.saveImage(new String(encoded), extension);
 			if(msg.equals("Failed")){
@@ -68,7 +70,7 @@ public class ImageController {
 	 * deleting the image
 	 */
 	@Delete("/{imageName}")
-	public HttpResponse delete(@Header("X-API-Key") String session,String imageName) {
+	public HttpResponse delete(@Header("X-API-Key") String session, String imageName) {
 		if(!sessionManager.verifySession(session))
 			return HttpResponse.unauthorized();
 		if(imageManager.deleteImage(imageName)){
@@ -77,6 +79,17 @@ public class ImageController {
 		else {
 			return HttpResponse.serverError();
 		}
+	}
+
+//	@Get(value = "/{imageName}", produces = MediaType.MULTIPART_FORM_DATA)
+//	public File get(@Header("X-API-Key") String session, String imageName) {
+//		if(!sessionManager.verifySession(session)){return null;}
+//		return imageManager.getImage(imageName);
+//	}
+
+	@Get(value = "/{imageName}")
+	public File get( String imageName) {
+		return imageManager.getImage(imageName);
 	}
 
 	public void deleteAll(){
