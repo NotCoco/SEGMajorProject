@@ -10,7 +10,6 @@ import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
 import Vuelidate from 'vuelidate'
 
-
 Vue.config.productionTip = false
 
 Vue.use(Print)

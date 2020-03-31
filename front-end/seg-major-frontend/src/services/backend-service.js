@@ -45,7 +45,15 @@ export default {
   logout() {
     return api.get('/user/logout')
   },
-
+	
+  getResetRequest(email) {
+	return api.post( '/user/password_reset_request' , {'string':email} ) 
+  },
+  
+  resetPassword(token,password) {
+	return api.put( '/user/password_reset_change' , {token,password} ) 
+  },
+  
   getUserName() {
     return api.get('/user/name')
   },

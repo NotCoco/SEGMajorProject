@@ -17,7 +17,17 @@ export default {
         const res = await BackendService.getUserName()
         return res.data
     },
-
+	
+	async getResetRequest(email){
+		await BackendService.getResetRequest(email)
+	},
+	
+	async resetPassword(token,passwd) {
+		const res = await BackendService.resetPassword(token,passwd)
+		return res.data
+		//logout()
+	},
+	
     isAuthenticated() {
         const apiKey = localStorage.getItem('api-key')
         if (!apiKey) return false
