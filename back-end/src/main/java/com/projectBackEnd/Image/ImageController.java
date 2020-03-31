@@ -3,8 +3,16 @@ package main.java.com.projectBackEnd.Image;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 
+import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Base64;
 
+import io.micronaut.http.MediaType;
+
+import io.micronaut.http.client.multipart.MultipartBody;
+import io.micronaut.http.multipart.CompletedFileUpload;
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 
@@ -24,22 +32,31 @@ public class ImageController {
 	/**
 	 * Add a new image by http POST method
 	 * @param session
-	 * @param imageBytes image bytes encoded with Base64
+
 	 * @return Http response with relevant information which depends on the result of
 	 * inserting new image
 	 */
-	@Post("/")
-	public HttpResponse<String> add(@Header("X-API-Key") String session,@Body String imageBytes) {
+	@Post(value = "/", consumes = MediaType.MULTIPART_FORM_DATA)
+	public HttpResponse<String> add(@Header("X-API-Key") String session, @Body CompletedFileUpload file) {
 		if(!sessionManager.verifySession(session))
 			return HttpResponse.unauthorized();
-		String msg = imageManager.saveImage(imageBytes);
-		if(msg.equals("Failed")){
-			return HttpResponse.serverError();
+		try {
+			String extension = file.getFilename().split("\\.")[1];
+			byte[] encoded = Base64.getEncoder().encode(file.getBytes());
+			String msg = imageManager.saveImage(new String(encoded), extension);
+			if(msg.equals("Failed")){
+				return HttpResponse.serverError();
+			}
+			else{
+				return HttpResponse
+						.created(msg)
+						.headers(headers -> headers.location(location(msg)));
+			}
 		}
-		else{
+		catch(IOException a){
+			System.out.println("Error occured");
 			return HttpResponse
-					.created(msg)
-					.headers(headers -> headers.location(location(msg)));
+					.noContent();
 		}
 	}
 

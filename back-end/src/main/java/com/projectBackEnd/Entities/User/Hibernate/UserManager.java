@@ -38,7 +38,7 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 		if(name == null || name.trim().isEmpty())
 			throw new IncorrectNameException("incorrect name");
 		if(password == null || password.trim().isEmpty())
-			throw new InvalidPasswordException("invalid password");	
+			throw new InvalidPasswordException("invalid password");
 	
 		User user = new User(email,hash(password),name);
 		insertTuple(user);
