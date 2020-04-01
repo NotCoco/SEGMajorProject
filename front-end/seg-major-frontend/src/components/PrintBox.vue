@@ -47,11 +47,12 @@
 									<td class="print" v-if="item === items[0]">{{item.Time}}&nbsp;</td>
 									<td class="print" v-else-if="items[index-1].Time === item.Time"></td>
 									<td class="print" v-else>{{item.Time}}&nbsp;</td>
-									<td class="print">{{item.Drug}}&nbsp;</td>
+									<td class="print" >{{split(item.Drug)}}&nbsp;</td>
 									<td class="print" v-if="item.Bold=='As per warining regime'"><b>{{item.Bold}}&nbsp;</b></td>
 									<td class="print" v-else><b>{{item.Dose}}{{item.Unit}}</b><br>{{item.Freq}}&nbsp;</td>
 									<!-- delete items -->
 									<td class="print-hide" align="absmiddle"><button class="button" style="width: 10px;height: 30px;" @click="delCard(item)"><i class="fa fa-close"></i></button><br></td>
+									<td class="print" style="width: 60px;"></td>
 									<td class="print" style="width: 60px;"></td>
 									<td class="print" style="width: 60px;"></td>
 									<td class="print" style="width: 60px;"></td>
@@ -94,6 +95,28 @@
 			};
 		},
 		methods:{
+			/**
+			 * @param {Object} medicine
+			 * if the length of the drug is longer than  15 words
+			 * split it
+			 */
+			split: function(medicine){
+				var firsthalf=""
+				var secondhalf=""
+				if(medicine.length>15&&medicine.length<=30){
+					firsthalf = medicine.substr(0,15)
+					secondhalf = medicine.substr(15,medicine.length)
+					medicine = firsthalf+"\n"+secondhalf
+					return medicine
+				}
+				else if(medicine.length>30){
+					firsthalf = medicine.substr(0,20)
+					secondhalf = medicine.substr(20,medicine.length)
+					medicine = firsthalf+"\n"+secondhalf
+					return medicine
+				}
+				return medicine
+			},
 			/**
 			 * @param {Object} item
 			 * Deleting items from print list

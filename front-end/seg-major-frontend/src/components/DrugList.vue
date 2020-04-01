@@ -151,6 +151,10 @@
 				//get medicine files from backend
 				return medicineService.getAllMedicines();
 			},
+			/**
+			 * @param {Object} matching string
+			 * match if theres invalid word
+			 */
 			regTest: function(string){
 				let reg = /[@#%&+;":{}'*^!.,~_=><]+/g
 				return reg.test(string)
@@ -164,8 +168,8 @@
 				
 				if(name!=="" && type !==""){
 					console.log(name_len)
-					if(name_len >30){
-						window.alert("The medicine name can not be longer than 30 words!")
+					if(name_len >40){
+						window.alert("The medicine name can not be longer than 40 words!")
 					}
 					else{
 						if(this.regTest(name)){
@@ -207,8 +211,8 @@
 				var name_len = name.length
 				
 				if(id!=="" && name!=="" && type !==""){
-					if(name_len >30){
-						window.alert("The medicine name can not be longer than 30 words!")
+					if(name_len >40){
+						window.alert("The medicine name can not be longer than 40 words!")
 					}
 					else{
 						if(this.regTest(name)){
