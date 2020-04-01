@@ -17,6 +17,8 @@ import main.java.com.projectBackEnd.Entities.Medicine.Hibernate.Medicine;
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 
+import javax.validation.constraints.Size;
+
 /**
  * Image Controller class is used for the interactions between frontend and backend
  * There are functionalites :
@@ -83,13 +85,12 @@ public class ImageController {
 
 	/**
 	 * Get an image with the image name by http Get method
-	 * @param session
 	 * @param imageName
 	 * @return the image file
 	 */
 	@Get(value = "/{imageName}", produces = MediaType.MULTIPART_FORM_DATA)
-	public File get(@Header("X-API-Key") String session, String imageName) {
-		if(!sessionManager.verifySession(session)){return null;}
+	@Size
+	public File get(String imageName) {
 		return imageManager.getImage(imageName);
 	}
 

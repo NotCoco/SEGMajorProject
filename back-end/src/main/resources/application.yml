@@ -1,6 +1,6 @@
 datasources:
   default:
-    url: ${JDBC_URL:`jdbc:mysql://127.0.0.1:3306/testunittest`}
+    url: ${JDBC_URL:`jdbc:mysql://127.0.0.1:3306/seg`}
     username: ${JDBC_USER:root}
     password: ${JDBC_PASSWORD:}
     driverClassName: ${JDBC_DRIVER:com.mysql.jdbc.Driver}
@@ -24,9 +24,9 @@ micronaut:
         web:
           allowedOrigins:
             - http://localhost:8081
-    maxRequestSize: 10MB
+    maxRequestSize: 100MB
     multipart:
-      maxFileSize: 10MB
+      maxFileSize: 100MB
     host: localhost
     netty:
       maxHeaderSize: 500KB

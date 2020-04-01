@@ -8,7 +8,6 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 
-import main.java.com.projectBackEnd.Entities.Medicine.Hibernate.Medicine;
 import main.java.com.projectBackEnd.Image.*;
 
 import javax.inject.Inject;
@@ -27,21 +26,26 @@ import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManager;
 import main.java.com.projectBackEnd.HibernateUtility;
 
 import java.io.File;
-import java.util.List;
-import java.util.Optional;
-
+/**
+ * The purpose of this class is to test the REST endpoints associated with the image related executions
+ */
 @MicronautTest
 public class ImageControllerTest {
 	private static ImageManager imageManager;
     private static String token;
 	private File file;
+	private File largeFile;
 	public ImageControllerTest(){
 		imageManager = new ImageManager();
 		file = new File(System.getProperty("user.dir")+"/src/test/resources/TestImages/UploadedImage/"+"testImage.jpg");
+		largeFile = new File(System.getProperty("user.dir")+"/src/test/resources/TestImages/UploadedImage/"+"17MB.jpg");
 	}
 	@Inject
 	@Client("/")
 	HttpClient client;
+	/**
+	 * Set up the user table for sessions and set the target directory of generated images to the specified folder
+	 */
 	@BeforeAll
 	public static void setUpBefore() {
 		DirectoryHolder.getDirectoryHolder().setDir(System.getProperty("user.dir")+"/src/test/resources/TestImages/Generated/");
@@ -56,9 +60,15 @@ public class ImageControllerTest {
 		}
 	}
 
+	/**
+	 * Clean up the folder
+	 */
 	@BeforeEach
 	public void setUp() {imageManager.deleteAll();}
 
+	/**
+	 * Clean up the folder and sets the directory back to default
+	 */
 	@AfterAll
 	public static void deleteCreatedImages() {
 		imageManager.deleteAll();
@@ -71,6 +81,9 @@ public class ImageControllerTest {
 		DirectoryHolder.getDirectoryHolder().setDefaultDir();
 	}
 
+	/**
+	 * Add an image with POST request
+	 */
 	@Test
 	public void testAddLegalImage(){
 		HttpResponse response = addImage(file,token);
@@ -78,6 +91,9 @@ public class ImageControllerTest {
 		String imageName = getEUrl(response);
 		assertTrue(imageManager.getImageUrls().contains(imageManager.getDir()+imageName));
 	}
+	/**
+	 *	Add an unauthorized image with POST request
+	 */
 	@Test
 	public void testAddUnauthorized(){
         	HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
@@ -91,6 +107,9 @@ public class ImageControllerTest {
         	});
 		assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
 	}
+	/**
+	 * Add image with wrong directory
+	 */
 	@Test
 	public void testAddIncorrect(){
 		File badFile = new File(System.getProperty("user.dir")+"/src/");
@@ -98,6 +117,9 @@ public class ImageControllerTest {
 			addImage(badFile, token);
         	});
 	}
+	/**
+	 * Delete an image
+	 */
 	@Test
 	public void testDeleteImage(){
 		HttpResponse response = addImage(file,token);
@@ -107,6 +129,9 @@ public class ImageControllerTest {
 		HttpResponse response2 = client.toBlocking().exchange(request);
 		assertEquals(HttpStatus.NO_CONTENT, response2.getStatus());
 	}
+	/**
+	 * Delete wrong images name
+	 */
 	@Test
 	public void testDeleteIncorrect(){
         	HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
@@ -123,8 +148,11 @@ public class ImageControllerTest {
 		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR , thrown2.getStatus());
 	}
 
+	/**
+	 * Delete with unionization
+	 */
 	@Test
-	public void testDeleteUnautorized(){
+	public void testDeleteUnauthorized(){
 		HttpResponse response = addImage(file, token);
 		assertEquals(HttpStatus.CREATED, response.getStatus());
 		String imageName = getEUrl(response);
@@ -142,6 +170,9 @@ public class ImageControllerTest {
 	
 	}
 
+	/**
+	 * Add and get the same image
+	 */
 	@Test
 	public void testAddAndGetImage(){
 		HttpResponse response = addImage(file,token);
@@ -149,10 +180,20 @@ public class ImageControllerTest {
 		String imageName = getEUrl(response);
 		assertTrue(imageManager.getImageUrls().contains(imageManager.getDir()+imageName));
 		HttpRequest request = HttpRequest.GET("/images/"+imageName)
-				.header("X-API-Key",token)
 				.contentType(MediaType.MULTIPART_FORM_DATA_TYPE);
 		File targetImage = client.toBlocking().retrieve(request, Argument.of(File.class));
 		assertNotNull(targetImage);
+	}
+
+	/**
+	 * Add an large image
+	 */
+	@Test
+	public void testAddLargeImage(){
+		HttpResponse response = addImage(largeFile,token);
+		assertEquals(HttpStatus.CREATED, response.getStatus());
+		String imageName = getEUrl(response);
+		assertTrue(imageManager.getImageUrls().contains(imageManager.getDir()+imageName));
 	}
 
 	private String getEUrl(HttpResponse response) {
