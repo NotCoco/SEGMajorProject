@@ -58,6 +58,7 @@ public class ImageManager {
 	public String saveImage(String imageBytes, String extension)
 	{
 		if(extension == null){ return "Failed"; }
+		extension = extension.toLowerCase();
 		//convert base64 string to binary data
 		byte[] data = hexStringToByteArray("e04fd020ea3a6910a2d808002b30309d");
 		try {
@@ -133,7 +134,7 @@ public class ImageManager {
 		File folder = new File(dir);
 		File[] listOfFiles = null;
 		try{listOfFiles = folder.listFiles();}
-		catch (Exception e){System.out.println("asdfasdf");}
+		catch (Exception e){}
 		List<String> urls = new ArrayList<String>();
 		for (int i = 0; i < listOfFiles.length; i++)
 		{
