@@ -10,6 +10,9 @@
 			<div class="notification is-danger" v-show="submitError">
 			<strong>Error:</strong> Please fill up your info and try again!
 			</div>
+			<div class="notification is-danger" v-show="lengthError">
+			<strong>Error:</strong> Password is too short!
+			</div>
 			<div class="notification is-danger" v-show="matchError">
 			<strong>Error:</strong> Password not match!
 			</div>
@@ -59,8 +62,10 @@
 				submitError: false,
 				verifyError: false,
 				matchError: false,
+				lengthError: false,
 				Success: false,
 				canClick: true
+				
 			}
 			
 		},
@@ -83,15 +88,6 @@
 					}
 				}
 			}
-			// canClick:{
-			// 	handler: function(){
-			// 		if(window.localStorage){
-			// 			window.localStorage.setItem("canClick",JSON.stringify(this.canClick));
-			// 		}else{
-			// 			console.log("failed")
-			// 		}
-			// 	}
-			// }
 		},
 		methods: {
 			shownew: function(){
@@ -112,7 +108,8 @@
 				},1000)
 			},
 			sendRequest: function(){
-				userService.getResetRequest("AlbertG2001@outlook.com")
+				var email =  window.localStorage.getItem("email")
+				userService.getResetRequest(email)
 				this.canClick = false
 				this.content = this.time + 's'
 				let clock = window.setInterval(() => {
@@ -130,8 +127,15 @@
 				var status = 0
 				var tk = document.getElementById('token').value
 				var pw = document.getElementById('newPw').value
+				var pw_len = pw.length
 				var pw_2 = document.getElementById('newPw_2').value
-				if(pw !== "" && pw_2 !== "" && pw === pw_2 && tk!==""){
+				if(pw_len<5){
+					this.lengthError = true
+					this.submitError = false
+					this.verifyError = false
+					this.matchError = false
+				}
+				else if(pw !== "" && pw_2 !== "" && pw === pw_2 && tk!==""){
 					await userService.resetPassword(tk,pw).then(async function(response) {
 							console.log(response.data)
 							status = 1
@@ -148,6 +152,7 @@
 					if(status === 1){
 						this.Success = true
 					}
+					this.lengthError = false
 					this.matchError = false
 					this.submitError = false
 					
@@ -155,10 +160,13 @@
 					this.submitError = true
 					this.matchError = false
 					this.verifyError = false
-				}else if(pw !== pw_2){
+					this.lengthError = false
+				}
+				else if(pw !== pw_2){
 					this.matchError = true
 					this.submitError = false
 					this.verifyError = false
+					this.lengthError = false
 				}
 				
 			}

@@ -121,6 +121,17 @@ export default {
       minLength: minLength(5)
     }
   },
+watch:{
+	email:{
+		handler: function(){
+			if(window.localStorage){
+				window.localStorage.setItem("email",JSON.stringify(this.email));
+			}else{
+				console.log("failed")
+			}
+		}
+	}
+},
   methods: {
 	showPasswd: function(){
 		this.showPw = !this.showPw
