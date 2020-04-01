@@ -10,7 +10,7 @@
             <nav class="sidebar-navigation">
               <transition name="fade" mode="out-in">
                 <span v-if="loading">
-                  <loading-spinner style="margin-top: 50px; opacity: 0.2"></loading-spinner>
+                  <loading-spinner style="margin-top: 50px; opacity: 0.4"></loading-spinner>
                 </span>
                 <div class="navigation-items" v-else>
                   <router-link
@@ -27,6 +27,9 @@
       </div>
 
       <div class="page-content">
+        <div class="searchBarContainer is-hidden-desktop">
+          <search-bar :pages="pages" />
+        </div>
         <transition name="fade" mode="out-in">
           <router-view v-bind:pages="pages" v-bind:key="$route.path"></router-view>
         </transition>
@@ -57,24 +60,28 @@
   background: #fdfdfd;
   border: none;
 }
+
+.searchBarContainer {
+  height: 50px;
+}
 </style>
 
 <script>
 import SitesService from "@/services/sites-service";
-
 import Navbar from "@/components/Navbar.vue";
-
+import SearchBar from '@/components/SearchBar.vue';
 import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default {
   components: {
     Navbar,
+    SearchBar,
     LoadingSpinner
   },
   data() {
     return {
       site: { name: "... " },
-      pages: [],
+      pages: null,
       loading: true
     };
   },

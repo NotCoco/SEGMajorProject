@@ -26,37 +26,27 @@
             <h1 class="brand-bottom">Paediatric Liver Service</h1>
           </div>
         </router-link>
+
+        <div class="navbar-burger is-hidden-desktop" @click="mobileNavActive=!mobileNavActive">
+          <font-awesome-icon icon="bars" size="2x" />
+        </div>
+
+
       </div>
 
-      <div class="navbar-menu">
+<transition name="fade" mode="out-in">
+      <div class="navbar-menu" ref="navMenu" :class="{ 'is-active': mobileNavActive }" v-bind:key="mobileNavActive">
         <div class="navbar-start" style="margin-left: 35px">
           <router-link to="/" class="navbar-item">Home</router-link>
           <router-link to="/news" class="navbar-item">News</router-link>
           <router-link to="/drug-chart" class="navbar-item">Drug Chart</router-link>
         </div>
 
-        <div class="navbar-end">
-          <div class="searchbox-container" v-if="showSearchBar">
-            <div class="control has-icons-left" style="height: 100%">
-              <span class="icon is-small is-left" style="height: 100%;">
-                <i class="search-icon material-icons">search</i>
-              </span>
-              <input class="searchbox input" type="text" v-model="searchQuery" placeholder="Search" />
-
-              <transition name="fade" mode="out-in">
-              <div v-if="searchQuery.length > 2" class="card search-suggestions">
-                <div v-for="page in filtered" v-bind:key="page" class="card suggestion-item">
-                  {{page}}
-                </div>
-                <div v-if="filtered.length == 0" class="card suggestion-item">
-                <p><i>No search results found</i></p>
-                </div>
-              </div>
-              </transition>
-            </div>
-          </div>
+        <div class="navbar-end search is-hidden-touch">
+          <search-bar v-if="showSearchBar" :pages="pages" />
         </div>
       </div>
+</transition>
     </nav>
     <transition name="vertical-slide" v-if="displayUrgentNews" appear>
       <router-link class="link" :to="`/news/${urgentNews.slug}`">
@@ -71,6 +61,7 @@
 
 <script>
 import NewsService from '@/services/news-service';
+import SearchBar from '@/components/SearchBar.vue';
 
 export default {
   name: "Navbar",
@@ -87,11 +78,16 @@ export default {
       type: Array
     }
   },
+  components: {
+    SearchBar
+  },
   computed: {
-    displayUrgentNews() { return this.showUrgentNews && this.urgentNews && !this.localHiddenState && !this.getHiddenState(); },
-    filtered() {
-      return this.pages.filter(p => p.includes(this.searchQuery))
-    }
+    displayUrgentNews() {
+      return this.showUrgentNews
+          && this.urgentNews
+          && !this.localHiddenState
+          && !this.getHiddenState();
+    },
   },
   methods: {
     closeUrgentNews() {
@@ -101,13 +97,13 @@ export default {
     getHiddenState() {
       const savedState = localStorage.getItem('hide-urgent-news');
       return savedState && JSON.parse(savedState) === this.urgentNews.slug;
-    }
+    },
   },
   data () {
     return {
       urgentNews: undefined,
       localHiddenState: false,
-      searchQuery: ''
+      mobileNavActive: false
     }
   },
   async created() {
@@ -120,7 +116,7 @@ export default {
   watch: {
     pages: function() {
       console.log(this.pages)
-    }
+    },
   }
 };
 </script>
@@ -172,6 +168,14 @@ nav.navbar {
 
   .navbar-brand {
     padding-left: 14px;
+    height: 100%;
+  }
+
+  .navbar-burger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
   }
 
   .brand-text {
@@ -187,38 +191,8 @@ nav.navbar {
       margin-bottom: 0px;
     }
   }
-}
-
-.input.searchbox {
-  height: 100%;
-  width: 400px;
-  border: 0;
-  box-shadow: none;
-  background-color: #fbfbfb;
-
-  &:hover {
-    background-color: #f9f9f9;
-  }
-
-  &:focus {
-    background-color: #f5f5f7;
-  }
-
-  &::placeholder {
-    opacity: 1;
-    color: #888;
-  }
-}
-
-.search-icon {
-  color: #aaa;
-}
-
-.search-suggestions {
-  background: white;
-
-  .suggestion-item {
-    padding: 15px 20px;
+  .search {
+    width: 400px;
   }
 }
 </style>
