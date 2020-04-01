@@ -33,7 +33,7 @@
 				</tbody >
 				<!-- The table displays all of the added medicines -->
 				<tr>
-					<table width="350" >
+					<table style="width: 1000px;" >
 						<!-- table head -->
 						<thead class="thead-light">
 							<th valign="left">Time&nbsp;</th>
@@ -52,6 +52,18 @@
 									<td class="print" v-else><b>{{item.Dose}}{{item.Unit}}</b><br>{{item.Freq}}&nbsp;</td>
 									<!-- delete items -->
 									<td class="print-hide" align="absmiddle"><button class="button" style="width: 10px;height: 30px;" @click="delCard(item)"><i class="fa fa-close"></i></button><br></td>
+									<td class="print" style="width: 60px;"></td>
+									<td class="print" style="width: 60px;"></td>
+									<td class="print" style="width: 60px;"></td>
+									<td class="print" style="width: 60px;"></td>
+									<td class="print" style="width: 60px;"></td>
+									<td class="print" style="width: 60px;"></td>
+									<td class="print" style="width: 60px;"></td>
+									<td class="print" style="width: 60px;"></td>
+									<td class="print" style="width: 60px;"></td>
+									<td class="print" style="width: 60px;"></td>
+									<td class="print" style="width: 60px;"></td>
+									<td class="print" style="width: 60px;"></td>
 							</tr>
 							
 						</tbody>

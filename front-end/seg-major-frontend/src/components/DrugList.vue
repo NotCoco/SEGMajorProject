@@ -46,12 +46,12 @@
 								</tr>
 										<!-- Buttons -->
 									<tr v-if="this.ChangeDrug" >
-										<td><button  class="button" @click="updateDrug()" id = "saveButton">Save</button></td>
-										<td><button  class="button" @click="deleteDrug()" id = "deleteButton">Delete</button></td>
+										<td><button  class="button" type="button" @click="updateDrug()" id = "saveButton">Save</button></td>
+										<td><button  class="button" type="button" @click="deleteDrug()" id = "deleteButton">Delete</button></td>
 									</tr>
 									<tr v-if="this.AddDrug" >
 										<td>
-											<button class="button" @click="addDrug()" id="addDrug">Save</button>
+											<button class="button" type="button" @click="addDrug()" id="addDrug">Save</button>
 											<!-- <button class="button" @click="Test()" id="a">Test</button> -->
 										</td>
 									</tr>
@@ -117,11 +117,17 @@
 			}
 		},
 		async mounted(){
+			/**
+			 * fetch the drug list
+			 */
 			document.getElementById("table").style.visibility ="hidden"
 			this.Medicines = await this.getDrug()
 			
 		},
 		computed: {
+			/**
+			 * search function
+			 */
 			filteredBlogs: function(){
 			return this.Medicines.filter(
 				(Medicines) => {return Medicines.name.match(this.search);}
@@ -129,25 +135,50 @@
 			}
 		},
 		methods: {
+			/**
+			 * Test data
+			 */
 			Test: function(){
 				for(var i=0;i<this.test.length;i++){
 					var data = {"name": this.test[i].name,"type":  this.test[i].type}
 					medicineService.createMedicine(data)
 				}
 			},
+			/**
+			 * get all medicines
+			 */
 			getDrug: function(){
 				//get medicine files from backend
 				return medicineService.getAllMedicines();
+			},
+			regTest: function(string){
+				let reg = /[@#%&+;":{}'*^!.,~_=><]+/g
+				return reg.test(string)
 			},
 			//add drug to db
 			addDrug: function(){
 				//add drug to backend
 				var name = document.getElementById('name').value
 				var type = this.selected.title
+				var name_len = name.length
+				
 				if(name!=="" && type !==""){
-					var data = {"name": name,"type": type}
-					medicineService.createMedicine(data);
-					location.reload()
+					console.log(name_len)
+					if(name_len >30){
+						window.alert("The medicine name can not be longer than 30 words!")
+					}
+					else{
+						if(this.regTest(name)){
+							window.alert("Please do NOT enter invalid words!\n"+
+							'Invalid: @#%&+;"'+":{}"+"'*^!.,~_=><")
+						}else{
+							var data = {"name": name,"type": type}
+							medicineService.createMedicine(data);
+							location.reload()
+						}
+						
+					}
+					
 				}
 				else{
 					window.alert("Please Enter full Info!")
@@ -173,10 +204,23 @@
 				var id = document.getElementById('primaryKey').value
 				var name = document.getElementById('name').value
 				var type = this.selected.title
+				var name_len = name.length
+				
 				if(id!=="" && name!=="" && type !==""){
-					var data = {"id": id ,"name": name ,"type": type}
-					medicineService.updateMedicine(data);
-					location.reload()
+					if(name_len >30){
+						window.alert("The medicine name can not be longer than 30 words!")
+					}
+					else{
+						if(this.regTest(name)){
+							window.alert("Please do NOT enter invalid words!\n"+
+							'Invalid: @#%&+;"'+":{}"+"'*^!.,~_=><")
+						}else{
+							var data = {"id": id ,"name": name ,"type": type}
+							medicineService.updateMedicine(data);
+							location.reload()
+						}
+					} 
+					
 				}
 				else{
 					window.alert("Please Enter full info!")

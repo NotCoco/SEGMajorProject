@@ -4,6 +4,7 @@
 		<link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 		<div style="overflow: hidden" class="custom-content-container" >
 			<h1 class="title">Password Reset</h1>
+			<!-- notifications -->
 			<div class="notification is-success" v-show="Success">
 			<strong>Success:</strong> Password has been reset, redirected to login page!&nbsp;<i class="fa fa-spinner fa-spin"></i>
 			</div>
@@ -20,6 +21,7 @@
 			<strong>Error:</strong> Verify Failed! Please check your token.
 			</div>
 				<table style="border-collapse:separate; border-spacing:0px 14px;" >
+					<!-- password input box -->
 					<tr><b>First, enter the new password:</b><br></tr>
 					<tr>
 						<td>
@@ -30,9 +32,10 @@
 						<button class="button"  style="height: 30px;width: 15px;"  @click="shownew()" id = "saveButton" v-show="showNew" ><i class="fa fa-eye-slash"></i></button>
 						</td>
 					</tr>
+					<!-- password input box -->
 					<tr><b>Please enter it again:</b><br></tr>
 					<tr><input id="newPw_2" class="input" type="password" style="height: 30px;width: 200px;" placeholder="Enter again"></tr>
-					
+					<!-- token input box -->
 					<tr><b>Last step, enter the verify code in the email:</b><br></tr>
 					<tr>
 						<td>
@@ -106,7 +109,7 @@
 				this.showNew = !this.showNew
 			},
 			/**
-			 * control wthether button can be clicked
+			 * control whether resend button can be clicked
 			 */
 			send: function(){
 				this.canClick = false
@@ -122,6 +125,9 @@
 					}
 				},1000)
 			},
+			/**
+			 * send the password reset request
+			 */
 			sendRequest: function(){
 				var email =  window.localStorage.getItem("email")
 				email = email.substr(0,email.length-1)
@@ -140,6 +146,10 @@
 					}
 				},1000)
 			},
+			/**
+			 * reset the password
+			 * control to display the notification
+			 */
 			async resetPw(){
 				var status = 0
 				var tk = document.getElementById('token').value

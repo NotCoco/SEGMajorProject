@@ -97,13 +97,13 @@ export default{
 			var unit = document.getElementById("unit").value.toString();
 			var freq = document.getElementById("freq").value.toString();
 			var bold = document.getElementById("warn").value.toString();
-			var drug = this.$refs.drug.getDrugName();2
+			var drug = this.$refs.drug.getDrugName();
 			var items = this.$refs.print.getItems();
 			if(time != null && drug != null && dose != null ){
 				var drugWithUnit = dose.concat(unit)
 				//check if added drug is in the drug list
 				if(this.drugCheck(drug)){
-						if(items.length<30){
+						if(items.length<100){
 							if(dose.length == 0 && !document.getElementById("warn").checked){
 								window.alert("Please fill in all the info!");
 							}
@@ -123,8 +123,8 @@ export default{
 								window.alert("Please fill in all the info!");
 							}
 						}
-						else{ //can not print more than 30 medicines in one page.
-								window.alert("You can only add 30 medicines at a time!")
+						else{ //can not print more than 100 medicines in one page.
+								window.alert("You can only add 100 medicines at a time!")
 						}
 				}
 				else{

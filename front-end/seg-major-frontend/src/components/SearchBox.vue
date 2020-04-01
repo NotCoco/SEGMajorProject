@@ -44,9 +44,11 @@ export default {
 			return medicineService.getAllMedicines();
 		},
 		getcube:function(id){
+			//get id of the drug
 			this.search = id
 		},
 		getDrugName:function(){
+			//return the search result
 			return this.search
 		}  
 	}
