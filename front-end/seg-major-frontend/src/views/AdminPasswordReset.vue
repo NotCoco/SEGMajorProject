@@ -58,6 +58,9 @@
 				content: 'Send',
 				time: 10,
 				password: '',
+				/**
+				 *  notifications
+				 */
 				showNew: false,
 				submitError: false,
 				verifyError: false,
@@ -70,6 +73,9 @@
 			
 		},
 		created() {
+			/**
+			 * Check if the countdown is still counting when refreshing pages
+			 */
 			var t = window.localStorage.getItem("time")
 			var fac = this.time
 			if((fac- t)>0){
@@ -79,6 +85,9 @@
 
 		},
 		watch:{
+			/**
+			 * save countdown
+			 */
 			time:{
 				handler: function(){
 					if(window.localStorage){
@@ -90,9 +99,15 @@
 			}
 		},
 		methods: {
+			/**
+			 * password hide/display
+			 */
 			shownew: function(){
 				this.showNew = !this.showNew
 			},
+			/**
+			 * control wthether button can be clicked
+			 */
 			send: function(){
 				this.canClick = false
 				this.content = this.time + 's'
@@ -109,6 +124,8 @@
 			},
 			sendRequest: function(){
 				var email =  window.localStorage.getItem("email")
+				email = email.substr(0,email.length-1)
+				email = email.substr(1)
 				userService.getResetRequest(email)
 				this.canClick = false
 				this.content = this.time + 's'
