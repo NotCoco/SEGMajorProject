@@ -11,36 +11,29 @@ import javax.persistence.Table;
 
 import javax.validation.constraints.NotNull;
 
-
-/**
- * Medicine objects are database entities for the table 'Medicine' defined in this class.
- * The have three attributes :
- *    - auto-increment primary key as 'ID' in table
- *    - name as 'Name',
- *    - type as 'Type' (Liquid, Tablet, Capsule, Injection, Topical, Suppositories, Drops, Inhalers).
- *
- *    https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
- */
 @Entity
 @Table(name = Medicine.TABLENAME)
 public class Medicine implements TableEntity {
 
-    // Table columns (attributes)
+    // 'Medicine' database table name and attributes
     public static final String TABLENAME = "Medicines";
     private static final String ID = "ID";
     private static final String NAME = "Name";
     private static final String TYPE = "Type";
 
-    // Private Fields : primaryKey, name, type
+
+    // Primary key 'ID' auto-incremented in the database
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ID, nullable = false)
     private Integer primaryKey;
 
+    // Name of the medicine
     @NotNull
     @Type(type = "text")
     @Column(name = NAME, nullable = false)
     private String name;
 
+    // Type of the medicine
     @NotNull
     @Type(type="text")
     @Column(name = TYPE, nullable = false)
@@ -48,20 +41,30 @@ public class Medicine implements TableEntity {
 
 
     /**
-     * Constructors : empty constructor, default constructor & constructor taking primary key id
-     * for object re-creation
+     * Default constructor
      */
-    public Medicine() {
-    }
+    public Medicine() {}
 
+
+    /**
+     * Main constructor
+     * The PK 'ID' is auto-increment in the database.
+     * @param name name of the medicine
+     * @param type type of the medicine
+     */
     public Medicine(String name, String type) {
         this.primaryKey = -1;
         setName(name);
         setType(type);
-
     }
 
-    // Constructor taking id
+
+    /**
+     * Constructor taking PK for object re-creation
+     * @param id    primary key of the object
+     * @param name  name of the medicine
+     * @param type  type of the medicine
+     */
     public Medicine(Integer id, String name, String type) {
         this.primaryKey = id;
         setName(name);
@@ -70,42 +73,68 @@ public class Medicine implements TableEntity {
 
 
     /**
-     * Getters and setters
-     * Primary key id cannot be changed in the database
+     * Get the ID of the medicine object
+     * @return Primary key ID
      */
     public Integer getPrimaryKey() {
         return primaryKey;
     }
 
+
+    /**
+     * Get the name of the medicine object
+     * @return Name
+     */
     public String getName() {
         return name;
     }
 
+
+    /**
+     * Change the name of the medicine object
+     * @param name New name
+     */
     public void setName(String name) {
         this.name = (name == null || "".equals(name.trim())) ? "Unnamed" : name;
     }
 
+
+    /**
+     * Get the type of the medicine object
+     * @return type
+     */
     public String getType() {
         return type;
     }
 
+
+    /**
+     * Change the type of the medicine object
+     * @param type New type
+     */
     public void setType(String type) {
         this.type = (type == null || "".equals(type.trim())) ? "Undefined" : type;
     }
 
+
     /**
      * Copy the values of the input TableEntity object
-     * @param toCopy
+     * @param toCopy    Medicine object to copy
      * @return this, updated medicine object
      */
     @Override
     public TableEntity copy(TableEntity toCopy) {
+
         Medicine medToCopy = (Medicine) toCopy;
         setName(medToCopy.getName());
         setType(medToCopy.getType());
+
         return this;
+
     }
 
 
 }
+
+
 
