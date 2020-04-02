@@ -11,35 +11,45 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import java.io.Serializable;
 
+/**
+ * User objects are database entities for the table 'Users' defined in this class.
+ * Each User has an ID, email, password and name.
+ *
+ * Inspiration : https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
+ */
 @Entity
 @Table(name = User.TABLENAME)
 public class User implements TableEntity{
 
+	// table columns (attributes)
 	public final static String TABLENAME = "Users";
 	private final static String KEY = "id";
 	private final static String EMAIL = "email";
 	private final static String PASSWORD = "password";
 	private final static String NAME = "name";
-	// Private fields
+	// Primary key 'ID' auto-incremented in the database
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = KEY)
    	private int primaryKey;
 
+	// Email of the user
 	@Column(name = EMAIL)
 	@Type(type="text")
 	private String email;
 
+	// Password of the user
 	@Column(name = PASSWORD)
 	@Type(type="text")
 	private String password;
 
+	// Name of the user
 	@Column(name = NAME)
 	@Type(type="text")
 	private String name;
 	/**
-	 * Constructors
-	 * @param email
-	 * @param password
+	 * Main constructor
+	 * @param email The email of the user
+	 * @param password The password of the user
 	 */
 	public User(String email, String password, String name) {
 		this.email = email;
@@ -47,33 +57,69 @@ public class User implements TableEntity{
 		this.name = name;
 	}
 
+	/**
+	 * Empty constructor
+	 */
 	public User(){};
 
 	/**
-	 * Getters and setters
-	 * Primary Key cannot be changed
+	 * Gets the ID of the user
+	 * @return ID primary key
 	 */
 	public Serializable getPrimaryKey() { return primaryKey; }
 
+	/**
+	 * Gets the email of the user
+	 * @return Email of the user
+	 */
 	public String getEmail(){
 		return email;
 	}
+
+	/**
+	 * Gets the password of the user
+	 * @return Password of the user
+	 */
 	public String getPassword(){
 		return password;
 	}
+
+	/**
+	 * Sets the email of the user
+	 * @param email The new email
+	 */
 	public void setEmail(String email){
 		this.email = email;
 	}
+
+	/**
+	 * Sets the password of the user
+	 * @param password The new password
+	 */
 	public void setPassword(String password){
 		this.password = password;
 	}
+
+	/**
+	 * Gets the name of the user
+	 * @return Name of user
+	 */
 	public String getName(){
 		return name;
 	}
+
+	/**
+	 * Sets the name of the user
+	 * @param name The new name of the user
+	 */
 	public void setName(String name){
 		this.name = name;
 	}
 
+	/**
+	 * Produces a string depicting this object
+	 * @return the generated string
+	 */
 	@Override
 	public String toString() {
 		return "User: " + this.primaryKey + ", " + this.email + ", " + this.password + "," + this.name;
@@ -83,6 +129,11 @@ public class User implements TableEntity{
 		return user.email == email;
 	}
 
+	/**
+	 * Copy the values of the input TableEntity object
+	 * @param newCopy    User object to copy
+	 * @return this, updated User object
+	 */
   	@Override
     public TableEntity copy(TableEntity newCopy) {
         if(newCopy instanceof User){
