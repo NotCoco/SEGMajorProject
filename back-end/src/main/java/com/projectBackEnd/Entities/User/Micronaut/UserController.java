@@ -20,14 +20,10 @@ import java.util.List;
 import java.net.URI;
 
 /**
- * User Controller class is used for the interactions between frontend and backend
- * There are functionalites :
- *    - add a new user
- *    - login
- *    - delete a user
- *    - change password
- *    - reset password
- *    - change email
+ * User Controller is a REST API endpoint.
+ * It deals with the interactions between the server and the Users table in the database.
+ * It provides HTTP requests for each of the queries that carry out the creation, deletion, retrieval, updating
+ * and logging in & out of users
  */
 @Controller("/user")
 public class UserController {
@@ -101,7 +97,7 @@ public class UserController {
 	 * @return Http response with relevant information which depends on the result of
 	 * deleting
 	 */
-    	@Delete("/delete")
+	@Delete("/delete")
 	public HttpResponse deleteUser(@Body UserBody user){
 		try{
 			userManager.deleteUser(user.getEmail(), user.getPassword());

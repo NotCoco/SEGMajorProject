@@ -27,15 +27,18 @@ public class SendMail
      * This method will send a email to a specific email account.
      * The addresser account is my personal account.
      * Only in this way I can get authentication code.
-     *
+     * @param to The email to send the message to
+     * @param title The subject of email
+     * @param content The content of email
+     * @return The success of the call
      */
     public static boolean send(String to, String title, String content) {
 
         String addresser = "476070991@qq.com";
         String authentication = "bxnxbljhsskqcaji";
 
-        // get the system properties and set up the host.
-        //use simple mail transfer protocol.
+        // Get the system properties and set up the host.
+        // Use simple mail transfer protocol.
         Properties properties = System.getProperties();
         properties.setProperty("mail.smtp.host", "smtp.qq.com");// qq mail server
         properties.put("mail.smtp.auth", "true");
@@ -46,8 +49,8 @@ public class SendMail
         MailSocket.setTrustAllHosts(true);
         properties.put("mail.smtp.ssl.enable", "true");
         properties.put("mail.smtp.ssl.socketFactory", MailSocket);
-        //get a default session.
-        //including the user name and the authentication code.
+        // Get a default session
+        // Include the user name and the authentication code
         Session session = Session.getDefaultInstance(properties, new Authenticator()
         {
             public PasswordAuthentication getPasswordAuthentication() {
