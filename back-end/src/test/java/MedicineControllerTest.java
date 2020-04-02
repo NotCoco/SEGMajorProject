@@ -33,6 +33,10 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManager;
 import main.java.com.projectBackEnd.HibernateUtility;
+
+/**
+* class to unit test interactions between rest calls and system with respect to medicine functionality
+*/
 @MicronautTest
 public class MedicineControllerTest{
 
@@ -42,6 +46,9 @@ public class MedicineControllerTest{
 
     static MedicineManagerInterface medicineManager;
     private static String token;
+	/**
+	*	set db to test db, get medicine manager and add user for verification
+	*/
     @BeforeAll
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
@@ -53,8 +60,10 @@ public class MedicineControllerTest{
         catch(Exception e){
         	fail();
         }    
-}
-
+	}
+	/**
+	*	delete the user and close the factory
+	*/
     @AfterAll
     public static void closeDatabase() {
         try{
@@ -65,12 +74,17 @@ public class MedicineControllerTest{
         }    
         HibernateUtility.shutdown();
     }
-
+	/**
+	*	delete all medicine objects
+	*/
     @BeforeEach
     public void setUp() {
         medicineManager.deleteAll();
 
     }
+	/**
+	*	check if geting not existing medicine returns 404 http exception
+	*/
     @Test
     public void testNonExistingMedicineReturns404() {
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
@@ -80,7 +94,9 @@ public class MedicineControllerTest{
         assertNotNull(thrown.getResponse());
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
     }
-
+	/**
+	*	check if adding medicnes and than getting them all has correct results
+	*/
     @Test
     public void testAddAndGetAll(){
         ArrayList<Integer> ids = new ArrayList<>();
@@ -96,6 +112,9 @@ public class MedicineControllerTest{
         for(int i=0; i<ids.size();i++) assertEquals(ids.get(i), medicineList.get(i).getPrimaryKey());
 
     }
+	/**
+	*	checking if adding medicine with empty name renames it to unnamed
+	*/
     @Test
     public void testAddEmptyNameMedicine(){
         HttpResponse response = addMedicine("", "Topical");
@@ -103,7 +122,9 @@ public class MedicineControllerTest{
         Medicine testMed = getMedicine(id);
         assertEquals("Unnamed", testMed.getName());
     }
-
+	/**
+	*	checking if adding medicine with empty type renames it to undefined
+	*/
     @Test
     public void testAddEmptyTypeMedicine(){
         HttpResponse response = addMedicine("Med1", "");
@@ -111,7 +132,9 @@ public class MedicineControllerTest{
         Medicine testMed = getMedicine(id);
         assertEquals("Undefined", testMed.getType());
     }
-
+	/**
+	* test if adding and getting correct medicine behaves correctly
+	*/
     @Test
     public void testAddAndGetMedicine(){
         HttpResponse response = addMedicine("Med1", "Liquid");
@@ -121,11 +144,17 @@ public class MedicineControllerTest{
 
         assertEquals("Med1", testMed.getName());
     }
+	/**
+	*	check if adding correct medicine returns correct http response
+	*/
     @Test
     public void testAddLegalMedicine(){
         HttpResponse response= addMedicine("Med1", "Liquid");
         assertEquals(HttpStatus.CREATED, response.getStatus());
     }
+	/**
+	*	check if adding medicine without correct session token returns http unauthorized exception
+	*/
 	@Test
 	public void testAddMedicineUnauthorised(){
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
@@ -138,7 +167,9 @@ public class MedicineControllerTest{
         });
         assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
 	}
-
+	/**
+	*	test if adding medicine with null fields renames them to correct defaulte values
+	*/
 	@Test
 	public void testAddMedicineNull(){
         HttpResponse response = addMedicine(null, null);
@@ -160,7 +191,9 @@ public class MedicineControllerTest{
 
 	
 
-
+	/**
+	*	test if adding medicine and deleting medicine and than geting it throws not found error
+	*/
     @Test
     public void testDeleteAndGetMedicine(){
         HttpResponse response = addMedicine("Med1", "Liquid");
@@ -174,7 +207,9 @@ public class MedicineControllerTest{
             client.toBlocking().exchange(HttpRequest.GET("/medicines/"+id));
         });
     }
-
+	/**
+	*	test if delting medicine without correct session token return http unauthorized exception
+	*/
 	@Test
 	public void testDeleteMedicinieUnauthorised(){
         int id =  getEId(addMedicine("name", "type")).intValue();
@@ -188,6 +223,9 @@ public class MedicineControllerTest{
         });
         assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
 	}
+	/**
+	*	test if deleting a medicine with wrong index returns an http exception
+	*/
 	@Test
 	public void testDeleteMedicineNotExist(){
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
@@ -199,7 +237,9 @@ public class MedicineControllerTest{
         });
         assertEquals(HttpStatus.METHOD_NOT_ALLOWED, thrown1.getStatus());
 	}
-
+	/**
+	*	test if updating medicine to correct values behaves correctly
+	*/
     @Test
     public void testPutLegalMedicine(){
         HttpResponse response= addMedicine("Med1", "Liquid");
@@ -207,7 +247,9 @@ public class MedicineControllerTest{
         response = putMedicine(id, "NewName", "NewType");
         assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
     }
-
+	/**
+	*	test if updating medicine to empty values sets the to defaulte ones
+	*/
  @Test
     public void testUpdateMedicineEmptyType() {
         HttpResponse response = addMedicine("Med1", "Liquid");
@@ -216,7 +258,9 @@ public class MedicineControllerTest{
         Medicine found = getMedicine(id);
         assertEquals("Undefined", found.getType());
     }
-	
+		/**
+	*	test if updating medicine to empty values sets the to defaulte ones
+	*/
     @Test
     public void testUpdateMedicineEmptyName() {
         HttpResponse response = addMedicine("Med1", "Liquid");
@@ -225,6 +269,9 @@ public class MedicineControllerTest{
         Medicine found = getMedicine(id);
         assertEquals("Unnamed", found.getName());
     }
+	/**
+	*	test if updating medicine to empty values sets the to defaulte ones
+	*/
 	@Test
 	public void testUpdateMedicineNull(){
         HttpResponse response = addMedicine("Med1", "Liquid");
@@ -244,6 +291,9 @@ public class MedicineControllerTest{
         assertEquals("Undefined", found2.getType());
 
 	}
+	/**
+	*	test if updating medicine without correct session token return http unauthorized exception
+	*/
 	@Test
 	public void testUpdateMedicinieUnauthorised(){
         int id =  getEId(addMedicine("name", "type")).intValue();
@@ -257,6 +307,9 @@ public class MedicineControllerTest{
         });
         assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
 	}
+	/**
+	*	test if adding and than updating medicine with correct values behaves correctly
+	*/
     @Test
     public void testAddAndUpdateMedicine(){
         HttpResponse response = addMedicine("Med1", "Liquid");
@@ -268,24 +321,35 @@ public class MedicineControllerTest{
         assertEquals("newName", m.getName());
         assertEquals("newType", m.getType());
     }
-
+	/**
+	*	creates put request to update medicine
+	* @returns http response to the request
+	*/
     protected HttpResponse putMedicine(int id, String name, String type){
         HttpRequest request = HttpRequest.PUT("/medicines", new MedicineUpdateCommand(id, name, type)).header("X-API-Key",token);
         return client.toBlocking().exchange(request);
     }
-
+	/**
+	*	creates post request to add medicine
+	* @returns http response to the request
+	*/
     protected HttpResponse addMedicine(String name, String type){
         HttpRequest request = HttpRequest.POST("/medicines", new MedicineAddCommand(name, type)).header("X-API-Key",token);
         HttpResponse response = client.toBlocking().exchange(request);
         return response;
     }
-
+	/**
+	*	creates a get response to get the medicine
+	* @returns medicine
+	*/
     protected Medicine getMedicine(int id){
         HttpRequest request = HttpRequest.GET("/medicines/" + id);
         return client.toBlocking().retrieve(request, Medicine.class);
 
-    }
-
+    }		
+	/**
+	*	gets medicines id from http response
+	*/
     protected Long getEId(HttpResponse response) {
         String val = response.header(HttpHeaders.LOCATION);
         if (val != null) {

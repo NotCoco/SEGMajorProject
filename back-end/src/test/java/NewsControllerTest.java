@@ -35,6 +35,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
+/**
+* class to unit test interactions between rest calls and the software with regards to news functionality
+*/
 @MicronautTest
 public class NewsControllerTest {
 
@@ -45,6 +48,10 @@ public class NewsControllerTest {
 
     static NewsManagerInterface newsManager;
     private static String token;
+
+	/**
+	*	run before class, aquire newManager object, set testing db and create and login a user whose credentials are used for testing
+	*/
     @BeforeAll
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
@@ -57,7 +64,9 @@ public class NewsControllerTest {
         	fail();
         }  
     }
-
+	/**
+	*	delete the user and shutdown the factory
+	*/
     @AfterAll
     public static void closeDatabase() {
         try{
@@ -67,15 +76,18 @@ public class NewsControllerTest {
         	fail();
         }    
         HibernateUtility.shutdown();
-    }
-
+    }	
+	
+	/**
+	*	delete all news objects
+	*/
     @BeforeEach
     public void setUp() {
         newsManager.deleteAll();
     }
-
-    @AfterEach
-    public void cleanUp(){ newsManager.deleteAll(); }
+	/**
+	*	add news, check if its added and than test if delete returns a proper http response
+	*/
    @Test
     public void testDeleteNews(){
         HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug",token);
@@ -85,6 +97,9 @@ public class NewsControllerTest {
         response = client.toBlocking().exchange(request);
         assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
     }
+	/**
+	*	add news, check if its added and than test if delete returns a proper http response and check if get that news returns error
+	*/
     @Test
     public void testDeleteAndGetNews(){
         HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "TestSlug",token);
@@ -99,7 +114,9 @@ public class NewsControllerTest {
             client.toBlocking().exchange(HttpRequest.GET("/news/"+"TestSlug"));
         });
     }
-
+	/**
+	*	check if delete news that does not exist returns error
+	*/
 	@Test
 	public void testDeleteIncorrect(){
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
@@ -112,6 +129,10 @@ public class NewsControllerTest {
 		assertEquals(HttpStatus.METHOD_NOT_ALLOWED, thrown1.getStatus());
 
 	}
+
+	/**
+	*	check if delete with wrong session token returns unauthorized response
+	*/
 	@Test
 	public void testDeleteUnauthorized(){
         HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug",token);
@@ -130,7 +151,9 @@ public class NewsControllerTest {
         });
 		assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
 	}
-	
+	/**
+	* check if adding news and then geting all news behaves correctly
+	*/
     @Test
     public void testAddAndGetNews(){
         HttpResponse response = addNews(new Date(34189213L) , true, "Test description", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug",token);
@@ -138,7 +161,9 @@ public class NewsControllerTest {
         List<News> newsList = getAllNews();
         assertEquals("Test description",newsList.get(0).getDescription());
     }
-
+	/**
+	*	check if adding news, creates new news
+	*/
     @Test
     public void testAddNews(){
         HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics",
@@ -150,6 +175,9 @@ public class NewsControllerTest {
         assertNotNull(testNews);
         assertEquals("Corona virus pandemics", testNews.getTitle());
     }
+	/**
+	*	check if adding a news with empty or null field throws an error
+	*/
 	@Test
 	public void testAddIncorrect(){
 		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
@@ -185,7 +213,9 @@ public class NewsControllerTest {
         });
 		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown8.getStatus());
 	}
-
+	/**
+	* check if adding news and than updating it, updates the news
+	*/
     @Test
     public void testAddAndUpdateNews(){
         HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug",token);
@@ -199,6 +229,9 @@ public class NewsControllerTest {
         assertEquals("New description", news.getDescription());
         assertEquals("New title", news.getTitle());
     }
+	/**
+	* check if adding news while using wrong token returns unauthorized exception
+	*/
 	@Test
 	public void testAddUnauthorized(){
 		 HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
@@ -210,7 +243,9 @@ public class NewsControllerTest {
         });
 		assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
 	}
-
+	/**
+	* checking if update with correct fields behaves correctly
+	*/
     @Test
     public void testUpdateLegalNews(){
         HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug",token);
@@ -221,7 +256,9 @@ public class NewsControllerTest {
         response = putNews(id, new Date(324189213L), true, "NewDescription", "NewTitle",true, "NewContent", "NewSlug",token);
         assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
     }
-
+	/**
+	* check if update with empty or null fields returns an error
+	*/
 	@Test
 	public void testUpdateIncorrect(){
         HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug",token);
@@ -263,7 +300,9 @@ public class NewsControllerTest {
         });
 		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown8.getStatus());
 	}
-
+	/**
+	* test if updating with wrong session token returns unauthorized
+	*/
 	@Test
 	public void testUpdateUnauthorized(){
         HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug",token);
@@ -280,14 +319,18 @@ public class NewsControllerTest {
         });
 		assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
 	}
-
+	/**
+	*	updates a news by making rest call
+	*/
     protected HttpResponse putNews(Integer primaryKey, Date date, boolean pinned, String description, String title,
                                    boolean urgent, String content, String slug,String token) {
         HttpRequest request = HttpRequest.PUT("/news", new NewsUpdateCommand(primaryKey, date, pinned, description,
                 title, urgent, content,slug)).header("X-API-Key",token);
         return client.toBlocking().exchange(request);
     }
-
+	/**
+	* adds a news by making rest call
+	*/
     protected HttpResponse addNews(Date date, boolean pinned, String description, String title, boolean urgent,
                                    String content, String slug,String token){
         HttpRequest request = HttpRequest.POST("/news", new NewsAddCommand(date, pinned, description, title,
@@ -295,12 +338,18 @@ public class NewsControllerTest {
         HttpResponse response = client.toBlocking().exchange(request);
         return response;
     }
-
+	/**
+	* returns all news by making rest call
+	* @return list of all news
+	*/
     protected List<News> getAllNews(){
         HttpRequest request = HttpRequest.GET("/news");
         return client.toBlocking().retrieve(request, Argument.of(List.class, News.class));
     }
-
+	/**
+	* get url fron httpresponse
+	* @return url string
+	*/
     private String getEUrl(HttpResponse response) {
         String val = response.header(HttpHeaders.LOCATION);
         if (val != null) {

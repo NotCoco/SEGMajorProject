@@ -33,8 +33,13 @@ import java.io.File;
 public class ImageControllerTest {
 	private static ImageManager imageManager;
     private static String token;
+
 	private File file;
 	private File largeFile;
+
+	/**
+	*	Constructor gets a new image manager Singleton
+	*/
 	public ImageControllerTest(){
 		imageManager = ImageManager.getImageManager();
 		file = new File(System.getProperty("user.dir")+"/src/test/resources/TestImages/UploadedImage/"+"testImage.jpg");
@@ -43,6 +48,7 @@ public class ImageControllerTest {
 	@Inject
 	@Client("/")
 	HttpClient client;
+  
 	/**
 	 * Set up the user table for sessions and set the target directory of generated images to the specified folder
 	 */
@@ -61,14 +67,13 @@ public class ImageControllerTest {
 	}
 
 	/**
-	 * Clean up the folder
+	 * Delete all images
 	 */
 	@BeforeEach
 	public void setUp() {imageManager.deleteAll();}
-
 	/**
-	 * Clean up the folder and sets the directory back to default
-	 */
+	* delete all images, delete the user, close the factory
+	*/
 	@AfterAll
 	public static void deleteCreatedImages() {
 		imageManager.deleteAll();
@@ -81,6 +86,7 @@ public class ImageControllerTest {
 		DirectoryHolder.getDirectoryHolder().setDefaultDir();
 	}
 
+
 	/**
 	 * Add an image with POST request
 	 */
@@ -92,7 +98,7 @@ public class ImageControllerTest {
 		assertTrue(imageManager.getImageUrls().contains(imageManager.getDir()+imageName));
 	}
 	/**
-	 *	Add an unauthorized image with POST request
+	 * test if adding a image without a correct session token returns http unauthorized excepiton
 	 */
 	@Test
 	public void testAddUnauthorized(){
@@ -108,7 +114,7 @@ public class ImageControllerTest {
 		assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
 	}
 	/**
-	 * Add image with wrong directory
+	 * Add image with wrong directory / null image
 	 */
 	@Test
 	public void testAddIncorrect(){
@@ -130,8 +136,10 @@ public class ImageControllerTest {
 		assertEquals(HttpStatus.NO_CONTENT, response2.getStatus());
 	}
 	/**
-	 * Delete wrong images name
+	 * Delete wrong image's name
 	 */
+
+
 	@Test
 	public void testDeleteIncorrect(){
         	HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
@@ -150,6 +158,7 @@ public class ImageControllerTest {
 
 	/**
 	 * Delete with unionization
+	 * test if deleting a image without a correct session token returns http unauthorized excepiton
 	 */
 	@Test
 	public void testDeleteUnauthorized(){
@@ -200,6 +209,7 @@ public class ImageControllerTest {
 	 * @param response
 	 * @return url
 	 */
+
 	private String getEUrl(HttpResponse response) {
 		String val = response.header(HttpHeaders.LOCATION);
 		if (val != null) {
@@ -227,5 +237,4 @@ public class ImageControllerTest {
 			HttpResponse response = client.toBlocking().exchange(request);
 			return response;
 	}
-
 }
