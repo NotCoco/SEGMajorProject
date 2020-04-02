@@ -21,7 +21,10 @@ public class AppInfoManagerTest {
         infoManager = AppInfoManager.getInfoManager();
     }
 
-
+    @BeforeEach
+    public void setUp() {
+        JSONLocation.setJsonFile("src/test/resources/AppInfoTest.json");
+    }
 //======================================================================================================================
 
     /**
@@ -29,7 +32,6 @@ public class AppInfoManagerTest {
      */
     @Test
     public void testUpdateAndGetInformation() {
-        JSONLocation.setJsonFile("src/test/resources/AppInfoTest.json");
         infoManager.updateInfo(new AppInfo("Interesting Hospital", "Cool Department"));
         assertEquals(infoManager.getInfo().getHospitalName(), "Interesting Hospital");
     }
@@ -40,7 +42,6 @@ public class AppInfoManagerTest {
      */
     @Test
     public void testUpdateAndGetInformationAgain() {
-        JSONLocation.setJsonFile("src/test/resources/AppInfoTest.json");
         infoManager.updateInfo(new AppInfo("Interesting New Hospital", "Cool Department"));
         assertEquals(infoManager.getInfo().getHospitalName(), "Interesting New Hospital");
     }
@@ -50,7 +51,6 @@ public class AppInfoManagerTest {
      */
     @Test
     public void testUpdateAndGetInformationOnceMore() {
-        JSONLocation.setJsonFile("src/test/resources/AppInfoTest.json");
         infoManager.updateInfo(new AppInfo("Interesting New Hospital", "Cool Department in a different dep"));
         assertEquals(infoManager.getInfo().getDepartmentName(), "Cool Department in a different dep");
     }
@@ -66,7 +66,7 @@ public class AppInfoManagerTest {
     }
 
     /**
-     * Unfound Random JSON
+     * Unfound Random JSON location should default to the default too.
      */
     @Test
     public void testUnfoundJSONFile() {
