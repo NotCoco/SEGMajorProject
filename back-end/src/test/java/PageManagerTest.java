@@ -33,7 +33,6 @@ public class PageManagerTest {
 
     /**
      * Prior to running, databaste information location is set and siteManagers and pageManagers are intialised
-     *
      */
     @BeforeAll
     public static void setUpDatabase() {
@@ -166,7 +165,6 @@ public class PageManagerTest {
 
     /**
      * Test the fill database method below, and the getAllPages method to show that all are successfully added.
-     * Expected: All the pages from the list are added successfully.
      */
     @Test
     public void testFillingAndGetting() {
@@ -259,7 +257,6 @@ public class PageManagerTest {
 
     /**
      * Testing a database will be flushed by the deleteAll method used between tests
-     * Expected: The entries will disappear from the database.
      */
     @Test
     public void testDeleteAllFilledDatabase() {
@@ -345,7 +342,6 @@ public class PageManagerTest {
     //Test PageManagerInterface: getByPrimaryKey
     /**
      * Testing that page objects can be found and made from their primary key.
-     * Expected: The page found shares the same values as the page in the database.
      */
     @Test
     public void testGetByPrimaryKey() {

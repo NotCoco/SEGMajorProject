@@ -1,6 +1,6 @@
 datasources:
   default:
-    url: ${JDBC_URL:`jdbc:mysql://127.0.0.1:3306/seg`}
+    url: ${JDBC_URL:`jdbc:mysql://127.0.0.1:3306/testunittest`}
     username: ${JDBC_USER:root}
     password: ${JDBC_PASSWORD:}
     driverClassName: ${JDBC_DRIVER:com.mysql.jdbc.Driver}

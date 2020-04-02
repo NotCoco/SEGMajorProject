@@ -146,7 +146,6 @@ public class SiteManagerTest {
 
     /**
      * Testing a database can have deleteAll run on it, even if it is empty
-     * Expected: The number of entries in the database remains zero.
      */
     @Test
     public void testDeleteAllEmptyDatabase() {
@@ -158,7 +157,6 @@ public class SiteManagerTest {
 
     /**
      * Testing a database will be flushed by the deleteAll method used between tests
-     * Expected: The entries will disappear from the database.
      */
     @Test
     public void testDeleteAllFilledDatabase() {
@@ -172,7 +170,6 @@ public class SiteManagerTest {
 
     /**
      * Test adding a regular Site article to the database.
-     * Expected: A new site article is added to the database, regardless of constructor used.
      */
     @Test
     public void testAddSite() {
@@ -186,7 +183,6 @@ public class SiteManagerTest {
 
     /**
      * Adding a site object with null values will not be added to the database.
-     * Expected: The size remains unchanged.
      */
     @Test
     public void testAddSiteWithNullValues() {
@@ -227,7 +223,6 @@ public class SiteManagerTest {
 
     /**
      * Testing that site objects can be found and made from their primary key.
-     * Expected: The site found shares the same values as the site in the database.
      */
     @Test
     public void testGetByPrimaryKey() {
@@ -280,7 +275,6 @@ public class SiteManagerTest {
 
     /**
      * Test deleting a primary key which is not in the database.
-     * Expected: The database remains unchanged and an error is thrown.
      */
     @Test
     public void testWithDeleteUnfoundPrimaryKey() {
@@ -296,7 +290,6 @@ public class SiteManagerTest {
     }
     /**
      * Test deleting a primary key which is null.
-     * Expected: The database remains unchanged and an error is thrown.
      */
     @Test
     public void testWithDeleteNullPrimaryKey() {
@@ -451,6 +444,7 @@ public class SiteManagerTest {
 
     }
     /**
+     * Get a prewritten list of sites.
      * @return array list of example site objects for database filling
      */
     private static ArrayList<Site> getListOfSites() {
@@ -470,7 +464,8 @@ public class SiteManagerTest {
     }
 
     /**
-     * Add sites to database
+     * Fill the database with a given list of sites
+     * @param listOfSites The list of sites to go into the database
      */
     private void fillDatabase(ArrayList<Site> listOfSites) {
         for (int i = 0; i<listOfSites.size(); ++i) siteManager.addSite(listOfSites.get(i));

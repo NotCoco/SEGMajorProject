@@ -125,7 +125,6 @@ public class NewsManagerTest {
     /**
      * Test the fill database method below, and the getAllNews method to show that all are
      * successfully added.
-     * Expected: All the news articles from the list are added successfully.
      */
     @Test
     public void testFillingAndGetting() {
@@ -156,7 +155,6 @@ public class NewsManagerTest {
 
     /**
      * Testing a database can have deleteAll run on it, even if it is empty
-     * Expected: The number of entries in the database remains zero.
      */
     @Test
     public void testDeleteAllEmptyDatabase() {
@@ -168,7 +166,6 @@ public class NewsManagerTest {
 
     /**
      * Testing a database will be flushed by the deleteAll method used between tests
-     * Expected: The entries will disappear from the database.
      */
     @Test
     public void testDeleteAllFilledDatabase() {
@@ -182,7 +179,6 @@ public class NewsManagerTest {
 
     /**
      * Test adding a regular News article to the database.
-     * Expected: A new news article is added to the database, regardless of constructor used.
      */
     @Test
     public void testAddNews() {
@@ -197,7 +193,6 @@ public class NewsManagerTest {
 
     /**
      * Adding a news object with null values will not be added to the database.
-     * Expected: The size remains unchanged.
      */
     @Test
     public void testAddNewsWithNullValues() {
@@ -208,7 +203,6 @@ public class NewsManagerTest {
 
     /**
      * Testing adding news articles with empty values
-     * Expected: The article is added.
      */
     @Test
     public void testAddNewsWithEmptyStringValues() {
@@ -238,7 +232,6 @@ public class NewsManagerTest {
 
     /**
      * Testing that news objects can be found and made from their primary key.
-     * Expected: The news found shares the same values as the news in the database.
      */
     @Test
     public void testGetByPrimaryKey() {
@@ -291,7 +284,6 @@ public class NewsManagerTest {
 
     /**
      * Test deleting a primary key which is not in the database.
-     * Expected: The database remains unchanged and an error is thrown.
      */
     @Test
     public void testWithDeleteUnfoundPrimaryKey() {
@@ -307,7 +299,6 @@ public class NewsManagerTest {
     }
     /**
      * Test deleting a primary key which is null.
-     * Expected: The database remains unchanged and an error is thrown.
      */
     @Test
     public void testWithDeleteNullPrimaryKey() {
@@ -356,6 +347,9 @@ public class NewsManagerTest {
         assertEquals(replacementNews.getTitle(), newsInDB.getTitle());
     }
 
+    /**
+     * Update a news article but not its unique key information
+     */
     @Test
     public void testUpdateNewsNotSlug() {
         News first = newsManager.addNews(new News(new Date(12343212L), false,
