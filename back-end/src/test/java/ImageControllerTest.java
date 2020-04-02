@@ -36,7 +36,7 @@ public class ImageControllerTest {
 	private File file;
 	private File largeFile;
 	public ImageControllerTest(){
-		imageManager = new ImageManager();
+		imageManager = ImageManager.getImageManager();
 		file = new File(System.getProperty("user.dir")+"/src/test/resources/TestImages/UploadedImage/"+"testImage.jpg");
 		largeFile = new File(System.getProperty("user.dir")+"/src/test/resources/TestImages/UploadedImage/"+"17MB.jpg");
 	}

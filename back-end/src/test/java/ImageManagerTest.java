@@ -24,7 +24,7 @@ public class ImageManagerTest {
 
     private static ImageManager imageManager;
 
-    public ImageManagerTest(){ imageManager = new ImageManager(); }
+    public ImageManagerTest(){ imageManager = ImageManager.getImageManager(); }
 
     @BeforeAll
     public static void setUpBefore() {

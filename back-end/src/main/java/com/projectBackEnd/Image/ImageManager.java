@@ -1,5 +1,7 @@
 package main.java.com.projectBackEnd.Image;
 
+import main.java.com.projectBackEnd.Entities.News.Hibernate.NewsManager;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -10,8 +12,10 @@ import java.util.*;
  * - Delete images
  * - Get images
  */
+
 public class ImageManager {
 
+	private static ImageManager imageManager;
 	//Random name related variables
 	final String lexicon = "ABCDEFGHIJKLMNOPQRSTUVWXYZ12345674890";
 	final java.util.Random rand = new java.util.Random();
@@ -20,8 +24,15 @@ public class ImageManager {
 	final String dir;
 	//Constructor
 	public ImageManager() {
+		imageManager = this;
 		dir = DirectoryHolder.getDir();
 	}
+
+	public static ImageManager getImageManager() {
+		if (imageManager != null) return imageManager;
+		else return new ImageManager();
+	}
+
 	/**
 	 * Return a random name
 	 * @retunn random name
@@ -129,6 +140,10 @@ public class ImageManager {
 		return targetFile;
 	}
 
+	/**
+	 * Get the all the image urls
+	 * @return list of urls
+	 */
 	public  List<String> getImageUrls()
 	{
 		File folder = new File(dir);
@@ -145,6 +160,10 @@ public class ImageManager {
 		return urls;
 	}
 
+	/**
+	 * Get the output directory
+	 * @return directory
+	 */
 	public String getDir()
 	{
 		return dir;

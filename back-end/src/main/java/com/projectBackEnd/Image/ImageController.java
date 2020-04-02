@@ -6,14 +6,11 @@ import io.micronaut.http.annotation.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Base64;
 
 import io.micronaut.http.MediaType;
 
 import io.micronaut.http.multipart.CompletedFileUpload;
-import main.java.com.projectBackEnd.Entities.Medicine.Hibernate.Medicine;
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 
@@ -30,7 +27,7 @@ public class ImageController {
 
 	protected final ImageManager imageManager;
 	protected final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
-	public ImageController(){imageManager = new ImageManager();}
+	public ImageController(){imageManager = ImageManager.getImageManager();}
 
 	/**
 	 * Add a new image by http POST method
@@ -94,10 +91,11 @@ public class ImageController {
 		return imageManager.getImage(imageName);
 	}
 
-	public void deleteAll(){
-		imageManager.deleteAll();
-	}
-
+	/**
+	 * Create URI with existing image name
+	 * @param imageName
+	 * @return created URI
+	 */
 	protected URI location(String imageName) {
 		return URI.create("/images/" + imageName);
 	}
