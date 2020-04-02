@@ -3,6 +3,9 @@ package main.java.com.projectBackEnd.Entities.Site.Hibernate;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ *  Methods used by SiteManager for database queries with the 'Site' table
+ */
 public interface SiteManagerInterface {
     public List<Site> getAllSites();
 

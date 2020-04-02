@@ -7,12 +7,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
- * ImageManager class is used to handle image related executions:
- * - Upload images
- * - Delete images
- * - Get images
+ * The ImageManager class deals with low level business logic transactions regarding images. These are stored
+ * on the server so no database interaction is involved
  */
-
 public class ImageManager {
 
 	private static ImageManager imageManager;
@@ -34,8 +31,8 @@ public class ImageManager {
 	}
 
 	/**
-	 * Return a random name
-	 * @retunn random name
+	 * Random name generator
+	 * @return A random name
 	 */
 	public String randomIdentifier() {
 		StringBuilder builder = new StringBuilder();
@@ -51,6 +48,10 @@ public class ImageManager {
 		return builder.toString();
 	}
 
+	/**
+	 * Return a byte array
+	 * @return A byte array
+	 */
 	public static byte[] hexStringToByteArray(String s) {
 		int len = s.length();
 		byte[] data = new byte[len / 2];
@@ -60,11 +61,11 @@ public class ImageManager {
 		}
 		return data;
 	}
+
 	/**
-	 * Save a image with bytes and its extension
+	 * Save the image(base64 bytes)
 	 * @param imageBytes
-	 * @param extension
-	 * @retunn random name
+	 * @return A random name of the saved image
 	 */
 	public String saveImage(String imageBytes, String extension)
 	{
@@ -90,9 +91,9 @@ public class ImageManager {
 	}
 
 	/**
-	 * Delete image
+	 * Delete an image with given name
 	 * @param imageName
-	 * @retunn boolean value to check if its deleted
+	 * @return boolean value that checks if the image is deleted
 	 */
 	public boolean deleteImage(String imageName)
 	{
@@ -110,7 +111,7 @@ public class ImageManager {
 	}
 
 	/**
-	 * Delete all the images
+	 * Delete all the images in the image directory
 	 */
 	public void deleteAll()
 	{
@@ -124,9 +125,9 @@ public class ImageManager {
 	}
 
 	/**
-	 * Get the image by image name
+	 * Get the image
 	 * @param imageName
-	 * @return
+	 * @return image file
 	 */
 	public File getImage(String imageName){
 		File folder = new File(dir);

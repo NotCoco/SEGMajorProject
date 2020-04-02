@@ -3,6 +3,9 @@ package main.java.com.projectBackEnd.Entities.User.Hibernate;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ *  Methods used by UserManager for database queries.
+ */
 public interface UserManagerInterface{
 	public void addUser(String email,String password, String name) throws EmailExistsException,InvalidEmailException,IncorrectNameException,InvalidPasswordException;
 	public String verifyUser(String email,String password);

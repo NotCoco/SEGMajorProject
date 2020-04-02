@@ -17,16 +17,20 @@ import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 import javax.validation.constraints.Size;
 
 /**
- * Image Controller class is used for the interactions between frontend and backend
- * There are functionalites :
- *    - add an image to file system
- *    - delete an image
+ * Image Controller is a REST API endpoint.
+ * It deals with the image related requests users might need.
+ * It provides HTTP requests for each of the queries that carry out the adding, deletion and retrieval of images
+ * from the server-side storage directories
  */
 @Controller("/images")
 public class ImageController {
 
+	//Manager to carry out business logic
 	protected final ImageManager imageManager;
 	protected final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
+	/**
+	 * Main constructor
+	 */
 	public ImageController(){imageManager = ImageManager.getImageManager();}
 
 	/**

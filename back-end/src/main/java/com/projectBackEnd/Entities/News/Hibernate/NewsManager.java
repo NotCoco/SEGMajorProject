@@ -2,38 +2,90 @@ package main.java.com.projectBackEnd.Entities.News.Hibernate;
 
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
-import javax.persistence.PersistenceException;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+
 /**
- * NewsManager defines methods for News objects to interact with the database.
- * This class extends the EntityManager.
+ * NewsManager defines methods to interact with the News table in the database.
+ * This class extends the EntityManager - supplying it with the rest of its interface methods.
  *
- * https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
+ * Inspiration : https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
 public class NewsManager extends EntityManager implements NewsManagerInterface {
 
     private static NewsManagerInterface newsManager;
 
+    /**
+     * Default private constructor (Singleton design pattern)
+     */
     private NewsManager() {
+
         super();
         setSubclass(News.class);
         HibernateUtility.addAnnotation(News.class);
         newsManager = this;
+
     }
 
-    /** Get news manager interface
-     * @return newsManager ; if none has been defined, create NewsManager()
+
+    /**
+     * Get news manager interface
+     * @return newsManager If none has been defined, create NewsManager()
      */
     public static NewsManagerInterface getNewsManager() {
         if (newsManager != null) return newsManager;
         else return new NewsManager();
     }
 
+
     /**
+     * Insert a News object into the database
+     * @param news  News object to add to the database
+     * @return added News object
+     */
+    public News addNews(News news) {
+        insertTuple(news);
+        return news;
+    }
+
+
+    /**
+     * Update a News object in the database
+     * @param news  News with updated attributes
+     * @return updated object
+     */
+    public News update(News news) {
+        return (News) super.update(news);
+    }
+
+
+    /**
+     * Retrieve News object corresponding to input primary key from database
+     * @param id    Primary key of object to find in database
+     * @return  retrieved object
+     */
+    public News getByPrimaryKey(Integer id) {
+        return (News) super.getByPrimaryKey(id);
+    }
+
+
+    /**
+     * Retrieve News object corresponding to input slug from database
+     * @param slug  Slug of object to find in database
+     * @return first news object with input slug ; else null
+     */
+    public News getNewsBySlug(String slug) {
+        List<News> matches = getAllNews().stream().filter(p -> p.getSlug().equals(slug)).collect(Collectors.toList());
+        return matches.size()>= 1 ? matches.get(0) : null;
+    }
+
+
+    /**
+     * Get list of all the News objects stored in News table of the database
      * @return list of all News objects in database
      */
     public List<News> getAllNews() {
@@ -42,56 +94,17 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
     }
 
 
-    /** Insert input News object into the database
-     * @param news
-     * @return added news
-     */
-    public News addNews(News news) {
-        if (getNewsBySlug(news.getSlug()) != null) throw new PersistenceException();;
-        insertTuple(news);
-        return news;
-    }
-
-    /** Retrieve news object from database using primary key
-     * @param id
-     * @return retrieved object
-     */
-    public News getByPrimaryKey(Integer id) {
-        return (News) super.getByPrimaryKey(id);
-    }
-
-    /** Retrieve news object from database using slug
-     * @param slug
-     * @return first news object with input slug ; else null
-     */
-    public News getNewsBySlug(String slug) {
-        List<News> matches = getAllNews().stream().filter(p -> p.getSlug().equals(slug)).collect(Collectors.toList());
-        return matches.size()>= 1 ? matches.get(0) : null;
-    }
-
     /**
-     * Update input News object
-     * @param updatedVersion
-     * @return updated object
-     */
-    public News update(News updatedVersion) {
-        News newsMatch = getNewsBySlug(updatedVersion.getSlug());
-        if (newsMatch != null && !newsMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey())) {
-            throw new PersistenceException();
-        }
-        return (News) super.update(updatedVersion);
-    }
-
-    /**
-     * Delete News object by primary key
-     * @param pk
+     * Delete News object corresponding to given primary key from database
+     * @param pk    Primary key of News object to remove
      */
     public void delete(Integer pk) {
         super.delete(pk);
     }
 
+
     /**
-     * Remove all news from database
+     * Remove all News from the database
      */
     public void deleteAll() {
         super.deleteAll();
@@ -99,7 +112,7 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
 
 
     /**
-     * Sort all the news by lowest date, in the following order :
+     * Sort all the News from the database by lowest date, in the following order :
      * Urgent and pinned, urgent only, pinned only, neither pinned nor urgent.
      * @return sorted list of news
      */
@@ -121,7 +134,9 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
         // Concat all lists together to make sorted list
         List<News> sorted = Stream.concat(Stream.concat(Stream.concat(pinnedAndUrgent, urgentDates), pinnedDates), regular)
                 .collect(Collectors.toList());
+
         return sorted;
+
     }
 
 
