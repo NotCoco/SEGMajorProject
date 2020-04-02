@@ -4,6 +4,7 @@ import main.java.com.projectBackEnd.Entities.Site.Hibernate.Site;
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
 
+import javax.persistence.PersistenceException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,6 +49,7 @@ public class PageManager extends EntityManager implements PageManagerInterface {
      * @return added object
      */
     public Page addPage(Page newPage) {
+        if (getPageBySiteAndSlug(newPage.getSite().getSlug(), newPage.getSlug()) != null) throw new PersistenceException();
         return (Page) super.insertTuple(newPage);
     }
 
