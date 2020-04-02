@@ -36,8 +36,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /**
-* class to unit test interactions between rest calls and the software with regards to news functionality
-*/
+ * The purpose of this class is to test the REST endpoints associated with the news entity through the news controller
+ */
 @MicronautTest
 public class NewsControllerTest {
 
@@ -49,9 +49,9 @@ public class NewsControllerTest {
     static NewsManagerInterface newsManager;
     private static String token;
 
-	/**
-	*	run before class, aquire newManager object, set testing db and create and login a user whose credentials are used for testing
-	*/
+    /**
+     * Sets the config resource location and the news manager. Also generates the token attribute
+     */
     @BeforeAll
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
@@ -64,9 +64,9 @@ public class NewsControllerTest {
         	fail();
         }  
     }
-	/**
-	*	delete the user and shutdown the factory
-	*/
+    /**
+     * Closes the session factory and deletes the testing user
+     */
     @AfterAll
     public static void closeDatabase() {
         try{
@@ -76,18 +76,18 @@ public class NewsControllerTest {
         	fail();
         }    
         HibernateUtility.shutdown();
-    }	
-	
-	/**
-	*	delete all news objects
-	*/
+    }
+
+    /**
+     * Ensure that there are no pre-existing news entities in the database before each test via the 'deleteAll()' method
+     */
     @BeforeEach
     public void setUp() {
         newsManager.deleteAll();
     }
-	/**
-	*	add news, check if its added and than test if delete returns a proper http response
-	*/
+    /**
+     * Tests that the endpoint is able to delete an existing news item, expects success
+     */
    @Test
     public void testDeleteNews(){
         HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug",token);
@@ -97,9 +97,10 @@ public class NewsControllerTest {
         response = client.toBlocking().exchange(request);
         assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
     }
-	/**
-	*	add news, check if its added and than test if delete returns a proper http response and check if get that news returns error
-	*/
+    /**
+     * Deletes an existing news item and attempts to retrieve it via the GET request, expects an HTTP error to
+     * be thrown
+     */
     @Test
     public void testDeleteAndGetNews(){
         HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "TestSlug",token);
@@ -151,9 +152,10 @@ public class NewsControllerTest {
         });
 		assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
 	}
-	/**
-	* check if adding news and then geting all news behaves correctly
-	*/
+    /**
+     * Tests the news request responsible for retrieving all newsas a list, via the GET request,
+     * expects success
+     */
     @Test
     public void testAddAndGetNews(){
         HttpResponse response = addNews(new Date(34189213L) , true, "Test description", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug",token);
@@ -161,9 +163,9 @@ public class NewsControllerTest {
         List<News> newsList = getAllNews();
         assertEquals("Test description",newsList.get(0).getDescription());
     }
-	/**
-	*	check if adding news, creates new news
-	*/
+    /**
+     * Tests that the endpoint is able to add a legal news item, expects success
+     */
     @Test
     public void testAddNews(){
         HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics",
@@ -213,9 +215,9 @@ public class NewsControllerTest {
         });
 		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown8.getStatus());
 	}
-	/**
-	* check if adding news and than updating it, updates the news
-	*/
+    /**
+     * Tests that the endpoint is able to add and update an existing news item with legal information, expects success
+     */
     @Test
     public void testAddAndUpdateNews(){
         HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug",token);
@@ -243,9 +245,9 @@ public class NewsControllerTest {
         });
 		assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
 	}
-	/**
-	* checking if update with correct fields behaves correctly
-	*/
+    /**
+     * Tests that the endpoint is able to update a news item with legal information, expects success
+     */
     @Test
     public void testUpdateLegalNews(){
         HttpResponse response = addNews(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics", true, "COVID-19 originated from Wuhan, China", "slug",token);
@@ -319,18 +321,35 @@ public class NewsControllerTest {
         });
 		assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
 	}
-	/**
-	*	updates a news by making rest call
-	*/
+    /**
+     * Quality of life method for updating a news item via the REST api
+     * @param primaryKey the primary key
+     * @param date the date
+     * @param pinned whether its pinned or not
+     * @param description the description
+     * @param title the title
+     * @param urgent if its urgent or not
+     * @param content the content
+     * @param slug the slug
+     * @return The HTTP response produced by the operation
+     */
     protected HttpResponse putNews(Integer primaryKey, Date date, boolean pinned, String description, String title,
                                    boolean urgent, String content, String slug,String token) {
         HttpRequest request = HttpRequest.PUT("/news", new NewsUpdateCommand(primaryKey, date, pinned, description,
                 title, urgent, content,slug)).header("X-API-Key",token);
         return client.toBlocking().exchange(request);
     }
-	/**
-	* adds a news by making rest call
-	*/
+    /**
+     * Quality of life method for adding a news item via the REST api
+     * @param date the date value
+     * @param pinned whether its pinned or not
+     * @param description the description
+     * @param title the title
+     * @param urgent the urgent
+     * @param content the content
+     * @param slug the slug
+     * @return The HTTP response produced by the operation
+     */
     protected HttpResponse addNews(Date date, boolean pinned, String description, String title, boolean urgent,
                                    String content, String slug,String token){
         HttpRequest request = HttpRequest.POST("/news", new NewsAddCommand(date, pinned, description, title,
@@ -338,18 +357,19 @@ public class NewsControllerTest {
         HttpResponse response = client.toBlocking().exchange(request);
         return response;
     }
-	/**
-	* returns all news by making rest call
-	* @return list of all news
-	*/
+    /**
+     * Quality of life method for retrieving all news items via the REST api
+     * @return The list of news items
+     */
     protected List<News> getAllNews(){
         HttpRequest request = HttpRequest.GET("/news");
         return client.toBlocking().retrieve(request, Argument.of(List.class, News.class));
     }
-	/**
-	* get url fron httpresponse
-	* @return url string
-	*/
+    /**
+     * Method for returning the url of an object involved in a HTTP response
+     * @param response the response
+     * @return the url
+     */
     private String getEUrl(HttpResponse response) {
         String val = response.header(HttpHeaders.LOCATION);
         if (val != null) {

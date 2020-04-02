@@ -19,7 +19,9 @@ import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
 
-
+/**
+ * The purpose of this class is to extensively unit test the image manager's methods and validation checks
+ */
 public class ImageManagerTest {
 
     private static ImageManager imageManager;

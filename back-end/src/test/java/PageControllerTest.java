@@ -42,8 +42,8 @@ import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManager;
 
 import main.java.com.projectBackEnd.HibernateUtility;
 /**
-* class to unit test interactions between rest calls and system with respect to page functionality
-*/
+ * The purpose of this class is to test the REST endpoints associated with the page entity through the page controller
+ */
 @MicronautTest
 public class PageControllerTest {
 
@@ -54,9 +54,9 @@ public class PageControllerTest {
     static SiteManagerInterface siteManager;
     static PageManagerInterface pageManager;
     private static String token;
-	/**
-	*	run before class, aquire siteManager, pageManager objects, set testing db and create and login a user whose credentials are used for testing
-	*/
+    /**
+     * Sets the config resource location and the page manager. Also generates the token attribute
+     */
     @BeforeAll
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
@@ -70,9 +70,9 @@ public class PageControllerTest {
         	fail();
         }    
     }
-	/**
-	* delete the user and close factory
-	*/
+    /**
+     * Closes the session factory and deletes the testing user
+     */
     @AfterAll
     public static void closeDatabase() {
 
@@ -85,9 +85,9 @@ public class PageControllerTest {
         HibernateUtility.shutdown(); 
     }
 
-	/**
-	*	delete all site and page objects from db
-	*/
+    /**
+     * Ensure that there are no pre-existing site or page entities in the database before each test via the 'deleteAll()' method
+     */
     @BeforeEach
     public void setUp() {
         siteManager.deleteAll();
@@ -95,9 +95,10 @@ public class PageControllerTest {
         pageManager.deleteAll();
     }
 
-	/**
-	* check if geting a page that does not request returns 404 error
-	*/
+    /**
+     * Attempts to retrieve a page that does not exist in the database via the GET request,
+     * expects an Http error to be thrown
+     */
     @Test
     public void testNonExistingPageReturns404() {
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
@@ -106,9 +107,9 @@ public class PageControllerTest {
         assertNotNull(thrown.getResponse());
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
     }
-	/**
-	* test if patching page index behaves correctly
-	*/
+    /**
+     * Tests that the endpoint is able to patch the index of 5 existing site, expects success
+     */
     @Test
     public void testPatchingPageIndex() {
         addSite("testSiteA", "name1",token);
@@ -158,9 +159,9 @@ public class PageControllerTest {
         });
 		assertEquals(HttpStatus.UNAUTHORIZED,thrown1.getStatus());
 	}
-	/**
-	*test if adding a page with correct fields behaves correctly
-	*/
+    /**
+     * Tests that the endpoint is able to add a legal page, expects success
+     */
     @Test
     public void testAddingRegularPage() {
         addSite("testSiteA", "name1",token);
@@ -171,18 +172,18 @@ public class PageControllerTest {
         Page testPage = getPage("testSiteA","nutrition/slu!#g");
         assertEquals("Title", testPage.getTitle());
     }
-	/**
-	*	test if adding page with null fields returns nullpointer exception
-	*/
+    /**
+     * Attempts to create a page with null information, expects an exception to be thrown
+     */
     @Test
     public void testAddingPageWithNulls() {
         assertThrows(NullPointerException.class, () -> {
             HttpResponse response = addPage(null, null, null, null, null,token);
         });
     }
-	/**
-	*	test if adding a correct page to a null site returns http error
-	*/
+    /**
+     * Attempts to create a page with a null site attribute, expects an HTTP exception
+     */
     @Test
     public void testAddingNullSitePage() {
         addSite("TestSite", "name1",token);
@@ -192,9 +193,9 @@ public class PageControllerTest {
         });
 
     }
-	/**
-	*	test if adding page with null index returns error
-	*/
+    /**
+     * Attempts to create a page with a null index attribute, expects an HTTP exception to be thrown
+     */
     @Test
     public void testAddingNullIndexPage() {
         addSite("testSiteA", "name1",token);
@@ -223,9 +224,9 @@ public class PageControllerTest {
 		assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
 
 	}
-	/**
-	*	test if creating page with same key returns error
-	*/
+    /**
+     * Attempts to create a page with a pre existing page's slug value, expects an HTTP exception to be thrown
+     */
     @Test
     public void testCreateSameKeys() {
         addSite("testSiteA", "name1",token);
@@ -234,18 +235,19 @@ public class PageControllerTest {
         	addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information",token);
         });
     }
-	/**
-	* test if deleting a non existent page returns an exception
-	*/
+    /**
+     * Attempts to delete a page that does not exist in the database via the GET request,
+     * expects an Http error to be thrown
+     */
     @Test
     public void testDeleteNonExistentPage() {
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
             client.toBlocking().exchange(HttpRequest.DELETE("nothing").header("X-API-Key",token));
         });
     }
-	/**
-	*	test if deleting  existend page, deletes it
-	*/
+    /**
+     * Tests that the endpoint is able to delete a pre-existing legal page, expects success
+     */
     @Test
     public void testDeletePage() {
         addSite("testSiteA", "name1",token);
@@ -277,9 +279,9 @@ public class PageControllerTest {
 		assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
 
 	}
-	/**
-	*	test if updating page to a duplicate key returns an error
-	*/
+    /**
+     * Attempts to update a page's slug value to the slug of a pre existing page, expects and HTTP exception to be thrown
+     */
     @Test
     public void updateToDuplicateKeysPage() {
         addSite("testSiteA", "name1",token);
@@ -291,9 +293,9 @@ public class PageControllerTest {
         });
         assertNotNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
     }
-	/**
-	*	test if udpating a page to a new tittle behaves correctly
-	*/
+    /**
+     * Tests that the endpoint is able to update an existing legal page's title to a legal value, expects success
+     */
     @Test
     public void testUpdatePageTitle() {
         addSite("testSiteA", "name1",token);
@@ -306,9 +308,10 @@ public class PageControllerTest {
         Page testPage = getPage("testSiteA", "nutrition/slu!#g");
         assertEquals("newTitle", testPage.getTitle());
     }
-	/**
-	*	test if udpating page's site to valid behaves correctly
-	*/
+    /**
+     * Tests that the endpoint is able to update the slug value of an existing page to a different legal slug, expects
+     * success
+     */
     @Test
     public void testUpdatePageSiteToValid() {
         addSite("testSiteA", "name!",token);
@@ -322,9 +325,10 @@ public class PageControllerTest {
         Page testPage = getPage("testSiteA", "nutrition/slu!#g");
         assertEquals("newTitle", testPage.getTitle());
     }
-	/**
-	* test if updating pages slug to valid behaves correctly
-	*/
+    /**
+     * Tests that the endpoint is able to update the slug value of an existing page to a different legal slug, expects
+     * success
+     */
     @Test
     public void testUpdatePageSlugToValid() {
         addSite("testSiteA", "name1",token);
@@ -342,9 +346,9 @@ public class PageControllerTest {
         });
         assertNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
     }
-	/**
-	* test if updateing page's field to invalid throws an error
-	*/
+    /**
+     * Attempts to update an existing page's site to a non valid value, expects an HTTP exception to be thrown
+     */
     @Test
     public void testUpdatePageToInvalid() {
         addSite("testSiteA", "name1",token);
@@ -375,39 +379,54 @@ public class PageControllerTest {
 		assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
 
 	}
-	/**
-	*	creates a put(update) rest request
-	*	@returns Http response to the request
-	*/
+    /**
+     * Quality of life method for updating a page via the REST api
+     * @param id the id
+     * @param siteName the site name
+     * @param slug the page slug
+     * @param index the index
+     * @param title the title
+     * @param content the content
+     * @return The HTTP response produced by the operation
+     */
     protected HttpResponse putPage(int id, String siteName, String slug, int index, String title, String content,String token) {
         URI pLoc = location(siteName);
         HttpRequest request = HttpRequest.PUT(pLoc+"/pages", new PageUpdateCommand(id, siteName, slug, index, title, content)).header("X-API-Key",token);
         return client.toBlocking().exchange(request);
     }
-	/**
-	*	creates a post(add) rest request
-	*	@returns Http response to the request
-	*/
+    /**
+     * Quality of life method for adding a page via the REST api
+     * @param siteSlug the site slug
+     * @param slug the page slug
+     * @param index the index
+     * @param title the title
+     * @param content the content
+     * @return The HTTP response produced by the operation
+     */
     protected HttpResponse addPage(String siteSlug, String slug, Integer index, String title, String content,String token) {
         URI sLoc = location(siteSlug);
         HttpRequest request = HttpRequest.POST((sLoc +"/pages"), new PageAddCommand(siteSlug, slug, index, title, content)).header("X-API-Key",token);
         HttpResponse response = client.toBlocking().exchange(request);
         return response;
     }
-	/**
-	*	gets a page by site slug and page name
-	* @returns correct page
-	*/
+    /**
+     * Quality of life method for retrieving a page via the REST api
+     * @param siteSlug the site slug
+     * @param pageName the page name
+     * @return The page item retrieved
+     */
     protected Page getPage(String siteSlug, String pageName) {
         URI loc = pageLocation(siteSlug, pageName);
 
         HttpRequest request = HttpRequest.GET(loc);
         return client.toBlocking().retrieve(request, Page.class);
     }
-	/**
-	*	gets uri String by site slug and page name
-	*	@returns URI page
-	*/
+    /**
+     * Method for producing a urlencoded url for a page
+     * @param siteSlug site slug of the page
+     * @param pageName page slug
+     * @return The URI produced
+     */
     protected URI pageLocation(String siteSlug, String pageName) {
         String encodedSlug = null;
         String encodedPage = null;
@@ -421,19 +440,22 @@ public class PageControllerTest {
     }
 
     //Adding and locating Site methods
-	/**
-	* creates a post request (adds site)
-	* @returns http response to the request
-	*/
+    /**
+     * Quality of life method for adding a site via the REST api
+     * @param slug the page slug
+     * @param name the page name
+     * @return The HTTP response produced by the operation
+     */
     protected HttpResponse addSite(String slug, String name,String token) {
         HttpRequest request = HttpRequest.POST("/sites", new SiteAddCommand(slug,name)).header("X-API-Key",token);
         HttpResponse response = client.toBlocking().exchange(request);
         return response;
     }
-	/**
-	* gets uri of site by site name
-	* @returns URI of site
-	*/
+    /**
+     * Method for producing a urlencoded url for a site
+     * @param siteName the site name
+     * @return
+     */
     protected URI location(String siteName) {
         String encodedSlug = null;
         try {

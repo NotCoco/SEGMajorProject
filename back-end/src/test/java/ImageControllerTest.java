@@ -67,7 +67,7 @@ public class ImageControllerTest {
 	}
 
 	/**
-	 * Delete all images
+	 * Deletes all images in the database before each test
 	 */
 	@BeforeEach
 	public void setUp() {imageManager.deleteAll();}
@@ -88,7 +88,7 @@ public class ImageControllerTest {
 
 
 	/**
-	 * Add an image with POST request
+	 * Tests that legal images can be added to the database via the endpoint, using a POST request
 	 */
 	@Test
 	public void testAddLegalImage(){
@@ -97,8 +97,9 @@ public class ImageControllerTest {
 		String imageName = getEUrl(response);
 		assertTrue(imageManager.getImageUrls().contains(imageManager.getDir()+imageName));
 	}
+
 	/**
-	 * test if adding a image without a correct session token returns http unauthorized excepiton
+	 * Test if adding a image without a correct session token returns http unauthorized exception
 	 */
 	@Test
 	public void testAddUnauthorized(){

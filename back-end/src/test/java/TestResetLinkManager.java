@@ -12,10 +12,17 @@ import org.junit.jupiter.api.*;
 import static org.junit.Assert.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+/**
+ * Test class to extensively unit test interactions between the reset link manager and the link entity in the database.
+ */
 public class TestResetLinkManager{
         public static ConnectionLeakUtil connectionLeakUtil = null;
         public static ResetLinkManagerInterface linkManager = null;
-        public static UserManagerInterface userManager = null;;
+        public static UserManagerInterface userManager = null;
+
+        /**
+         * Prior to running, database information is set and a singleton manager is created for testing.
+         */
         @BeforeAll
         public static void setUpDatabase() {
                 HibernateUtility.setResource("testhibernate.cfg.xml");
@@ -25,17 +32,26 @@ public class TestResetLinkManager{
 
         }
 
+        /**
+         * After the test, the factory is shut down and the LeakUtil can tell us whether any connections leaked.
+         */
         @AfterAll
         public static void assertNoLeaks() {
                 HibernateUtility.shutdown();
                 //connectionLeakUtil.assertNoLeaks();
         }
 
+        /**
+         * Prior to each test, we'll delete all the users in the users table.
+         */
         @BeforeEach
         public void setUp() {
                 ((EntityManager)linkManager).deleteAll();                
 		((EntityManager)userManager).deleteAll();
         }
+        /**
+         * Tests that the manager is able to create a new token for a link being reset, expects success
+         */
         @Test
         public void testCreate(){
                 fill();
@@ -48,12 +64,20 @@ public class TestResetLinkManager{
 			fail();
 		}
 	}
+        /**
+         * Attempts to create a token for an email which does not exist, expects and exception to be thrown
+         * @throws EmailNotExistException The exception to be thrown
+         */
         @Test
         public void testCreateEmailNotExist() throws EmailNotExistException{
                 fill();
 		assertThrows(EmailNotExistException.class,() -> {linkManager.create("test2@test.com");});
 
         }
+        /**
+         * Tests that the manager is able to retrieve an email via it's token, also tests that retrieval attempts
+         * with an invalid token are unsuccessful, expects success
+         */
         @Test
         public void testGetEmail(){
                 fill();
@@ -70,6 +94,11 @@ public class TestResetLinkManager{
 			fail();
 		}
         }
+
+        /**
+         * Tests that the manager is able to dictate whether link exists depending on the token provided, invalid tokens should
+         * return false, expects success
+         */
        @Test
         public void testExist(){
                 fill();
@@ -86,6 +115,10 @@ public class TestResetLinkManager{
 			fail();
 		}
         }
+
+        /**
+         * Quality of life method for filling the database with users to initialise links with
+         */
         public void fill(){
                 try{
                         userManager.addUser("test@test.com","pass","name");

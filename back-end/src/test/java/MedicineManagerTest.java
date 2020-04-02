@@ -37,7 +37,7 @@ public class MedicineManagerTest {
     }
 
     /**
-     * After the tests, the factory is shut down and the LeakUtil can tell us whether any connections leaked.
+     * After the test, the factory is shut down and the LeakUtil can tell us whether any connections leaked.
      */
     @AfterAll
     public static void assertNoLeaks() {
@@ -58,6 +58,7 @@ public class MedicineManagerTest {
 
     /**
      * Test the constructor constraints for naming with valid names
+     * Expected: The medicine is created with the given name and type
      */
     @Test
     public void testCreateValidMedicine() {
@@ -67,7 +68,8 @@ public class MedicineManagerTest {
     }
 
     /**
-     * Test the constructor constraints for empty names - changing to Unnamed
+     * Test the constructor constraints for empty names
+     * Expected: The empty name is replaced with Unnamed
      */
     @Test
     public void testCreateEmptyStringNameMedicine() {
@@ -76,7 +78,8 @@ public class MedicineManagerTest {
     }
 
     /**
-     * Test the constructor constraints for empty types - changing to Undefined
+     * Test the constructor constraints for empty types
+     * Expected: The empty type is replaced with Undefined
      */
     public void testCreateEmptyStringTypeMedicine() {
         Medicine emptyTypeMedicine = new Medicine("Medicine for BA", "");
@@ -84,7 +87,8 @@ public class MedicineManagerTest {
     }
 
     /**
-     * Test the constructor constraints for null types - changing to Undefined
+     * Test the constructor constraints for null types
+     * Expected: The null type is replaced with Undefined
      */
     public void testCreateNullTypeMedicine() {
         Medicine nullTypeMedicine = new Medicine("Medicine for BA", null);
@@ -92,7 +96,8 @@ public class MedicineManagerTest {
     }
 
     /**
-     * Test the constructor constraints for null names - changing to Unnamed
+     * Test the constructor constraints for null names
+     * Expected: The null name is replaced with Unnamed
      */
     @Test
     public void testCreateNullNameMedicine() {
@@ -102,6 +107,7 @@ public class MedicineManagerTest {
 
     /**
      * Test that two medicines created the same way share the same property values
+     * Expected: Medicines are identical
      */
     @Test
     public void testTwoEqualMedicines() {
@@ -124,6 +130,7 @@ public class MedicineManagerTest {
     /**
      * Test the fill database method below, and the getAllMedicines method to show all are
      * successfully added.
+     * Expected: All the medicines from the list getListOfMedicines() are added successfully to the database.
      */
     @Test
     public void testFillingAndGetting() {
@@ -160,6 +167,7 @@ public class MedicineManagerTest {
 
     /**
      * Testing a database can have deleteAll run on it, even if it is empty
+     * Expected: The number of entries in the database remains zero.
      */
     @Test
     public void testDeleteAllEmptyDatabase() {
@@ -171,6 +179,7 @@ public class MedicineManagerTest {
 
     /**
      * Testing a database will be flushed by the deleteAll method used between tests
+     * Expected: The entries will disappear from the database.
      */
     @Test
     public void testDeleteAllFilledDatabase() {
@@ -184,6 +193,7 @@ public class MedicineManagerTest {
     //Testing MedicineManagerInterface: addMedicine
     /**
      * Test adding a regular medicine to the database.
+     * Expected: A new medicine with the given type and name is saved to the database, and a fresh ID.
      */
     @Test
     public void testAddMedicines() {
@@ -198,6 +208,7 @@ public class MedicineManagerTest {
 
     /**
      * Test adding identical null valued Medicines to the database
+     * Expected: The medicines' values are replaced and both added successfully.
      */
     @Test
     public void testAddIdenticalMedicinesWithNullValues() {
@@ -215,6 +226,7 @@ public class MedicineManagerTest {
 
     /**
      * Test adding empty valued Medicines to the database
+     * Expected: The medicines' values are replaced and both added successfully.
      */
     @Test
     public void testAddMedicineWithEmptyStringValues() {
@@ -232,6 +244,7 @@ public class MedicineManagerTest {
 
     /**
      * Test adding medicines with whitespaced names to the database
+     * Expected: The medicines are added as expected with preserved names.
      */
     @Test
     public void testAddMedicineWithWhitespaceInValues() {
@@ -246,6 +259,7 @@ public class MedicineManagerTest {
 
     /**
      * Test adding medicines to the database with forbidden characters
+     * Expected: No characters are forbidden - so medicines are added as expected.
      */
     @Test
     public void testAddMedicineWithForbiddenCharactersInValues() {
@@ -263,6 +277,7 @@ public class MedicineManagerTest {
 
     /**
      * Testing that medicines can be found using their primary key
+     * Expected: The medicine found shares the same values as the medicine in the database.
      */
     @Test
     public void testGetByPrimaryKey() {
@@ -313,6 +328,7 @@ public class MedicineManagerTest {
 
     /**
      * Test deleting a primary key which is not from the database.
+     * Expected: The database remains unchanged and an error is thrown.
      */
     @Test
     public void testDeleteUnfoundPrimaryKey() {

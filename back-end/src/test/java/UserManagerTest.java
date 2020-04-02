@@ -17,10 +17,16 @@ import java.math.BigInteger;
 import main.java.com.projectBackEnd.HibernateUtility;
 import main.java.com.projectBackEnd.EntityManager;
 
+/**
+ * Test class to extensively unit test interactions between the user entity manager and the Users table in the database.
+ */
 public class UserManagerTest{
 	public static ConnectionLeakUtil connectionLeakUtil = null;
 	public static UserManagerInterface userManager = null;
 
+	/**
+	 * Prior to running, database information is set and a singleton manager is created for testing.
+	 */
 	@BeforeAll
     public static void setUpDatabase() {
 
@@ -30,19 +36,28 @@ public class UserManagerTest{
 
 	}
 
+	/**
+	 * After the test, the factory is shut down and the LeakUtil can tell us whether any connections leaked.
+	 */
 	@AfterAll
 	public static void assertNoLeaks() {
 		HibernateUtility.shutdown();
 		connectionLeakUtil.assertNoLeaks();
 	}
 
+	/**
+	 * Prior to each test, we'll delete all the users in the users table.
+	 */
 	@BeforeEach
 	public void setUp() {
 		((EntityManager)userManager).deleteAll();
 	}
 
 
-
+	/**
+	 * Attempts to add a user with an email missing an '@' to the database, expects an exception to be thrown
+	 * @throws InvalidEmailException The exception
+	 */
 	@Test
 	public void testAddUserInvalidEmail1() throws InvalidEmailException{
 
@@ -50,19 +65,28 @@ public class UserManagerTest{
 		assertThrows(InvalidEmailException.class,() -> {userManager.addUser("email","password5","name");});
 		
 	}
-
+	/**
+	 * Attempts to add a user with an email including a space character to the database, expects an exception to be thrown
+	 */
 	@Test
 	public void testAddUserInvalidEmail2() {
 
 		assertThrows(InvalidEmailException.class,() -> {userManager.addUser("ema il@email.com","password5","name");});
 		
 	}
+	/**
+	 * Attempts to add a user with an email missing it's extension to the database, expects an exception to be thrown
+	 */
 	@Test
 	public void testAddUserInvalidEmail3() {
 
 		assertThrows(InvalidEmailException.class,() -> {userManager.addUser("email@email.","password5","name");});
 		
 	}
+
+	/**
+	 * Attempts to add a user with an email missing it's body to the database, expects an exception to be thrown
+	 */
 	@Test
 	public void testAddUserInvalidEmail4() {
 
@@ -70,6 +94,10 @@ public class UserManagerTest{
 		
 
 	}
+
+	/**
+	 * Attempts to add a user with an email missing it's body and extension to the database, expects an exception to be thrown
+	 */
 	@Test
 	public void testAddUserInvalidEmail5() {
 	
@@ -78,12 +106,20 @@ public class UserManagerTest{
 		
 	}
 
+	/**
+	 * Attempts to add a user with an empty name to the database, expects an exception to be thrown
+	 */
 	@Test
 	public void testAddUserIncorrectNameEmpty() {
 		
 		assertThrows(IncorrectNameException.class,() -> {userManager.addUser("email@email.com","password5","");});
 		
 	}
+
+	/**
+	 * Attempts to add a user with a null name to the database, expects an exception to be thrown
+	 * @throws IncorrectNameException The exception
+	 */
 	@Test
 	public void testAddUserIncorrectNameNull() throws IncorrectNameException{
 
@@ -92,6 +128,9 @@ public class UserManagerTest{
 		
 	}
 
+	/**
+	 * Tests that the manager is able to add a number of valid users to the database, expects success
+	 */
 	@Test
 	public void testAddUser(){
 		fill();
@@ -105,12 +144,21 @@ public class UserManagerTest{
 		assertEquals(users.size(),8);
 		assertEquals(1,users.stream().filter(u->(u.getEmail().equals("user8@email.com") && u.getPassword().equals(hash("password8")))).count());
 	}
+
+	/**
+	 * Attempts to add a user with credentials of a pre existing user to the database, expects an exception to be thrown
+	 * @throws EmailExistsException The exception
+	 */
 	@Test
 	public void testAddExistingUser()throws EmailExistsException{
 		fill();
 		assertThrows(EmailExistsException.class,() -> {userManager.addUser("user5@email.com","password5","name");});
 		
 	}
+
+	/**
+	 * Tests that the manager is able to verify a valid user, expects success
+	 */
 	@Test
 	public void testVerifyUser(){
 		fill();
@@ -119,6 +167,11 @@ public class UserManagerTest{
 		assertNotNull(userManager.verifyUser("user6@email.com","password6"));
 		assertNull(userManager.verifyUser("user6@email.com","password5"));
 	}
+
+	/**
+	 * Tests that the manager is able to change the password of an existing user to a legal value, expects succest
+	 * @throws UserNotExistException
+	 */
 	@Test
 	public void testChangePassword() throws UserNotExistException{
 		fill();
@@ -134,12 +187,20 @@ public class UserManagerTest{
 
 
 	}
+
+	/**
+	 * Attempts to change the password of a non existing user, expects an exception to be thrown
+	 */
 	@Test
 	public void testChangePasswordUserNotExsist() {
 		fill();
 
 		assertThrows(UserNotExistException.class,() -> {userManager.changePassword("user20@email.com","password10");});
 	}
+
+	/**
+	 * Attempts to change the password of an existing user to an illegal value, expects an exception to be thrown
+	 */
 	@Test
 	public void testChangePasswordUserWrongPassword() {
 		fill();
@@ -147,6 +208,10 @@ public class UserManagerTest{
 		assertThrows(InvalidPasswordException.class,() -> {userManager.changePassword("user6@email.com","");});
 		assertThrows(InvalidPasswordException.class,() -> {userManager.changePassword("user6@email.com",null);});
 	}
+
+	/**
+	 * Tests that the manager is able to delete a number of existing users from the database, expects success
+	 */
 	@Test
 	public void testDeleteUser(){
 		fill();
@@ -161,6 +226,10 @@ public class UserManagerTest{
 		}
 	}
 
+	/**
+	 * Attempts to delete a user who does not exist in the database, expects to throw an exception
+	 * @throws UserNotExistException The exception expected
+	 */
 	@Test
 	public void testDeleteNotExistingUser() throws UserNotExistException{
 		fill();
@@ -168,6 +237,11 @@ public class UserManagerTest{
 		assertThrows(UserNotExistException.class,() -> {userManager.deleteUser("user0@email.com","password0");});
 
 	}
+
+	/**
+	 * Attempts to delete a user with an incorrect password, expects to throw an exception
+	 * @throws UserNotExistException The exception expected
+	 */
 	@Test
 	public void testDeleteWrongPasswordUser() throws UserNotExistException{
 		fill();
@@ -175,6 +249,12 @@ public class UserManagerTest{
 		assertThrows(UserNotExistException.class,() -> {userManager.deleteUser("user1@email.com","password0");});
 
 	}
+
+	/**
+	 * Attempts to change the email of a non existing user, expects to throw exceptions
+	 * @throws UserNotExistException The exception expected
+	 * @throws EmailExistsException This exception throw is not expected but may be thrown
+	 */
 	@Test
 	public void testChangeEmailBadEmail() throws UserNotExistException,EmailExistsException{
 		fill();
@@ -182,6 +262,12 @@ public class UserManagerTest{
 		assertThrows(UserNotExistException.class,() -> {userManager.changeEmail("user@email.com","user19@email.com");});
 
 	}
+
+	/**
+	 * Attempts to change the email of an existing user to the email of another existing user, expects to throw an exception
+	 * @throws EmailExistsException The exception expected
+	 * @throws UserNotExistException This exception is not expected but may be thrown
+	 */
 	@Test
 	public void testChangeEmailExisitngEmail() throws EmailExistsException,UserNotExistException{
 		fill();
@@ -189,6 +275,11 @@ public class UserManagerTest{
 		assertThrows(EmailExistsException.class,() -> {userManager.changeEmail("user1@email.com","user5@email.com");});
 
 	}
+
+	/**
+	 * Tests that the manager is able to change the email of an existing user to a different valid email,
+	 * expects success
+	 */
 	@Test
 	public void testChangeEmail(){
 		fill();
@@ -200,6 +291,10 @@ public class UserManagerTest{
 			fail();
 		}	
 	}
+
+	/**
+	 * Tests that the manager is able to verify an existing legal user email, expects success
+	 */
 	@Test	
 	public void testVerifyEmail(){
 		fill();
@@ -209,6 +304,11 @@ public class UserManagerTest{
 		
 	}
 
+	/**
+	 * Tests that the manager is able to change the name of an existing user, expects success
+	 * @throws IncorrectNameException This exception is not asserted but may be thrown
+	 * @throws UserNotExistException This exception is not expected but may be thrown
+	 */
 	@Test
 	public void testChangeGetName() throws IncorrectNameException, UserNotExistException{
 		fill();
@@ -217,13 +317,22 @@ public class UserManagerTest{
 		assertEquals("n a me",userManager.getName("user1@email.com"));
 
 	}
-	
+	/**
+	 * Attempts to change the name of a non existing user, expects an exception to be thrown
+	 * @throws IncorrectNameException This exception is not expected but may be thrown
+	 * @throws UserNotExistException The exception expected
+	 */
 	@Test
 	public void testChangeGetNameIncorrectUser() throws IncorrectNameException, UserNotExistException{
 
 		assertThrows(UserNotExistException.class,() -> {userManager.changeName("user1@email.com", "new name");});
 	}
 
+	/**
+	 * Attempts to change the name of an existing user to an empty value, expects to throw an exception
+	 * @throws IncorrectNameException The exception expected
+	 * @throws UserNotExistException This exception is not expected but may be thrown
+	 */
 	@Test
 	public void testIncorrectNameEmpty() throws IncorrectNameException, UserNotExistException{
 		fill();
@@ -231,6 +340,11 @@ public class UserManagerTest{
 		assertThrows(IncorrectNameException.class,() -> {userManager.changeName("user1@email.com", "");});
 	}
 
+	/**
+	 * Attempts to change the name of an existing user to a null value, expects to throw an exception
+	 * @throws IncorrectNameException The exception expected
+	 * @throws UserNotExistException This exception is not expected but may be thrown
+	 */
 	@Test
 	public void testIncorrectNameNull() throws IncorrectNameException, UserNotExistException{
 		fill();
@@ -239,6 +353,11 @@ public class UserManagerTest{
 
 	}
 
+	/**
+	 * Method used to hash passwords, using SHA-512
+	 * @param in The password to hash
+	 * @return The hashed passwords
+	 */
 	private String hash(String in){
 		String salt = "fX66CeuGKjmdkguhPEzp";
 		int split = in.length()/3;
@@ -255,6 +374,11 @@ public class UserManagerTest{
 		}
 
 	}
+
+	/**
+	 * Quality of life method for retrieving a list of existing users
+	 * @return The list of users
+	 */
 	private ArrayList<User> getTestUsers(){
 		ArrayList<User> users = new ArrayList<User>();
 		users.add(new User("user1@email.com",hash("password1"),"name"));
@@ -269,6 +393,10 @@ public class UserManagerTest{
 		return users;
 
 	}
+
+	/**
+	 * Quality of life method for filling the database with the users generated by 'getTestUsrs()'
+	 */
 	private void fill(){
 		for(User u : getTestUsers()){
 			((EntityManager)userManager).insertTuple(u);

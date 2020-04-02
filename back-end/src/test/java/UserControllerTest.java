@@ -38,8 +38,8 @@ import main.java.com.projectBackEnd.HibernateUtility;
 import main.java.com.projectBackEnd.EntityManager;
 import java.util.List;
 /**
-* class to unit test interactions between rest calls and system with respect to user functionality
-*/
+ * The purpose of this class is to test the REST endpoints associated with the user entity through the user controller
+ */
 @MicronautTest
 public class UserControllerTest{
     
@@ -52,16 +52,16 @@ public class UserControllerTest{
 	private static final ResetLinkManagerInterface linkManager = ResetLinkManager.getResetLinkManager();	
 	private static final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
 	/**
-	* set database to test database
-	*/
+	 * Sets the config resource location and the user manager
+	 */
     @BeforeAll
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
 
     }
 	/**
-	*	closes the database and deletes any user, link or session objects
-	*/
+	 * Closes the session factory
+	 */
     @AfterAll
     public static void closeDatabase() {
 		((EntityManager)userManager).deleteAll();
@@ -70,8 +70,9 @@ public class UserControllerTest{
         HibernateUtility.shutdown();
     }
 	/**
-	* deletes all session, user or link objects
-	*/
+	 * Ensure that there are no pre-existing user, resetlink or session entities in the database
+	 * before each test via the 'deleteAll()' method
+	 */
     @BeforeEach
     public void setUp() {
 		((EntityManager)userManager).deleteAll();
@@ -79,8 +80,9 @@ public class UserControllerTest{
 		((EntityManager)sessionManager).deleteAll();
     }
 	/**
-	* test if creating an correct user behaves correctly
-	*/
+	 * Tests that users can be created with unconventional characters in it's attributes (this varies depending
+	 * on the attribute), expects success
+	 */
 	@Test
 	public void testCreateUser(){
 		assertEquals(HttpStatus.CREATED,addUser("username@mail.com","password","na me").getStatus());
@@ -105,8 +107,8 @@ public class UserControllerTest{
 
 	}
 	/**
-	* testing if creating users with passwords with withspace only symbols or null throws an exception
-	*/
+	 * Tests the creation of users with empty and null passwords, expects HTTP errors to be thrown
+	 */
 	@Test
 	public void testCreateUserIncorrectPassword(){
 		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class,()->{
@@ -132,8 +134,8 @@ public class UserControllerTest{
 	}
 
 	/**
-	* test if creating a user with names whoes symbols are whitespace only or null returns exception
-	*/
+	 * Tests the creation of users with empty and null names, expects HTTP errors to be thrown
+	 */
 	@Test
 	public void testCreateUserIncorrectName(){
 		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class,()->{
@@ -161,8 +163,8 @@ public class UserControllerTest{
 	}
 
 	/**
-	* test if creating an user account with incorrect email returns an exception
-	*/
+	 * Tests the creation of users with an invalid email format, expects HTTP errors to be thrown
+	 */
 	@Test
 	public void testCreateUserIncorrectEmail(){
 		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class,()->{
@@ -203,8 +205,8 @@ public class UserControllerTest{
 
 	}
 	/**
-	* test if creating an user with duiplicate email creates an exception
-	*/
+	 * Tests the creation of duplicate users, expects an exception
+	 */
 	@Test
 	public void testCreateDuplicateUser(){
 		try{
@@ -226,8 +228,8 @@ public class UserControllerTest{
 		assertEquals("user already exsits", thrown.getResponse().getBody().get());
 	}
 	/**
-	* test if logging in behaves correctly with correct inputs
-	*/
+	 * Tests that the endpoint is able to log a user in, expects success
+	 */
 	@Test
 	public void TestLoginCorrect(){
 		assertEquals(HttpStatus.CREATED, addUser("mail@mail.com", "pass", "name").getStatus());
@@ -245,8 +247,8 @@ public class UserControllerTest{
 		((EntityManager)sessionManager).deleteAll();
 	}
 	/**
-	* test if loging ing with null or empty creadentials throws an http exception
-	*/
+	 * Attempts to log in with non existing user credentials, expects UNAUTHORIZED HTTP errors thrown
+	 */
 	@Test
 	public void TestLoginIncorrect(){
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
@@ -286,8 +288,8 @@ public class UserControllerTest{
 
 	}
 	/**
-	* test if logging out with correct details behaves correctly
-	*/
+	 * Tests that the endpoint is able to log an existing user out, expects success
+	 */
 	@Test
 	public void testLogout(){
 		addUser("admin@admin.com","admin","not me");
@@ -343,8 +345,8 @@ public class UserControllerTest{
 		assertEquals(HttpStatus.UNAUTHORIZED , thrown1.getStatus());
 	}
 	/**
-	* testing if delete with correct details behaves correctly
-	*/
+	 * Tests that the endpoint is able to delete an existing user, expects success
+	 */
  	@Test
 	public void testDeleteCorrect(){
 			addUser("username@mail.com","password","na me");
@@ -364,8 +366,8 @@ public class UserControllerTest{
 			assertNull(userManager.verifyUser("nam123e@mail.com","pas32  1sw@/-ord"));
 	}
 	/**
-	* test if deleting users with incorrect details returns an http error
-	*/
+	 * Attempts to delete non existing users from the database, expects NOT_FOUND HTTP errors to be thrown
+	 */
 	@Test
 	public void testDeleteIncorrect(){
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
@@ -405,8 +407,8 @@ public class UserControllerTest{
 
 	}
 	/**
-	* test if sending a password reset request behaves correctly with correct details
-	*/
+	 * Tests that the endpoint is able to retrieve and reset an existing user's password, expects succeess
+	 */
 	@Test
 	public void testGetPasswordResetCorrect(){
 		assertEquals(HttpStatus.CREATED,addUser("test@gmail.com","password","name").getStatus());
@@ -416,8 +418,8 @@ public class UserControllerTest{
 		assertEquals(HttpStatus.OK , response.getStatus());
 	}
 	/**
-	* check if sending a password reset request to not existing email or empty, null email returns http error
-	*/
+	 * Attempts to reset the password of non existing users, expects HTTP NOT_FOUND errors to be thrown
+	 */
 	@Test
 	public void testGetPasswordResetIncorrect(){
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
@@ -446,8 +448,8 @@ public class UserControllerTest{
 		assertEquals(HttpStatus.NOT_FOUND , thrown4.getStatus());
 	}
 	/**
-	* test if changing password with correct token behaves correctly
-	*/
+	 * Tests that the endpoint is able to reset an existing user's password, expects success
+	 */
 	@Test
 	public void testPasswordResetCorrect(){
 		try{
@@ -469,8 +471,8 @@ public class UserControllerTest{
 		}	
 	}
 	/**
-	* test if changing password with wrong token returns an exception
-	*/
+	 * Attempts to reset the password of non existing users, expects HTTP NOT_FOUND errors to be thrown
+	 */
 	@Test
 	public void testPasswordResetIncorrect(){
 	 HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
@@ -528,8 +530,8 @@ public class UserControllerTest{
 		}	
 	}
 	/**
-	* test if geting a name from correct accounts behaves correctly
-	*/
+	 * Tests that the endpoint is able to retrieve the name of an existing user, expects success
+	 */
 	@Test
 	public void testGetNameCorrect(){
 		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name").getStatus());
@@ -548,8 +550,9 @@ public class UserControllerTest{
 		sessionManager.terminateSession(token2);
 	}
 	/**
-	* test if getting  a name while not being logged in returns unauthorized http exception
-	*/
+	 * Attempts to retrieve a user's name from a user that does not exist in the database via the GET request,
+	 * expects an Http error to be thrown
+	 */
 	@Test
 	public void testGetNameIncorrect(){
 			HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
@@ -563,8 +566,8 @@ public class UserControllerTest{
 			assertEquals(HttpStatus.UNAUTHORIZED , thrown2.getStatus());	
 	}
 	/**
-	*	testing if changing email with correct user detials behaves correctly
-	*/
+	 * Tests that the endpoint is able to change the email of an existing user, expects success
+	 */
 	@Test
 	public void testChangeEmailCorrect(){
 		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name").getStatus());
@@ -575,10 +578,11 @@ public class UserControllerTest{
 		assertNotNull(token1);
 		sessionManager.terminateSession(token1);
 
-	}	
+	}
 	/**
-	* test if changing an email to a user that does not exist returns an error
-	*/
+	 * Attempts to update the email of a user that does not exist in the database via the PUT request,
+	 * expects an Http error to be thrown
+	 */
 	@Test
 	public void testChangeEmailUserNotExist(){
 			HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
@@ -591,8 +595,8 @@ public class UserControllerTest{
 			assertEquals(HttpStatus.UNAUTHORIZED , thrown1.getStatus());	
 	}
 	/**
-	* test if changing an email to an existing one returns an error
-	*/
+	 * Attempts to change the email of existing user A to the email of existing user B, expects HTTP error to be thrown
+	 */
 	@Test
 	public void testChangeEmailEmailExist(){
 		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name").getStatus());
@@ -606,8 +610,8 @@ public class UserControllerTest{
 	}
 
 	/**
-	* test if changing a name to a correct one behaves correctly
-	*/
+	 * Tests that the endpoint is able to change the name of an existing user, expects success
+	 */
 	@Test
 	public void testChangeNameCorrect(){
 		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name").getStatus());
@@ -626,8 +630,9 @@ public class UserControllerTest{
 		sessionManager.terminateSession(token);
 	}
 	/**
-	* test if changing a name of an user that does not exist throws an http exception
-	*/
+	 * Attempts to change the user name of a user that does not exist in the database via the PUT request,
+	 * expects an Http error to be thrown
+	 */
 	@Test
 	public void testChangeNameUserNotExist(){
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
@@ -641,8 +646,8 @@ public class UserControllerTest{
 		assertEquals(HttpStatus.UNAUTHORIZED , thrown1.getStatus());	
 	}
 	/**
-	* test if changing a name to invalid throws an http exception
-	*/
+	 * Attempts to change the name of an existing user to an empty string or null, expects an HTTP error to be thrown
+	 */
 	@Test
 	public void testChangeNameInvalid(){
 		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name").getStatus());
@@ -666,8 +671,8 @@ public class UserControllerTest{
 		sessionManager.terminateSession(token);
 	}
 	/**
-	* test if changing a password with correct setting behaves correctly
-	*/
+	 * Tests that the endpoint is able to change the password of an existing user, expects success
+	 */
 	@Test
 	public void testChangePasswordCorrect(){
 		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name").getStatus());
@@ -695,8 +700,9 @@ public class UserControllerTest{
 
 	}
 	/**
-	* test if changing a password of a not existing user throws an http exception
-	*/
+	 * Attempts to change the password of a user that does not exist in the database via the PUT request,
+	 * expects an Http error to be thrown
+	 */
 	@Test
 	public void testChangePasswordUserNotExist(){
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
@@ -710,8 +716,8 @@ public class UserControllerTest{
 		assertEquals(HttpStatus.UNAUTHORIZED , thrown1.getStatus());	
 	}
 	/**
-	* test if changing a password to invalid password throws an http exception
-	*/
+	 * Attempts to change the password of an existing user to an empty string or null, expects an HTTP error to be thrown
+	 */
 	@Test
 	public void testChangePasswordInvalid(){
 		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name").getStatus());
@@ -735,60 +741,77 @@ public class UserControllerTest{
 		sessionManager.terminateSession(token);
 	}
 	/**
-	* create a post request to add user
-	* @return http response of the request
-	*/
+	 * Quality of life method for adding a user via the REST api
+	 * @param email the email
+	 * @param password the password
+	 * @param name the name
+	 * @return The HTTP response produced by the operation
+	 */
 	private HttpResponse addUser(String email, String password, String name){
 		return client.toBlocking().exchange(HttpRequest.POST("/user/create",new UserBody(email,password,name)));
 
 	}
 	/**
-	* creates a post request to login a user 
-	* @return http response to that request
-	*/
+	 * Quality of life method for logging a user in via the REST api
+	 * @param email the email
+	 * @param password the password
+	 * @return The HTTP response produced by the operation
+	 */
 	private HttpResponse login(String email, String password){
 		return client.toBlocking().exchange(HttpRequest.POST("/user/login",new UserBody(email,password)));
 
 	}
 	/**
-	* @return session token from login request with given credentials
-	*/
+	 * Quality of life method for retrieving a user-based token via the REST api
+	 * @param email the email
+	 * @param password the password
+	 * @return The token retrieved
+	 */
 	private String getToken(String email, String password){
 		return client.toBlocking().retrieve(HttpRequest.POST("/user/login",new UserBody(email,password)),String.class);
 
 	}
 	/**
-	* creates a delete request to delete user
-	*	@returns http response to that request
-	*/
+	 * Quality of life method for deleting a user via the REST api
+	 * @param email the email
+	 * @param password the password
+	 * @return The HTTP response produced by the operation
+	 */
 	private HttpResponse delete(String email, String password){
 		return client.toBlocking().exchange(HttpRequest.DELETE("/user/delete",new UserBody(email,password)));
 	}
 	/**
-	* creates a get request to get name of the user with given session token
-	* @returns name of the user from http response
-	*/
+	 * Quality of life method for retrieving a user's name via the REST api
+	 * @param token The user token
+	 * @return The name of the user
+	 */
 	private String getName(String token){
 		return client.toBlocking().retrieve(HttpRequest.GET("/user/name").header("X-API-Key",token), String.class);
 	}
 	/**
-	* creates a request to change email of user
-	* @returns http response to that request
-	*/
+	 * Quality of life method for updating a user's email via the REST api
+	 * @param token the token
+	 * @param email the email
+	 * @return The HTTP response produced by the operation
+	 */
 	private HttpResponse changeEmail(String token, String email){
 		return client.toBlocking().exchange(HttpRequest.PUT("/user/change_email",new StringBody(email)).header("X-API-Key",token));
 	}
 	/**
-	* creates a request to change name of the user
-	* @returns http response to that request
-	*/
+	 * Quality of life method for updating a user's name via the REST api
+	 * @param token the token
+	 * @param name the name
+	 * @return The HTTP response produced by the operation
+	 */
 	private HttpResponse changeName(String token, String name){
 		return client.toBlocking().exchange(HttpRequest.PUT("/user/change_name",new StringBody(name)).header("X-API-Key",token));
 	}
 	/**
-	* creates a request to change name of the user
-	* @returns http response to that request
-	*/
+	 * Quality of life method for updating a user's password via the REST api
+	 * @param token the token
+	 * @param password the password
+	 * @return The HTTP response produced by the operation
+	 */
 	private HttpResponse changePassword(String token, String password){
 		return client.toBlocking().exchange(HttpRequest.PUT("/user/change_password",new StringBody(password)).header("X-API-Key",token));
 	}
