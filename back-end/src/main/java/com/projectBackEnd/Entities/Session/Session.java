@@ -1,8 +1,7 @@
 package main.java.com.projectBackEnd.Entities.Session;
 
 import main.java.com.projectBackEnd.TableEntity;
-import org.hibernate.annotations.Type;
-import java.nio.charset.Charset;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -11,86 +10,146 @@ import java.util.Random;
 import java.sql.Timestamp;
 
 import java.io.Serializable;
+
+
+/**
+ * Session objects are database entities for the table 'Sessions' defined in this class.
+ * They have a Token, a date of the session been created, a Timeout, and an Email
+ * within the site, a title, and some content.
+ *
+ * https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
+ */
 @Entity
 @Table(name = Session.TABLENAME)
 public class Session implements TableEntity {
-	
+
+	// 'Session' database table name and columns
 	public final static String TABLENAME = "Sessions";
 	private final static String TOKEN = "Token";
 	private final static String DATE = "Date";
 	private final static String TIMEOUT = "Timeout";
 	private final static String EMAIL = "Email";
 
+
+	// The primary key token, used for authentication
 	@Id
 	@Column(name = TOKEN)
 	private String token;
+
+	// The date, used in email generation
 	@Column(name = DATE)
 	private Timestamp date;
+
+	// A timeout upper bound (seconds)
 	@Column(name = TIMEOUT)
 	private Timestamp timeout;
+
+	// The email of the user associated with the session
 	@Column(name = EMAIL)
 	private String email;
+
+
 	/**
-	 *	timeout in sec
+	 * Empty constructor
 	 */
-	public Session(String email, int timeout){
+	public Session(){}
+
+
+	/**
+	 * Main constructor
+	 * @param email		User email
+	 * @param timeout	Timeout
+	 */
+	public Session(String email, int timeout) {
+
 		this.email = email;
-		this.date = new Timestamp(System.currentTimeMillis());
 		this.timeout = new Timestamp(System.currentTimeMillis() + timeout * 1000);
+		this.date = new Timestamp(System.currentTimeMillis());
 		this.token = generateToken();
+
 	}
 
-	public Session(){};
+
+	/**
+	 * Get the primary key 'token'
+	 * @return unique token
+	 */
 	public Serializable getPrimaryKey(){
 		return token;
 	}
 
-	private String generateToken(){
+
+	/**
+	 * Generate a token for the session
+	 * @return generated token
+	 */
+	private String generateToken() {
+
 		Random rand = new Random();
 		String s = null;
 		String alphaNum = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvxyz";
-		do{
+		do {
 			StringBuilder sb = new StringBuilder();
-			for(int i = 0; i < 26;++i){
-				sb.append(alphaNum.charAt(rand.nextInt(alphaNum.length())));
-			}
+			for(int i = 0; i < 26;++i) sb.append(alphaNum.charAt(rand.nextInt(alphaNum.length())));
 			s = sb.toString();
-		}while(s == null && SessionManager.getSessionManager().verifySession(s));
+		} while(s == null && SessionManager.getSessionManager().verifySession(s));
 		return s;
+
 	}
 
+
+	/**
+	 * Get the token attribute
+	 * @return Token
+	 */
 	public String getToken(){
 		return token;
 	}
 
+
+	/**
+	 * Get the Date attribute
+	 * @return Date
+	 */
 	public Timestamp getDate(){
 		return date;
 	}
 
+
+	/**
+	 * Get the timeout attribute (in seconds)
+	 * @return timeout
+	 */
 	public Timestamp getTimeout(){
 		return timeout;
 	}
 
+
+	/**
+	 * Get the email associated to the session
+	 * @return email
+	 */
 	public String getEmail(){
 		return email;
 	}
 
+
 	/**
 	 * Copy the values of input object
-	 * @param newCopy
+	 * @param toCopy	Session to copy
 	 * @return updated object
 	 */
-	public TableEntity copy(TableEntity newCopy) {
-		if(newCopy instanceof Session){
-			token = ((Session)newCopy).getToken();
-			date = ((Session)newCopy).getDate();
-			timeout = ((Session)newCopy).getTimeout();
-			email = ((Session)newCopy).getEmail();
+	public TableEntity copy(TableEntity toCopy) {
+
+		if (toCopy instanceof Session){
+			token = ((Session)toCopy).getToken();
+			date = ((Session)toCopy).getDate();
+			timeout = ((Session)toCopy).getTimeout();
+			email = ((Session)toCopy).getEmail();
 			return this;
 		}
 		else return null;
 	}
-
 
 
 } 
