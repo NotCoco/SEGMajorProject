@@ -92,7 +92,7 @@ public class PageController {
      * @return      List of all pages belonging to specified site
      */
     @Get("/{name}/pages")
-    public List<Page> pages(String name) {
+    public List<Page> getAllPages(String name) {
         return pageManager.getAllPagesOfSite(name);
     }
 

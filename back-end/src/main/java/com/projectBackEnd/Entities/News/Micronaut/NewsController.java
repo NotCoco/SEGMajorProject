@@ -31,7 +31,7 @@ public class NewsController {
      * @return List of all the News in the database
      */
     @Get("/")
-    public List<News> index(){
+    public List<News> getAllNews(){
         return newsManager.getAllNews();
     }
 

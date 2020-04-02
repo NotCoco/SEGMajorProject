@@ -89,23 +89,25 @@ public class MedicineController {
 
 
     /**
-     * Get the specific medicine by http GET method
-     * @param id
+     * Get the specific medicine by HTTP GET method
+     * @param id   Primary key of the medicine to retrieve
      * @return get the Medicine with the specified id
      */
     @Get(value = "/{id}", produces = MediaType.TEXT_JSON)
-    public Medicine list(int id) {
+    public Medicine getMedicine(int id) {
         return medicineManager.getByPrimaryKey(id);
     }
+
 
     /**
      * Get all the medicines from the database by HTTP GET method
      * @return list of all the Medicines
      */
     @Get("/")
-    public List<Medicine> index(){
+    public List<Medicine> getAllMedicines(){
         return medicineManager.getAllMedicines();
     }
+
 
     /**
      * Create URI of the medicine with its specified id
