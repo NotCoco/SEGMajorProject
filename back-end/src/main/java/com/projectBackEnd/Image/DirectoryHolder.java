@@ -4,7 +4,7 @@ import java.io.File;
 
 public class DirectoryHolder {
 
-	private static String dir = System.getProperty("user.dir")+"\\back-end\\src\\main\\resources\\images\\";
+	private static String dir = System.getProperty("user.dir")+"/src/main/resources/images/";
 	private static DirectoryHolder holder;
 	private DirectoryHolder(){
 		holder = this;
@@ -24,7 +24,7 @@ public class DirectoryHolder {
 		}
 		this.dir = newDir;
 	}
-	public void setDefaultDir(){dir = System.getProperty("user.dir")+"\\back-end\\src\\main\\resources\\images\\";}
+	public void setDefaultDir(){dir = System.getProperty("user.dir")+"/src/main/resources/images/";}
 	public static String getDir() {
 		return dir;
 	}
