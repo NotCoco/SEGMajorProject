@@ -23,7 +23,7 @@ public class ImageManager {
 	//Directory of the folder where the images are saved
 	final String dir;
 	//Constructor
-	public ImageManager() {
+	private ImageManager() {
 		imageManager = this;
 		dir = DirectoryHolder.getDir();
 	}

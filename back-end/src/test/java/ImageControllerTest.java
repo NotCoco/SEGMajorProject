@@ -195,7 +195,11 @@ public class ImageControllerTest {
 		String imageName = getEUrl(response);
 		assertTrue(imageManager.getImageUrls().contains(imageManager.getDir()+imageName));
 	}
-
+	/**
+	 * Get the url of the image
+	 * @param response
+	 * @return url
+	 */
 	private String getEUrl(HttpResponse response) {
 		String val = response.header(HttpHeaders.LOCATION);
 		if (val != null) {
@@ -207,7 +211,12 @@ public class ImageControllerTest {
 		}
 		return null;
 	}
-
+	/**
+	 * Add image by http POST request
+	 * @param file image file
+	 * @param token
+	 * @return http response
+	 */
 	protected HttpResponse addImage(File file, String token){
 		MultipartBody body = MultipartBody.builder()
 				.addPart("file","testImage.jpg",MULTIPART_FORM_DATA_TYPE,file)

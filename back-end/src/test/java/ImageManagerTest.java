@@ -26,20 +26,32 @@ public class ImageManagerTest {
 
     public ImageManagerTest(){ imageManager = ImageManager.getImageManager(); }
 
+    /**
+     * Prior to running, set the directory to the test image folder
+     */
     @BeforeAll
     public static void setUpBefore() {
         DirectoryHolder.getDirectoryHolder().setDir(System.getProperty("user.dir")+"/src/test/resources/TestImages/");
     }
 
+    /**
+     * Prior to each test, clean up the test image folder
+     */
     @BeforeEach
     public void setUp() { imageManager.deleteAll(); }
 
+    /**
+     * After all the tests, clean up the folder and set the directory back to default
+     */
     @AfterAll
     public static void cleanUp() {
         imageManager.deleteAll();
         DirectoryHolder.getDirectoryHolder().setDefaultDir();
     }
-
+//======================================================================================================================
+    /**
+     * Test saving an image file
+     */
     @Test
     public void testSaveImage() {
         String imageBytes = readLineByLine("ImageBytes.txt");
@@ -49,6 +61,9 @@ public class ImageManagerTest {
         assertTrue(check);
     }
 
+    /**
+     * Test deleting an image file
+     */
     @Test
     public void testDeleteImage() {
         String imageBytes = readLineByLine("ImageBytes.txt");
@@ -69,6 +84,9 @@ public class ImageManagerTest {
         assertEquals(0, imageManager.getImageUrls().size());
     }
 
+    /**
+     * Test saving an image file and delete it
+     */
     @Test
     public void testSaveAndDeleteAll() {
         String imageBytes = readLineByLine("ImageBytes.txt");
@@ -90,6 +108,9 @@ public class ImageManagerTest {
         assertEquals(0, imageManager.getImageUrls().size());
     }
 
+    /**
+     * Read the bytes from the txt file in this directory to avoid long string
+     */
     private static String readLineByLine(String filePath)
     {
         StringBuilder contentBuilder = new StringBuilder();
