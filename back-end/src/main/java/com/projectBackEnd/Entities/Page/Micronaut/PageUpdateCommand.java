@@ -13,7 +13,7 @@ public class PageUpdateCommand extends PageAddCommand {
 
     // Primary key, unique 'ID'
     @NotNull
-    private int id;
+    private int primaryKey;
 
     /**
      * Default Constructor
@@ -34,7 +34,7 @@ public class PageUpdateCommand extends PageAddCommand {
      */
     public PageUpdateCommand(Integer id, String site, String slug, Integer index, String title, String content){
         super(site, slug, index, title, content);
-        this.id = id;
+        this.primaryKey = id;
     }
 
 
@@ -42,6 +42,6 @@ public class PageUpdateCommand extends PageAddCommand {
      * Get the primary key 'ID' of the page
      * @return id
      */
-    public int getId() { return id; }
+    public int getPrimaryKey() { return primaryKey; }
 
 }
