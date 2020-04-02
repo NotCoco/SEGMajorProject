@@ -1,5 +1,6 @@
 package main.java.com.projectBackEnd.Entities.User.Hibernate;
 
+import org.apache.commons.validator.routines.EmailValidator;
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
