@@ -42,7 +42,7 @@ public class UserManagerTest{
 	}
 
 
-	//replace with parametric maybe?
+
 	@Test
 	public void testAddUserInvalidEmail1() throws InvalidEmailException{
 
@@ -117,6 +117,7 @@ public class UserManagerTest{
 		assertNull(userManager.verifyUser("not_in","not in"));
 		assertNotNull(userManager.verifyUser("user6@email.com","password6"));
 		assertNotNull(userManager.verifyUser("user6@email.com","password6"));
+		assertNull(userManager.verifyUser("user6@email.com","password5"));
 	}
 	@Test
 	public void testChangePassword() throws UserNotExistException{
@@ -239,14 +240,17 @@ public class UserManagerTest{
 	}
 
 	private String hash(String in){
+		String salt = "fX66CeuGKjmdkguhPEzp";
+		int split = in.length()/3;
+		String withSalt = in.substring(0,split) + salt + in.substring(split,in.length());
 		try{
-			MessageDigest alg = MessageDigest.getInstance("SHA-512");
+			MessageDigest alg = MessageDigest.getInstance("SHA-512"); 
 			alg.reset();
-			alg.update(in.getBytes(StandardCharsets.UTF_8));
+			alg.update(withSalt.getBytes(StandardCharsets.UTF_8));
 			return String.format("%0128x", new BigInteger(1, alg.digest()));
 		}
-		catch (NoSuchAlgorithmException e) {
-			throw new RuntimeException(e);
+        catch (NoSuchAlgorithmException e) { 
+            throw new RuntimeException(e); 
 
 		}
 
