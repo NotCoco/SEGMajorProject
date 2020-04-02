@@ -21,7 +21,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 
 /**
- * Test class to extensively unit test interactions between software and the Pages table
+ * Test class to extensively unit test interactions between the page entity manager and the Pages table in the database.
  */
 public class PageManagerTest {
 
@@ -32,7 +32,8 @@ public class PageManagerTest {
     private static Site testSiteB = null;
 
     /**
-     * Prior to running, databaste information location is set and siteManagers and pageManagers are intialised
+     * Prior to running, database information is set the singleton managers for page and site are created for testing.
+     * Also two sites are added to the database which the pages will use during the tests
      */
     @BeforeAll
     public static void setUpDatabase() {
@@ -54,8 +55,8 @@ public class PageManagerTest {
     }
 
     /**
-     * After the tests, the factory is shut down and we can see if any connections were leaked with the Database.
-     * The created sites are cleansed too.
+     * After the test, the factory is shut down, created sites are deleted
+     * and the LeakUtil can tell us whether any connections leaked.
      */
     @AfterAll
     public static void assertNoLeaks() {
@@ -65,7 +66,7 @@ public class PageManagerTest {
     }
 
     /**
-     * Prior to each test, we delete all the existing pages.
+     * Prior to each test, we'll delete all the pages in the pages table.
      */
     @BeforeEach
     public void setUp() {
@@ -122,7 +123,7 @@ public class PageManagerTest {
     }
 
     /**
-     * Test that pages when copying eachother become identical
+     * Tests that the manager is able to copy the attributes of one page onto another, expects success
      */
     @Test
     public void testPageCopy() {
@@ -138,7 +139,7 @@ public class PageManagerTest {
     //Testing Foreign Key constraints
 
     /**
-     * Test a deleted site removes its associated page
+     * Tests that deleting the site of an existing page will also cause the page to be deleted, expects success
      */
     @Test
     public void testEffectOfSiteDelete() {
@@ -149,7 +150,8 @@ public class PageManagerTest {
     }
 
     /**
-     * Test an update to a site will trickle onto its pages
+     * Tests that updating the site of an existing page will cause the page's site attribute to also change,
+     * expects success
      */
     @Test
     public void testSiteUpdateEffectOnPage() {
@@ -199,7 +201,7 @@ public class PageManagerTest {
 
     //Test PageManagerInterface: getAllPagesBySite
     /**
-     * Test that the order returned by getAllPages sorts the pages in the database by index before returning.
+     * Tests that the manager is able to retrieve existing sites in the correct (increasing) order, expects success
      */
     @Test
     public void testGetAllBySiteOrder() {
@@ -269,7 +271,7 @@ public class PageManagerTest {
     //Testing PageManagerInterface: addPage
 
     /**
-     * Test that pages with valid sites can be added provided they don't violate constraints
+     * Tests that the manager is able to add valid pages to the database, expects success
      */
     @Test
     public void testAddRegularPagesKey() {
@@ -282,7 +284,8 @@ public class PageManagerTest {
     }
 
     /**
-     * Test that pages which violate the constraints of same site slug / slug will not be added
+     * Attempts to add two valid pages with the same site and page slug to the database,
+     * expects only one page to be added to the database
      */
     @Test
     public void testViolateDuplicateCompositeKey() {
@@ -308,7 +311,7 @@ public class PageManagerTest {
     }
 
     /**
-     * Test that a page with an invalid site will not be added
+     * Attempts to add a page with invalid site slug to the database, expects the page to not be added to the database
      */
     @Test
     public void testAddPageWithInvalidSite() {
@@ -331,7 +334,7 @@ public class PageManagerTest {
     }
 
     /**
-     * Test Pages with empty values can still be added provided they don't violate constraints
+     * Tests that the manager is able to add a page with empty content to the database, expects success
      */
     @Test
     public void testEmptyContent() {
@@ -381,7 +384,7 @@ public class PageManagerTest {
     //Testing PageManagerInterface: getBySiteAndSlug
 
     /**
-     * Test the correct site can be found by giving its slug and site's slug
+     * Tests that the manager is able to retrieve a page by it's site and slug value alone, expects success
      */
     @Test
     public void testGetPageBySiteAndSlug() {
@@ -434,7 +437,7 @@ public class PageManagerTest {
     //Testing PageManagerInterface: delete
 
     /**
-     * Test the delete function removes a page from the database table
+     * Tests that the manager is able to delete a valid existing page, expects success
      */
     @Test
     public void testDelete() {
@@ -492,7 +495,7 @@ public class PageManagerTest {
     //Testing PageManagerInterface: update
 
     /**
-     * Test that updating a page works - including changing unique slug
+     * Tests that the manager is able to update an existing page with valid information, expects success
      */
     @Test
     public void testUpdatePage() {
@@ -553,7 +556,8 @@ public class PageManagerTest {
     }
 
     /**
-     * Test updating with null data throws an error
+     * Attempts to update an existing page with null attribute values (excluding primary key and site slug), expects an
+     * exception to be thrown
      */
     @Test
     public void testUpdateWithNullData() {
@@ -616,8 +620,7 @@ public class PageManagerTest {
     }
 
     /**
-     * Fills the database with a list of pages
-     * @param pagesToAdd The list of pages to be inserted to the database.
+     * Quality of life method to fill database with the pages created from the 'getListOfPages()' method
      */
     private void fillDatabase(ArrayList<Page> pagesToAdd) {
         for (int i = 0; i<pagesToAdd.size(); ++i) pageManager.addPage(pagesToAdd.get(i));

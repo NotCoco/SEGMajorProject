@@ -35,7 +35,7 @@ public class SiteManagerTest {
     }
 
     /**
-     * After the tests, the factory is shut down and we can see if any connections were leaked with the Database.
+     * After the test, the factory is shut down and we can see if any connections were leaked with the Database.
      */
     @AfterAll
     public static void assertNoLeaks() {
@@ -109,7 +109,7 @@ public class SiteManagerTest {
 
     /**
      * Test the fill database method below, and the getAllSites method to show that all are successfully added.
-     * Expected: All the sites from the list are added successfully.
+     * Expected: All the medicines from the list are added successfully.
      */
     @Test
     public void testFillingAndGetting() {
@@ -146,6 +146,7 @@ public class SiteManagerTest {
 
     /**
      * Testing a database can have deleteAll run on it, even if it is empty
+     * Expected: The number of entries in the database remains zero.
      */
     @Test
     public void testDeleteAllEmptyDatabase() {
@@ -157,6 +158,7 @@ public class SiteManagerTest {
 
     /**
      * Testing a database will be flushed by the deleteAll method used between tests
+     * Expected: The entries will disappear from the database.
      */
     @Test
     public void testDeleteAllFilledDatabase() {
@@ -170,6 +172,7 @@ public class SiteManagerTest {
 
     /**
      * Test adding a regular Site article to the database.
+     * Expected: A new site article is added to the database, regardless of constructor used.
      */
     @Test
     public void testAddSite() {
@@ -183,6 +186,7 @@ public class SiteManagerTest {
 
     /**
      * Adding a site object with null values will not be added to the database.
+     * Expected: The size remains unchanged.
      */
     @Test
     public void testAddSiteWithNullValues() {
@@ -223,6 +227,7 @@ public class SiteManagerTest {
 
     /**
      * Testing that site objects can be found and made from their primary key.
+     * Expected: The site found shares the same values as the site in the database.
      */
     @Test
     public void testGetByPrimaryKey() {
@@ -275,6 +280,7 @@ public class SiteManagerTest {
 
     /**
      * Test deleting a primary key which is not in the database.
+     * Expected: The database remains unchanged and an error is thrown.
      */
     @Test
     public void testWithDeleteUnfoundPrimaryKey() {
