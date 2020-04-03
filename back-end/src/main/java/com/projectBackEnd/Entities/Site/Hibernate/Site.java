@@ -42,13 +42,13 @@ public class Site implements TableEntity {
     public Site(String siteSlug, String siteName) {
         this.primaryKey = -1;
         this.name = siteName;
-        this.slug = siteSlug;
+        setSlug(siteSlug);
     }
 
     public Site(Integer ID, String siteSlug, String siteName) {
         this.primaryKey = ID;
         this.name = siteName;
-        this.slug = siteSlug;
+        setSlug(siteSlug);
     }
 
     /**
@@ -69,7 +69,10 @@ public class Site implements TableEntity {
         this.name = name;
     }
 
-    public void setSlug(String newSlug) { this.slug = newSlug; }
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
     public String getSlug() { return slug; }
 
      /**

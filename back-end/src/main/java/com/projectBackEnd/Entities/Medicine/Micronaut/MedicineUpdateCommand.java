@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 public class MedicineUpdateCommand extends MedicineAddCommand {
 
     @NotNull
-    private int id;
+    private int primaryKey;
 
     public MedicineUpdateCommand() {
         super();
@@ -21,9 +21,9 @@ public class MedicineUpdateCommand extends MedicineAddCommand {
 
     public MedicineUpdateCommand(int id, String name, String type) {
         super(name, type);
-        this.id = id;
+        this.primaryKey = id;
     }
 
-    public int getId() { return id; }
+    public int getPrimaryKey() { return primaryKey; }
 
 }

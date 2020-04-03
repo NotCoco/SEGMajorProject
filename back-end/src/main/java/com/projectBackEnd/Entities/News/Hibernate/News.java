@@ -98,8 +98,8 @@ public class News implements TableEntity {
         this.title = title;
         this.urgent = urgent;
         this.content = content;
-        this.slug = slug;
         this.primaryKey = primaryKey;
+        this.slug = slug;
     }
 
     /**

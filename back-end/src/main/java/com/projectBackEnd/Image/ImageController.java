@@ -3,10 +3,18 @@ package main.java.com.projectBackEnd.Image;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
+import java.util.Base64;
 
+import io.micronaut.http.MediaType;
+
+import io.micronaut.http.multipart.CompletedFileUpload;
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
+
+import javax.validation.constraints.Size;
 
 /**
  * Image Controller class is used for the interactions between frontend and backend
@@ -19,27 +27,37 @@ public class ImageController {
 
 	protected final ImageManager imageManager;
 	protected final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
-	public ImageController(){imageManager = new ImageManager();}
+	public ImageController(){imageManager = ImageManager.getImageManager();}
 
 	/**
 	 * Add a new image by http POST method
 	 * @param session
-	 * @param imageBytes image bytes encoded with Base64
+	 * @param file
 	 * @return Http response with relevant information which depends on the result of
 	 * inserting new image
 	 */
-	@Post("/")
-	public HttpResponse<String> add(@Header("X-API-Key") String session,@Body String imageBytes) {
+	@Post(value = "/", consumes = MediaType.MULTIPART_FORM_DATA)
+	public HttpResponse<String> add(@Header("X-API-Key") String session, @Body CompletedFileUpload file) {
 		if(!sessionManager.verifySession(session))
 			return HttpResponse.unauthorized();
-		String msg = imageManager.saveImage(imageBytes);
-		if(msg.equals("Failed")){
-			return HttpResponse.serverError();
+		try {
+			String[] strings = file.getFilename().split("\\.");
+			String extension = strings[strings.length-1];
+			byte[] encoded = Base64.getEncoder().encode(file.getBytes());
+			String msg = imageManager.saveImage(new String(encoded), extension);
+			if(msg.equals("Failed")){
+				return HttpResponse.serverError();
+			}
+			else{
+				return HttpResponse
+						.created(msg)
+						.headers(headers -> headers.location(location(msg)));
+			}
 		}
-		else{
+		catch(IOException a){
+			System.out.println("Error occured");
 			return HttpResponse
-					.created(msg)
-					.headers(headers -> headers.location(location(msg)));
+					.noContent();
 		}
 	}
 
@@ -51,7 +69,7 @@ public class ImageController {
 	 * deleting the image
 	 */
 	@Delete("/{imageName}")
-	public HttpResponse delete(@Header("X-API-Key") String session,String imageName) {
+	public HttpResponse delete(@Header("X-API-Key") String session, String imageName) {
 		if(!sessionManager.verifySession(session))
 			return HttpResponse.unauthorized();
 		if(imageManager.deleteImage(imageName)){
@@ -62,10 +80,22 @@ public class ImageController {
 		}
 	}
 
-	public void deleteAll(){
-		imageManager.deleteAll();
+	/**
+	 * Get an image with the image name by http Get method
+	 * @param imageName
+	 * @return the image file
+	 */
+	@Get(value = "/{imageName}", produces = MediaType.MULTIPART_FORM_DATA)
+	@Size
+	public File get(String imageName) {
+		return imageManager.getImage(imageName);
 	}
 
+	/**
+	 * Create URI with existing image name
+	 * @param imageName
+	 * @return created URI
+	 */
 	protected URI location(String imageName) {
 		return URI.create("/images/" + imageName);
 	}

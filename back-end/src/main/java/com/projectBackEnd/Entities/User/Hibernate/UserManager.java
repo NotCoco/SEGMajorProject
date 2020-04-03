@@ -10,7 +10,7 @@ import java.util.List;
 import java.math.BigInteger;
 
 import org.apache.commons.validator.routines.EmailValidator;
-
+import java.util.List;
 
 
 
@@ -35,10 +35,10 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 			throw new InvalidEmailException("email: " + email + " is invalid");
 		if(getAll().stream().filter(u->((User)u).getEmail().equals(email)).count() > 0)
 			throw new EmailExistsException("email: " + email + " already exsists");
-		if(name == null || name.isEmpty())
+		if(name == null || name.trim().isEmpty())
 			throw new IncorrectNameException("incorrect name");
-		if(password == null || password.isEmpty())
-			throw new InvalidPasswordException("invalid password");	
+		if(password == null || password.trim().isEmpty())
+			throw new InvalidPasswordException("invalid password");
 	
 		User user = new User(email,hash(password),name);
 		insertTuple(user);
@@ -52,7 +52,7 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 			
 	}
 	public void changePassword(String email, String newPassword) throws UserNotExistException,InvalidPasswordException{
-		if(newPassword == null || newPassword.isEmpty())
+		if(newPassword == null || newPassword.trim().isEmpty())
 			throw new InvalidPasswordException("invalid password");	
 		List<User> users = getAll();
 		User user = null;
@@ -109,7 +109,7 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 		}
 		if(user == null)
 			throw new UserNotExistException("there is no user with email: " + email);
-		if(name == null || name.isEmpty())
+		if(name == null || name.trim().isEmpty())
 			throw new IncorrectNameException("incorrect name");
 		user.setName(name);
 		update(user);
@@ -123,14 +123,20 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 		throw new UserNotExistException("No such user");
 
 	}
+	public List<User> getUsers(){
+		return getAll();
+	}
 	public boolean verifyEmail(String email){ 
 		return (getAll().stream().filter(u->((User)u).getEmail().equals(email)).count() > 0);
 	}
 	private String hash(String in){
+		String salt = "fX66CeuGKjmdkguhPEzp";
+		int split = in.length()/3;
+		String withSalt = in.substring(0,split) + salt + in.substring(split,in.length());
 		try{
 			MessageDigest alg = MessageDigest.getInstance("SHA-512"); 
 			alg.reset();
-			alg.update(in.getBytes(StandardCharsets.UTF_8));
+			alg.update(withSalt.getBytes(StandardCharsets.UTF_8));
 			return String.format("%0128x", new BigInteger(1, alg.digest()));
 		}
         catch (NoSuchAlgorithmException e) { 

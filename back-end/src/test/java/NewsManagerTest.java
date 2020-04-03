@@ -125,7 +125,6 @@ public class NewsManagerTest {
     /**
      * Test the fill database method below, and the getAllNews method to show that all are
      * successfully added.
-     * Expected: All the news articles from the list are added successfully.
      */
     @Test
     public void testFillingAndGetting() {
@@ -156,7 +155,6 @@ public class NewsManagerTest {
 
     /**
      * Testing a database can have deleteAll run on it, even if it is empty
-     * Expected: The number of entries in the database remains zero.
      */
     @Test
     public void testDeleteAllEmptyDatabase() {
@@ -168,7 +166,6 @@ public class NewsManagerTest {
 
     /**
      * Testing a database will be flushed by the deleteAll method used between tests
-     * Expected: The entries will disappear from the database.
      */
     @Test
     public void testDeleteAllFilledDatabase() {
@@ -182,7 +179,6 @@ public class NewsManagerTest {
 
     /**
      * Test adding a regular News article to the database.
-     * Expected: A new news article is added to the database, regardless of constructor used.
      */
     @Test
     public void testAddNews() {
@@ -197,7 +193,6 @@ public class NewsManagerTest {
 
     /**
      * Adding a news object with null values will not be added to the database.
-     * Expected: The size remains unchanged.
      */
     @Test
     public void testAddNewsWithNullValues() {
@@ -208,7 +203,6 @@ public class NewsManagerTest {
 
     /**
      * Testing adding news articles with empty values
-     * Expected: The article is added.
      */
     @Test
     public void testAddNewsWithEmptyStringValues() {
@@ -224,8 +218,13 @@ public class NewsManagerTest {
         int sizeBefore = newsManager.getAllNews().size();
         newsManager.addNews(new News(new Date(12343212L), false,
                 "desc213ription1", "ti321t      le1", false, "con321tent1", "slug1"));
-        newsManager.addNews(new News(new Date(12343212L), false,
-                "desc213ription1", "ti321tle1", false, "con321tent1", "slug1"));
+        try {
+            newsManager.addNews(new News(new Date(12343212L), false,
+                    "desc213ription1", "ti321tle1", false, "con321tent1", "slug1"));
+            fail();
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+        }
         assertEquals(sizeBefore+1, newsManager.getAllNews().size());
     }
 
@@ -233,7 +232,6 @@ public class NewsManagerTest {
 
     /**
      * Testing that news objects can be found and made from their primary key.
-     * Expected: The news found shares the same values as the news in the database.
      */
     @Test
     public void testGetByPrimaryKey() {
@@ -286,7 +284,6 @@ public class NewsManagerTest {
 
     /**
      * Test deleting a primary key which is not in the database.
-     * Expected: The database remains unchanged and an error is thrown.
      */
     @Test
     public void testWithDeleteUnfoundPrimaryKey() {
@@ -302,7 +299,6 @@ public class NewsManagerTest {
     }
     /**
      * Test deleting a primary key which is null.
-     * Expected: The database remains unchanged and an error is thrown.
      */
     @Test
     public void testWithDeleteNullPrimaryKey() {
@@ -352,22 +348,43 @@ public class NewsManagerTest {
     }
 
     /**
+     * Update a news article but not its unique key information
+     */
+    @Test
+    public void testUpdateNewsNotSlug() {
+        News first = newsManager.addNews(new News(new Date(12343212L), false,
+                "changedDescription", "newTitle", false, "content2", "slug9"));
+        int id = first.getPrimaryKey();
+        News replacementNews = new News(id, new Date(12343212L), true,
+                "changedDescription", "newTitle", false, "content1", "slug9");
+        newsManager.update(replacementNews);
+
+        News newsInDB = newsManager.getByPrimaryKey(id);
+        assertEquals(replacementNews.getDescription(), newsInDB.getDescription());
+        assertEquals(replacementNews.getTitle(), newsInDB.getTitle());
+    }
+
+    /**
      * Testing updating a news article so it violates the unique - it should throw an error!
      */
     @Test
     public void testUpdateNewsWithDupeSlug() {
         fillDatabase(getListOfNews());
-        int previousSize = newsManager.getAllNews().size();
         int id = newsManager.getAllNews().get(0).getPrimaryKey();
         News replacementNews = new News(id ,new Date(12343212L), true, "changedDescrption",
                 "newTitle", false, "content1", "slug1");
         try {
-            newsManager.update(replacementNews);
+            News n = newsManager.update(replacementNews);
             fail();
         } catch (PersistenceException e) {
             e.printStackTrace();
-            assertEquals(newsManager.getAllNews().size(), previousSize);
         }
+        int count = 0;
+        List<News> allFound = newsManager.getAllNews();
+        for (int i =0; i <allFound.size(); ++i) {
+            if (allFound.get(i).getSlug().equals("slug1")) ++count;
+        }
+        assertEquals(1, count);
     }
 
     /**
@@ -403,6 +420,31 @@ public class NewsManagerTest {
         News newsInDB = newsManager.getByPrimaryKey(id);
         assertEquals(replacementNews.getDescription(), newsInDB.getDescription());
         assertEquals(replacementNews.getTitle(), newsInDB.getTitle());
+    }
+
+    /**
+     * Test what happens if a null article is updated
+     */
+    @Test
+    public void testUpdateNullNews() {
+        try {
+            newsManager.update(new News());
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Test updating an article that doesn't exist
+     */
+    @Test
+    public void testUpdateUnfoundNews() {
+        int previousSize = newsManager.getAllNews().size();
+        assertNull(newsManager.getByPrimaryKey(-100));
+        News fakeNews = new News(-100, new Date(12343212L), true,
+                "changedDescription", "newTitle", false, "content1", "slug9");
+        newsManager.update(fakeNews);
+        assertEquals(newsManager.getAllNews().size(), previousSize);
     }
 
     //Testing NewsManagerInterface: getNewsBySlug

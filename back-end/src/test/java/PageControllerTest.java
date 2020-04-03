@@ -41,7 +41,9 @@ import java.util.List;
 import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManager;
 
 import main.java.com.projectBackEnd.HibernateUtility;
-
+/**
+* class to unit test interactions between rest calls and system with respect to page functionality
+*/
 @MicronautTest
 public class PageControllerTest {
 
@@ -52,6 +54,9 @@ public class PageControllerTest {
     static SiteManagerInterface siteManager;
     static PageManagerInterface pageManager;
     private static String token;
+	/**
+	*	run before class, aquire siteManager, pageManager objects, set testing db and create and login a user whose credentials are used for testing
+	*/
     @BeforeAll
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
@@ -65,18 +70,24 @@ public class PageControllerTest {
         	fail();
         }    
     }
-
+	/**
+	* delete the user and close factory
+	*/
     @AfterAll
     public static void closeDatabase() {
-        HibernateUtility.shutdown();
+
         try{
         	UserManager.getUserManager().deleteUser("test@test.com" , "123");
         }
         catch(Exception e){
         	fail();
-        }    
+        }   
+        HibernateUtility.shutdown(); 
     }
 
+	/**
+	*	delete all site and page objects from db
+	*/
     @BeforeEach
     public void setUp() {
         siteManager.deleteAll();
@@ -84,6 +95,9 @@ public class PageControllerTest {
         pageManager.deleteAll();
     }
 
+	/**
+	* check if geting a page that does not request returns 404 error
+	*/
     @Test
     public void testNonExistingPageReturns404() {
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
@@ -92,14 +106,16 @@ public class PageControllerTest {
         assertNotNull(thrown.getResponse());
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
     }
-
+	/**
+	* test if patching page index behaves correctly
+	*/
     @Test
     public void testPatchingPageIndex() {
-        addSite("testSiteA", "name1");
-        addPage("testSiteA", "nutrition/slu!#g", 9, "Title", "nutri!tion/information");
-        addPage("testSiteA", "anotherPage", 12, "Title", "nutri!tion/information");
-        addPage("testSiteA", "coolPage", 20, "Title", "nutri!tion/information");
-        addPage("testSiteA", "Paaage", 13, "Title", "nutri!tion/information");
+        addSite("testSiteA", "name1",token);
+        addPage("testSiteA", "nutrition/slu!#g", 9, "Title", "nutri!tion/information",token);
+        addPage("testSiteA", "anotherPage", 12, "Title", "nutri!tion/information",token);
+        addPage("testSiteA", "coolPage", 20, "Title", "nutri!tion/information",token);
+        addPage("testSiteA", "Paaage", 13, "Title", "nutri!tion/information",token);
         //public PagePatchCommand(int id, String slug, int index) {
         List<Page> allPagesWithID = pageManager.getAllPages();
         List<PagePatchCommand> input = new ArrayList<>();
@@ -114,38 +130,74 @@ public class PageControllerTest {
         for(int i = 0; i < allPagesWithID.size(); ++i) assertEquals(i, allPagesWithID.get(i).getIndex());
 
     }
+	/**
+	* test if patching with invalid token returns unauthroized http response
+	*/
+	@Test
+	public void testPatchingUnauthorized(){
+        addSite("testSiteA", "name1",token);
+        addPage("testSiteA", "nutrition/slu!#g", 9, "Title", "nutri!tion/information",token);
+        addPage("testSiteA", "anotherPage", 12, "Title", "nutri!tion/information",token);
+        addPage("testSiteA", "coolPage", 20, "Title", "nutri!tion/information",token);
+        addPage("testSiteA", "Paaage", 13, "Title", "nutri!tion/information",token);
+        //public PagePatchCommand(int id, String slug, int index) {
+        List<Page> allPagesWithID = pageManager.getAllPages();
+        List<PagePatchCommand> input = new ArrayList<>();
 
+        for(int i = 0; i < allPagesWithID.size(); ++i) {
+            Page currentPage = allPagesWithID.get(i);
+            input.add(new PagePatchCommand(currentPage.getPrimaryKey(), currentPage.getSlug(), i));
+        }
+
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.PATCH("/sites/"+ "testSiteA" +"/page-indices", input).header("X-API-Key","SOmeVeryCo2rr45ECt231TokEN1"));
+        });
+		assertEquals(HttpStatus.UNAUTHORIZED,thrown.getStatus());
+		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.PATCH("/sites/"+ "testSiteA" +"/page-indices", input).header("X-API-Key",""));
+        });
+		assertEquals(HttpStatus.UNAUTHORIZED,thrown1.getStatus());
+	}
+	/**
+	*test if adding a page with correct fields behaves correctly
+	*/
     @Test
     public void testAddingRegularPage() {
-        addSite("testSiteA", "name1");
-        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
+        addSite("testSiteA", "name1",token);
+        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information",token);
         assertNotNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
 
         //String id =  getEUrl(response);
         Page testPage = getPage("testSiteA","nutrition/slu!#g");
         assertEquals("Title", testPage.getTitle());
     }
-
+	/**
+	*	test if adding page with null fields returns nullpointer exception
+	*/
     @Test
     public void testAddingPageWithNulls() {
         assertThrows(NullPointerException.class, () -> {
-            HttpResponse response = addPage(null, null, null, null, null);
+            HttpResponse response = addPage(null, null, null, null, null,token);
         });
     }
-
+	/**
+	*	test if adding a correct page to a null site returns http error
+	*/
     @Test
     public void testAddingNullSitePage() {
-        addSite("TestSite", "name1");
+        addSite("TestSite", "name1",token);
         HttpRequest request = HttpRequest.POST(("/sites/"+ "TestSite" +"/pages"), new PageAddCommand(null, "slug", 3, "", ""));
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
             client.toBlocking().exchange(request);
         });
 
     }
-
+	/**
+	*	test if adding page with null index returns error
+	*/
     @Test
     public void testAddingNullIndexPage() {
-        addSite("testSiteA", "name1");
+        addSite("testSiteA", "name1",token);
         assertThrows(NullPointerException.class, () -> {
             HttpRequest.POST(("/sites/"+ "testSiteA" +"/pages"), new PageAddCommand("testSiteA", "slug", null, "", ""));
         });
@@ -154,80 +206,134 @@ public class PageControllerTest {
             client.toBlocking().exchange(request);
         }); //Shouldn't be allowed!
     }
+	/**
+	*	test if adding page with wrong session token returns http unauthorized
+	*/
+	@Test
+	public void testAddUnauthorized(){
+        addSite("testSiteA", "name1",token);
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            addPage( "testSiteA", "nutrition/slu!#g", 1, "newTitle", "nutri!tion/information","");
+        });
+		assertEquals(HttpStatus.UNAUTHORIZED, thrown.getStatus());
 
+ 		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
+            addPage( "testSiteA", "nutrition/slu!#g", 1, "newTitle", "nutri!tion/information","SOmeVeryCo2rr45ECt231TokEN1");
+        });
+		assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
+
+	}
+	/**
+	*	test if creating page with same key returns error
+	*/
     @Test
     public void testCreateSameKeys() {
-        addSite("testSiteA", "name1");
-        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
+        addSite("testSiteA", "name1",token);
+        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information",token);
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-        addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
+        	addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information",token);
         });
     }
-
+	/**
+	* test if deleting a non existent page returns an exception
+	*/
     @Test
     public void testDeleteNonExistentPage() {
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
             client.toBlocking().exchange(HttpRequest.DELETE("nothing").header("X-API-Key",token));
         });
     }
-
+	/**
+	*	test if deleting  existend page, deletes it
+	*/
     @Test
     public void testDeletePage() {
-        addSite("testSiteA", "name1");
-        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
+        addSite("testSiteA", "name1",token);
+        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information",token);
         URI pLoc = pageLocation("testSiteA", "nutrition/slu!#g");
         HttpRequest request = HttpRequest.DELETE(pLoc.toString()).header("X-API-Key",token);
         client.toBlocking().exchange(request);
         assertNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
     }
+	/**
+	*	test if trying to delete a page without a correct session token returns unauthorized
+	*/
+	@Test
+	public void testDeleteUnauthorized(){
 
+        addSite("testSiteA", "name1",token);
+        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information",token);
+        URI pLoc = pageLocation("testSiteA", "nutrition/slu!#g");
 
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.DELETE(pLoc.toString()).header("X-API-Key",""));
+        });
+		assertEquals(HttpStatus.UNAUTHORIZED, thrown.getStatus());
+
+        HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.DELETE(pLoc.toString()).header("X-API-Key","SOmeVeryCo2rr45ECt231TokEN1"));
+        });
+
+		assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
+
+	}
+	/**
+	*	test if updating page to a duplicate key returns an error
+	*/
     @Test
     public void updateToDuplicateKeysPage() {
-        addSite("testSiteA", "name1");
-        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
-        response = addPage("testSiteA", "sameKey", 1, "Title", "nutri!tion/information");
+        addSite("testSiteA", "name1",token);
+        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information",token);
+        response = addPage("testSiteA", "sameKey", 1, "Title", "nutri!tion/information",token);
         int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            putPage(idOfMadePage, "notvalid", "sameKey", 1, "newTitle", "nutri!tion/information");
+            putPage(idOfMadePage, "notvalid", "sameKey", 1, "newTitle", "nutri!tion/information",token);
         });
         assertNotNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
     }
-
+	/**
+	*	test if udpating a page to a new tittle behaves correctly
+	*/
     @Test
     public void testUpdatePageTitle() {
-        addSite("testSiteA", "name1");
-        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
+        addSite("testSiteA", "name1",token);
+        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information",token);
         assertNotNull(pageManager.getAllPages().get(0));
         int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
         //protected HttpResponse putPage(int id, String siteName, String slug, int index, String title, String content) {
-        response = putPage(idOfMadePage, "testSiteA", "nutrition/slu!#g", 1, "newTitle", "nutri!tion/information");
+        response = putPage(idOfMadePage, "testSiteA", "nutrition/slu!#g", 1, "newTitle", "nutri!tion/information",token);
         assertEquals("newTitle",pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getTitle());
         Page testPage = getPage("testSiteA", "nutrition/slu!#g");
         assertEquals("newTitle", testPage.getTitle());
     }
+	/**
+	*	test if udpating page's site to valid behaves correctly
+	*/
     @Test
     public void testUpdatePageSiteToValid() {
-        addSite("testSiteA", "name!");
-        addSite("testSiteB", "name!");
-        addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
+        addSite("testSiteA", "name!",token);
+        addSite("testSiteB", "name!",token);
+        addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information",token);
         //gets id of above page
         int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
 
-        putPage(idOfMadePage, "testSiteA", "nutrition/slu!#g", 1, "newTitle", "nutri!tion/information");
+        putPage(idOfMadePage, "testSiteA", "nutrition/slu!#g", 1, "newTitle", "nutri!tion/information",token);
 
         Page testPage = getPage("testSiteA", "nutrition/slu!#g");
         assertEquals("newTitle", testPage.getTitle());
     }
+	/**
+	* test if updating pages slug to valid behaves correctly
+	*/
     @Test
     public void testUpdatePageSlugToValid() {
-        addSite("testSiteA", "name1");
-        addSite("testSiteB", "name1");
-        addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
+        addSite("testSiteA", "name1",token);
+        addSite("testSiteB", "name1",token);
+        addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information",token);
         //gets id of above page
         int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
 
-        putPage(idOfMadePage, "testSiteA", "nutrition/sl123u!#g", 1, "newTitle", "nutri!tion/information");
+        putPage(idOfMadePage, "testSiteA", "nutrition/sl123u!#g", 1, "newTitle", "nutri!tion/information",token);
 
         Page testPage = getPage("testSiteA", "nutrition/sl123u!#g");
         assertEquals("newTitle", testPage.getTitle());
@@ -236,40 +342,72 @@ public class PageControllerTest {
         });
         assertNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
     }
-
+	/**
+	* test if updateing page's field to invalid throws an error
+	*/
     @Test
     public void testUpdatePageToInvalid() {
-        addSite("testSiteA", "name1");
-        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information");
+        addSite("testSiteA", "name1",token);
+        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information",token);
         int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            putPage(idOfMadePage, "notvalid", "nutrition/slu!#g", 1, "newTitle", "nutri!tion/information");
+            putPage(idOfMadePage, "notvalid", "nutrition/slu!#g", 1, "newTitle", "nutri!tion/information",token);
         });
         assertNotNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
     }
+	/**
+	*	test if updating page without correct session token returns http unauthorized
+	*/
+	@Test
+	public void testUpdateUnauthorized(){
+        addSite("testSiteA", "name1",token);
+        HttpResponse response = addPage("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information",token);
+        int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
 
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            putPage(idOfMadePage, "testSiteA", "nutrition/slu!#g", 1, "newTitle", "nutri!tion/information","");
+        });
+		assertEquals(HttpStatus.UNAUTHORIZED, thrown.getStatus());
 
+ 		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
+            putPage(idOfMadePage, "testSiteA", "nutrition/slu!#g", 1, "newTitle", "nutri!tion/information","SOmeVeryCo2rr45ECt231TokEN1");
+        });
+		assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
 
-    protected HttpResponse putPage(int id, String siteName, String slug, int index, String title, String content) {
+	}
+	/**
+	*	creates a put(update) rest request
+	*	@returns Http response to the request
+	*/
+    protected HttpResponse putPage(int id, String siteName, String slug, int index, String title, String content,String token) {
         URI pLoc = location(siteName);
         HttpRequest request = HttpRequest.PUT(pLoc+"/pages", new PageUpdateCommand(id, siteName, slug, index, title, content)).header("X-API-Key",token);
         return client.toBlocking().exchange(request);
     }
-
-    protected HttpResponse addPage(String siteSlug, String slug, Integer index, String title, String content) {
+	/**
+	*	creates a post(add) rest request
+	*	@returns Http response to the request
+	*/
+    protected HttpResponse addPage(String siteSlug, String slug, Integer index, String title, String content,String token) {
         URI sLoc = location(siteSlug);
         HttpRequest request = HttpRequest.POST((sLoc +"/pages"), new PageAddCommand(siteSlug, slug, index, title, content)).header("X-API-Key",token);
         HttpResponse response = client.toBlocking().exchange(request);
         return response;
     }
-
+	/**
+	*	gets a page by site slug and page name
+	* @returns correct page
+	*/
     protected Page getPage(String siteSlug, String pageName) {
         URI loc = pageLocation(siteSlug, pageName);
 
         HttpRequest request = HttpRequest.GET(loc);
         return client.toBlocking().retrieve(request, Page.class);
     }
-
+	/**
+	*	gets uri String by site slug and page name
+	*	@returns URI page
+	*/
     protected URI pageLocation(String siteSlug, String pageName) {
         String encodedSlug = null;
         String encodedPage = null;
@@ -283,12 +421,19 @@ public class PageControllerTest {
     }
 
     //Adding and locating Site methods
-    protected HttpResponse addSite(String slug, String name) {
+	/**
+	* creates a post request (adds site)
+	* @returns http response to the request
+	*/
+    protected HttpResponse addSite(String slug, String name,String token) {
         HttpRequest request = HttpRequest.POST("/sites", new SiteAddCommand(slug,name)).header("X-API-Key",token);
         HttpResponse response = client.toBlocking().exchange(request);
         return response;
     }
-
+	/**
+	* gets uri of site by site name
+	* @returns URI of site
+	*/
     protected URI location(String siteName) {
         String encodedSlug = null;
         try {

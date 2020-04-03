@@ -2,7 +2,7 @@ package main.java.com.projectBackEnd.Entities.News.Hibernate;
 
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
-
+import javax.persistence.PersistenceException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,6 +47,7 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
      * @return added news
      */
     public News addNews(News news) {
+        if (getNewsBySlug(news.getSlug()) != null) throw new PersistenceException();;
         insertTuple(news);
         return news;
     }
@@ -70,11 +71,15 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
 
     /**
      * Update input News object
-     * @param news
+     * @param updatedVersion
      * @return updated object
      */
-    public News update(News news) {
-        return (News) super.update(news);
+    public News update(News updatedVersion) {
+        News newsMatch = getNewsBySlug(updatedVersion.getSlug());
+        if (newsMatch != null && !newsMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey())) {
+            throw new PersistenceException();
+        }
+        return (News) super.update(updatedVersion);
     }
 
     /**

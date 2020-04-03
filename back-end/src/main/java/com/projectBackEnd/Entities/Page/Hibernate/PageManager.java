@@ -3,7 +3,7 @@ package main.java.com.projectBackEnd.Entities.Page.Hibernate;
 import main.java.com.projectBackEnd.Entities.Site.Hibernate.Site;
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
-
+import javax.persistence.PersistenceException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,6 +41,7 @@ public class PageManager extends EntityManager implements PageManagerInterface {
      * @return added object
      */
     public Page addPage(Page newPage) {
+        if (getPageBySiteAndSlug(newPage.getSite().getSlug(), newPage.getSlug()) != null) throw new PersistenceException();
         return (Page) super.insertTuple(newPage);
     }
 
@@ -85,7 +86,11 @@ public class PageManager extends EntityManager implements PageManagerInterface {
      * Update attributes of the object
      * @return updated object
      */
-    public Page update(Page updatedVersion) { super.update(updatedVersion); return updatedVersion; }
+    public Page update(Page updatedVersion) {
+        Page pageMatch = getPageBySiteAndSlug(updatedVersion.getSite().getSlug(), updatedVersion.getSlug());
+        if (pageMatch != null && !pageMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey())) throw new PersistenceException();
+        super.update(updatedVersion); return updatedVersion;
+    }
 
 
 }

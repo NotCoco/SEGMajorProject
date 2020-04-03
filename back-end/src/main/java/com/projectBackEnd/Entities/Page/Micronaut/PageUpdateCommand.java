@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 public class PageUpdateCommand extends PageAddCommand {
 
     @NotNull
-    private int id;
+    private int primaryKey;
 
 
     public PageUpdateCommand(){
@@ -18,9 +18,9 @@ public class PageUpdateCommand extends PageAddCommand {
 
     public PageUpdateCommand(Integer id, String site, String slug, Integer index, String title, String content){
         super(site, slug, index, title, content);
-        this.id = id;
+        this.primaryKey = id;
     }
 
-    public int getId() { return id; }
+    public int getPrimaryKey() { return primaryKey; }
 
 }
