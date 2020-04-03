@@ -2,7 +2,7 @@
 
 <div class="root"  >
   <form class = "form-inline">
-    <table  style="border-collapse:separate; border-spacing:0px 3px;">
+    <table class="table-layout" >
       <!-- Buttons for adding/ changing drugs info -->
       <tr>
         <td>
@@ -13,12 +13,12 @@
       </tr>
       <tr>
         <td>
-          <select style="width:400px;height: 450px;" name="users-out" id="allDrugs"  multiple="multiple" size="10">
-            <option type="button"   @click="changeInfo(medicine)" v-for="medicine in filteredBlogs" :key='medicine.primaryKey' class='list-group-item'>{{medicine.name}}</option>
+          <select  style="width:400px;height: 450px;" name="users-out" id="allDrugs"  multiple="multiple" size="10">
+            <option type="button"   @click="changeInfo(medicine)" v-for="medicine in Search" :key='medicine.id' class='list-group-item'>{{medicine.name}}</option>
           </select>
         </td>
         <td>						
-          <table v-if="this.ShowTable" id="table" style="border-collapse:separate; border-spacing:5px 5px;">
+          <table id="table" class="searchBox-layout">
             <thead>
               <tr>
               <th v-if="this.ChangeDrug" >ID</th>
@@ -28,10 +28,10 @@
             </thead>
               <tr>
                 <td v-if="this.ChangeDrug">
-                  <input v-model="selectedMedicine.primaryKey" class="input" style="height: 38px;width: 165px;" id = "primaryKey" disabled/>
+                  <input v-model="selectedMedicine.primaryKey" class="DrugList input"  id = "primaryKey" disabled/>
                 </td>
                 <td>
-                  <input v-model="selectedMedicine.name" class="input" style="height: 38px;width: 165px;" id = "name" />
+                  <input v-model="selectedMedicine.name" class="DrugList input" id = "name" />
                 </td>
                 <td >
                   <!-- multiSelect dropdown -->
@@ -51,7 +51,6 @@
               <tr v-if="this.AddDrug" >
                 <td>
                   <button class="button" type="button" @click="addDrug()" id="addDrug">Save</button>
-                  <!-- <button class="button" @click="Test()" id="a">Test</button> -->
                 </td>
               </tr>
           </table>
@@ -97,12 +96,6 @@
       Medicines:[
         //list of all Medicines
       ],
-      test:[
-        //name of Medicines (TEST)
-        {name:"Aerobid",type:"Tablets"},
-        {name:"African Mango",type:"Liquid"},
-        {name:"Azmacort",type:"Suppositories"}
-      ],
       search:""
       }
     },
@@ -117,7 +110,7 @@
       /**
       * search function
       */
-      filteredBlogs: function(){
+      Search: function(){
       return this.Medicines.filter(
         (Medicines) => {return Medicines.name.match(this.search);}
         );
@@ -248,3 +241,17 @@
 
 
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+<style lang="scss" scoped>
+ .table-layout{
+    border-collapse:separate; 
+    border-spacing:0px 3px;
+    .searchBox-layout{
+      border-collapse:separate; 
+      border-spacing:5px 5px;
+    }
+ }
+ .input.DrugList{
+   height: 38px;
+   width: 165px;
+ }
+</style>
