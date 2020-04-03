@@ -3,23 +3,23 @@
   <div class="print" id="printableTable">
     <div class="header" >
       <!-- Header of printbox -->
-      <table class="striped" style="border-collapse:separate; border-spacing:5px 25px;">
+      <table class="table-layout striped" >
           <tr>
             <th>
               <p>Patient Name</p>
-              <input class="input" style="height: 25px;" size="45"/>
+              <input class="height input" size="45"/>
             </th>
             <th>
               <p>Hospital Number</p>
-              <input class="input" style="height: 25px;" size="25"/>
+              <input class="height input" size="25"/>
             </th>
             <th>
               <p>DOB</p>
-              <input class="input" style="height: 25px;" type="date" value="2000-01-01"/>
+              <input class="height input" type="date" value="2000-01-01"/>
             </th>
             <th>
               <p>Drug Allergies</p>
-              <input class="input" style="height: 25px;"  size="45"/>
+              <input class="height input"  size="45"/>
             </th>
 
           </tr>
@@ -140,13 +140,15 @@
 
 </script>
 
-<style media="print">
+<style lang="scss" media="print" scoped>
   /* Style the body */
-  body {
-  font-family: Arial;
-  margin: 0;
+  .striped.table-layout{
+    border-collapse:separate; 
+    border-spacing:5px 25px;
   }
-
+  .input.height{
+    height: 25px;
+  }
   /* Header/Logo Title */
   .header {
   padding: 0px;

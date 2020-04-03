@@ -20,26 +20,26 @@
 			<div class="notification is-danger" v-show="verifyError">
 			<strong>Error:</strong> Verify Failed! Please check your token.
 			</div>
-				<table style="border-collapse:separate; border-spacing:0px 14px;" >
+				<table class="passwordtable-layout">
 					<!-- password input box -->
 					<tr><b>First, enter the new password:</b><br></tr>
 					<tr>
 						<td>
-						<input id="newPw" class="input" type="password" v-model="newPw" v-show="!showNew" style="height: 30px;width: 200px;" placeholder="Enter new password"> 
-						<input id="newPw" class="input" type="text" v-model="newPw" v-show="showNew" style="height: 30px;width: 200px;" placeholder="Enter new password"> 
+						<input id="newPw" class="input-layout input" type="password" v-model="newPw" v-show="!showNew"  placeholder="Enter new password"> 
+						<input id="newPw" class="input-layout input" type="text" v-model="newPw" v-show="showNew" placeholder="Enter new password"> 
 						&nbsp;
-						<button class="button"   style="height: 30px;width: 15px;"  @click="shownew()" id = "saveButton" v-show="!showNew" ><i class="fa fa-eye"></i></button>
-						<button class="button"  style="height: 30px;width: 15px;"  @click="shownew()" id = "saveButton" v-show="showNew" ><i class="fa fa-eye-slash"></i></button>
+						<button class="button-layout button"  @click="shownew()" id = "saveButton" v-show="!showNew" ><i class="fa fa-eye"></i></button>
+						<button class="button-layout button"  @click="shownew()" id = "saveButton" v-show="showNew" ><i class="fa fa-eye-slash"></i></button>
 						</td>
 					</tr>
 					<!-- password input box -->
 					<tr><b>Please enter it again:</b><br></tr>
-					<tr><input id="newPw_2" class="input" type="password" style="height: 30px;width: 200px;" placeholder="Enter again"></tr>
+					<tr><input id="newPw_2" class="input-layout input" type="password"  placeholder="Enter again"></tr>
 					<!-- token input box -->
 					<tr><b>Last step, enter the verify code in the email:</b><br></tr>
 					<tr>
 						<td>
-						<input class="input" id="token" type="text" style="height: 30px;width: 200px;" placeholder="Enter token">
+						<input class="input-layout input" id="token" type="text" placeholder="Enter token">
 						&nbsp;
 						<button class="button"  v-bind:disabled="!canClick" style="height: 30px;width: 85px;"  @click="sendRequest()" id = "sendButton"  >
 							<i v-show="canClick" class="fa fa-send-o">&nbsp;{{this.content}}</i>
@@ -211,4 +211,16 @@
 		width: 300%;
 		max-width: 600px;
 	}
+  .passwordtable-layout{
+    border-collapse:separate; 
+    border-spacing:0px 14px;
+  }
+  .input.input-layout{
+    height: 30px;
+    width: 200px;
+  }
+  .button.button-layout{
+    height: 30px;
+    width: 15px;
+  }
 </style>

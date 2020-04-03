@@ -12,13 +12,13 @@
     </section>
 
     <section class="section">
-      <div class="container">
-    <table  style="border-collapse:separate; border-spacing:15px 10px;">
+  <div class="container">
+    <table class="table-layout">
     <tr>
       <!-- Header of the Drug chart -->
       <td><br><b>Time:</b><br><br><br><b>Name:</b><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><b>Dose:</b></td>
       <td>
-        <table style="border-collapse:separate; border-spacing:15px 25px;">
+        <table class="subtable-layout">
             <!-- input time -->
             <tr>
             <input class="input" style="width:180px;" type="time" id="time" name="appt" min="00:00" max="24:00" required>
@@ -37,13 +37,13 @@
                 <option value=""></option>
                 <option value="daily">daily</option>
                 <option value="daily for 1 week">daily for 1 week</option>
-                <option value="to continue">to continue</option>
+                <option value="daily to continue">daily to continue</option>
                 
             </select>						
             </tr>
             <tr>
               <input type="checkbox" id="warn" value="As per warining regime" >
-              <label for="As per warining regime">As per warining regime</label>
+              <label for="As per warining regime" style="font-size: 15px;">As per warining regime</label>
             </tr>
           <tr>
             <!-- buttons of the drug chart -->
@@ -158,4 +158,14 @@ export default{
     overflow: unset;
   }
 
+</style>
+<style lang="scss" scoped>
+ .table-layout{
+    border-collapse:separate; 
+    border-spacing:15px 10px;
+    .subtable-layout{
+      border-collapse:separate;
+      border-spacing:15px 25px;
+    }
+ }
 </style>
