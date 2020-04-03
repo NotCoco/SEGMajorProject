@@ -4,7 +4,7 @@
     <section class="section">
       <div class="custom-content-container">
         <h1 class="title">Drug Chart Configuration</h1>
-		<DrugList></DrugList>
+    <DrugList></DrugList>
       </div>
     </section>
   </div>
@@ -13,9 +13,9 @@
 <script  type="text/javascript">
 import DrugList from "@/components/DrugList.vue"
 export default{
-	components: {
-		DrugList,
-	}
+  components: {
+    DrugList,
+  }
 }
 </script>
 
