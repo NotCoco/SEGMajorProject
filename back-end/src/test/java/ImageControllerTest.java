@@ -48,7 +48,7 @@ public class ImageControllerTest {
 	@Inject
 	@Client("/")
 	HttpClient client;
-  
+ 
 	/**
 	 * Set up the user table for sessions and set the target directory of generated images to the specified folder
 	 */
@@ -238,3 +238,4 @@ public class ImageControllerTest {
 			return response;
 	}
 }
+

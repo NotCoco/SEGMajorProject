@@ -35,7 +35,12 @@ dependencies {
     implementation group: 'org.hibernate', name: 'hibernate-core', version: '5.4.11.Final'
     implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.19'
     implementation 'javax.validation:validation-api:2.0.1.Final'
-	implementation group: 'commons-validator', name: 'commons-validator', version: '1.6'
+
+    implementation 'com.sun.mail:javax.mail:1.6.2'
+    implementation 'com.google.apis:google-api-services-sqladmin:v1beta4-rev76-1.25.0'
+    implementation 'com.google.cloud.sql:mysql-socket-factory-connector-j-8:1.0.15'
+    implementation group: 'commons-validator', name: 'commons-validator', version: '1.6'
+
 
     implementation 'com.sun.mail:javax.mail:1.6.2'
 
