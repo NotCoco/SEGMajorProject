@@ -180,7 +180,7 @@
         var name = document.getElementById('name').value
         var type = this.selected.title
         if(id!=="" && name!=="" && type !==""){
-          var data = {"primaryKey": id ,"name": name ,"type": type}
+          var data = {"id": id ,"name": name ,"type": type}
           medicineService.deleteMedicine(data);
           location.reload()
         }
