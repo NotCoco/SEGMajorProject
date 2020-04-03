@@ -180,7 +180,7 @@
         var name = document.getElementById('name').value
         var type = this.selected.title
         if(id!=="" && name!=="" && type !==""){
-          var data = {"id": id ,"name": name ,"type": type}
+          var data = {"primaryKey": id ,"name": name ,"type": type}
           medicineService.deleteMedicine(data);
           location.reload()
         }
@@ -204,7 +204,7 @@
               window.alert("Please do NOT enter invalid words!\n"+
               'Invalid: @#%&+;"'+":{}"+"'*^!.,~_=><")
             }else{
-              var data = {"id": id ,"name": name ,"type": type}
+              var data = {"primaryKey": id ,"name": name ,"type": type}
               medicineService.updateMedicine(data);
               location.reload()
             }
