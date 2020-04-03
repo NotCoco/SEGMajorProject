@@ -13,12 +13,12 @@
       </tr>
       <tr>
         <td>
-          <select   style="width:400px;height: 450px;" name="users-out" id="allDrugs"  multiple="multiple" size="10">
-            <option type="button"   @click="changeInfo(medicine)" v-for="medicine in filteredBlogs" :key='medicine' class='list-group-item'>{{medicine.name}}</option>
+          <select style="width:400px;height: 450px;" name="users-out" id="allDrugs"  multiple="multiple" size="10">
+            <option type="button"   @click="changeInfo(medicine)" v-for="medicine in filteredBlogs" :key='medicine.primaryKey' class='list-group-item'>{{medicine.name}}</option>
           </select>
         </td>
         <td>						
-          <table id="table" style="border-collapse:separate; border-spacing:5px 5px;">
+          <table v-if="this.ShowTable" id="table" style="border-collapse:separate; border-spacing:5px 5px;">
             <thead>
               <tr>
               <th v-if="this.ChangeDrug" >ID</th>
@@ -28,10 +28,10 @@
             </thead>
               <tr>
                 <td v-if="this.ChangeDrug">
-                  <input  class="input" style="height: 38px;width: 165px;" id = "primaryKey" disabled/>
+                  <input v-model="selectedMedicine.primaryKey" class="input" style="height: 38px;width: 165px;" id = "primaryKey" disabled/>
                 </td>
                 <td>
-                  <input  class="input" style="height: 38px;width: 165px;" id = "name" />
+                  <input v-model="selectedMedicine.name" class="input" style="height: 38px;width: 165px;" id = "name" />
                 </td>
                 <td >
                   <!-- multiSelect dropdown -->
@@ -45,8 +45,8 @@
               </tr>
                 <!-- Buttons -->
               <tr v-if="this.ChangeDrug" >
-                <td><button  class="button" type="button" @click="updateDrug()" id = "saveButton">Save</button></td>
-                <td><button  class="button" type="button" @click="deleteDrug()" id = "deleteButton">Delete</button></td>
+                <td><button v-if="ShowSaveButton" class="button" type="button" @click="updateDrug()" id = "saveButton">Save</button></td>
+                <td><button v-if="ShowDeleteButton" class="button" type="button" @click="deleteDrug()" id = "deleteButton">Delete</button></td>
               </tr>
               <tr v-if="this.AddDrug" >
                 <td>
@@ -73,8 +73,12 @@
     },
     data :function(){ 
       return {
+      selectedMedicine:{ id: '', name: '', type: '' },
       ChangeDrug: false,
       AddDrug: false,
+      ShowTable: false,
+      ShowDeleteButton : false,
+      ShowSaveButton : false,
       Icon: '',
       sortType: 'sort',
       selected: { title: '', desc: '', img: '' },
@@ -106,7 +110,7 @@
       /**
       * fetch the drug list
       */
-      document.getElementById("table").style.visibility ="hidden"
+      // document.getElementById("table").style.visibility ="hidden"
       this.Medicines = await this.getDrug()
     },
     computed: {
@@ -221,12 +225,10 @@
         this.ChangeDrug = true;
         this.AddDrug = false;
         if(medicine!==null){
-          document.getElementById("table").style.visibility = "visible"
-          document.getElementById("saveButton").style.visibility = "visible"
-          document.getElementById("deleteButton").style.visibility = "visible"
-
-          document.getElementById("primaryKey").value = medicine.primaryKey
-          document.getElementById("name").value = medicine.name
+          this.ShowTable = true;
+          this.ShowSaveButton = true;
+          this.ShowDeleteButton = true;
+          this.selectedMedicine=medicine;
           this.selected.title = medicine.type
         }
 
@@ -237,12 +239,8 @@
       addInfo : function() {
         this.ChangeDrug = false;
         this.AddDrug = true;
-  
-        document.getElementById("name").value = ""
         this.selected.title = ""
-        
-        document.getElementById("table").style.visibility = "visible"
-        document.getElementById("addDrug").style.visibility = "visible"
+        this.ShowTable = true;
       }
     }
   }
