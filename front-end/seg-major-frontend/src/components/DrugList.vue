@@ -18,7 +18,7 @@
           </select>
         </td>
         <td>						
-          <table id="table" class="searchBox-layout">
+          <table v-if="this.DrugBox" id="table" class="searchBox-layout">
             <thead>
               <tr>
               <th v-if="this.ChangeDrug" >ID</th>
@@ -30,8 +30,11 @@
                 <td v-if="this.ChangeDrug">
                   <input v-model="selectedMedicine.primaryKey" class="DrugList input"  id = "primaryKey" disabled/>
                 </td>
-                <td>
+                <td v-if="this.ChangeDrug">
                   <input v-model="selectedMedicine.name" class="DrugList input" id = "name" />
+                </td>
+                <td v-if="this.AddDrug">
+                  <input  class="DrugList input" id = "add_name" />
                 </td>
                 <td >
                   <!-- multiSelect dropdown -->
@@ -73,6 +76,7 @@
     data :function(){ 
       return {
       selectedMedicine:{ id: '', name: '', type: '' },
+      DrugBox: false,
       ChangeDrug: false,
       AddDrug: false,
       ShowTable: false,
@@ -144,7 +148,7 @@
       //add drug to db
       addDrug: function(){
         //add drug to backend
-        var name = document.getElementById('name').value
+        var name = document.getElementById('add_name').value
         var type = this.selected.title
         var name_len = name.length
         
@@ -215,6 +219,7 @@
       // This method will display the drug info
       // which user selected.
       changeInfo : function(medicine) {
+        this.DrugBox = true;
         this.ChangeDrug = true;
         this.AddDrug = false;
         if(medicine!==null){
@@ -230,6 +235,7 @@
       // This method will display the adding frame
       // which user can input info.
       addInfo : function() {
+        this.DrugBox = true;
         this.ChangeDrug = false;
         this.AddDrug = true;
         this.selected.title = ""
