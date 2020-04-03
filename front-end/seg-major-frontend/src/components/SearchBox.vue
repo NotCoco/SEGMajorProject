@@ -6,7 +6,7 @@
           <tr><input class="input" type="text"  style="width:180px;" v-model="search" placeholder="searchBox">
           <tr>
           <select class="select" style="width:180px;height: 350px;" name="users-out" id="students-out"  multiple="multiple" size="10">			           
-            <option style="height: 30px;" v-on:click="getcube(medicine.name)"  v-for="medicine in filteredBlogs" :key='medicine' class='list-group-item'>{{medicine.name}}</option>
+            <option style="height: 30px;" v-on:click="getcube(medicine.name)"  v-for="medicine in Search" :key='medicine' class='list-group-item'>{{medicine.name}}</option>
           </select>
           </tr>
         </table>
@@ -24,20 +24,20 @@ export default {
             search:"",
         }
     },
-  components: {
-    
-  },
+
   async mounted(){
     this.Medicines = await this.getDrug()
   },
     computed: {
-    filteredBlogs: function(){
-    //this.Medicines = DrugList.data().Medicines;
-    return this.Medicines.filter(
-    (Medicines) => {return Medicines.name.match(this.search);}
-    );
-    }
-    },
+      Search: function(){
+      //this.Medicines = DrugList.data().Medicines;
+        return this.Medicines.filter(
+          (Medicines) => {
+            return Medicines.name.match(this.search);
+            }
+          );
+      }
+   },
   methods:{
     getDrug: function(){
       //get medicine files from backend
