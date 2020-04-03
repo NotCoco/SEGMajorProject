@@ -22,7 +22,7 @@ public class AppInfoManager implements AppInfoManagerInterface {
 
     public void updateInfo(AppInfo updatedVersion) {
         try {
-            file = JSONLocation.getJsonFile();
+            //file = JSONLocation.getJsonFile();
             mapper.writeValue(file, updatedVersion);
             savedInfo = readInfo();
         } catch (IOException e) {
@@ -36,7 +36,7 @@ public class AppInfoManager implements AppInfoManagerInterface {
 
     private static AppInfo readInfo() {
         try {
-            file = JSONLocation.getJsonFile();
+            //file = JSONLocation.getJsonFile();
             return mapper.readValue(file, AppInfo.class);
         } catch (IOException e) {
             e.printStackTrace();
