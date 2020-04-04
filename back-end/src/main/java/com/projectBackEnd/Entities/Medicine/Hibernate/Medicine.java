@@ -21,19 +21,15 @@ public class Medicine implements TableEntity {
     private static final String NAME = "Name";
     private static final String TYPE = "Type";
 
-
-    // Primary key 'ID' auto-incremented in the database
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ID, nullable = false)
     private Integer primaryKey;
 
-    // Name of the medicine
     @NotNull
     @Type(type = "text")
     @Column(name = NAME, nullable = false)
     private String name;
 
-    // Type of the medicine
     @NotNull
     @Type(type="text")
     @Column(name = TYPE, nullable = false)

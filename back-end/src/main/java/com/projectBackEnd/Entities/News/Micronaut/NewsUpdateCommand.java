@@ -2,7 +2,6 @@ package main.java.com.projectBackEnd.Entities.News.Micronaut;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-//TODO Reinsert tags as I couldn't get them to compile on IntelliJ Jars.
 
 /**
  * NewsUpdateCommand is used by its controller to update a news object in the database.
@@ -12,7 +11,6 @@ import java.util.Date;
 //@Introspected
 public class NewsUpdateCommand extends NewsAddCommand {
 
-    // Primary key 'ID'
     @NotNull
     private int primaryKey;
 

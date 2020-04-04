@@ -11,7 +11,6 @@ import javax.validation.constraints.NotNull;
  */
 public class PageUpdateCommand extends PageAddCommand {
 
-    // Primary key, unique 'ID'
     @NotNull
     private int primaryKey;
 

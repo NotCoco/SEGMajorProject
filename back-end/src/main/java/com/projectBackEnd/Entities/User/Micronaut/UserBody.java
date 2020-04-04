@@ -1,7 +1,8 @@
 package main.java.com.projectBackEnd.Entities.User.Micronaut;
 
 /**
- * This class encapsulates a user entity, excluding the ID. This is for the implementation of the command design pattern
+ * This class encapsulates a user entity, excluding the ID.
+ * This is for the implementation of the command design pattern.
  */
 public class UserBody{
 
@@ -10,7 +11,7 @@ public class UserBody{
 	private String email;
 
 	/**
-	 * Empty constructor
+	 * Default constructor
 	 */
 	public UserBody(){}
 

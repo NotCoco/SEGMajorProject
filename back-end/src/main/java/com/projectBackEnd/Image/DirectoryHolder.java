@@ -3,7 +3,7 @@ package main.java.com.projectBackEnd.Image;
 import java.io.File;
 
 /**
- * This class is responsible for generating/providing user-specific directory information to allow
+ * This class is responsible for generating and providing user-specific directory information to allow
  * for image-access operations which require dynamic accessing of specific directories
  */
 public class DirectoryHolder {
@@ -12,6 +12,7 @@ public class DirectoryHolder {
 	private static String dir = System.getProperty("user.dir")+"/src/main/resources/images/";
 	// Reference to self
 	private static DirectoryHolder holder;
+
 	/**
 	 * Private constructor implementing singleton design pattern
 	 */
@@ -20,7 +21,7 @@ public class DirectoryHolder {
 	}
 
 	/**
-	 * Retrieves the directory holder
+	 * Retrieve the directory holder
 	 * @return The directory holder
 	 */
 	public static DirectoryHolder getDirectoryHolder() {
@@ -29,28 +30,29 @@ public class DirectoryHolder {
 	}
 
 	/**
-	 * Sets a new value to the directory attribute, effectively changing the access location
-	 * If no directory exists, one is created
+	 * Set a new value to the directory attribute, effectively changing the access location
+	 * If no directory exists, one is created.
 	 * @param newDir The new directory to be set
 	 */
 	public void setDir(String newDir) {
+
 		File locationOfImageStorage = new File(newDir);
 		if (!locationOfImageStorage.exists()) {
-			if (locationOfImageStorage.mkdir()) {
-				System.out.println("Directory is created!");
-			} else {
-				System.out.println("Failed to create directory!");
-			}
+			if (locationOfImageStorage.mkdir()) System.out.println("Directory is created!");
+			else System.out.println("Failed to create directory!");
 		}
 		this.dir = newDir;
+
 	}
 
 	/**
-	 * Sets the directory back to it's default user-specific setting
+	 * Set the directory back to its default user-specific setting
 	 */
 	public void setDefaultDir(){dir = System.getProperty("user.dir")+"/src/main/resources/images/";}
+
+
 	/**
-	 * Retrieves the directory attribute
+	 * Retrieve the directory attribute
 	 * @return The directory
 	 */
 	public static String getDir() {

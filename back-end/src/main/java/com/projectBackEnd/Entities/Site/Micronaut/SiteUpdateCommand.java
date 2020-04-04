@@ -11,7 +11,6 @@ import javax.validation.constraints.NotNull;
 //@Introspected
 public class SiteUpdateCommand extends SiteAddCommand {
 
-	// Primary key ID of the site
     @NotNull
     private int primaryKey;
 

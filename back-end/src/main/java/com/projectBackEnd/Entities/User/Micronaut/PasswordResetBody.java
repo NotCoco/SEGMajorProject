@@ -3,7 +3,8 @@ package main.java.com.projectBackEnd.Entities.User.Micronaut;
 /**
  * This class encapsulates the operations involved in resetting a password
  */
-public class PasswordResetBody{
+public class PasswordResetBody {
+
 	private String password;
 	private String token;// token used for user validation
 
@@ -18,7 +19,7 @@ public class PasswordResetBody{
 	}
 
 	/**
-	 * Empty constructor
+	 * Default constructor
 	 */
 	public PasswordResetBody(){}
 

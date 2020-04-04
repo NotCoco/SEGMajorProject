@@ -2,7 +2,6 @@ package main.java.com.projectBackEnd.Entities.Page.Micronaut;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 //import io.micronaut.core.annotation.Introspected;
-//TODO Reinsert tags as I couldn't get them to compile on IntelliJ Jars.
 
 
 /**
@@ -13,15 +12,12 @@ import javax.validation.constraints.NotNull;
 //@Introspected
 public class PagePatchCommand {
 
-    // Primary key ID of the page
     @NotNull
     private int id;
 
-    // Slug of the page for identification
     @NotBlank
     private String slug;
 
-    // Index of the page : its position on the site
     @NotNull
     private int index;
 

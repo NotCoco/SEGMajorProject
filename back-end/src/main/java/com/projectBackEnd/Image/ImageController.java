@@ -28,6 +28,7 @@ public class ImageController {
 	//Manager to carry out business logic
 	protected final ImageManager imageManager;
 	protected final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
+
 	/**
 	 * Main constructor
 	 */
@@ -42,26 +43,20 @@ public class ImageController {
 	 */
 	@Post(value = "/", consumes = MediaType.MULTIPART_FORM_DATA)
 	public HttpResponse<String> add(@Header("X-API-Key") String session, @Body CompletedFileUpload file) {
-		if(!sessionManager.verifySession(session))
-			return HttpResponse.unauthorized();
+		if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
 		try {
 			String[] strings = file.getFilename().split("\\.");
 			String extension = strings[strings.length-1];
 			byte[] encoded = Base64.getEncoder().encode(file.getBytes());
 			String msg = imageManager.saveImage(new String(encoded), extension);
-			if(msg.equals("Failed")){
-				return HttpResponse.serverError();
-			}
-			else{
-				return HttpResponse
+			if(msg.equals("Failed")) return HttpResponse.serverError();
+			else return HttpResponse
 						.created(msg)
 						.headers(headers -> headers.location(location(msg)));
-			}
 		}
-		catch(IOException a){
+		catch(IOException a) {
 			System.out.println("Error occured");
-			return HttpResponse
-					.noContent();
+			return HttpResponse.noContent();
 		}
 	}
 
@@ -74,14 +69,11 @@ public class ImageController {
 	 */
 	@Delete("/{imageName}")
 	public HttpResponse delete(@Header("X-API-Key") String session, String imageName) {
-		if(!sessionManager.verifySession(session))
-			return HttpResponse.unauthorized();
-		if(imageManager.deleteImage(imageName)){
-			return HttpResponse.noContent();
-		}
-		else {
-			return HttpResponse.serverError();
-		}
+
+		if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
+		if(imageManager.deleteImage(imageName)) return HttpResponse.noContent();
+		else return HttpResponse.serverError();
+
 	}
 
 	/**

@@ -34,13 +34,6 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
         else return siteManager;
     }
 
-    /**
-     * Get a list of all Sites from the Site table in the database
-     * @return List of all Sites in the database
-     */
-    public List<Site> getAllSites() {
-        return (List<Site>) super.getAll();
-    }
 
     /**
      * Insert a Site object into the database
@@ -53,6 +46,18 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
         if (getSiteBySlug(newSite.getSlug()) != null) throw new PersistenceException();
         super.insertTuple(newSite);
         return newSite;
+    }
+
+    /**
+     * Update the Site's attributes
+     * @param updatedVersion Site with updated attributed
+     * @return updated Site
+     */
+    public Site update(Site updatedVersion) {
+
+        Site foundSiteMatch = getSiteBySlug(updatedVersion.getSlug());
+        if (foundSiteMatch != null && !foundSiteMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey())) throw new PersistenceException();
+        return (Site) super.update(updatedVersion);
     }
 
     /**
@@ -76,15 +81,13 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
     }
 
     /**
-     * Update the Site's attributes
-     * @param updatedVersion Site with updated attributed
-     * @return updated Site
+     * Get a list of all Sites from the Site table in the database
+     * @return List of all Sites in the database
      */
-    public Site update(Site updatedVersion) {
-
-        Site foundSiteMatch = getSiteBySlug(updatedVersion.getSlug());
-        if (foundSiteMatch != null && !foundSiteMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey())) throw new PersistenceException();
-        return (Site) super.update(updatedVersion);
+    public List<Site> getAllSites() {
+        return (List<Site>) super.getAll();
     }
+
+
 
 }

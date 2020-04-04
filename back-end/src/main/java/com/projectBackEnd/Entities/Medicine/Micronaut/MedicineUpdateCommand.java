@@ -1,7 +1,6 @@
 package main.java.com.projectBackEnd.Entities.Medicine.Micronaut;
 
 import javax.validation.constraints.NotNull;
-//TODO Reinsert tags as I couldn't get them to compile on IntelliJ Jars.
 //import io.micronaut.core.annotation.Introspected;
 
 /**
@@ -12,7 +11,6 @@ import javax.validation.constraints.NotNull;
 //@Introspected
 public class MedicineUpdateCommand extends MedicineAddCommand {
 
-    // ID of the medicine
     @NotNull
     private int primaryKey;
 

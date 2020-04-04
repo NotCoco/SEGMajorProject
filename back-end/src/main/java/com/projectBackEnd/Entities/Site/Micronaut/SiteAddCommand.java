@@ -4,19 +4,16 @@ import javax.validation.constraints.NotNull;
 //import io.micronaut.core.annotation.Introspected;
 
 /**
- * SiteAddComment is an implementation of the Command design pattern.
+ * SiteAddCommand is an implementation of the Command design pattern.
  * It creates mock Site objects and reduced memory use.
  * It is used by the controller to insert a Site object into the database
  */
-//TODO Reinsert tags as I couldn't get them to compile on IntelliJ Jars.
 //@Introspected
 public class SiteAddCommand {
 	
-	// Name of the site
     @NotNull
     private String name;
 	
-	// Slug of the site for identification
     @NotNull
     private String slug;
 
@@ -30,9 +27,9 @@ public class SiteAddCommand {
      * @param slug  Slug of the mock Site
      * @param name  Name of the mock Site
      */
-    public SiteAddCommand(String slug, String site){
+    public SiteAddCommand(String slug, String name){
         this.slug = slug;
-        this.name = site;
+        this.name = name;
     }
 
     /**

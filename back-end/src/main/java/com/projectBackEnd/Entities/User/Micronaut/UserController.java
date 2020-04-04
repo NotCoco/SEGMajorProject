@@ -27,19 +27,18 @@ import java.net.URI;
  */
 @Controller("/user")
 public class UserController {
+
     private final UserManagerInterface userManager = UserManager.getUserManager();
     private final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
 
 
 	/**
 	 * Add a new user to the database with user by http POST method
-	 * @param user
-	 * @return Http response with relevant information which depends on the result of
-	 * inserting a new user
+	 * @param user to add to the database
+	 * @return HTTP response with relevant information which depends on the result of inserting a new user
 	 */
-
 	@Post("/create")
-	public HttpResponse createUser(@Body UserBody user){
+	public HttpResponse createUser(@Body UserBody user) {
 		try{
 			System.out.println("kurwa " + user.getEmail() + " " + user.getPassword() + " " + user.getName());
 			userManager.addUser(user.getEmail(),user.getPassword(),user.getName());
@@ -61,32 +60,27 @@ public class UserController {
 	}
 
 	/**
-	 * Login of user by http POST method
-	 * @param user
-	 * @return Http response with relevant information which depends on the result of
-	 * login
+	 * Login of user by HTTP POST method
+	 * @param user to log in
+	 * @return Http response with relevant information which depends on the result of login
 	 */
 	@Post("/login")
 	public HttpResponse<String> login(@Body UserBody user){
 		String token = userManager.verifyUser(user.getEmail(),user.getPassword());
-		if(token != null)
-			return HttpResponse.ok(token);
-		else
-			return HttpResponse.unauthorized();
+		if(token != null) return HttpResponse.ok(token);
+		else return HttpResponse.unauthorized();
 	}
 
 	@Get("/logout")
 	public HttpResponse logout(@Header("X-API-Key") String session){
-		if(!sessionManager.verifySession(session))
-			return HttpResponse.unauthorized();
+		if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
 		sessionManager.terminateSession(session);
 		return HttpResponse.ok();
 	}
 
 	@Get("/")
 	public HttpResponse<List<User>> index(@Header("X-API-Key") String session){
-		if(!sessionManager.verifySession(session))
-			return HttpResponse.unauthorized();
+		if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
 		return HttpResponse.ok(userManager.getUsers());
 	}
 
@@ -226,8 +220,7 @@ public class UserController {
 
 	@Put("/change_password") 
 	public HttpResponse<String> changePassword(@Header("X-API-Key") String session,@Body StringBody body){
-		if(!sessionManager.verifySession(session))
-			return HttpResponse.unauthorized();
+		if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
 		else{
 			try{
 				String email = sessionManager.getEmail(session);

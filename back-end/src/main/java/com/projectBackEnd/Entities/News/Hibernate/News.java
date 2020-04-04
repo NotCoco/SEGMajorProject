@@ -29,25 +29,21 @@ public class News implements TableEntity {
     private static final String CONTENT = "Content";
     public static final String SLUG = "Slug";
 
-    // Auto-incremented and unique primary key 'ID'
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ID, nullable = false)
     private Integer primaryKey;
 
-    // Date of publication
     @NotNull
-    @Temporal(TemporalType.DATE) //Change here if unsuitable.
+    @Temporal(TemporalType.DATE)
     @Column(name = DATE, nullable = false)
     private Date date;
 
-    // Description of the article
     @NotNull
     @Type(type="text")
     @Column(name = DESCRIPTION, nullable = false)
     private String description;
 
-    // Contents of the article
     @NotNull
     @Type(type="text")
     @Column(name = CONTENT, nullable = false)
@@ -58,26 +54,22 @@ public class News implements TableEntity {
     @Column(name = SLUG, nullable = false, unique = true)
     private String slug;
 
-    // Title of the article
     @NotNull
     @Type(type="text")
     @Column(name = TITLE, nullable = false)
     private String title;
 
-    // Urgency status : urgent news appear at the top of the news list
-
     @NotNull
     @Column(name = URGENT, nullable = false)
     private boolean urgent;
 
-    // Pinned status : pinned news appear at the top of the news list
     @NotNull
     @Column(name = PINNED, nullable = false)
     private boolean pinned;
 
 
     /**
-     * Constructors for News
+     * Constructor for News
      */
     public News() {}
 

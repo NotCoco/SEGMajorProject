@@ -33,32 +33,26 @@ public class Page implements TableEntity {
     private static final String CONTENT = "Content";
 
 
-    // Auto-incremented and unique primary key 'ID' in the database
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ID, nullable = false)
     private Integer primaryKey;
 
-    // Parent site to which the Page belongs
     @ManyToOne(targetEntity = Site.class)
     @OnDelete(action= OnDeleteAction.CASCADE)
     @JoinColumn(name = SITE, nullable = false)
     private Site site;
 
-    // Slug of the Page (for identification)
     @Column(name = SLUG, nullable = false)
     @Type(type="text")
     private String slug;
 
-    // Index of the page : its position on the site
     @Column(name = INDEX, nullable = false)
     private Integer index;
 
-    // Title of the Page
     @Column(name = TITLE)
     @Type(type="text")
     private String title;
 
-    // Content of the Page
     @Column(name = CONTENT)
     @Type(type="text")
     private String content;

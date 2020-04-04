@@ -12,25 +12,19 @@ import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManagerInterface
  * It creates mock Page objects to reduce memory use.
  */
 
-//TODO Reinsert tags as I couldn't get them to compile on IntelliJ Jars.
 //@Introspected
 public class PageAddCommand {
 
-    // Parent site
     private String site;
 
-    // Identifying slug of the page
     @NotNull
     private String slug;
 
-    // Position of the page on the site
     @NotNull
     private String index;
 
-    // Title of the page
     private String title;
 
-    // Content of the Page
     private String content;
 
 

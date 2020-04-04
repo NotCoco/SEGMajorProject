@@ -51,12 +51,11 @@ public class SiteController {
      */
     @Post("/")
     public HttpResponse<Site> add(@Header("X-API-Key") String session,@Body SiteAddCommand command) {
-		if(!sessionManager.verifySession(session))
-			return HttpResponse.unauthorized();
+
+		if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
         Site s = siteManager.addSite(new Site(command.getSlug(), command.getName()));
-        if(siteManager.getByPrimaryKey(s.getPrimaryKey()) == null){
-            return HttpResponse.serverError();
-        }
+        if(siteManager.getByPrimaryKey(s.getPrimaryKey()) == null) return HttpResponse.serverError();
+
         return HttpResponse
                 .created(s)
                 .headers(headers -> headers.location(location(s.getSlug())));
@@ -87,11 +86,12 @@ public class SiteController {
      * @return Http response with relevant information resulting from the deletion of the Site
      */
     @Delete("/{slug}")
-    public HttpResponse delete(@Header("X-API-Key") String session,String slug){
-		if(!sessionManager.verifySession(session))
-			return HttpResponse.unauthorized();
+    public HttpResponse delete(@Header("X-API-Key") String session,String slug) {
+
+		if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
         Site s = siteManager.getSiteBySlug(slug);
         siteManager.delete(s.getPrimaryKey());
+
         return HttpResponse.noContent();
     }
 

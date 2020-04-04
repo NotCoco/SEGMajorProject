@@ -1,13 +1,15 @@
 package main.java.com.projectBackEnd.Entities.User.Micronaut;
 
 /**
- * This class is used to encapsulate a string to make high level string transactions easier with the micronaut framework
+ * This class is used to encapsulate a string in order to facilitate the making of high level string transactions
+ * with the micronaut framework
  */
-public class StringBody{
+public class StringBody {
+
 	private String string;
 
 	/**
-	 * Empty constructor
+	 * Default constructor
 	 */
 	public StringBody(){}
 
@@ -21,15 +23,15 @@ public class StringBody{
 
 	/**
 	 * Gets the string
-	 * @return The string
+	 * @return  string
 	 */
 	public String getString(){
 		return string;
 	}
 
 	/**
-	 * Sets the string
-	 * @param string The string
+	 * Set the string as the input string
+	 * @param string new string value
 	 */
 	public void setString(String string){
 		this.string = string;

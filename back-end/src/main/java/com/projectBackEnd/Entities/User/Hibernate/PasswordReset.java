@@ -6,8 +6,9 @@ import main.java.com.projectBackEnd.Entities.ResetLinks.EmailNotExistException;
  * This class is an implementation of the PasswordResetInterface which carries out the lower level requests
  * involved in resetting a user password
  */
-public class PasswordReset implements PasswordResetInterface{
-public static PasswordResetInterface passwordResetManager;
+public class PasswordReset implements PasswordResetInterface {
+
+	public static PasswordResetInterface passwordResetManager;
 
 	/**
 	 * Private constructor implementing Singleton design pattern
@@ -18,13 +19,11 @@ public static PasswordResetInterface passwordResetManager;
 
 	/**
 	 * Get the password reset manager
-	 * @return passwordResetManager ; if none has been defined, create a new PasswordReset object
+	 * @return passwordResetManager - if none has been defined, create a new PasswordReset object
 	 */
 	public static PasswordResetInterface getPasswordResetManager(){
-		if(passwordResetManager != null)
-			return passwordResetManager;
-		else
-			return new PasswordReset();
+		if(passwordResetManager != null) return passwordResetManager;
+		else return new PasswordReset();
 	}
 
 	/**
@@ -33,14 +32,13 @@ public static PasswordResetInterface passwordResetManager;
 	 * @throws EmailNotExistException Non-existing email provided
 	 * @throws ServerErrorException Internal server error
 	 */
-	public void sendPasswordResetLink(String email) throws EmailNotExistException, ServerErrorException{
+	public void sendPasswordResetLink(String email) throws EmailNotExistException, ServerErrorException {
+
 		String token = ResetLinkManager.getResetLinkManager().create(email);
 		String title = "Password Reset Request";
 		String content = "please click the link to reset the password " + token + "\n if you did not request password reset please ignore this message";
-		if(SendMail.send(email, title, content))
-			return;
-		else
-			throw new ServerErrorException("error has occured");
+		if(SendMail.send(email, title, content)) return;
+		else throw new ServerErrorException("error has occured");
 	
 	}
 
@@ -52,15 +50,14 @@ public static PasswordResetInterface passwordResetManager;
 	 * @throws UserNotExistException Invalid user
 	 * @throws InvalidPasswordException Invalid password
 	 */
-	public void changePassword(String token, String password) throws TokenNotExistException,UserNotExistException,InvalidPasswordException{
-		if(password == null || password.isEmpty())
-			throw new InvalidPasswordException("invalid password");	
+	public void changePassword(String token, String password) throws TokenNotExistException, UserNotExistException, InvalidPasswordException {
+
+		if(password == null || password.isEmpty()) throw new InvalidPasswordException("invalid password");
 		String email = ResetLinkManager.getResetLinkManager().getEmail(token);
 		if(ResetLinkManager.getResetLinkManager().exist(token)){
 			ResetLinkManager.getResetLinkManager().delete(token);
 			UserManager.getUserManager().changePassword(email,password);
 		}
-		else
-			throw new TokenNotExistException("incorrect token");
+		else throw new TokenNotExistException("incorrect token");
 	}
 }

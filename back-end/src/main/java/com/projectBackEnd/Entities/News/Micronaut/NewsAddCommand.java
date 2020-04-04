@@ -9,34 +9,27 @@ import java.util.Date;
  * It is an implementation of the Command design pattern.
  * It creates mock News objects and reduce memory use.
  */
-//TODO Reinsert tags as I couldn't get them to compile on IntelliJ Jars.
 //@Introspected
 public class NewsAddCommand {
 
     @NotNull
-    private Date date; //Can be updated to take a long of the time!
+    private Date date;
 
-    // Description of the News article
     @NotNull
     private String description;
 
-    // Content of the News article
     @NotNull
     private String content;
 
-    // Slug of the News article
     @NotNull
     private String slug;
 
-    // Title of the News article
     @NotNull
     private String title;
 
-    // Urgency status
     @NotNull
     private boolean urgent;
 
-    // Pinned status
     @NotNull
     private boolean pinned;
 

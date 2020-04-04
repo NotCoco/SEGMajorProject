@@ -3,9 +3,11 @@ package main.java.com.projectBackEnd.Entities.User.Micronaut;
 /**
  * This class encapsulates the operations involved in changing an email of a user
  */
-public class ChangeEmailBody{
+public class ChangeEmailBody {
+
 	private String oldEmail;
 	private String newEmail;
+
 	/**
 	 * Main constructor
 	 * @param oldEmail Old email of user
@@ -17,7 +19,7 @@ public class ChangeEmailBody{
 	}
 
 	/**
-	 * Empty constructor
+	 * Default constructor
 	 */
 	public ChangeEmailBody(){}
 

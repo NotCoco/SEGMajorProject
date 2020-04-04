@@ -13,18 +13,27 @@ import java.util.*;
 public class ImageManager {
 
 	private static ImageManager imageManager;
+
 	//Random name related variables
 	final String lexicon = "ABCDEFGHIJKLMNOPQRSTUVWXYZ12345674890";
 	final java.util.Random rand = new java.util.Random();
 	final Set<String> identifiers = new HashSet<String>();
+
 	//Directory of the folder where the images are saved
 	final String dir;
-	//Constructor
+
+	/**
+	 * Private constructor
+	 */
 	private ImageManager() {
 		imageManager = this;
 		dir = DirectoryHolder.getDir();
 	}
 
+	/**
+	 * Get the image manager
+	 * @return image manager
+	 */
 	public static ImageManager getImageManager() {
 		if (imageManager != null) return imageManager;
 		else return new ImageManager();
@@ -38,12 +47,8 @@ public class ImageManager {
 		StringBuilder builder = new StringBuilder();
 		while(builder.toString().length() == 0) {
 			int length = rand.nextInt(5)+5;
-			for(int i = 0; i < length; i++) {
-				builder.append(lexicon.charAt(rand.nextInt(lexicon.length())));
-			}
-			if(identifiers.contains(builder.toString())) {
-				builder = new StringBuilder();
-			}
+			for(int i = 0; i < length; i++) builder.append(lexicon.charAt(rand.nextInt(lexicon.length())));
+			if(identifiers.contains(builder.toString()))  builder = new StringBuilder();
 		}
 		return builder.toString();
 	}
@@ -113,14 +118,10 @@ public class ImageManager {
 	/**
 	 * Delete all the images in the image directory
 	 */
-	public void deleteAll()
-	{
+	public void deleteAll() {
 		List<String> listOfImageUrls = getImageUrls();
 		if(!listOfImageUrls.isEmpty()){
-			for (String imageUrl : listOfImageUrls)
-			{
-				deleteImage(imageUrl.substring(imageUrl.lastIndexOf("/") + 1));
-			}
+			for (String imageUrl : listOfImageUrls) deleteImage(imageUrl.substring(imageUrl.lastIndexOf("/") + 1));
 		}
 	}
 
@@ -129,14 +130,13 @@ public class ImageManager {
 	 * @param imageName
 	 * @return image file
 	 */
-	public File getImage(String imageName){
+	public File getImage(String imageName) {
+
 		File folder = new File(dir);
 		File targetFile = null;
 		File[] listOfFiles = folder.listFiles();
 		for (File f: listOfFiles) {
-			if(f.getName().equals(imageName)){
-				targetFile = f;
-			}
+			if(f.getName().equals(imageName)) targetFile = f;
 		}
 		return targetFile;
 	}
@@ -152,11 +152,8 @@ public class ImageManager {
 		try{listOfFiles = folder.listFiles();}
 		catch (Exception e){}
 		List<String> urls = new ArrayList<String>();
-		for (int i = 0; i < listOfFiles.length; i++)
-		{
-			if (listOfFiles[i].isFile()) {
-				urls.add(dir+listOfFiles[i].getName());
-			}
+		for (int i = 0; i < listOfFiles.length; i++) {
+			if (listOfFiles[i].isFile()) urls.add(dir+listOfFiles[i].getName());
 		}
 		return urls;
 	}
@@ -165,8 +162,7 @@ public class ImageManager {
 	 * Get the output directory
 	 * @return directory
 	 */
-	public String getDir()
-	{
+	public String getDir() {
 		return dir;
 	}
 }

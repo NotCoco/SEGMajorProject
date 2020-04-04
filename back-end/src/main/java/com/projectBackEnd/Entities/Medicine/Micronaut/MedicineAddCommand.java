@@ -1,12 +1,11 @@
 package main.java.com.projectBackEnd.Entities.Medicine.Micronaut;
 import javax.validation.constraints.NotNull;
 //import io.micronaut.core.annotation.Introspected;
-//TODO Reinsert tags as I couldn't get them to compile on IntelliJ Jars.
 
 /**
  * MedicineAddCommand is an implementation of the Command design pattern.
- * It creates mock medicine objects and reduced memory use.
- * It is used by the controller to insert a medicine object into the database/
+ * It creates mock medicine objects and reduce memory use.
+ * It is used by the controller to insert a medicine object into the database.
  */
 //@Introspected
 public class MedicineAddCommand {

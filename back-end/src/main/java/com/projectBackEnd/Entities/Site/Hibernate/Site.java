@@ -7,9 +7,7 @@ import javax.persistence.*;
 /**
  * Site objects are database entities for the table 'Site' defined in this class.
  * They can be considered as a category of pages, one site is created for each condition.
- * The have two attributes :
- *    - auto-increment primary key as 'ID' in table
- *    - site name as 'Name'.
+ * The have an auto-increment primary key as 'ID' in table and a name as 'Name'.
  *
  *    https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
@@ -23,18 +21,15 @@ public class Site implements TableEntity {
     public static final String SITENAME = "Name";
     public static final String SITESLUG = "Slug";
 
-    // Auto-incremented and unique primary key 'ID'
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ID, nullable = false)
     private Integer primaryKey;
 	
-	// Name of the site
     @Type(type="text")
     @Column(name = SITENAME, nullable=false)
     private String name;
 	
-	// Slug of the site for identification
     @Type(type="text")
     @Column(name = SITESLUG, nullable=false, unique=true)
     private String slug;
@@ -92,18 +87,17 @@ public class Site implements TableEntity {
     public void setName(String name) {
         this.name = name;
     }
-	
-    /**
-     * Get the slug of the Site
-     * @return slug
+
+    /** Set the slug of the Site as the input slug
+     * @param slug New slug value
      */
     public void setSlug(String slug) {
         this.slug = slug;
     }
-	
+
     /**
-     * Set the slug of the Site as the input slug
-     * @param newSlug New slug value
+     * Get the slug of the Site
+     * @return slug
      */
     public String getSlug() { return slug; }
 	
