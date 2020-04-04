@@ -575,7 +575,7 @@ public class UserControllerTest{
 	public void testChangeEmailCorrect(){
 		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name").getStatus());
 		String token = userManager.verifyUser("email@email.com", "password");
-		assertEquals(HttpStatus.OK,changeEmail(token,"newemail@email.com").getStatus());
+		assertEquals(HttpStatus.NO_CONTENT,changeEmail(token,"newemail@email.com").getStatus());
 		sessionManager.terminateSession(token);
 		String token1 = userManager.verifyUser("newemail@email.com", "password");
 		assertNotNull(token1);
@@ -619,10 +619,10 @@ public class UserControllerTest{
 		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name").getStatus());
 		String token = userManager.verifyUser("email@email.com", "password");
 		try{
-			assertEquals(HttpStatus.OK,changeName(token,"na me").getStatus());
+			assertEquals(HttpStatus.NO_CONTENT,changeName(token,"na me").getStatus());
 			assertEquals("na me",userManager.getName("email@email.com"));
 
-			assertEquals(HttpStatus.OK,changeName(token,"na-me").getStatus());
+			assertEquals(HttpStatus.NO_CONTENT,changeName(token,"na-me").getStatus());
 			assertEquals("na-me",userManager.getName("email@email.com"));
 
 		}
@@ -680,19 +680,19 @@ public class UserControllerTest{
 		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name").getStatus());
 		String token = userManager.verifyUser("email@email.com", "password");
 
-		assertEquals(HttpStatus.OK,changePassword(token,"newPassoword").getStatus());
+		assertEquals(HttpStatus.NO_CONTENT,changePassword(token,"newPassoword").getStatus());
 		sessionManager.terminateSession(token);
 		
 		String token1 = userManager.verifyUser("email@email.com","newPassoword");
 		assertNotNull(token1);
 
-		assertEquals(HttpStatus.OK,changePassword(token1,"newPassoword").getStatus());
+		assertEquals(HttpStatus.NO_CONTENT,changePassword(token1,"newPassoword").getStatus());
 		sessionManager.terminateSession(token1);
 
 		String token2 = userManager.verifyUser("email@email.com","newPassoword");
 		assertNotNull(token1);
 
-		assertEquals(HttpStatus.OK,changePassword(token2,"newPas   :}{?><\\|soword").getStatus());
+		assertEquals(HttpStatus.NO_CONTENT ,changePassword(token2,"newPas   :}{?><\\|soword").getStatus());
 		sessionManager.terminateSession(token2);
 
 		String token3 = userManager.verifyUser("email@email.com","newPas   :}{?><\\|soword");

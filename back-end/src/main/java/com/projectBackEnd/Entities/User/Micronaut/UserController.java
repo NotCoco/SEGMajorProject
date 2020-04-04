@@ -190,7 +190,7 @@ public class UserController {
 			try{
 				String email = sessionManager.getEmail(session);
 				userManager.changeEmail(email, body.getString());
-				return HttpResponse.ok();
+				return HttpResponse.noContent();
 			}
 			catch(NoSessionException e){
 				return HttpResponse.unauthorized();
@@ -214,7 +214,7 @@ public class UserController {
 			try{
 				String email = sessionManager.getEmail(session);
 				userManager.changeName(email, body.getString());
-				return HttpResponse.ok();
+				return HttpResponse.noContent();
 			}
 			catch(NoSessionException e){
 				return HttpResponse.unauthorized();
@@ -236,7 +236,7 @@ public class UserController {
 			try{
 				String email = sessionManager.getEmail(session);
 				userManager.changePassword(email, body.getString());
-				return HttpResponse.ok();
+				return HttpResponse.noContent();
 			}
 			catch(NoSessionException e){
 				return HttpResponse.unauthorized();
