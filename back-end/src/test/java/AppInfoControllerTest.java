@@ -27,7 +27,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManager;
 import main.java.com.projectBackEnd.HibernateUtility;
 
-
+/**
+ * Testing REST API endpoints for the controller and its interactions with HTTP Requests
+ */
 @MicronautTest
 public class AppInfoControllerTest {
 
@@ -38,6 +40,9 @@ public class AppInfoControllerTest {
     static AppInfoManagerInterface infoManager;
     private static String token;
 
+    /**
+     * Set up the database to have a test administrator user with a token for restricted requests
+     */
     @BeforeAll
     public static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
@@ -51,6 +56,9 @@ public class AppInfoControllerTest {
         }
     }
 
+    /**
+     * Deletes the test user and shutsdown the database.
+     */
     @AfterAll
     public static void closeDatabase() {
         try {
@@ -61,18 +69,27 @@ public class AppInfoControllerTest {
         HibernateUtility.shutdown();
     }
 
+    /**
+     * Tests updating information and that the getter returns the correct new information
+     */
     @Test
     public void testUpdatingInfo() {
         updateInformation(new AppInfo("Interesting New Hospital", "Cool Department"));
         assertEquals(getInfo().getHospitalName(), "Interesting New Hospital");
     }
 
+    /**
+     * Test updating information again, to return the new information
+     */
     @Test
     public void testUpdatingAndGettingInfo() {
         updateInformation(new AppInfo("Cool", "Cool Department"));
         assertEquals(getInfo().getHospitalName(), "Cool");
     }
 
+    /**
+     * Test updating information once more, to return new information
+     */
     @Test
     public void testUpdatingAndGettingInfoAgain() {
         updateInformation(new AppInfo("Fancy update", "Cool Department"));
@@ -80,12 +97,21 @@ public class AppInfoControllerTest {
     }
 
 
-    protected HttpResponse updateInformation(AppInfo updatedInfo){
+    /**
+     * Creates a PUT request with the updated information supplying API Key and new information
+     * @param updatedInfo The new information to be updated
+     * @return The HTTP response governing success
+     */
+    private HttpResponse updateInformation(AppInfo updatedInfo){
         HttpRequest request = HttpRequest.PUT("/appinfo", updatedInfo).header("X-API-Key",token);
         return client.toBlocking().exchange(request);
     }
 
-    protected AppInfo getInfo(){
+    /**
+     * Runs a GET request to get the information currently stored
+     * @return The information AppInfo object stored.
+     */
+    private AppInfo getInfo(){
         HttpRequest request = HttpRequest.GET("/appinfo/");
         return client.toBlocking().retrieve(request, AppInfo.class);
     }
