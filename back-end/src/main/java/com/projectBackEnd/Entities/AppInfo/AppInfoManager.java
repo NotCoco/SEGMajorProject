@@ -37,10 +37,10 @@ public class AppInfoManager implements AppInfoManagerInterface {
      */
     public void updateInfo(AppInfo updatedVersion) {
         try {
-            mapper.writeValue(file, updatedVersion);
-            savedInfo = updatedVersion;
             //file = JSONLocation.getJsonFile();
             //Uncomment this line for runtime changing of the JSONLocation class static.
+            mapper.writeValue(file, updatedVersion);
+            savedInfo = updatedVersion;
         } catch (IOException e) {
             e.printStackTrace();
         }
