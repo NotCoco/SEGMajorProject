@@ -43,7 +43,7 @@
               
             <tbody >
               <!-- drug names -->
-              <tr class="print"  valign="left" v-modle="items" v-for="(item,index) in items"  v-bind:index="index" v-bind:key="item">
+              <tr class="print" valign="left" v-for="(item,index) in items" v-bind:index="index" v-bind:key="index">
                   <td class="print" v-if="item === items[0]">{{item.Time}}&nbsp;</td>
                   <td class="print" v-else-if="items[index-1].Time === item.Time"></td>
                   <td class="print" v-else>{{item.Time}}&nbsp;</td>
