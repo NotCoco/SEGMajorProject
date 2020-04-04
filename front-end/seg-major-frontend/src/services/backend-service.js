@@ -46,8 +46,32 @@ export default {
     return api.get('/user/logout')
   },
 
-  getUserName() {
-    return api.get('/user/name')
+  createUser(user) {
+    return api.post('/user/create', user)
+  },
+
+  getUserDetails() {
+    return api.get('/user/user_details')
+  },
+
+  getAllUsers() {
+    return api.get('/user')
+  },
+
+  changeUserName(name) {
+    return api.put('/user/change_name', { 'string': name })
+  },
+
+  changeUserEmail(email) {
+    return api.put('/user/change_email', { 'string': email })
+  },
+
+  changeUserPassword(newPassword) {
+    return api.put('/user/change_password', { 'string': newPassword })
+  },
+
+  deleteUser(user) {
+    return api.delete('/user/delete', { data: user })
   },
 
   createSite(site) {

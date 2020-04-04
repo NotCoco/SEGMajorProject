@@ -13,8 +13,18 @@ export default {
         localStorage.removeItem('api-key')
     },
 
+    async createUser(user) {
+        const res = await BackendService.createUser(user)
+        return res.data
+    },
+
     async getUserName() {
-        const res = await BackendService.getUserName()
+        const res = await BackendService.getUserDetails()
+        return res.data.name
+    },
+
+    async getUserDetails() {
+        const res = await BackendService.getUserDetails()
         return res.data
     },
 
@@ -22,5 +32,28 @@ export default {
         const apiKey = localStorage.getItem('api-key')
         if (!apiKey) return false
         return true
+    },
+
+    async getAllUsers() {
+        const res = await BackendService.getAllUsers()
+        return res.data
+    },
+
+    async changeName(name) {
+        await BackendService.changeUserName(name)
+    },
+
+    async changeEmail(email) {
+        await BackendService.changeUserEmail(email)
+    },
+
+    async changePassword(user) {
+        const res = await BackendService.changeUserPassword(user)
+        return res.data
+    },
+
+    async deleteAccount(user) {
+        const res = await BackendService.deleteUser(user)
+        return res.data;
     }
 }

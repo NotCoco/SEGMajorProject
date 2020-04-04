@@ -9,8 +9,7 @@
           <router-link to="/admin/drug-chart" class="navbar-item">Drug Chart</router-link>
 
           <a class="navbar-item">News</a>
-
-          <a class="navbar-item">Settings</a>
+          <router-link to="/admin/settings" class="navbar-item">Settings</router-link>
         </div>
 
         <div class="navbar-menu">
@@ -22,9 +21,17 @@
               </a>
 
               <div class="navbar-dropdown is-right">
-                <a class="navbar-item">User Settings</a>
-                <a class="navbar-item">Change Email</a>
-                <a class="navbar-item">Change Password</a>
+                <router-link to="/admin/settings#your-account" class="navbar-item">Your account</router-link>
+                <router-link to="/admin/settings#change-email" class="navbar-item">Change Email</router-link>
+                <router-link
+                  to="/admin/settings#change-password"
+                  class="navbar-item"
+                >Change Password</router-link>
+                <hr class="navbar-divider" />
+                <router-link
+                  to="/admin/settings/create-new-user"
+                  class="navbar-item"
+                >Create new user</router-link>
                 <hr class="navbar-divider" />
                 <a class="navbar-item log-out" @click="logout()">Log out</a>
               </div>
@@ -36,7 +43,7 @@
 
     <div class="expanded-scrollable-area">
       <transition name="fade" mode="out-in" v-bind:duration="{ leave: 50 }">
-        <router-view v-bind:username="username"></router-view>
+        <router-view v-bind:username="username" v-on:nameChanged="onNameChanged($event)"></router-view>
       </transition>
     </div>
   </div>
@@ -56,6 +63,9 @@ export default {
       await UserService.logout();
       console.log("Logged out... redirecting to home page");
       this.$router.push("/");
+    },
+    onNameChanged(newName) {
+      this.username = newName;
     }
   },
   async mounted() {

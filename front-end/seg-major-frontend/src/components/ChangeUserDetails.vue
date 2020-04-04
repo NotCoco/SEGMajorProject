@@ -1,0 +1,184 @@
+<template>
+  <div id="change-user-details">
+    <article class="message">
+      <div class="message-header">
+        <p>Change name</p>
+      </div>
+      <div class="message-body">
+        <div class="field">
+          <label class="label">Name</label>
+          <div class="control">
+            <input
+              class="input"
+              type="text"
+              v-model="newName"
+              v-bind:disabled="!user.name"
+              v-on:change="$v.newName.$touch()"
+              v-on:keyup.enter="changeUserName()"
+              placeholder="Enter your name here..."
+            />
+          </div>
+          <div v-if="$v.newName.$dirty">
+            <p class="help is-danger" v-if="!$v.newName.required">This field is required</p>
+          </div>
+        </div>
+
+        <div class="field is-grouped is-grouped-right">
+          <p class="control">
+            <button
+              class="button is-success"
+              @click="changeUserName()"
+              v-bind:disabled="!user.name || newName == user.name"
+            >Change name</button>
+          </p>
+        </div>
+      </div>
+    </article>
+
+    <article id="change-email" class="message">
+      <div class="message-header">
+        <p>Change email</p>
+      </div>
+      <div class="message-body">
+        <div class="field">
+          <label class="label">Email</label>
+          <div class="control">
+            <input
+              class="input"
+              type="text"
+              v-model="newEmail"
+              v-bind:disabled="!user.email"
+              v-on:change="$v.newEmail.$touch()"
+              v-on:keyup.enter="changeEmail()"
+              placeholder="Enter your email..."
+            />
+          </div>
+          <div v-if="$v.newEmail.$dirty">
+            <p class="help is-danger" v-if="!$v.newEmail.required">This field is required</p>
+            <p class="help is-danger" v-if="!$v.newEmail.email">Please enter a valid email</p>
+          </div>
+        </div>
+
+        <div class="field is-grouped is-grouped-right">
+          <p class="control">
+            <button
+              class="button is-success"
+              @click="changeEmail()"
+              v-bind:disabled="$v.newEmail.$anyError || !newEmail || newEmail == user.email"
+            >Change email</button>
+          </p>
+        </div>
+      </div>
+    </article>
+
+    <article id="change-password" class="message">
+      <div class="message-header">
+        <p>Change password</p>
+      </div>
+      <div class="message-body">
+        <div class="field">
+          <label class="label">New password</label>
+          <div class="control">
+            <input
+              class="input"
+              type="password"
+              v-model="newPassword"
+              v-on:change="$v.newPassword.$touch()"
+              v-on:keyup.enter="changePassword()"
+              placeholder="Enter your new password..."
+            />
+          </div>
+          <div v-if="$v.newPassword.$dirty">
+            <p class="help is-danger" v-if="!$v.newPassword.required">This field is required</p>
+            <p class="help is-danger" v-if="!$v.newPassword.minLength">Password too short</p>
+          </div>
+        </div>
+
+        <div class="field is-grouped is-grouped-right">
+          <p class="control">
+            <button
+              class="button is-success"
+              @click="changePassword()"
+              v-bind:disabled="$v.newPassword.$anyError || !newPassword"
+            >Change password</button>
+          </p>
+        </div>
+      </div>
+    </article>
+  </div>
+</template>
+
+<script>
+import UserService from "@/services/user-service";
+
+import { required, minLength, email } from "vuelidate/lib/validators";
+
+export default {
+  data() {
+    return {
+      user: {
+        name: "",
+        email: "",
+        password: ""
+      },
+      newName: null,
+      newPassword: null,
+      newEmail: null
+    };
+  },
+  validations: {
+    newName: {
+      required
+    },
+    newEmail: {
+      required,
+      email
+    },
+    newPassword: {
+      required,
+      minLength: minLength(5)
+    }
+  },
+  methods: {
+    async changeUserName() {
+      this.$v.newName.$touch();
+      if (this.$v.newName.$invalid) {
+        return console.log("Form invalid. Not attempting to change name.");
+      }
+
+      await UserService.changeName(this.newName);
+      this.$emit("nameChanged", this.newName);
+    },
+    async changeEmail() {
+      this.$v.newEmail.$touch();
+      if (this.$v.newEmail.$invalid) {
+        return console.log("Form invalid. Not attempting to change email.");
+      }
+
+      await UserService.changeEmail(this.newEmail);
+      alert("Email changed successfully. Please re-login.");
+      this.$router.push("/login?exp=true");
+    },
+    async changePassword() {
+      this.$v.newPassword.$touch();
+      if (this.$v.newPassword.$invalid) {
+        return console.log("Form invalid. Not attempting to change password.");
+      }
+
+      await UserService.changePassword(this.newPassword);
+    }
+  },
+  watch: {
+    user() {
+      this.newName = this.user.name;
+      this.newEmail = this.user.email;
+    }
+  },
+  async mounted() {
+    this.user = await UserService.getUserDetails();
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+</style>

@@ -22,6 +22,9 @@ import Login from '../views/Login.vue'
 import DrugChartCreator from '../views/DrugChartCreator.vue'
 import AllPages from '../views/AllPages.vue'
 import PageEmptyState from '../views/PageEmptyState.vue'
+import AdminSettings from '../views/AdminSettings.vue'
+import AdminDeleteAccount from '../views/AdminDeleteAccount.vue'
+import AdminCreateNewUser from '../views/AdminCreateNewUser.vue'
 
 import UserService from "@/services/user-service";
 
@@ -61,6 +64,18 @@ const routes = [
       {
         path: 'drug-chart',
         component: AdminDrugChart,
+      },
+      {
+        path: 'settings',
+        component: AdminSettings,
+      },
+      {
+        path: 'settings/create-new-user',
+        component: AdminCreateNewUser,
+      },
+      {
+        path: 'settings/delete-account',
+        component: AdminDeleteAccount,
       },
       {
         path: 'sites',
