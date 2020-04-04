@@ -12,18 +12,28 @@ import java.nio.file.Files;
 
 import static org.junit.Assert.*;
 
-
+/**
+ * Testing the two methods in the AppInfoManagerInterface
+ */
 public class AppInfoManagerTest {
 
     private static AppInfoManagerInterface infoManager;
 
+    /**
+     * Default Constructor
+     */
     public AppInfoManagerTest() {
-        infoManager = AppInfoManager.getInfoManager();
+
     }
 
+    /**
+     * Set the JSON's location and initialise a manager for testing
+     */
     @BeforeEach
     public void setUp() {
         JSONLocation.setJsonFile("src/test/resources/AppInfoTest.json");
+        //Setting this will create the file itself before the AppInfoManager is initialised
+        infoManager = AppInfoManager.getInfoManager();
     }
 //======================================================================================================================
 
@@ -56,17 +66,18 @@ public class AppInfoManagerTest {
     }
 
     /**
-     * Unfound JSONs default to the main place.
+     * Test that changing the json file once the AppInfoManager has been initialised has no effect.
      */
     @Test
     public void testEmptyJSONFile() {
         JSONLocation.setJsonFile("");
         infoManager.updateInfo(new AppInfo("Interesting New Hospital", "Cool Department in a different dep"));
-        assertEquals(infoManager.getInfo().getDepartmentName(), "Cool Department in a different dep");
+            assertEquals(infoManager.getInfo().getDepartmentName(), "Cool Department in a different dep");
     }
 
     /**
-     * Unfound Random JSON location should default to the default too.
+     * Test that changing the json file once the AppInfoManager has been initialised has no effect.
+     * (If runtime changing is enabled, this will create a new file with the spam name)
      */
     @Test
     public void testUnfoundJSONFile() {
