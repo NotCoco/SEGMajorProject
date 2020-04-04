@@ -201,7 +201,7 @@
 	}
 </script>
 
-<style>
+<style lang="scss" scoped>
 	.custom-content-container {
 		display: flex;
 		flex-direction: column;
