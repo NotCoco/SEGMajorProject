@@ -84,29 +84,47 @@ public class ImageManagerTest {
         assertEquals(0, imageManager.getImageUrls().size());
     }
 
+    /**
+     * Deleting an image that doesn't exist should return false
+     */
     @Test
     public void testDeleteImageThatDoesntExist() {
-        fail();
+        assertFalse(imageManager.deleteImage("."));
     }
 
+    /**
+     * Getting an image that doesn't exist should return null
+     */
     @Test
     public void testGetImageThatDoesntExist() {
-        fail();
+        assertNull(imageManager.getImage("."));
     }
 
+    /**
+     * Getting a null image should return a null image
+     */
     @Test
     public void testGetNullImage() {
-        fail();
+        assertNull(imageManager.getImage(null));
     }
 
+    /**
+     * Deleting a null image should return false
+     */
     @Test
     public void testDeleteNullImage() {
-        fail();
+        assertFalse(imageManager.deleteImage(null));
     }
 
+    /**
+     * Test that no errors are thrown when attempting to delete all from empty file.
+     */
     @Test
-    public void testEmptyDeleteAll() {
-        fail();
+    public void testDeleteAllWithNothing() {
+        imageManager.deleteAll();
+        assertEquals(0, imageManager.getImageUrls().size());
+        imageManager.deleteAll();
+        assertEquals(0, imageManager.getImageUrls().size());
     }
 
     /**
