@@ -29,45 +29,26 @@
         <div class="field">
           <label class="label">Password</label>
           <div class="control">
-            <input
-              class="input"
-              v-model="password"
-              type="password"
-				style="height: 38px;width: 321px;" 
-				v-show="!showPw" 
-              placeholder="Enter password here..."
-              v-on:change="$v.password.$touch()"
-              v-on:keyup.enter="login()"
-            />
-			<input
-				class="input"
-				v-model="password"
-				type="text"
-				style="height: 38px;width: 321px;" 
-				v-show="showPw" 
-				placeholder="Enter password here..."
-				v-on:change="$v.password.$touch()"
-				v-on:keyup.enter="login()"
-			/>
-			&nbsp;
-			<button 
-					id = "saveButton" 
-					class="button" 
-					style="height: 38px;width: 20px;" 
-					@click="showPasswd()" 
-					v-show="!showPw" 
-			>
-				<font-awesome-icon icon="eye" />
-			</button>
-			<button 
-					class="button"
-					style="height: 38px;width: 20px;"
-					@click="showPasswd()"
-					id = "saveButton" 
-					v-show="showPw"  
-			>
-				<font-awesome-icon icon="eye-slash" />
-			</button>
+            <div class="field has-addons">
+              <div class="control is-expanded">
+                <input
+                  class="input"
+                  v-model="password"
+                  :type="showPassword ? 'text' : 'password'"
+                  placeholder="Enter password here..."
+                  v-on:change="$v.password.$touch()"
+                  v-on:keyup.enter="login()"
+                />
+              </div>
+              <div class="control">
+                <button 
+                  class="button"
+                  @click="showPassword = !showPassword" 
+                >
+                  <font-awesome-icon :icon="showPassword ? 'eye-slash' : 'eye'" />
+                </button>
+              </div>
+            </div>
           </div>
           <div v-if="$v.password.$dirty">
             <p class="help is-danger" v-if="!$v.password.required">This field is required</p>
@@ -107,7 +88,7 @@ export default {
       email: "",
       password: "",
       loginError: false,
-		showPw: false
+      showPassword: false
     };
   },
   validations: {
@@ -121,20 +102,17 @@ export default {
     }
   },
 watch:{
-	email:{
-		handler: function(){
-			if(window.localStorage){
-				window.localStorage.setItem("email",JSON.stringify(this.email));
-			}else{
-				console.log("failed")
-			}
-		}
-	}
+  email:{
+    handler: function(){
+      if (window.localStorage) {
+        window.localStorage.setItem("email", JSON.stringify(this.email));
+      } else {
+        console.log("failed")
+      }
+    }
+  }
 },
   methods: {
-	showPasswd: function(){
-		this.showPw = !this.showPw
-	},
     async login() {
       this.$v.$touch();
       if (this.$v.$invalid) {
