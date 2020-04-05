@@ -13,63 +13,21 @@
 
       <section class="section">
       <div class="container">
-        <table class="Drugchart-layout">
-          <tr>
-            <td>
-              <button class="layout button is-danger"  v-show="showfirst" @click="showFirst()">
-                <i class="fa fa-minus-square">&nbsp;Hide FirstLayout</i>
-              </button>
-              <button class="layout button is-success" v-show="!showfirst" @click="showFirst()">
-                <i class="fa fa-plus-square">&nbsp;Show FirstLayout</i>
-              </button>
-            </td>
-            <td>
-              <button class="layout button is-danger" v-show="showsecond" @click="showSecond()">
-                <i class="fa fa-minus-square">&nbsp;Hide SecondLayout</i>
-              </button>
-              <button class="layout button is-success" v-show="!showsecond" @click="showSecond()">
-                <i class="fa fa-plus-square">&nbsp;Show SecondLayout</i>
-              </button>
-            </td>
-             
-          </tr>
-        </table>
             <transition name="fade-transform" mode="out-in">
-              <FirstLayout v-show="showfirst"></FirstLayout>
+              <DrugChartLayout ></DrugChartLayout>
             </transition>
-             <SecondLayout v-show="showsecond"></SecondLayout>
       </div>
     </section>
   </div>
 </template>
 <script>
-import FirstLayout from "@/views/FirstLayout.vue";
-import SecondLayout from "@/views/SecondLayout.vue"
+import DrugChartLayout from "@/components/DrugChartLayout.vue";
 import Navbar from "@/components/Navbar.vue";
 export default{
   name: "DrugChart",
-  data(){
-    return{
-      showfirst: true,
-      showsecond: false
-    }
-   
-  },
   components: {
-    FirstLayout,
-    SecondLayout,
+    DrugChartLayout,
     Navbar
-  },
-  methods: {
-    showFirst: function(){
-        this.showfirst = !this.showfirst
-        this.showsecond = !this.showsecond
-    },
-    showSecond: function(){
-        this.showsecond = !this.showsecond
-        this.showfirst = !this.showfirst
-     
-    }
   }
 }
 </script>
