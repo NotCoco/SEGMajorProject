@@ -5,11 +5,15 @@
         <div class="navbar-brand">
           <router-link to="/admin" class="navbar-item text-brand">Admin</router-link>
 
-          <router-link to="/admin/sites" class="navbar-item">Sites</router-link>
-          <router-link to="/admin/drug-chart" class="navbar-item">Drug Chart</router-link>
+          <router-link to="/admin/sites" class="navbar-item" active-class="is-active">Sites</router-link>
+          <router-link
+            to="/admin/drug-chart"
+            class="navbar-item"
+            active-class="is-active"
+          >Drug Chart</router-link>
 
           <a class="navbar-item">News</a>
-          <router-link to="/admin/settings" class="navbar-item">Settings</router-link>
+          <router-link to="/admin/settings" class="navbar-item" active-class="is-active">Settings</router-link>
         </div>
 
         <div class="navbar-menu">
@@ -75,6 +79,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/styles";
+
 .text-brand {
   font-size: 20px;
   font-weight: bold;
