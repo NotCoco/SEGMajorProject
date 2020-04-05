@@ -40,7 +40,7 @@ public class ImageController {
 		try {
 			return saveImage(file);
 		}
-		catch(IOException e){
+		catch (IOException e){
 			e.printStackTrace();
 			return HttpResponse
 					.noContent();
@@ -51,8 +51,9 @@ public class ImageController {
 	 * Saves an image by passing its encodings to the imageManager
 	 * @param file File to be encoded for saving
 	 * @return HTTP response based on success.
+	 * @throws Encoding may throw IOExceptions
 	 */
-	private HttpResponse saveImage(CompletedFileUpload file) {
+	private HttpResponse saveImage(CompletedFileUpload file) throws IOException {
 		String[] strings = file.getFilename().split("\\.");
 		String extension = strings[strings.length-1];
 		byte[] encoded = Base64.getEncoder().encode(file.getBytes());
