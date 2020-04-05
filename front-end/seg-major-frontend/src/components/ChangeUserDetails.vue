@@ -148,6 +148,7 @@ export default {
 
       await UserService.changeName(this.newName);
       this.$emit("nameChanged", this.newName);
+      this.user.name = this.newName;
     },
     async changeEmail() {
       this.$v.newEmail.$touch();
