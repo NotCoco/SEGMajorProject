@@ -167,6 +167,8 @@ export default {
       }
 
       await UserService.changePassword(this.newPassword);
+      this.newPassword = '';
+      this.$v.newPassword.$reset();
     }
   },
   watch: {
