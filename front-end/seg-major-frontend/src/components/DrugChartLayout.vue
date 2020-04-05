@@ -1,7 +1,5 @@
 <template>
   <div id="first-layout">
-<link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-
     <section class="section">
   <div class="container">
     <table class="table-layout">

@@ -51,7 +51,7 @@
                   <td class="print" v-if="item.Bold=='As per warining regime'"><b>{{item.Bold}}&nbsp;</b></td>
                   <td class="print" v-else><b>{{item.Dose}}{{item.Unit}}</b><br>{{item.Freq}}&nbsp;</td>
                   <!-- delete items -->
-                  <td class="print-hide" align="absmiddle"><button class="button" style="width: 10px;height: 30px;" @click="delCard(item)"><i class="fa fa-close"></i></button><br></td>
+                  <td class="print-hide" align="absmiddle"><button class="button" style="width: 10px;height: 30px;" @click="delCard(item)"><font-awesome-icon icon="times" /></button><br></td>
                   <td class="print" style="width: 50px;" v-for="n in 31" :key="n"></td>
               </tr>
               

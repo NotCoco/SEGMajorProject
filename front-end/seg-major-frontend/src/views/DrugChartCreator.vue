@@ -1,7 +1,6 @@
 <template>
   <div id="drug-chart-creator">
     <Navbar></Navbar>
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
       <section class="hero is-primary">
         <div class="hero-body">
           <div class="container">

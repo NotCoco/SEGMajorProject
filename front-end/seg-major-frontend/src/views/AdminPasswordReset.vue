@@ -1,7 +1,6 @@
 <template>
 	
 	<section class="section">
-		<link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 		<div style="overflow: hidden" class="custom-content-container" >
 			<h1 class="title">Password Reset</h1>
 			<!-- notifications -->

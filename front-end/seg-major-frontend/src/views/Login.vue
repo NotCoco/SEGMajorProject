@@ -2,7 +2,6 @@
   <div id="login">
     <div id="bg"></div>
     <Navbar></Navbar>
-	<link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <div class="custom-content-container">
       <div class="card login-box">
         <div class="notification" v-if="sessionExpired">
@@ -58,7 +57,7 @@
 					@click="showPasswd()" 
 					v-show="!showPw" 
 			>
-				<i class="fa fa-eye"></i>
+				<font-awesome-icon icon="eye" />
 			</button>
 			<button 
 					class="button"
@@ -67,7 +66,7 @@
 					id = "saveButton" 
 					v-show="showPw"  
 			>
-				<i class="fa fa-eye-slash"></i>
+				<font-awesome-icon icon="eye-slash" />
 			</button>
           </div>
           <div v-if="$v.password.$dirty">
