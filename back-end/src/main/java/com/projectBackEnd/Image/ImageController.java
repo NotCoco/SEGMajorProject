@@ -17,10 +17,7 @@ import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 import javax.validation.constraints.Size;
 
 /**
- * Image Controller class is used for the interactions between frontend and backend
- * There are functionalites :
- *    - add an image to file system
- *    - delete an image
+ * Image Controller class is used for the REST API interactions between frontend and backend
  */
 @Controller("/images")
 public class ImageController {
@@ -41,22 +38,31 @@ public class ImageController {
 		if(!sessionManager.verifySession(session))
 			return HttpResponse.unauthorized();
 		try {
-			String[] strings = file.getFilename().split("\\.");
-			String extension = strings[strings.length-1];
-			byte[] encoded = Base64.getEncoder().encode(file.getBytes());
-			String msg = imageManager.saveImage(new String(encoded), extension);
-			if (msg == null) {
-				return HttpResponse.serverError();
-			} else {
-				return HttpResponse
-						.created(msg)
-						.headers(headers -> headers.location(location(msg)));
-			}
+			return saveImage(file);
 		}
-		catch(IOException a){
-			System.out.println("Error occured");
+		catch(IOException e){
+			e.printStackTrace();
 			return HttpResponse
 					.noContent();
+		}
+	}
+
+	/**
+	 * Saves an image by passing its encodings to the imageManager
+	 * @param file File to be encoded for saving
+	 * @return HTTP response based on success.
+	 */
+	private HttpResponse saveImage(CompletedFileUpload file) {
+		String[] strings = file.getFilename().split("\\.");
+		String extension = strings[strings.length-1];
+		byte[] encoded = Base64.getEncoder().encode(file.getBytes());
+		String msg = imageManager.saveImage(new String(encoded), extension);
+		if (msg == null) {
+			return HttpResponse.serverError();
+		} else {
+			return HttpResponse
+					.created(msg)
+					.headers(headers -> headers.location(location(msg)));
 		}
 	}
 
@@ -69,14 +75,9 @@ public class ImageController {
 	 */
 	@Delete("/{imageName}")
 	public HttpResponse delete(@Header("X-API-Key") String session, String imageName) {
-		if(!sessionManager.verifySession(session))
-			return HttpResponse.unauthorized();
-		if(imageManager.deleteImage(imageName)){
-			return HttpResponse.noContent();
-		}
-		else {
-			return HttpResponse.serverError();
-		}
+		if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
+		if(imageManager.deleteImage(imageName)) return HttpResponse.noContent();
+		else return HttpResponse.serverError();
 	}
 
 	/**
