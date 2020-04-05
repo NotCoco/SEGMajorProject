@@ -109,7 +109,7 @@
 <style lang="scss" media="print" scoped>
   /* Style the body */
   .striped.table-layout{
-    border-collapse:separate; 
+    border-collapse:separate;
     border-spacing:5px 25px;
   }
   .input.height{
