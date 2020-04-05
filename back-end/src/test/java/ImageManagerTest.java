@@ -84,6 +84,31 @@ public class ImageManagerTest {
         assertEquals(0, imageManager.getImageUrls().size());
     }
 
+    @Test
+    public void testDeleteImageThatDoesntExist() {
+        fail();
+    }
+
+    @Test
+    public void testGetImageThatDoesntExist() {
+        fail();
+    }
+
+    @Test
+    public void testGetNullImage() {
+        fail();
+    }
+
+    @Test
+    public void testDeleteNullImage() {
+        fail();
+    }
+
+    @Test
+    public void testEmptyDeleteAll() {
+        fail();
+    }
+
     /**
      * Test saving an image file and delete it
      */

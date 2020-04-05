@@ -45,10 +45,9 @@ public class ImageController {
 			String extension = strings[strings.length-1];
 			byte[] encoded = Base64.getEncoder().encode(file.getBytes());
 			String msg = imageManager.saveImage(new String(encoded), extension);
-			if(msg.equals("Failed")){
+			if (msg == null) {
 				return HttpResponse.serverError();
-			}
-			else{
+			} else {
 				return HttpResponse
 						.created(msg)
 						.headers(headers -> headers.location(location(msg)));
