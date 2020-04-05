@@ -3,39 +3,39 @@
     <editor-menu-bar v-if="editable" :editor="editor" v-slot="{ commands, isActive }">
       <div class="rich-text-editor-menu">
         <button
-          class="print-hide button is-light rte-menu-button"
+          class="button is-light rte-menu-button"
           :class="{ 'is-active': isActive.bold() }"
           @click="commands.bold"
         >
-          <i class="print-hide material-icons">format_bold</i>
+          <i class="material-icons">format_bold</i>
         </button>
 
         <button
-          class="print-hide button is-light rte-menu-button"
+          class="button is-light rte-menu-button"
           :class="{ 'is-active': isActive.italic() }"
           @click="commands.italic"
         >
-          <i class="print-hide material-icons">format_italic</i>
+          <i class="material-icons">format_italic</i>
         </button>
 
         <button
-          class="print-hide button is-light rte-menu-button"
+          class="button is-light rte-menu-button"
           :class="{ 'is-active': isActive.underline() }"
           @click="commands.underline"
         >
-          <i class="print-hide material-icons">format_underline</i>
+          <i class="material-icons">format_underline</i>
         </button>
 
         <button
-          class="print-hide button is-light rte-menu-button"
+          class="button is-light rte-menu-button"
           :class="{ 'is-active': isActive.paragraph() }"
           @click="commands.paragraph"
         >
-          <span class="print-hide rte-menu-button-text-icon">P</span>
+          <span class="rte-menu-button-text-icon">P</span>
         </button>
 
         <button
-          class="print-hide button is-light rte-menu-button"
+          class="button is-light rte-menu-button"
           :class="{ 'is-active': isActive.heading({ level: 1 }) }"
           @click="commands.heading({ level: 1 })"
         >
@@ -43,62 +43,62 @@
         </button>
 
         <button
-          class="print-hide button is-light rte-menu-button"
+          class="button is-light rte-menu-button"
           :class="{ 'is-active': isActive.heading({ level: 2 }) }"
           @click="commands.heading({ level: 2 })"
         >
-          <span class="print-hide rte-menu-button-text-icon">H2</span>
+          <span class="rte-menu-button-text-icon">H2</span>
         </button>
 
         <button
-          class="print-hide button is-light rte-menu-button"
+          class="button is-light rte-menu-button"
           :class="{ 'is-active': isActive.heading({ level: 3 }) }"
           @click="commands.heading({ level: 3 })"
         >
-          <span class="print-hide rte-menu-button-text-icon">H3</span>
+          <span class="rte-menu-button-text-icon">H3</span>
         </button>
 
         <button
-          class="print-hide button is-light rte-menu-button"
+          class="button is-light rte-menu-button"
           :class="{ 'is-active': isActive.bullet_list() }"
           @click="commands.bullet_list"
         >
-          <i class="print-hide material-icons">format_list_bulleted</i>
+          <i class="material-icons">format_list_bulleted</i>
         </button>
 
         <button
-          class="print-hide button is-light rte-menu-button"
+          class="button is-light rte-menu-button"
           :class="{ 'is-active': isActive.ordered_list() }"
           @click="commands.ordered_list"
         >
-          <i class="print-hide material-icons">format_list_numbered</i>
+          <i class="material-icons">format_list_numbered</i>
         </button>
 
         <button
-          class="print-hide button is-light rte-menu-button"
+          class="button is-light rte-menu-button"
           :class="{ 'is-active': isActive.blockquote() }"
           @click="commands.blockquote"
         >
-          <i class="print-hide material-icons">format_quote</i>
+          <i class="material-icons">format_quote</i>
         </button>
 
         <button
-          class="print-hide button is-light rte-menu-button"
+          class="button is-light rte-menu-button"
           :class="{ 'is-active': isActive.notification() }"
           @click="commands.notification"
         >
-          <i class="print-hide material-icons">note</i>
+          <i class="material-icons">note</i>
         </button>
 
-        <button class="print-hide button is-light rte-menu-button" @click="commands.horizontal_rule">
+        <button class="button is-light rte-menu-button" @click="commands.horizontal_rule">
           <i class="material-icons">remove</i>
         </button>
 
-        <button class="print-hide button is-light rte-menu-button" @click="commands.undo">
+        <button class="button is-light rte-menu-button" @click="commands.undo">
           <i class="material-icons">undo</i>
         </button>
 
-        <button class="print-hide button is-light rte-menu-button" @click="commands.redo">
+        <button class="button is-light rte-menu-button" @click="commands.redo">
           <i class="material-icons">redo</i>
         </button>
       </div>
@@ -198,19 +198,6 @@ export default {
   }
 };
 </script>
-<style>
-  @media print {
-    .button.print-hide {
-      visibility: hidden!important;
-      display: none!important;
-    }
-    .page-break {
-    page-break-after: always;
-    }
-    @page{
-      size: landscape; 
-      margin-top: 1mm;
-    }
-  }
-  
+
+<style lang="scss" scoped>
 </style>
