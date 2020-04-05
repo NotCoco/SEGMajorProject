@@ -127,6 +127,13 @@ export default {
     })
   },
 
+  updatePageIndexes(pages) {
+    if (pages && pages.length > 0) {
+      const siteSlug = pages[0].site.slug;
+      return api.patch(`/sites/${siteSlug}/page-indices`, pages)
+    }
+  },
+
   deletePage(page) {
     return api.delete(`/sites/${page.site.slug}/pages/${page.slug}`)
   },

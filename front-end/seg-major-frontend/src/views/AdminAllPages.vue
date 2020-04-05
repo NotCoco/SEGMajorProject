@@ -13,18 +13,30 @@
                 class="subtitle is-6"
               >You can create a new page using the add button in the bottom left!</p>
             </div>
-            <router-link
-              v-bind:to="page.slug"
-              append
-              v-for="page of pages"
-              v-bind:key="page.primaryKey"
+
+            <div
+              class="notification is-italic is-white is-paddingless has-text-dark"
+              v-if="pages.length > 1"
             >
-              <div class="card">
-                <div class="card-content">
-                  <p class="page-name">{{ page.title }}</p>
+              <strong>Click</strong> to view/edit or
+              <strong>drag</strong> to re-order.
+            </div>
+
+            <draggable v-model="pages" animation="180" @end="dragEnd()">
+              <router-link
+                class="is-block"
+                v-bind:to="page.slug"
+                append
+                v-for="page of pages"
+                v-bind:key="page.primaryKey"
+              >
+                <div class="card">
+                  <div class="card-content">
+                    <p class="page-name">{{ page.title }}</p>
+                  </div>
                 </div>
-              </div>
-            </router-link>
+              </router-link>
+            </draggable>
           </div>
         </transition>
       </div>
@@ -39,15 +51,27 @@
 <script>
 import SitesService from "@/services/sites-service";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import draggable from "vuedraggable";
 
 export default {
   components: {
-    LoadingSpinner
+    LoadingSpinner,
+    draggable
   },
   data() {
     return {
       pages: null
     };
+  },
+  methods: {
+    dragEnd() {
+      // update page indexes
+      const updatedPages = this.pages.map((p, index) => {
+        p.index = index;
+        return p;
+      });
+      SitesService.updatePageIndexes(updatedPages);
+    }
   },
   async mounted() {
     const siteSlug = this.$route.params.siteSlug;
