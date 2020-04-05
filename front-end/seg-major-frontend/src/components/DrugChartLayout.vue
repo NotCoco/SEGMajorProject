@@ -28,15 +28,17 @@
                   </select>						
                 </tr>
                 <tr>
-                  <input type="checkbox" id="warn" value="As per warining regime" >
-                  <label for="As per warining regime" style="font-size: 15px;">As per warining regime</label>
+                  <label class="checkbox" style="font-size:15px;">
+                    <input type="checkbox" id="weaning" value="As per weaning regime">
+                    As per weaning regime
+                  </label>
                 </tr>
                 <tr>
                   <!-- buttons of the drug chart -->
                   <td>
                     <button valign="left" class="button is-success" @click="addCard()">Add</button>
                     &nbsp;
-                    <button valign="right"  class="button is-success" v-print ="printObj" >Print</button>
+                    <button valign="right" class="button is-success" v-print="printObj">Print</button>
                   </td>
                 </tr>
               </table>

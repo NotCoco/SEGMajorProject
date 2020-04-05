@@ -59,9 +59,8 @@
           <strong>Error:</strong> Please re-enter your credentials and try again.
         </div>
         <button
-          class="button is-primary is-medium"
+          class="button is-primary is-medium login-button"
           v-bind:disabled="$v.$anyError || !email || !password"
-          style="margin-top: 10px;"
           @click="login()"
         >Login</button>
       </div>
@@ -166,6 +165,10 @@ watch:{
     background-size: 200px 200px;
     background-position: 0 0, 100px 100px;
     filter: blur(1px);
+  }
+
+  .login-button {
+    margin-top: 10px;
   }
 }
 
