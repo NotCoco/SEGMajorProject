@@ -55,6 +55,10 @@ const routes = [
     component: DrugChartCreator
   },
   {
+    path: '/password-reset',
+    component: AdminPasswordReset,
+  },
+  {
     path: '/admin',
     component: AdminLayout,
     children: [
@@ -65,10 +69,6 @@ const routes = [
       {
         path: 'drug-chart',
         component: AdminDrugChart,
-      },
-      {
-        path: 'password-reset',
-        component: AdminPasswordReset,
       },
       {
         path: 'settings',
