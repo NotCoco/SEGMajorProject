@@ -59,9 +59,12 @@ public class PageManager extends EntityManager implements PageManagerInterface {
      * @return Page object with updated attributes
      */
     public Page update(Page updatedVersion) {
+
         Page pageMatch = getPageBySiteAndSlug(updatedVersion.getSite().getSlug(), updatedVersion.getSlug());
-        if (pageMatch != null && !pageMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey())) throw new PersistenceException();
-        super.update(updatedVersion); return updatedVersion; }
+        if (pageMatch != null && !pageMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey()))
+            throw new PersistenceException();
+        super.update(updatedVersion); return updatedVersion;
+    }
 
 
     /**
