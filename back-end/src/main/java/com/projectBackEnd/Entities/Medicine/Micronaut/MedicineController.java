@@ -114,7 +114,7 @@ public class MedicineController {
      * @param id Primary key of the medicine to locate
      * @return created URI
      */
-    protected URI location(int id) {
+    private URI location(int id) {
         return URI.create("/medicines/" + id);
     }
 
@@ -124,7 +124,7 @@ public class MedicineController {
      * @param medicine Medicine object to locate
      * @return created URI
      */
-    protected URI location(Medicine medicine) {
+    private URI location(Medicine medicine) {
         return location(medicine.getPrimaryKey());
     }
 

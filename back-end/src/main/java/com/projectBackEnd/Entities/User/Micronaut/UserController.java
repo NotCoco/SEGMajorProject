@@ -17,7 +17,7 @@ import java.util.List;
  * User Controller is a REST API endpoint.
  * It deals with the interactions between the server and the Users table in the database.
  * It provides HTTP requests for each of the queries that carry out the creation, deletion, retrieval, updating
- * and logging in & out of users
+ * and logging in and out of users.
  */
 @Controller("/user")
 public class UserController {

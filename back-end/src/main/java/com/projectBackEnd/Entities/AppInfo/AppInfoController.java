@@ -55,7 +55,7 @@ public class AppInfoController {
      * @param hospitalName The name of the hospital
      * @return The encoded hospital name and its access location.
      */
-    protected URI location(String hospitalName) {
+    private URI location(String hospitalName) {
         String encodedSlug;
         try {
             encodedSlug = URLEncoder.encode(hospitalName, java.nio.charset.StandardCharsets.UTF_8.toString());

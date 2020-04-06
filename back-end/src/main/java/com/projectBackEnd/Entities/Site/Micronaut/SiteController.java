@@ -119,7 +119,7 @@ public class SiteController {
      * @return URI for the site
      */
     private URI location(String siteSlug) {
-        String encodedSlug = null;
+        String encodedSlug;
         try {
             encodedSlug = URLEncoder.encode(siteSlug, java.nio.charset.StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {
