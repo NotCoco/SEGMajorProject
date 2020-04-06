@@ -61,6 +61,25 @@ public class SiteController {
     }
 
     /**
+     * Update a site with SiteUpdateCommand methods via an HTTP Put request
+     * @param session               Current session
+     * @param updatedSiteCommand    Dedicated SiteUpdateCommand class to update site
+     * @return TTP response resulting from the Put request with path
+     */
+    @Put("/")
+    public HttpResponse update(@Header("X-API-Key") String session, @Body SiteUpdateCommand updatedSiteCommand) {
+
+        if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
+        Site newSite = new Site(updatedSiteCommand.getPrimaryKey(), updatedSiteCommand.getSlug(), updatedSiteCommand.getName());
+        siteManager.update(newSite);
+
+        return HttpResponse
+                .noContent()
+                .header(HttpHeaders.LOCATION, location(updatedSiteCommand.getSlug(), "/sites/").getPath());
+    }
+
+
+    /**
      * Get the specific Site corresponding to the given ID via an HTTP Get request
      * @param id    Primary key of the site to retrieve
      * @return Site with the specified ID
@@ -93,21 +112,5 @@ public class SiteController {
 
         return HttpResponse.noContent();
     }
-
-    /**
-     * Update a site with SiteUpdateCommand methods via an HTTP Put request
-     * @param session               Current session
-     * @param updatedSiteCommand    Dedicated SiteUpdateCommand class to update site
-     * @return TTP response resulting from the Put request with path
-     */
-    @Put("/")
-    public HttpResponse update(@Header("X-API-Key") String session,@Body SiteUpdateCommand updatedSiteCommand) {
-  		  if(!sessionManager.verifySession(session))
-			    return HttpResponse.unauthorized();
-        Site newSite = new Site(updatedSiteCommand.getPrimaryKey(), updatedSiteCommand.getSlug(), updatedSiteCommand.getName());
-        siteManager.update(newSite);
-        return HttpResponse
-                .noContent()
-                .header(HttpHeaders.LOCATION, location(updatedSiteCommand.getSlug(), "/sites/").getPath());
-    }
 }
+

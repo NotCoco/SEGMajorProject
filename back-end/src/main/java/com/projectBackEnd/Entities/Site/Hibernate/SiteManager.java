@@ -58,8 +58,11 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
         if (foundSiteMatch != null && !foundSiteMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey()))
             throw new PersistenceException();
 
-        return (Site) super.update(updatedVersion);
+        super.update(updatedVersion);
+        return updatedVersion;
+
     }
+
 
     /**
      * Retrieve Site object corresponding to the given primary key from the database
