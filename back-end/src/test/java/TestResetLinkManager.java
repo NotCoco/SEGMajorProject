@@ -50,17 +50,6 @@ class TestResetLinkManager{
     }
 
     /**
-     * Test the copy method in links
-     */
-    @Test
-    void testLinkCopy() {
-        Link link1 = Link("email");
-        Link link2 = Link("email2");
-        link1.copy(link2);
-        assertThat(link1, samePropertyValuesAs(link2));
-    }
-
-    /**
      * Tests that the manager is able to create a new token for a link being reset
      */
     @Test
