@@ -59,6 +59,7 @@ public class UserControllerTest{
         HibernateUtility.setResource("testhibernate.cfg.xml");
 
     }
+
 	/**
 	 * Closes the session factory
 	 */
@@ -69,6 +70,7 @@ public class UserControllerTest{
 		((EntityManager)sessionManager).deleteAll();
         HibernateUtility.shutdown();
     }
+
 	/**
 	 * Ensure that there are no pre-existing user, resetlink or session entities in the database
 	 * before each test via the 'deleteAll()' method
@@ -79,6 +81,7 @@ public class UserControllerTest{
 		((EntityManager)linkManager).deleteAll();
 		((EntityManager)sessionManager).deleteAll();
     }
+
 	/**
 	 * Tests that users can be created with unconventional characters in it's attributes (this varies depending
 	 * on the attribute), expects success
@@ -106,6 +109,7 @@ public class UserControllerTest{
 		sessionManager.terminateSession(token4);
 
 	}
+
 	/**
 	 * Tests the creation of users with empty and null passwords, expects HTTP errors to be thrown
 	 */
@@ -312,8 +316,9 @@ public class UserControllerTest{
 		});
 		assertEquals(HttpStatus.UNAUTHORIZED , thrown1.getStatus());
 	}
+
 	/**
-	*test if adding users and than getting it all creates matching result
+	* Test if adding users and than getting it all creates matching result
 	*/
 	@Test
 	public void testGetAll(){
@@ -329,8 +334,9 @@ public class UserControllerTest{
 		}
 		
 	}
+
 	/**
-	* Test if geting all users while not having a correct session token returns an http error
+	* Test if getting all users while not having a correct session token returns an http error
 	*/
 	@Test
 	public void testGetAllUnauthorized(){
@@ -344,6 +350,7 @@ public class UserControllerTest{
 		});
 		assertEquals(HttpStatus.UNAUTHORIZED , thrown1.getStatus());
 	}
+
 	/**
 	 * Tests that the endpoint is able to delete an existing user, expects success
 	 */

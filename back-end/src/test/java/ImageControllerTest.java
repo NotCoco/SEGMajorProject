@@ -141,7 +141,7 @@ public class ImageControllerTest {
 	}
 
 	/**
-	 * Delete an image that doesn't exist
+	 * Testing deleting an image that doesn't exist
 	 */
 	@Test
 	public void testDeleteIncorrect(){

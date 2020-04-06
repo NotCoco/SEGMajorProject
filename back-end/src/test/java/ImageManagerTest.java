@@ -131,7 +131,7 @@ public class ImageManagerTest {
     }
 
     /**
-     * Test saving an image file and delete it
+     * Test saving an image file and deleting it
      */
     @Test
     public void testSaveAndDeleteAll() {
@@ -155,7 +155,9 @@ public class ImageManagerTest {
     }
 
     /**
-     * Read the bytes from the txt file in this directory to avoid long string
+     * Read the text in a file
+     * @param filePath The location of the file
+     * @return String version of the text
      */
     private static String readLineByLine(String filePath)
     {
