@@ -17,6 +17,7 @@ import java.math.BigInteger;
  * Inspiration : https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
 public class UserManager extends EntityManager implements UserManagerInterface {
+
 	private static UserManagerInterface userManager;
 	private static final int TIMEOUT = 3600; //amount of time for which session will be valid
 
@@ -40,10 +41,10 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 	}
 
 	/**
-	 * Adds a new user to the database
-	 * @param email the email of the new user
-	 * @param password the password of the new user
-	 * @param name the name of the new user
+	 * Add a new user to the database
+	 * @param email		The email of the new user
+	 * @param password	The password of the new user
+	 * @param name		The name of the new user
 	 * @throws EmailExistsException Email already exists
 	 * @throws InvalidEmailException Invalid email
 	 * @throws IncorrectNameException Invalid name
@@ -51,33 +52,39 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 	 */
 	public void addUser(String email, String password, String name) throws EmailExistsException, InvalidEmailException, IncorrectNameException,InvalidPasswordException {
 
-		if(!EmailValidator.getInstance().isValid(email)) throw new InvalidEmailException("email: " + email + " is invalid");
-		if(getAll().stream().filter(u->((User)u).getEmail().equals(email)).count() > 0) throw new EmailExistsException("email: " + email + " already exsists");
-		if(name == null || name.trim().isEmpty()) throw new IncorrectNameException("incorrect name");
-		if(password == null || password.trim().isEmpty()) throw new InvalidPasswordException("invalid password");
+		if(!EmailValidator.getInstance().isValid(email))
+			throw new InvalidEmailException("email: " + email + " is invalid");
+
+		if(getAll().stream().filter(u->((User)u).getEmail().equals(email)).count() > 0)
+			throw new EmailExistsException("email: " + email + " already exsists");
+
+		if(name == null || name.trim().isEmpty())
+			throw new IncorrectNameException("incorrect name");
+
+		if(password == null || password.trim().isEmpty())
+			throw new InvalidPasswordException("invalid password");
 	
 		User user = new User(email,hash(password),name);
 		insertTuple(user);
 	}
 
 	/**
-	 * Checks the attributes of the user and verifies
-	 * @param email User email
-	 * @param password User password
+	 * Check the attributes of the user and verifies
+	 * @param email		User email
+	 * @param password	User password
 	 * @return A new session, with verified user
 	 */
 	public String verifyUser(String email,String password){
 		if(getAll().stream().filter(u->(((User)u).getEmail().equals(email) && ((User)u).getPassword().equals(hash(password)))).count() > 0)
 			return SessionManager.getSessionManager().getNewSession(email,TIMEOUT);
-
 		else return null;
 			
 	}
 
 	/**
-	 * Changes a user's password
-	 * @param email Email of the user
-	 * @param newPassword Password of the user
+	 * Change a user's password
+	 * @param email			Email of the user
+	 * @param newPassword	New value for the user's password
 	 * @throws UserNotExistException Invalid user
 	 * @throws InvalidPasswordException Invalid password
 	 */
@@ -96,9 +103,103 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 	}
 
 	/**
-	 * Deletes a user from the database
-	 * @param email Email of the user
-	 * @param password Password of the user
+	 * Change the email of a user
+	 * @param oldEmail Old email of user
+	 * @param newEmail New email of user
+	 * @throws UserNotExistException Invalid user
+	 * @throws EmailExistsException Pre-existing user
+	 */
+	public void changeEmail(String oldEmail, String newEmail) throws UserNotExistException,EmailExistsException { 
+		List<User> users = getAll();
+		User user = null;
+		for(User u:users){
+			if(u.getEmail().equals(oldEmail)) user = u;
+			if(u.getEmail().equals(newEmail)) throw new EmailExistsException("email: " + newEmail + " already exists");
+		}
+		if(user == null) throw new UserNotExistException("there is no user with email: " + oldEmail);
+		user.setEmail(newEmail);
+		update(user);
+	}
+
+	/**
+	 * Change the name of a user
+	 * @param email Email of user
+	 * @param name	Name of user
+	 * @throws UserNotExistException Invalid user
+	 * @throws IncorrectNameException Invalid name
+	 */
+	public void changeName(String email,String name) throws UserNotExistException, IncorrectNameException {
+
+		List<User> users = getAll();
+		User user = null;
+		for(User u:users) if(u.getEmail().equals(email)) user = u;
+
+		if(user == null) throw new UserNotExistException("there is no user with email: " + email);
+		if(name == null || name.trim().isEmpty()) throw new IncorrectNameException("incorrect name");
+
+		user.setName(name);
+		update(user);
+	}
+
+	/**
+	 * Filter through all users to find given user
+	 * @param email The email of the user to search for
+	 * @return The found user's name - or exception
+	 * @throws UserNotExistException The user was not found
+	 */
+	public String getName(String email) throws UserNotExistException {
+
+		List<User> users = getAll();
+		for(User u:users) if(u.getEmail().equals(email)) return u.getName();
+		throw new UserNotExistException("No such user");
+
+	}
+
+	/**
+	 * Check that a user exists in the database
+	 * @param email	User email to verify
+	 * @return Verification status
+	 */
+	public boolean verifyEmail(String email){
+		return (getAll().stream().filter(u->((User)u).getEmail().equals(email)).count() > 0);
+	}
+
+	/**
+	 * Get a list of all the users stored in the database
+	 * @return List of users
+	 */
+	public List<User> getUsers(){
+		return getAll();
+	}
+
+
+	/**
+	 * Hash a given password to add to the database
+	 * @param password The password to hash
+	 * @return The hashed password
+	 */
+	private String hash(String password) {
+
+		String salt = "fX66CeuGKjmdkguhPEzp";
+		int split = password.length()/3;
+		String withSalt = password.substring(0,split) + salt + password.substring(split, password.length());
+		try{
+			MessageDigest alg = MessageDigest.getInstance("SHA-512"); 
+			alg.reset();
+			alg.update(withSalt.getBytes(StandardCharsets.UTF_8));
+			return String.format("%0128x", new BigInteger(1, alg.digest()));
+		}
+        catch (NoSuchAlgorithmException e) { 
+            throw new RuntimeException(e);
+		}
+		
+	}
+
+
+	/**
+	 * Remove a user from the database
+	 * @param email		Email of the user
+	 * @param password	Password of the user
 	 * @throws UserNotExistException Invalid user
 	 */
 	public void deleteUser(String email, String password) throws UserNotExistException{
@@ -118,97 +219,6 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 		}
 		else throw new UserNotExistException("user details incorrect");
 
-	}
-
-	/**
-	 * Changes the email of a user
-	 * @param oldEmail Old email of user
-	 * @param newEmail New email of user
-	 * @throws UserNotExistException Invalid user
-	 * @throws EmailExistsException Pre-existing user
-	 */
-	public void changeEmail(String oldEmail, String newEmail) throws UserNotExistException,EmailExistsException { 
-		List<User> users = getAll();
-		User user = null;
-		for(User u:users){
-			if(u.getEmail().equals(oldEmail)) user = u;
-			if(u.getEmail().equals(newEmail)) throw new EmailExistsException("email: " + newEmail + " already exists");
-		}
-		if(user == null) throw new UserNotExistException("there is no user with email: " + oldEmail);
-		user.setEmail(newEmail);
-		update(user);
-	}
-
-	/**
-	 * Changes the name of a user
-	 * @param email Email of user
-	 * @param name Name of user
-	 * @throws UserNotExistException Invalid user
-	 * @throws IncorrectNameException Invalid name
-	 */
-	public void changeName(String email,String name) throws UserNotExistException, IncorrectNameException {
-
-		List<User> users = getAll();
-		User user = null;
-		for(User u:users) if(u.getEmail().equals(email)) user = u;
-
-		if(user == null) throw new UserNotExistException("there is no user with email: " + email);
-		if(name == null || name.trim().isEmpty()) throw new IncorrectNameException("incorrect name");
-
-		user.setName(name);
-		update(user);
-	}
-
-	/**
-	 * Filters through all users to find given user
-	 * @param email The email to search for
-	 * @return The found user's name/ exception
-	 * @throws UserNotExistException The user was not found
-	 */
-	public String getName(String email) throws UserNotExistException {
-
-		List<User> users = getAll();
-		for(User u:users) if(u.getEmail().equals(email)) return u.getName();
-		throw new UserNotExistException("No such user");
-
-	}
-	/**
-	 * Get all the users
-	 * @return List of users
-	 */
-	public List<User> getUsers(){
-		return getAll();
-	}
-
-	/**
-	 * Checks that a user exists
-	 * @param email User email to verify
-	 * @return Verification status
-	 */
-	public boolean verifyEmail(String email){ 
-		return (getAll().stream().filter(u->((User)u).getEmail().equals(email)).count() > 0);
-	}
-
-	/**
-	 * Hashes a given password, for input in the database
-	 * @param in The password to hash
-	 * @return The hashed password
-	 */
-	private String hash(String in){
-		String salt = "fX66CeuGKjmdkguhPEzp";
-		int split = in.length()/3;
-		String withSalt = in.substring(0,split) + salt + in.substring(split,in.length());
-		try{
-			MessageDigest alg = MessageDigest.getInstance("SHA-512"); 
-			alg.reset();
-			alg.update(withSalt.getBytes(StandardCharsets.UTF_8));
-			return String.format("%0128x", new BigInteger(1, alg.digest()));
-		}
-        catch (NoSuchAlgorithmException e) { 
-            throw new RuntimeException(e); 
-
-		}
-		
 	}
 	
 

@@ -19,7 +19,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = User.TABLENAME)
-public class User implements TableEntity{
+public class User implements TableEntity {
 
 	// table columns (attributes)
 	public final static String TABLENAME = "Users";
@@ -27,29 +27,28 @@ public class User implements TableEntity{
 	private final static String EMAIL = "email";
 	private final static String PASSWORD = "password";
 	private final static String NAME = "name";
-	// Primary key 'ID' auto-incremented in the database
+
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = KEY)
    	private int primaryKey;
 
-	// Email of the user
 	@Column(name = EMAIL)
 	@Type(type="text")
 	private String email;
 
-	// Password of the user
 	@Column(name = PASSWORD)
 	@Type(type="text")
 	private String password;
 
-	// Name of the user
 	@Column(name = NAME)
 	@Type(type="text")
 	private String name;
+
+
 	/**
 	 * Main constructor
-	 * @param email The email of the user
-	 * @param password The password of the user
+	 * @param email		The email of the user
+	 * @param password	The password of the user
 	 */
 	public User(String email, String password, String name) {
 		this.email = email;
@@ -60,16 +59,16 @@ public class User implements TableEntity{
 	/**
 	 * Empty constructor
 	 */
-	public User(){};
+	public User(){}
 
 	/**
-	 * Gets the ID of the user
+	 * Get the ID of the user
 	 * @return ID primary key
 	 */
 	public Serializable getPrimaryKey() { return primaryKey; }
 
 	/**
-	 * Gets the email of the user
+	 * Get the email of the user
 	 * @return Email of the user
 	 */
 	public String getEmail(){
@@ -77,7 +76,7 @@ public class User implements TableEntity{
 	}
 
 	/**
-	 * Gets the password of the user
+	 * Get the password of the user
 	 * @return Password of the user
 	 */
 	public String getPassword(){
@@ -85,7 +84,7 @@ public class User implements TableEntity{
 	}
 
 	/**
-	 * Sets the email of the user
+	 * Set the email of the user
 	 * @param email The new email
 	 */
 	public void setEmail(String email){
@@ -93,7 +92,7 @@ public class User implements TableEntity{
 	}
 
 	/**
-	 * Sets the password of the user
+	 * Set the password of the user
 	 * @param password The new password
 	 */
 	public void setPassword(String password){
@@ -101,7 +100,7 @@ public class User implements TableEntity{
 	}
 
 	/**
-	 * Gets the name of the user
+	 * Get the name of the user
 	 * @return Name of user
 	 */
 	public String getName(){
@@ -109,7 +108,7 @@ public class User implements TableEntity{
 	}
 
 	/**
-	 * Sets the name of the user
+	 * Set the name of the user
 	 * @param name The new name of the user
 	 */
 	public void setName(String name){
@@ -117,7 +116,7 @@ public class User implements TableEntity{
 	}
 
 	/**
-	 * Produces a string depicting this object
+	 * Produce a string depicting this object
 	 * @return the generated string
 	 */
 	@Override
@@ -125,6 +124,11 @@ public class User implements TableEntity{
 		return "User: " + this.primaryKey + ", " + this.email + ", " + this.password + "," + this.name;
 	}
 
+	/**
+	 * Check the equality of two user objects based on their emails
+	 * @param user User to compare
+	 * @return Objects equality
+	 */
 	public boolean equals(User user){
 		return user.email == email;
 	}
