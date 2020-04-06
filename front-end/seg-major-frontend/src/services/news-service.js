@@ -19,5 +19,23 @@ export default {
   async getArticle(slug) {
     return (await this.getAllArticles())
             .find(elem => elem.slug === slug) ?? null;
-  }
+  },
+
+  async createArticle(article) {
+    const res = await BackendService.createArticle(article);
+    this.newsPromise = null;
+    return res.data;
+  },
+
+  async updateArticle(article) {
+    const res = await BackendService.updateArticle(article);
+    this.newsPromise = null;
+    return res.data;
+  },
+
+  async deleteArticle(article) {
+    const res = await BackendService.deleteArticle(article);
+    this.newsPromise = null;
+    return res.data;
+  },
 }
