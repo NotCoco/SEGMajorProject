@@ -39,6 +39,10 @@
               >Slug can only contain lowercase letters, numbers, and hyphens</p>
               <p
                 class="help is-danger"
+                v-else-if="!$v.site.slug.siteSlug"
+              >This slug is not allowed because it is reserved</p>
+              <p
+                class="help is-danger"
                 v-else-if="slugAlreadyExists"
               >This slug is already in use by another site</p>
             </div>
@@ -74,7 +78,7 @@
 import SitesService from "@/services/sites-service";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { required } from "vuelidate/lib/validators";
-import { slug } from "@/custom-validators";
+import { slug, siteSlug } from "@/custom-validators";
 
 export default {
   components: {
@@ -95,7 +99,8 @@ export default {
       },
       slug: {
         required,
-        slug
+        slug,
+        siteSlug
       }
     }
   },
