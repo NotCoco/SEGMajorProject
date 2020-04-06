@@ -5,6 +5,8 @@ package main.java.com.projectBackEnd.Entities.AppInfo;
  */
 
 public interface AppInfoManagerInterface {
+
     void updateInfo(AppInfo updatedVersion);
+
     AppInfo getInfo();
 }

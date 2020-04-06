@@ -55,7 +55,7 @@ public class AppInfoManager implements AppInfoManagerInterface {
     }
 
     /**
-     * Reads information from the file, returning an AppInfo object.
+     * Read information from the file, returning an AppInfo object.
      * @return The AppInfo object as specified in the JSON.
      */
     private static AppInfo readInfo() {

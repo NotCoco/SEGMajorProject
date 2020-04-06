@@ -37,16 +37,17 @@ public class AppInfoController {
     }
 
     /**
-     * Update the AppInfo saved in the manager.
-     * @param session The login session with X-API Key to check permissions
-     * @param info The new information to be saved
-     * @return A HTTP Response regarding success of the action
+     * Update the AppInfo saved in the manager via an HTTP Put request
+     * @param session   The login session with X-API Key to check permissions
+     * @param info      The new information to be saved
+     * @return A HTTP Response regarding success of the operation
      */
     @Put("/")
     public HttpResponse update(@Header("X-API-Key") String session, @Body AppInfo info) {
-        if(!sessionManager.verifySession(session))
-            return HttpResponse.unauthorized();
+
+        if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
         infoManager.updateInfo(info);
+
         return HttpResponse
                 .noContent()
                 .header(HttpHeaders.LOCATION, location(info.getHospitalName()).getPath());
