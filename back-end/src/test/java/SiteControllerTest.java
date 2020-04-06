@@ -227,7 +227,7 @@ public class SiteControllerTest {
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
     }
 	/**
-	*	test if updating while using incorrect session token returns http unauthorized exception
+	*	Test if updating while using incorrect session token returns an HTTP unauthorized exception
 	*/
 	@Test
 	public void testUpdateUnauthorized(){
@@ -246,43 +246,46 @@ public class SiteControllerTest {
         });
 		assertEquals(HttpStatus.UNAUTHORIZED,thrown1.getStatus());
 	}
+
     /**
-     * Quality of life method for updating a site via the REST api
-     * @param id the id
-     * @param newSlug the new slug value
-     * @param newName the new name
+     * Quality of life method for updating a site via the REST API
+     * @param id The ID of the site to be updated
+     * @param newSlug The new slug value
+     * @param newName The new name
      * @return The HTTP response produced by the operation
      */
-    protected HttpResponse putSite(int id, String newSlug, String newName) {
+    private HttpResponse putSite(int id, String newSlug, String newName) {
         HttpRequest request = HttpRequest.PUT("/sites", new SiteUpdateCommand(id, newSlug, newName)).header("X-API-Key",token);
         return client.toBlocking().exchange(request);
     }
+
     /**
-     * Quality of life method for adding a site via the REST api
-     * @param slug the slug
-     * @param name the name
+     * Quality of life method for adding a site via the REST API
+     * @param slug The slug
+     * @param name The name
      * @return The HTTP response produced by the operation
      */
-    protected HttpResponse addSite(String slug, String name) {
+    private HttpResponse addSite(String slug, String name) {
         HttpRequest request = HttpRequest.POST("/sites", new SiteAddCommand(slug, name)).header("X-API-Key",token);
         HttpResponse response = client.toBlocking().exchange(request);
         return response;
     }
+
     /**
      * Quality of life method for retrieving a site via the REST api
-     * @param slug the slug
+     * @param slug The slug
      * @return The site retrieved
      */
-    protected Site getSite(String slug) {
+    private Site getSite(String slug) {
         URI loc = location(slug);
         HttpRequest request = HttpRequest.GET(loc);
         return client.toBlocking().retrieve(request, Site.class);
     }
 
     /**
-     * Method for producing the url of a site from it's associated response
-     * @param response the http response
-     * @return The url produced
+     * Method for producing the URL of a site from its associated response
+     * @param response the HTTP response to be searched
+     * @return The String of the URL for a site
      */
     private String getEUrl(HttpResponse response) {
         String val = response.header(HttpHeaders.LOCATION);
@@ -296,14 +299,12 @@ public class SiteControllerTest {
         return null;
     }
 
-
-
     /**
-     * Method for generating a urlencoded url for a site
-     * @param siteName the site's slug
+     * Method for generating a urlencoded URI for a site
+     * @param siteName The string to be encoded
      * @return The generated URI
      */
-    protected URI location(String siteName) {
+    private URI location(String siteName) {
         String encodedSlug = null;
         try {
             encodedSlug = URLEncoder.encode(siteName, java.nio.charset.StandardCharsets.UTF_8.toString());
@@ -312,12 +313,13 @@ public class SiteControllerTest {
         }
         return URI.create("/sites/" + encodedSlug);
     }
+
     /**
-     * Quality of life method for retrieving a site's ID by it's slug
+     * Quality of life method for retrieving a site's ID by its slug
      * @param slug the site's slug
      * @return the site's ID
      */
-    protected int getSitePKBySlug(String slug){
+    private int getSitePKBySlug(String slug){
         return getSite(slug).getPrimaryKey();
     }
 }
