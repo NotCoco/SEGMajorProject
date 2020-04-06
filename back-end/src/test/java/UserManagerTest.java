@@ -141,7 +141,7 @@ class UserManagerTest{
 			fail();
 		}
 		List<User> users = (List<User>)((EntityManager) userManager).getAll();
-		assertEquals(users.size(),8);
+		assertEquals(8,users.size());
 		assertEquals(1,users.stream().filter(u->(u.getEmail().equals("user8@email.com") && u.getPassword().equals(hash("password8")))).count());
 	}
 
@@ -183,7 +183,7 @@ class UserManagerTest{
 		}
 		List<User> users = (List<User>)((EntityManager) userManager).getAll();
 		assertEquals(1,users.stream().filter(u->(u.getEmail().equals("user1@email.com") && u.getPassword().equals(hash("password10")))).count());
-		assertEquals(users.size(),7);
+		assertEquals(7,users.size());
 
 
 	}
@@ -219,7 +219,7 @@ class UserManagerTest{
 			userManager.deleteUser("user1@email.com","password1");
 			List<User> users = (List<User>)((EntityManager) userManager).getAll();
 			assertEquals(0,users.stream().filter(u->(u.getEmail().equals("user1@email.com") && u.getPassword().equals(hash("password1")) == true)).count());
-			assertEquals(users.size(),6);
+			assertEquals(6,users.size());
 		}
 		catch(UserNotExistException e){
 			fail();
