@@ -14,7 +14,6 @@ import main.java.com.projectBackEnd.Entities.User.Hibernate.*;
 import main.java.com.projectBackEnd.Entities.ResetLinks.EmailNotExistException;
 
 import java.util.List;
-import java.net.URI;
 
 /**
  * User Controller is a REST API endpoint.
