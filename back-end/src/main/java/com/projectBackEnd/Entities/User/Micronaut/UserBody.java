@@ -3,7 +3,7 @@ package main.java.com.projectBackEnd.Entities.User.Micronaut;
 /**
  * This class encapsulates a user entity, excluding the ID.
  */
-public class UserBody{
+public class UserBody {
 
 	private String name;
 	private String password;
@@ -16,9 +16,9 @@ public class UserBody{
 
 	/**
 	 * Constructor with name setting
-	 * @param email User email
-	 * @param password User password
-	 * @param name User name
+	 * @param email		User email
+	 * @param password	User password
+	 * @param name		User name
 	 */
 	public UserBody(String email, String password,String name){
 		this.email = email;
@@ -28,8 +28,8 @@ public class UserBody{
 
 	/**
 	 * Constructor without name setting
-	 * @param email User email
-	 * @param password User password
+	 * @param email		User email
+	 * @param password	User password
 	 */
 	public UserBody(String email, String password){
 		this.email = email;
@@ -37,14 +37,14 @@ public class UserBody{
 	}
 
 	/**
-	 * Gets the user email
-	 * @return Email
+	 * Get the user email
+	 * @return Email of this user
 	 */
 	public String getEmail(){return email; }
 
 	/**
-	 * Gets the user password
-	 * @return Password
+	 * Get the user password
+	 * @return Password of this user
 	 */
 	public String getPassword(){
 		return password;
@@ -59,15 +59,15 @@ public class UserBody{
 	}
 
 	/**
-	 * Sets the user password
-	 * @param password Password to set
+	 * Set the user password as the given password
+	 * @param password New value for password to set
 	 */
 	public void setPassword(String password){
 		this.password = password;
 	}
 
 	/**
-	 * Gets the user name
+	 * Get the user name
 	 * @return Name
 	 */
 	public String getName(){
@@ -75,8 +75,8 @@ public class UserBody{
 	}
 
 	/**
-	 * Sets the user name
-	 * @param name Name to set
+	 * Set the user name as the given user name
+	 * @param name New value for the username to set
 	 */
 	public void setName(String name){
 		this.name = name;

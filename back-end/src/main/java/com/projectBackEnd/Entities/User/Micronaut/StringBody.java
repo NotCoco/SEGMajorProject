@@ -2,7 +2,7 @@ package main.java.com.projectBackEnd.Entities.User.Micronaut;
 
 /**
  * This class is used to encapsulate a string in order to facilitate the making of high level string transactions
- * with the micronaut framework
+ * with the micronaut framework.
  */
 public class StringBody {
 
@@ -31,7 +31,7 @@ public class StringBody {
 
 	/**
 	 * Set the string as the input string
-	 * @param string new string value
+	 * @param string	New string value
 	 */
 	public void setString(String string){
 		this.string = string;
