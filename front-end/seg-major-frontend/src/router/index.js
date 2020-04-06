@@ -20,6 +20,7 @@ import AdminSiteSettings from '../views/AdminSiteSettings.vue'
 import SearchResults from '../views/SearchResults.vue'
 import Login from '../views/Login.vue'
 import DrugChartCreator from '../views/DrugChartCreator.vue'
+import AdminPasswordReset from "../views/AdminPasswordReset.vue"
 import AllPages from '../views/AllPages.vue'
 import PageEmptyState from '../views/PageEmptyState.vue'
 import AdminSettings from '../views/AdminSettings.vue'
@@ -52,6 +53,10 @@ const routes = [
   {
     path: '/drug-chart',
     component: DrugChartCreator
+  },
+  {
+    path: '/password-reset',
+    component: AdminPasswordReset,
   },
   {
     path: '/admin',

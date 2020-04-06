@@ -3,17 +3,21 @@
     <section class="section">
       <div class="custom-content-container">
         <h1 class="title">Drug Chart Configuration</h1>
+        <admin-drug-list></admin-drug-list>
       </div>
     </section>
   </div>
 </template>
 
-<script>
+<script  type="text/javascript">
+import AdminDrugList from "@/components/AdminDrugList.vue"
+
 export default {
-    
+  components: {
+    AdminDrugList,
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-
 </style>

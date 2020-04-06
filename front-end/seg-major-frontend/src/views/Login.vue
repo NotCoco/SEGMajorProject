@@ -2,7 +2,6 @@
   <div id="login">
     <div id="bg"></div>
     <Navbar></Navbar>
-
     <div class="custom-content-container">
       <div class="card login-box">
         <div class="notification" v-if="sessionExpired">
@@ -30,14 +29,26 @@
         <div class="field">
           <label class="label">Password</label>
           <div class="control">
-            <input
-              class="input"
-              v-model="password"
-              type="password"
-              placeholder="Enter password here..."
-              v-on:change="$v.password.$touch()"
-              v-on:keyup.enter="login()"
-            />
+            <div class="field has-addons">
+              <div class="control is-expanded">
+                <input
+                  class="input"
+                  v-model="password"
+                  :type="showPassword ? 'text' : 'password'"
+                  placeholder="Enter password here..."
+                  v-on:change="$v.password.$touch()"
+                  v-on:keyup.enter="login()"
+                />
+              </div>
+              <div class="control">
+                <button 
+                  class="button"
+                  @click="showPassword = !showPassword" 
+                >
+                  <font-awesome-icon :icon="showPassword ? 'eye-slash' : 'eye'" />
+                </button>
+              </div>
+            </div>
           </div>
           <div v-if="$v.password.$dirty">
             <p class="help is-danger" v-if="!$v.password.required">This field is required</p>
@@ -48,9 +59,8 @@
           <strong>Error:</strong> Please re-enter your credentials and try again.
         </div>
         <button
-          class="button is-primary is-medium"
+          class="button is-primary is-medium login-button"
           v-bind:disabled="$v.$anyError || !email || !password"
-          style="margin-top: 10px;"
           @click="login()"
         >Login</button>
       </div>
@@ -76,7 +86,8 @@ export default {
     return {
       email: "",
       password: "",
-      loginError: false
+      loginError: false,
+      showPassword: false
     };
   },
   validations: {
@@ -143,6 +154,10 @@ export default {
     background-size: 200px 200px;
     background-position: 0 0, 100px 100px;
     filter: blur(1px);
+  }
+
+  .login-button {
+    margin-top: 10px;
   }
 }
 
