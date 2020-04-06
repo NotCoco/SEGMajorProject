@@ -1,14 +1,11 @@
 package test.java;
 
-import main.java.com.projectBackEnd.Entities.AppInfo.*;
+import main.java.com.projectBackEnd.Entities.AppInfo.AppInfo;
+import main.java.com.projectBackEnd.Entities.AppInfo.AppInfoManager;
+import main.java.com.projectBackEnd.Entities.AppInfo.AppInfoManagerInterface;
+import main.java.com.projectBackEnd.Entities.AppInfo.JSONLocation;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
 import static org.junit.Assert.*;
 
