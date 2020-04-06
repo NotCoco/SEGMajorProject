@@ -48,6 +48,7 @@ public class SiteControllerTest {
     static SiteManagerInterface siteManager;
     static PageManagerInterface pageManager;
     private static String token;
+
     /**
      * Sets the config resource location and the site manager. Also generates the token attribute
      */
@@ -64,6 +65,7 @@ public class SiteControllerTest {
         	fail();
         }  
     }
+
     /**
      * Closes the session factory and deletes the testing user
      */
@@ -77,8 +79,9 @@ public class SiteControllerTest {
         }    
         HibernateUtility.shutdown();
     }
+
     /**
-     * Ensure that there are no pre-existing site or page entities in the database before each test via the 'deleteAll()' method
+     * Ensure that there are no pre-existing site or page entities in the database before each test
      */
     @BeforeEach
     public void setUp() {
@@ -86,9 +89,9 @@ public class SiteControllerTest {
         //Automatically deletes all pages too due to cascade, but:
         pageManager.deleteAll();
     }
+
     /**
-     * Attempts to retrieve a site that does not exist in the database via the GET request,
-     * expects an Http error to be thrown
+     * Attempts to retrieve a site that does not exist in the database via the GET request expects error
      */
     @Test
     public void testNonExistingSiteReturns404() {
@@ -99,8 +102,9 @@ public class SiteControllerTest {
         assertNotNull(thrown.getResponse());
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
     }
+
     /**
-     * Tests that the endpoint is able to update and existing site with legal information, expects success
+     * Tests that the endpoint is able to update and existing site with legal information
      */
     @Test
     public void testPutLegalSite(){
@@ -110,8 +114,9 @@ public class SiteControllerTest {
         response = putSite(id,"newSlug", "NewName");
         assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
     }
+
     /**
-     * Tests that the endpoint is able to add a site with legal information, expects success
+     * Tests that the endpoint is able to add a site with legal information
      */
     @Test
     public void testAddLegalSite(){
@@ -129,8 +134,9 @@ public class SiteControllerTest {
         });
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
     }
+
     /**
-     * Tests that the endpoint is able to add a site with legal information and also retrieve it, expects success
+     * Tests that the endpoint is able to add a site with legal information and also retrieve it
      */
     @Test
     public void testAddAndGetSite(){
@@ -141,8 +147,9 @@ public class SiteControllerTest {
 
         assertEquals("testSite", testSite.getName());
     }
+
 	/**
-	*	test if adding site while using incorrect session tokens returns http unauthorized exception
+	*	Test if adding site while using incorrect session tokens returns HTTP unauthorized exception
 	*/
 	@Test
 	public void testAddUnauthorized(){
@@ -163,6 +170,7 @@ public class SiteControllerTest {
 
 		token = correctToken;
 	}
+
     /**
      * Attempts to delete an existing site and then retrieve it, expects an HTTP error to be thrown
      */
@@ -181,8 +189,9 @@ public class SiteControllerTest {
         });
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
     }
+
 	/**
-	*	test if deleting while using incorrect session token returns http unauthorized exception
+	*	Test if deleting while using an invalid session token returns HTTP unauthorized exception
 	*/
 	@Test
 	public void testDeleteUnauthorized(){
@@ -199,6 +208,7 @@ public class SiteControllerTest {
         });
 		assertEquals(HttpStatus.UNAUTHORIZED,thrown1.getStatus());
 	}
+
     /**
      * Tests that the endpoint is able to add and update a site with legal information, expects success
      */

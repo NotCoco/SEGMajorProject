@@ -106,7 +106,7 @@ public class MedicineControllerTest{
         ArrayList<Integer> ids = new ArrayList<>();
         HttpResponse response;
         for (int i=0;i<3;i++) {
-            response = addMedicine("ShouldBeDeleted", "Liquid");
+            response = addMedicine(new MedicineAddCommand("ShouldBeDeleted", "Liquid"));
             ids.add(getEId(response).intValue());
         }
 
@@ -122,7 +122,7 @@ public class MedicineControllerTest{
      */
     @Test
     public void testAddEmptyNameMedicine(){
-        HttpResponse response = addMedicine("", "Topical");
+        HttpResponse response = addMedicine(new MedicineAddCommand("", "Topical"));
         int id =  getEId(response).intValue();
         Medicine testMed = getMedicine(id);
         assertEquals("Unnamed", testMed.getName());
@@ -133,7 +133,7 @@ public class MedicineControllerTest{
      */
     @Test
     public void testAddEmptyTypeMedicine(){
-        HttpResponse response = addMedicine("Med1", "");
+        HttpResponse response = addMedicine(new MedicineAddCommand("Med1", ""));
         int id =  getEId(response).intValue();
         Medicine testMed = getMedicine(id);
         assertEquals("Undefined", testMed.getType());
@@ -144,7 +144,7 @@ public class MedicineControllerTest{
      */
     @Test
     public void testAddAndGetMedicine(){
-        HttpResponse response = addMedicine("Med1", "Liquid");
+        HttpResponse response = addMedicine(new MedicineAddCommand("Med1", "Liquid"));
         int id =  getEId(response).intValue();
 
         Medicine testMed = getMedicine(id);
@@ -157,7 +157,7 @@ public class MedicineControllerTest{
      */
     @Test
     public void testAddLegalMedicine(){
-        HttpResponse response= addMedicine("Med1", "Liquid");
+        HttpResponse response= addMedicine(new MedicineAddCommand("Med1", "Liquid"));
         assertEquals(HttpStatus.CREATED, response.getStatus());
     }
 	/**
@@ -180,18 +180,18 @@ public class MedicineControllerTest{
 	*/
 	@Test
 	public void testAddMedicineNull(){
-        HttpResponse response = addMedicine(null, null);
+        HttpResponse response = addMedicine(new MedicineAddCommand(null, null));
         int id =  getEId(response).intValue();
         Medicine testMed = getMedicine(id);
         assertEquals("Undefined", testMed.getType());
         assertEquals("Unnamed", testMed.getName());
 
-        HttpResponse response1 = addMedicine("Med1", null);
+        HttpResponse response1 = addMedicine(new MedicineAddCommand("Med1", null));
         int id1 =  getEId(response1).intValue();
         Medicine testMed1 = getMedicine(id1);
         assertEquals("Undefined", testMed1.getType());
 
-        HttpResponse response2 = addMedicine(null, "type");
+        HttpResponse response2 = addMedicine(new MedicineAddCommand(null, "type"));
         int id2 =  getEId(response2).intValue();
         Medicine testMed2 = getMedicine(id2);
         assertEquals("Unnamed", testMed2.getName());
@@ -202,7 +202,7 @@ public class MedicineControllerTest{
      */
     @Test
     public void testDeleteAndGetMedicine(){
-        HttpResponse response = addMedicine("Med1", "Liquid");
+        HttpResponse response = addMedicine(new MedicineAddCommand("Med1", "Liquid"));
         int id =  getEId(response).intValue();
         // Asserting that we've added a medicine
         assertEquals(HttpStatus.CREATED, response.getStatus());
@@ -218,7 +218,7 @@ public class MedicineControllerTest{
 	*/
 	@Test
 	public void testDeleteMedicinieUnauthorised(){
-        int id =  getEId(addMedicine("name", "type")).intValue();
+        int id =  getEId(addMedicine(new MedicineAddCommand("name", "type"))).intValue();
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
 			client.toBlocking().exchange(HttpRequest.DELETE("/medicines/0").header("X-API-Key",""));
         });
@@ -248,9 +248,9 @@ public class MedicineControllerTest{
      */
     @Test
     public void testPutLegalMedicine(){
-        HttpResponse response= addMedicine("Med1", "Liquid");
+        HttpResponse response= addMedicine(new MedicineAddCommand("Med1", "Liquid"));
         int id =  getEId(response).intValue();
-        response = putMedicine(id, "NewName", "NewType");
+        response = putMedicine(new MedicineUpdateCommand(id, "NewName", "NewType"));
         assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
     }
     /**
@@ -258,9 +258,9 @@ public class MedicineControllerTest{
      */
     @Test
     public void testUpdateMedicineEmptyType() {
-        HttpResponse response = addMedicine("Med1", "Liquid");
+        HttpResponse response = addMedicine(new MedicineAddCommand("Med1", "Liquid"));
         int id =  getEId(response).intValue();
-        putMedicine(id, "name", "");
+        putMedicine(new MedicineUpdateCommand(id, "name", ""));
         Medicine found = getMedicine(id);
         assertEquals("Undefined", found.getType());
     }
@@ -269,7 +269,7 @@ public class MedicineControllerTest{
      */
     @Test
     public void testUpdateMedicineEmptyName() {
-        HttpResponse response = addMedicine("Med1", "Liquid");
+        HttpResponse response = addMedicine(new MedicineAddCommand("Med1", "Liquid"));
         int id =  getEId(response).intValue();
         client.toBlocking().exchange(HttpRequest.PUT("/medicines", new MedicineUpdateCommand(id, "", "type")).header("X-API-Key",token));
         Medicine found = getMedicine(id);
@@ -280,7 +280,7 @@ public class MedicineControllerTest{
 	*/
 	@Test
 	public void testUpdateMedicineNull(){
-        HttpResponse response = addMedicine("Med1", "Liquid");
+        HttpResponse response = addMedicine(new MedicineAddCommand("Med1", "Liquid"));
         int id =  getEId(response).intValue();
 
         client.toBlocking().exchange(HttpRequest.PUT("/medicines", new MedicineUpdateCommand(id, null, "type")).header("X-API-Key",token));
@@ -302,7 +302,7 @@ public class MedicineControllerTest{
 	*/
 	@Test
 	public void testUpdateMedicinieUnauthorised(){
-        int id =  getEId(addMedicine("name", "type")).intValue();
+        int id =  getEId(addMedicine(new MedicineAddCommand("name", "type"))).intValue();
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
 			client.toBlocking().exchange(HttpRequest.PUT("/medicines", new MedicineUpdateCommand(0, "name", "type")).header("X-API-Key",""));
         });
@@ -318,10 +318,10 @@ public class MedicineControllerTest{
      */
     @Test
     public void testAddAndUpdateMedicine(){
-        HttpResponse response = addMedicine("Med1", "Liquid");
+        HttpResponse response = addMedicine(new MedicineAddCommand("Med1", "Liquid"));
         int id =  getEId(response).intValue();
 
-        response = putMedicine(id, "newName", "newType");
+        response = putMedicine(new MedicineUpdateCommand(id, "newName", "newType"));
 
         Medicine m = getMedicine(id);
         assertEquals("newName", m.getName());
@@ -329,29 +329,26 @@ public class MedicineControllerTest{
     }
     /**
      * Quality of life method for updating a medicine via the REST API
-     * @param id The ID of the medicine to be updated
-     * @param name The replacement name for the medicine
-     * @param type The replacement type for the medicine
+     * @param medicineToPut The medicine to be updated
      * @return The HTTP response produced by the operation
      */
-    private HttpResponse putMedicine(int id, String name, String type){
-        HttpRequest request = HttpRequest.PUT("/medicines", new MedicineUpdateCommand(id, name, type)).header("X-API-Key",token);
+    private HttpResponse putMedicine(MedicineUpdateCommand medicineToPut){
+        HttpRequest request = HttpRequest.PUT("/medicines", medicineToPut).header("X-API-Key",token);
         return client.toBlocking().exchange(request);
     }
     /**
-     * Quality of life method for adding a medicine via the REST api
-     * @param name The name of the medicine to be added
-     * @param type The type of the medicine to be added
+     * Quality of life method for adding a medicine via the REST API
+     * @param medicineToAdd The medicine to add
      * @return The HTTP response produced by the operation
      */
-    private HttpResponse addMedicine(String name, String type){
-        HttpRequest request = HttpRequest.POST("/medicines", new MedicineAddCommand(name, type)).header("X-API-Key",token);
+    private HttpResponse addMedicine(MedicineAddCommand medicineToAdd){
+        HttpRequest request = HttpRequest.POST("/medicines", medicineToAdd).header("X-API-Key",token);
         HttpResponse response = client.toBlocking().exchange(request);
         return response;
     }
     /**
-     * Quality of life method for retrieving a medicine via the REST api
-     * @param id The ID of the medicine to get
+     * Quality of life method for retrieving a medicine via the REST API
+     * @param id The ID/Primary Key of the medicine to get
      * @return The medicine object returned
      */
     private Medicine getMedicine(int id){
