@@ -109,9 +109,9 @@ public class UserController {
 	}
 
 	/**
-	 * Reset the password of a user via an HTTP Post request
-	 * @param body new value for password
-	 * @return HTTP response with relevant information resulting from the password reset
+	 * Request a password reset via an HTTP Post request
+	 * @param body	StringBody containing the reset link for the user
+	 * @return HTTP response with relevant information resulting from the password reset request
 	 */
 	@Post("/password_reset_request")
 	public HttpResponse<String> getPasswordReset(@Body StringBody body){
@@ -129,9 +129,9 @@ public class UserController {
 	}
 
 	/**
-	 * Reset the user's password with PasswordResetBody
-	 * @param body	PasswordResetBody class to update password
-	 * @return HTTP response with relevant information resulting on the password reset
+	 * Changes the password of a user after a reset request via an HTTP Put request
+	 * @param body	StringBody containing the new password and the token for the user
+	 * @return HTTP response with relevant information resulting on the password change
 	 */
 	@Put("/password_reset_change") 
 	public HttpResponse<String> passwordReset(@Body PasswordResetBody body){
@@ -150,6 +150,7 @@ public class UserController {
 		}
 	}
 
+	
 	/**
 	 * Get the details of the user on the current session via an HTTP Get request
 	 * @param session	current session
