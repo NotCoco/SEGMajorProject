@@ -37,7 +37,7 @@ class TestResetLinkManager{
     @AfterAll
     static void assertNoLeaks() {
             HibernateUtility.shutdown();
-            //connectionLeakUtil.assertNoLeaks();
+            connectionLeakUtil.assertNoLeaks();
     }
 
     /**

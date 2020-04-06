@@ -339,7 +339,7 @@ import org.junit.jupiter.api.BeforeEach;
     @Test
      void testUpdateSiteWithDupeSlug() {
         Site toBeUpdated = siteManager.addSite(new Site("slug", "Spicy name!"));
-        Site another = siteManager.addSite(new Site("I should be unique slug", "Spicy unique name!"));
+        siteManager.addSite(new Site("I should be unique slug", "Spicy unique name!"));
         int previousSize = siteManager.getAllSites().size();
 
         Site replacementSite = new Site(toBeUpdated.getPrimaryKey() , "I should be unique slug", "Another coooool update!");

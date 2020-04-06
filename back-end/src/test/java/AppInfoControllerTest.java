@@ -30,7 +30,6 @@ class AppInfoControllerTest {
     @Client("/")
     private HttpClient client;
 
-    private static AppInfoManagerInterface infoManager;
     private static String token;
 
     /**
@@ -40,7 +39,7 @@ class AppInfoControllerTest {
     static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         JSONLocation.setJsonFile("src/test/resources/AppInfoTest.json");
-        infoManager = AppInfoManager.getInfoManager();
+
         try {
             UserManager.getUserManager().addUser("test@test.com", "123", "name");
             token = UserManager.getUserManager().verifyUser("test@test.com", "123");

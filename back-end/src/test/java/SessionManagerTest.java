@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * Test class to extensively unit test interactions between the session entity manager and the Sessions table in the database.
  */
-public class SessionManagerTest {
+class SessionManagerTest {
 
     private static ConnectionLeakUtil connectionLeakUtil = null;
 	private static SessionManagerInterface sessionManager = null;

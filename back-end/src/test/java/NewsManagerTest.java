@@ -31,7 +31,7 @@ class NewsManagerTest {
      * Prior to running, database information location is set and a singleton newsManager is acquired for testing on
      */
     @BeforeAll
-    public static void setUpDatabase() {
+    static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         newsManager = NewsManager.getNewsManager();
         connectionLeakUtil = new ConnectionLeakUtil();
@@ -41,7 +41,7 @@ class NewsManagerTest {
      * After the tests, the factory is shut down and we can see if any connections were leaked with the Database.
      */
     @AfterAll
-    public static void assertNoLeaks() {
+    static void assertNoLeaks() {
         HibernateUtility.shutdown();
         connectionLeakUtil.assertNoLeaks();
     }
@@ -50,19 +50,19 @@ class NewsManagerTest {
      * Prior to each test, we'll delete all the news tuples from the table.
      */
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         newsManager.deleteAll();
     }
 
 //======================================================================================================================
     //Testing the News Creation Constructors
-    //public News(Date date, boolean pinned, String description, String title, boolean urgent, String content, String slug)
+    //News(Date date, boolean pinned, String description, String title, boolean urgent, String content, String slug)
 
     /**
      * Testing that creating a news object correctly assigns all the fields with expected values
      */
     @Test
-    public void testCreateValidNews() {
+    void testCreateValidNews() {
         News validNews = new News(new Date(12343212L), false,
                 "description", "title", false, "content", "slug1");
         assertEquals("description", validNews.getDescription());
@@ -75,7 +75,7 @@ class NewsManagerTest {
      * Testing that News object with null values will still be created
      */
     @Test
-    public void testCreateNullValuesNews() {
+    void testCreateNullValuesNews() {
         News news1 = new News(null, false,
                 null, null, false, null, null);
         assertNotNull(news1);
@@ -87,7 +87,7 @@ class NewsManagerTest {
      * Testing that news objects with empty string values will still be created
      */
     @Test
-    public void testCreateEmptyValuesNews() {
+    void testCreateEmptyValuesNews() {
         News news1 = new News(new Date(), false,
                 "", "", false, "", "");
         assertNotNull(news1);
@@ -99,7 +99,7 @@ class NewsManagerTest {
      * Testing that news objects with empty string values will still be created
      */
     @Test
-    public void testEqualNews() {
+    void testEqualNews() {
         News news1 = new News(new Date(12343212L), false,
                 "desc213ription1", "ti321tle1", false, "con321tent1", "slug1");
         News news2 = new News(new Date(12343212L), false,
@@ -111,7 +111,7 @@ class NewsManagerTest {
      * Testing that once a news object copies another, they both have the same property values
      */
     @Test
-    public void testNewsCopying() {
+    void testNewsCopying() {
         News news1 = new News(new Date(12343212L), false,
                 "description", "title", false, "content", "slug1");
         News news2 = new News(null, false,
@@ -129,7 +129,7 @@ class NewsManagerTest {
      * Expected: All the medicines from the list are added successfully.
      */
     @Test
-    public void testFillingAndGetting() {
+    void testFillingAndGetting() {
         fillDatabase(getListOfNews());
         assertEquals(getListOfNews().size(), newsManager.getAllNews().size());
     }
@@ -138,7 +138,7 @@ class NewsManagerTest {
      * Testing the order returned by the getAllNews
      */
     @Test
-    public void testOrderOfNews() {
+    void testOrderOfNews() {
         fillDatabase(getListOfNews());
         List<News> allNews = newsManager.getAllNews();
         assertEquals("title6", allNews.get(0).getTitle());
@@ -149,7 +149,7 @@ class NewsManagerTest {
      * Test that an empty table returns no news
      */
     @Test
-    public void testGetAllOnEmptyTable() {
+    void testGetAllOnEmptyTable() {
         assertEquals(0, newsManager.getAllNews().size());
     }
 
@@ -160,7 +160,7 @@ class NewsManagerTest {
      * Expected: The number of entries in the database remains zero.
      */
     @Test
-    public void testDeleteAllEmptyDatabase() {
+    void testDeleteAllEmptyDatabase() {
         newsManager.deleteAll();
         assertEquals(0, newsManager.getAllNews().size());
         newsManager.deleteAll();
@@ -172,7 +172,7 @@ class NewsManagerTest {
      * Expected: The entries will disappear from the database.
      */
     @Test
-    public void testDeleteAllFilledDatabase() {
+    void testDeleteAllFilledDatabase() {
         fillDatabase(getListOfNews());
         assertEquals(getListOfNews().size(), newsManager.getAllNews().size());
         newsManager.deleteAll();
@@ -186,7 +186,7 @@ class NewsManagerTest {
      * Expected: A new news article is added to the database, regardless of constructor used.
      */
     @Test
-    public void testAddNews() {
+    void testAddNews() {
         newsManager.addNews(new News(new Date(12343212L), false,
                 "''##DROP TABLE';;'", "sameTitle", false, "con321tent1", "slug1"));
         newsManager.addNews(new News(231, new Date(123432124L), false,
@@ -201,7 +201,7 @@ class NewsManagerTest {
      * Expected: The size remains unchanged.
      */
     @Test
-    public void testAddNewsWithNullValues() {
+    void testAddNewsWithNullValues() {
         int sizeBefore = newsManager.getAllNews().size();
         newsManager.addNews(new News(null,true, null, null, false, null, null));
         assertEquals(sizeBefore, newsManager.getAllNews().size());
@@ -212,7 +212,7 @@ class NewsManagerTest {
      * Expected: The article is added.
      */
     @Test
-    public void testAddNewsWithEmptyStringValues() {
+    void testAddNewsWithEmptyStringValues() {
         int sizeBefore = newsManager.getAllNews().size();
         newsManager.addNews(new News(new Date(),true, "   ", "", false, "", ""));
         assertEquals(sizeBefore+1, newsManager.getAllNews().size());
@@ -221,7 +221,7 @@ class NewsManagerTest {
      * Testing adding news articles which share the same slug. This should not be possible.
      */
     @Test
-    public void testDuplicateSlugAddition() {
+    void testDuplicateSlugAddition() {
         int sizeBefore = newsManager.getAllNews().size();
         newsManager.addNews(new News(new Date(12343212L), false,
                 "desc213ription1", "ti321t      le1", false, "con321tent1", "slug1"));
@@ -242,7 +242,7 @@ class NewsManagerTest {
      * Expected: The news found shares the same values as the news in the database.
      */
     @Test
-    public void testGetByPrimaryKey() {
+    void testGetByPrimaryKey() {
         fillDatabase(getListOfNews());
         News foundNews = newsManager.getAllNews().get(0);
         int newsPK = foundNews.getPrimaryKey();
@@ -255,7 +255,7 @@ class NewsManagerTest {
      * Testing that attempting to obtain a news article with a primary key that doesn't exist returns null
      */
     @Test
-    public void testGetUnfoundPrimaryKey() {
+    void testGetUnfoundPrimaryKey() {
         assertNull(newsManager.getByPrimaryKey(-1));
     }
 
@@ -263,7 +263,7 @@ class NewsManagerTest {
      * Testing an error is thrown if a primary key searched for is null
      */
     @Test
-    public void testGetNullPrimaryKey() {
+    void testGetNullPrimaryKey() {
         fillDatabase(getListOfNews());
         int previousSize = newsManager.getAllNews().size();
         try {
@@ -282,7 +282,7 @@ class NewsManagerTest {
      * in the database.
      */
     @Test
-    public void testDelete() {
+    void testDelete() {
         fillDatabase(getListOfNews());
         newsManager.delete(newsManager.getAllNews().get(1).getPrimaryKey());
         assertEquals( getListOfNews().size()-1, newsManager.getAllNews().size());
@@ -295,7 +295,7 @@ class NewsManagerTest {
      * Expected: The database remains unchanged and an error is thrown.
      */
     @Test
-    public void testWithDeleteUnfoundPrimaryKey() {
+    void testWithDeleteUnfoundPrimaryKey() {
         int previousSize = newsManager.getAllNews().size();
         try {
             newsManager.delete(-1);
@@ -310,7 +310,7 @@ class NewsManagerTest {
      * Test deleting a primary key which is null.
      */
     @Test
-    public void testWithDeleteNullPrimaryKey() {
+    void testWithDeleteNullPrimaryKey() {
         int previousSize = newsManager.getAllNews().size();
         try {
             newsManager.delete(null);
@@ -325,7 +325,7 @@ class NewsManagerTest {
      * Test the correct article was infact deleted when using delete
      */
     @Test
-    public void testCorrectNewsDeletedUsingPrimaryKey() {
+    void testCorrectNewsDeletedUsingPrimaryKey() {
         News toBeDeleted = newsManager.addNews(new News(new Date(12343212L), false,
                 "getting deleted", "soon won't exist", false, "f", "slug1"));
         News alsoAdded = newsManager.addNews(new News(new Date(12343212L), false,
@@ -344,7 +344,7 @@ class NewsManagerTest {
      * Testing updating one of the existing news articles into another one
      */
     @Test
-    public void testUpdateNews() {
+    void testUpdateNews() {
         fillDatabase(getListOfNews());
         int id = newsManager.getAllNews().get(0).getPrimaryKey();
         News replacementNews = new News(id, new Date(12343212L), true,
@@ -360,7 +360,7 @@ class NewsManagerTest {
      * Update a news article but not its unique key information
      */
     @Test
-    public void testUpdateNewsNotSlug() {
+    void testUpdateNewsNotSlug() {
         News first = newsManager.addNews(new News(new Date(12343212L), false,
                 "changedDescription", "newTitle", false, "content2", "slug9"));
         int id = first.getPrimaryKey();
@@ -377,7 +377,7 @@ class NewsManagerTest {
      * Testing updating a news article so it violates the unique - it should throw an error!
      */
     @Test
-    public void testUpdateNewsWithDupeSlug() {
+    void testUpdateNewsWithDupeSlug() {
         fillDatabase(getListOfNews());
         int id = newsManager.getAllNews().get(0).getPrimaryKey();
         News replacementNews = new News(id ,new Date(12343212L), true, "changedDescrption",
@@ -400,7 +400,7 @@ class NewsManagerTest {
      * Test update a news article with nulls
      */
     @Test
-    public void testUpdateNewsWithNullValues() {
+    void testUpdateNewsWithNullValues() {
         fillDatabase(getListOfNews());
         int previousSize = newsManager.getAllNews().size();
         int id = newsManager.getAllNews().get(0).getPrimaryKey();
@@ -419,7 +419,7 @@ class NewsManagerTest {
      * Test update a news article with empty string values
      */
     @Test
-    public void testUpdateNewsWithEmptyStringValues() {
+    void testUpdateNewsWithEmptyStringValues() {
         fillDatabase(getListOfNews());
         int id = newsManager.getAllNews().get(0).getPrimaryKey();
         News replacementNews = new News(id, new Date(12343212L), true,
@@ -435,7 +435,7 @@ class NewsManagerTest {
      * Test what happens if a null article is updated
      */
     @Test
-    public void testUpdateNullNews() {
+    void testUpdateNullNews() {
         try {
             newsManager.update(new News());
         } catch (IllegalArgumentException e) {
@@ -447,7 +447,7 @@ class NewsManagerTest {
      * Test updating an article that doesn't exist
      */
     @Test
-    public void testUpdateUnfoundNews() {
+    void testUpdateUnfoundNews() {
         int previousSize = newsManager.getAllNews().size();
         assertNull(newsManager.getByPrimaryKey(-100));
         News fakeNews = new News(-100, new Date(12343212L), true,
@@ -462,7 +462,7 @@ class NewsManagerTest {
      * Test that unique slugs can be used to obtain the News article from the database.
      */
     @Test
-    public void testGetNewsBySlug() {
+    void testGetNewsBySlug() {
         fillDatabase(getListOfNews());
         newsManager.addNews(new News(new Date(12343212L), false,
                 "getting deleted", "soon won't exist", false, "f", "unique-slug"));
@@ -475,7 +475,7 @@ class NewsManagerTest {
      * Test searching for a slug that doesn't exist in the table.
      */
     @Test
-    public void testGetNewsByUnfoundSlug() {
+    void testGetNewsByUnfoundSlug() {
         fillDatabase(getListOfNews());
         News found = newsManager.getNewsBySlug("not a slug in the database sorry");
         assertNull(found);
@@ -485,7 +485,7 @@ class NewsManagerTest {
      * Testing an error is thrown if a slug searched for is null
      */
     @Test
-    public void testGetNewsByNullSlug() {
+    void testGetNewsByNullSlug() {
         fillDatabase(getListOfNews());
         assertNull(newsManager.getNewsBySlug(null));
     }
