@@ -136,16 +136,16 @@ public class User implements TableEntity {
 
 	/**
 	 * Copy the values of the input TableEntity object
-	 * @param newCopy    User object to copy
+	 * @param toCopy    User object to copy
 	 * @return this, updated User object
 	 */
   	@Override
-    public TableEntity copy(TableEntity newCopy) {
-        if(newCopy instanceof User){
-            setEmail(((User) newCopy).getEmail());
-            setPassword(((User) newCopy).getPassword());
-			setName(((User) newCopy).getName());
-        }
-        return newCopy;
+    public TableEntity copy(TableEntity toCopy) {
+  		User newUserVersion = (User) toCopy;
+        setEmail(newUserVersion.getEmail());
+        setPassword(newUserVersion.getPassword());
+        setName(newUserVersion.getName());
+      	return newUserVersion;
     }
+
 }
