@@ -298,7 +298,7 @@ public class UserControllerTest{
 		assertFalse(sessionManager.verifySession(token));
 	}
 	/**
-	* test if loging out while not having a correct session token throws an http exception
+	* Test if loging out while not having a correct session token throws an http exception
 	*/
 	@Test
 	public void testLogoutUnauthorized(){
@@ -330,7 +330,7 @@ public class UserControllerTest{
 		
 	}
 	/**
-	* test if geting all users while not having a correct session token returns an http error
+	* Test if geting all users while not having a correct session token returns an http error
 	*/
 	@Test
 	public void testGetAllUnauthorized(){
@@ -404,7 +404,6 @@ public class UserControllerTest{
 			client.toBlocking().exchange(HttpRequest.DELETE("/user/delete",new UserBody("valid@email.com","correct_password")));
 		});
 		assertEquals(HttpStatus.NOT_FOUND , thrown6.getStatus());
-
 	}
 	/**
 	 * Tests that the endpoint is able to retrieve and reset an existing user's password, expects succeess
@@ -417,6 +416,7 @@ public class UserControllerTest{
 		HttpResponse response = client.toBlocking().exchange(HttpRequest.POST("/user/password_reset_request",new StringBody("test@gmail.com")));
 		assertEquals(HttpStatus.OK , response.getStatus());
 	}
+
 	/**
 	 * Attempts to reset the password of non existing users, expects HTTP NOT_FOUND errors to be thrown
 	 */
@@ -447,6 +447,7 @@ public class UserControllerTest{
 		});
 		assertEquals(HttpStatus.NOT_FOUND , thrown4.getStatus());
 	}
+
 	/**
 	 * Tests that the endpoint is able to reset an existing user's password, expects success
 	 */
@@ -470,6 +471,7 @@ public class UserControllerTest{
 			fail();
 		}	
 	}
+
 	/**
 	 * Attempts to reset the password of non existing users, expects HTTP NOT_FOUND errors to be thrown
 	 */
@@ -529,6 +531,7 @@ public class UserControllerTest{
 			fail();
 		}	
 	}
+
 	/**
 	 * Tests that the endpoint is able to retrieve the name of an existing user, expects success
 	 */
@@ -555,6 +558,7 @@ public class UserControllerTest{
 		assertEquals("email2@email.com",u2.getEmail());
 		sessionManager.terminateSession(token2);
 	}
+
 	/**
 	 * Attempts to retrieve a user's name from a user that does not exist in the database via the GET request,
 	 * expects an Http error to be thrown
@@ -571,6 +575,7 @@ public class UserControllerTest{
 			});
 			assertEquals(HttpStatus.UNAUTHORIZED , thrown2.getStatus());	
 	}
+
 	/**
 	 * Tests that the endpoint is able to change the email of an existing user, expects success
 	 */
@@ -583,8 +588,8 @@ public class UserControllerTest{
 		String token1 = userManager.verifyUser("newemail@email.com", "password");
 		assertNotNull(token1);
 		sessionManager.terminateSession(token1);
-
 	}
+
 	/**
 	 * Attempts to update the email of a user that does not exist in the database via the PUT request,
 	 * expects an Http error to be thrown
@@ -600,6 +605,7 @@ public class UserControllerTest{
 			});
 			assertEquals(HttpStatus.UNAUTHORIZED , thrown1.getStatus());	
 	}
+
 	/**
 	 * Attempts to change the email of existing user A to the email of existing user B, expects HTTP error to be thrown
 	 */
@@ -636,6 +642,7 @@ public class UserControllerTest{
 
 		sessionManager.terminateSession(token);
 	}
+
 	/**
 	 * Attempts to change the user name of a user that does not exist in the database via the PUT request,
 	 * expects an Http error to be thrown
@@ -652,6 +659,7 @@ public class UserControllerTest{
 		});
 		assertEquals(HttpStatus.UNAUTHORIZED , thrown1.getStatus());	
 	}
+
 	/**
 	 * Attempts to change the name of an existing user to an empty string or null, expects an HTTP error to be thrown
 	 */
@@ -677,6 +685,7 @@ public class UserControllerTest{
 		assertEquals(HttpStatus.BAD_REQUEST , thrown2.getStatus());		
 		sessionManager.terminateSession(token);
 	}
+
 	/**
 	 * Tests that the endpoint is able to change the password of an existing user, expects success
 	 */
@@ -706,6 +715,7 @@ public class UserControllerTest{
 
 
 	}
+
 	/**
 	 * Attempts to change the password of a user that does not exist in the database via the PUT request,
 	 * expects an Http error to be thrown
@@ -722,6 +732,7 @@ public class UserControllerTest{
 		});
 		assertEquals(HttpStatus.UNAUTHORIZED , thrown1.getStatus());	
 	}
+
 	/**
 	 * Attempts to change the password of an existing user to an empty string or null, expects an HTTP error to be thrown
 	 */
@@ -747,6 +758,7 @@ public class UserControllerTest{
 		assertEquals(HttpStatus.BAD_REQUEST , thrown2.getStatus());	
 		sessionManager.terminateSession(token);
 	}
+
 	/**
 	 * Quality of life method for adding a user via the REST api
 	 * @param email the email
@@ -756,8 +768,8 @@ public class UserControllerTest{
 	 */
 	private HttpResponse addUser(String email, String password, String name){
 		return client.toBlocking().exchange(HttpRequest.POST("/user/create",new UserBody(email,password,name)));
-
 	}
+
 	/**
 	 * Quality of life method for logging a user in via the REST api
 	 * @param email the email
@@ -768,6 +780,7 @@ public class UserControllerTest{
 		return client.toBlocking().exchange(HttpRequest.POST("/user/login",new UserBody(email,password)));
 
 	}
+
 	/**
 	 * Quality of life method for retrieving a user-based token via the REST api
 	 * @param email the email
@@ -778,6 +791,7 @@ public class UserControllerTest{
 		return client.toBlocking().retrieve(HttpRequest.POST("/user/login",new UserBody(email,password)),String.class);
 
 	}
+
 	/**
 	 * Quality of life method for deleting a user via the REST api
 	 * @param email the email
@@ -804,6 +818,7 @@ public class UserControllerTest{
 	private HttpResponse changeEmail(String token, String email){
 		return client.toBlocking().exchange(HttpRequest.PUT("/user/change_email",new StringBody(email)).header("X-API-Key",token));
 	}
+
 	/**
 	 * Quality of life method for updating a user's name via the REST api
 	 * @param token the token
@@ -813,6 +828,7 @@ public class UserControllerTest{
 	private HttpResponse changeName(String token, String name){
 		return client.toBlocking().exchange(HttpRequest.PUT("/user/change_name",new StringBody(name)).header("X-API-Key",token));
 	}
+
 	/**
 	 * Quality of life method for updating a user's password via the REST api
 	 * @param token the token
