@@ -170,7 +170,7 @@ public class SessionManagerTest {
 	 */
 	private void fill() {
 		for(Session s : getTestSessions()){
-			((EntityManager)sessionManager).insertTuple(s);
+			((EntityManager) sessionManager).insertTuple(s);
 		}
 	}
 

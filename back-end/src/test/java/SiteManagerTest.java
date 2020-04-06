@@ -110,7 +110,6 @@ public class SiteManagerTest {
 
     /**
      * Test the fill database method below, and the getAllSites method to show that all are successfully added.
-     * Expected: All the medicines from the list are added successfully.
      */
     @Test
     public void testFillingAndGetting() {
@@ -119,8 +118,7 @@ public class SiteManagerTest {
     }
 
     /**
-     * Test the fill database method such that all the sites stored have matching names and types
-     * to the ones added.
+     * Test the fill database method such that all the sites stored have matching names and types to the ones added.
      */
     @Test
     public void testFillingAndGettingValues() {
@@ -143,11 +141,10 @@ public class SiteManagerTest {
     public void testGetAllOnEmptyTable() {
         assertEquals(0, siteManager.getAllSites().size());
     }
-    //Testing SiteManagerInterface: deleteAll
 
+    //Testing SiteManagerInterface: deleteAll
     /**
      * Testing a database can have deleteAll run on it, even if it is empty
-     * Expected: The number of entries in the database remains zero.
      */
     @Test
     public void testDeleteAllEmptyDatabase() {
@@ -159,7 +156,6 @@ public class SiteManagerTest {
 
     /**
      * Testing a database will be flushed by the deleteAll method used between tests
-     * Expected: The entries will disappear from the database.
      */
     @Test
     public void testDeleteAllFilledDatabase() {
@@ -173,7 +169,6 @@ public class SiteManagerTest {
 
     /**
      * Test adding a regular Site article to the database.
-     * Expected: A new site article is added to the database, regardless of constructor used.
      */
     @Test
     public void testAddSite() {
@@ -187,7 +182,6 @@ public class SiteManagerTest {
 
     /**
      * Adding a site object with null values will not be added to the database.
-     * Expected: The size remains unchanged.
      */
     @Test
     public void testAddSiteWithNullValues() {
@@ -198,7 +192,6 @@ public class SiteManagerTest {
 
     /**
      * Testing adding sites with empty values
-     * Expected: The site is added.
      */
     @Test
     public void testAddSiteWithEmptyStringValues() {
@@ -228,7 +221,6 @@ public class SiteManagerTest {
 
     /**
      * Testing that site objects can be found and made from their primary key.
-     * Expected: The site found shares the same values as the site in the database.
      */
     @Test
     public void testGetByPrimaryKey() {
@@ -267,8 +259,7 @@ public class SiteManagerTest {
     //Testing SiteManagerInterface: delete
 
     /**
-     * Test that deleting a site article from the database reduces the number of site articles
-     * in the database.
+     * Test that deleting a site article from the database reduces the number of site articles the database.
      */
     @Test
     public void testDelete() {
@@ -281,7 +272,6 @@ public class SiteManagerTest {
 
     /**
      * Test deleting a primary key which is not in the database.
-     * Expected: The database remains unchanged and an error is thrown.
      */
     @Test
     public void testWithDeleteUnfoundPrimaryKey() {
@@ -344,7 +334,7 @@ public class SiteManagerTest {
     }
 
     /**
-     * Testing updating a site article so it violates the unique - it should throw an error!
+     * Testing updating a site article so it violates the unique - it should throw an error
      */
     @Test
     public void testUpdateSiteWithDupeSlug() {
@@ -363,7 +353,7 @@ public class SiteManagerTest {
     }
 
     /**
-     * Test update a site article with nulls
+     * Test update a site article with nulls - should throw an error
      */
     @Test
     public void testUpdateSiteWithNullValues() {
@@ -420,7 +410,7 @@ public class SiteManagerTest {
     //Testing SiteManagerInterface: getSiteBySlug
 
     /**
-     * Test that unique slugs can be used to obtain the Site article from the database.
+     * Test that unique slugs can be used to obtain the Site from the database.
      */
     @Test
     public void testGetSiteBySlug() {
@@ -430,6 +420,7 @@ public class SiteManagerTest {
         assertNotNull(found);
         assertEquals("f", found.getName());
     }
+
     /**
      * Test searching for a slug that doesn't exist in the table.
      */
