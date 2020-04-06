@@ -147,20 +147,20 @@ public class UserController {
 		}
 	}
 
-	@Get("/name")
-	public HttpResponse<String> getName(@Header("X-API-Key") String session){
+	@Get("/user_details")
+	public HttpResponse<UserBody> getUserDetails(@Header("X-API-Key") String session){
 		if(!sessionManager.verifySession(session))
 			return HttpResponse.unauthorized();
 		try{
-
-			return HttpResponse.ok(userManager.getName(sessionManager.getEmail(session)));
+			String email = sessionManager.getEmail(session);
+			return HttpResponse.ok(new UserBody(email,"",userManager.getName(email)));
 
 		}
 		catch(NoSessionException e){
 			return HttpResponse.unauthorized();
 		}
 		catch(UserNotExistException e){
-			return HttpResponse.notFound("no user found that is connected to this session");
+			return HttpResponse.notFound();
 		}
 	}	
 

@@ -533,20 +533,26 @@ public class UserControllerTest{
 	 * Tests that the endpoint is able to retrieve the name of an existing user, expects success
 	 */
 	@Test
-	public void testGetNameCorrect(){
+	public void testGetUserDetailsCorrect(){
 		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name").getStatus());
 		String token = userManager.verifyUser("email@email.com", "password");
-		assertEquals("name",getName(token));
+		UserBody u = getUserDetails(token);
+		assertEquals("name",u.getName());
+		assertEquals("email@email.com",u.getEmail());
 		sessionManager.terminateSession(token);
 
 		assertEquals(HttpStatus.CREATED, addUser("email1@email.com", "password","na me").getStatus());
 		String token1 = userManager.verifyUser("email1@email.com", "password");
-		assertEquals("na me",getName(token1));
+		UserBody u1 = getUserDetails(token1);
+		assertEquals("na me",u1.getName());
+		assertEquals("email1@email.com",u1.getEmail());
 		sessionManager.terminateSession(token1);
 
 		assertEquals(HttpStatus.CREATED, addUser("email2@email.com", "password","na-me").getStatus());
 		String token2 = userManager.verifyUser("email2@email.com", "password");
-		assertEquals("na-me",getName(token2));
+		UserBody u2 = getUserDetails(token2);
+		assertEquals("na-me",u2.getName());
+		assertEquals("email2@email.com",u2.getEmail());
 		sessionManager.terminateSession(token2);
 	}
 	/**
@@ -554,14 +560,14 @@ public class UserControllerTest{
 	 * expects an Http error to be thrown
 	 */
 	@Test
-	public void testGetNameIncorrect(){
+	public void testGetUserDetailsIncorrect(){
 			HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-				client.toBlocking().exchange(HttpRequest.GET("/user/name").header("X-API-Key","243fdsfdvqnSDFdsaSDF"));
+				client.toBlocking().exchange(HttpRequest.GET("/user/user_details").header("X-API-Key","243fdsfdvqnSDFdsaSDF"));
 			});
 			assertEquals(HttpStatus.UNAUTHORIZED , thrown.getStatus());
 
 			HttpClientResponseException thrown2 = assertThrows(HttpClientResponseException.class, () -> {
-				client.toBlocking().exchange(HttpRequest.GET("/user/name").header("X-API-Key",""));
+				client.toBlocking().exchange(HttpRequest.GET("/user/user_details").header("X-API-Key",""));
 			});
 			assertEquals(HttpStatus.UNAUTHORIZED , thrown2.getStatus());	
 	}
@@ -622,6 +628,7 @@ public class UserControllerTest{
 
 			assertEquals(HttpStatus.OK,changeName(token,"na-me").getStatus());
 			assertEquals("na-me",userManager.getName("email@email.com"));
+
 		}
 		catch(UserNotExistException e){
 			fail();
@@ -781,13 +788,13 @@ public class UserControllerTest{
 		return client.toBlocking().exchange(HttpRequest.DELETE("/user/delete",new UserBody(email,password)));
 	}
 	/**
-	 * Quality of life method for retrieving a user's name via the REST api
-	 * @param token The user token
-	 * @return The name of the user
-	 */
-	private String getName(String token){
-		return client.toBlocking().retrieve(HttpRequest.GET("/user/name").header("X-API-Key",token), String.class);
+	* creates a get request to get name of the user with given session token
+	* @returns UserBody of the user from http response , containing user's name and email
+	*/
+	private UserBody getUserDetails(String token){
+		return client.toBlocking().retrieve(HttpRequest.GET("/user/user_details").header("X-API-Key",token), UserBody.class);
 	}
+
 	/**
 	 * Quality of life method for updating a user's email via the REST api
 	 * @param token the token

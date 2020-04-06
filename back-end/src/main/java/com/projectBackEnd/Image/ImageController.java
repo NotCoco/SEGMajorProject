@@ -20,18 +20,15 @@ import javax.validation.constraints.Size;
  * Image Controller is a REST API endpoint.
  * It deals with the image related requests users might need.
  * It provides HTTP requests for each of the queries that carry out the adding, deletion and retrieval of images
- * from the server-side storage directories
+ * from the server-side storage directories.
  */
 @Controller("/images")
 public class ImageController {
 
-	//Manager to carry out business logic
-	protected final ImageManager imageManager;
+	protected final ImageManagerInterface imageManager;
 	protected final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
 
-	/**
-	 * Main constructor
-	 */
+	/** Main constructor */
 	public ImageController(){imageManager = ImageManager.getImageManager();}
 
 	/**
@@ -43,21 +40,35 @@ public class ImageController {
 	 */
 	@Post(value = "/", consumes = MediaType.MULTIPART_FORM_DATA)
 	public HttpResponse<String> add(@Header("X-API-Key") String session, @Body CompletedFileUpload file) {
+
 		if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
 		try {
-			String[] strings = file.getFilename().split("\\.");
-			String extension = strings[strings.length-1];
-			byte[] encoded = Base64.getEncoder().encode(file.getBytes());
-			String msg = imageManager.saveImage(new String(encoded), extension);
-			if(msg.equals("Failed")) return HttpResponse.serverError();
-			else return HttpResponse
-						.created(msg)
-						.headers(headers -> headers.location(location(msg)));
+			return saveImage(file);
 		}
-		catch(IOException a) {
-			System.out.println("Error occured");
+		catch (IOException e){
+			e.printStackTrace();
 			return HttpResponse.noContent();
 		}
+	}
+
+	/**
+	 * Saves an image by passing its encodings to the imageManager
+	 * @param file File to be encoded for saving
+	 * @return HTTP response based on success.
+	 * @throws Encoding may throw IOExceptions
+	 */
+	private HttpResponse saveImage(CompletedFileUpload file) throws IOException {
+
+		String[] strings = file.getFilename().split("\\.");
+		String extension = strings[strings.length-1];
+		byte[] encoded = Base64.getEncoder().encode(file.getBytes());
+		String msg = imageManager.saveImage(new String(encoded), extension);
+
+		if (msg == null) return HttpResponse.serverError();
+		else return HttpResponse
+					.created(msg)
+					.headers(headers -> headers.location(location(msg)));
+
 	}
 
 	/**
@@ -69,11 +80,9 @@ public class ImageController {
 	 */
 	@Delete("/{imageName}")
 	public HttpResponse delete(@Header("X-API-Key") String session, String imageName) {
-
 		if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
 		if(imageManager.deleteImage(imageName)) return HttpResponse.noContent();
 		else return HttpResponse.serverError();
-
 	}
 
 	/**

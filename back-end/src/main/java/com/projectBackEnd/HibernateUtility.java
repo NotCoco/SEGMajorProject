@@ -43,7 +43,7 @@ public class HibernateUtility {
             cfg.addAnnotatedClass(entityClass);
         }
         sessionFactory = cfg.configure(resourceName).buildSessionFactory();
-        return sessionFactory;
+        return sessionFactory.isOpen() ? sessionFactory : createFactory(cfg);
     }
     /**
      * Set the location of the hibernate config file which contains database information
@@ -69,7 +69,7 @@ public class HibernateUtility {
      * @return The open session factory
      */
     public static SessionFactory getSessionFactory() {
-        if (sessionFactory != null && !sessionFactory.isClosed()) return sessionFactory;
+        if (sessionFactory != null && !sessionFactory.isClosed() && sessionFactory.isOpen()) return sessionFactory;
         else return getOpenSessionFactory();
     }
 
