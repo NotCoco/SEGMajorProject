@@ -14,20 +14,25 @@
         <div class="columns">
           <div class="column">
             <p class="title is-3">Sites</p>
-            <router-link
-              v-for="site of sites"
-              v-bind:key="site.primaryKey"
-              class="is-block"
-              style="margin-bottom: 20px"
-              v-bind:to="site.slug"
-              append
-            >
-              <div class="card">
-                <div class="card-content">
-                  <h5 class="title is-5">{{site.name}}</h5>
-                </div>
+            <transition name="fade" mode="out-in">
+              <loading-spinner v-if="!sites" style="margin-top: 50px;"></loading-spinner>
+              <div v-else>
+                <router-link
+                  v-for="site of sites"
+                  v-bind:key="site.primaryKey"
+                  class="is-block"
+                  style="margin-bottom: 20px"
+                  v-bind:to="site.slug"
+                  append
+                >
+                  <div class="card">
+                    <div class="card-content">
+                      <h5 class="title is-5">{{site.name}}</h5>
+                    </div>
+                  </div>
+                </router-link>
               </div>
-            </router-link>
+            </transition>
           </div>
 
           <div class="column is-narrow">
@@ -42,15 +47,17 @@
 <script>
 import BulletinBoard from "@/components/BulletinBoard.vue";
 import SitesService from "@/services/sites-service";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default {
   name: "Home",
   components: {
-    BulletinBoard: BulletinBoard
+    BulletinBoard: BulletinBoard,
+    LoadingSpinner
   },
   data() {
     return {
-      sites: []
+      sites: null
     };
   },
   async mounted() {

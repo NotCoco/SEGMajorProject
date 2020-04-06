@@ -31,6 +31,7 @@
                 class="input title"
                 v-model="page.title"
                 placeholder="Enter page title here..."
+                :disabled="saving"
               />
             </div>
           </div>
@@ -38,7 +39,11 @@
           <label class="label">URL Slug</label>
           <div class="field has-addons" style="margin-bottom: 35px;">
             <p class="control">
-              <a class="button is-static" v-if="page.site">/{{page.site.slug}}/</a>
+              <a
+                class="button is-static"
+                v-if="page.site"
+                :class="{ 'border-none': saving}"
+              >/{{page.site.slug}}/</a>
             </p>
             <p class="control is-expanded">
               <input
@@ -46,18 +51,30 @@
                 type="text"
                 v-model="page.slug"
                 placeholder="Enter URL Slug here..."
+                :disabled="saving"
               />
             </p>
           </div>
 
           <div style="flex-grow: 1;">
-            <rich-text-editor v-model="page.content"></rich-text-editor>
+            <rich-text-editor v-model="page.content" :disabled="saving"></rich-text-editor>
           </div>
 
-          <div class="buttons" style="justify-content: flex-end">
+          <div class="buttons" style="justify-content: flex-end; margin-bottom: 7px;">
             <router-link to="../" class="button is-light">Cancel</router-link>
             <button class="button is-danger" @click="deletePage()">Delete</button>
-            <button class="button is-success" @click="save()">Save</button>
+            <button class="button is-success" :class="{ 'is-loading': saving }" @click="save()">Save</button>
+          </div>
+          <div class="saved-notification-container">
+            <transition name="fade" mode="out-in">
+              <div
+                class="box notification saved-notification"
+                v-bind:key="saved"
+                :class="{ 'is-invisible': !saved }"
+              >
+                <font-awesome-icon :icon="['far', 'check-circle']" class="check-icon" />Saved
+              </div>
+            </transition>
           </div>
         </div>
       </transition>
@@ -66,8 +83,11 @@
 </template>
 
 <style lang="scss" scoped>
+@import "@/styles";
+
 #admin-edit-page {
   height: 100%;
+  overflow-y: scroll;
 }
 
 .section {
@@ -78,6 +98,33 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+}
+
+.saved-notification-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 30px;
+
+  .saved-notification {
+    font-size: 18px;
+    border-left: 4px solid $primary;
+    padding: 7px 12px;
+    border-radius: 0;
+
+    .check-icon {
+      color: $primary-dark;
+      margin-right: 10px;
+    }
+  }
+}
+
+input,
+.button.is-static {
+  transition: 0.18s;
+}
+
+.border-none {
+  border-color: transparent !important;
 }
 </style>
 
@@ -102,20 +149,26 @@ export default {
   data() {
     return {
       page: {},
-      loading: true
+      loading: true,
+      saving: false,
+      saved: false
     };
   },
   methods: {
-    save() {
+    async save() {
+      this.saving = true;
+      this.saved = false;
+
       if (this.newPage === true) {
-        this.createNewPage();
+        await this.createNewPage();
       } else {
-        this.updatePage();
+        await this.updatePage();
       }
+
+      this.saving = false;
+      this.saved = true;
     },
     async createNewPage() {
-      this.loading = true;
-
       // Generate Page index
       const currentPages = await SitesService.getAllPages(this.page.site.slug);
       if (currentPages && currentPages.length > 0) {
@@ -129,12 +182,8 @@ export default {
       this.$router.push(
         `/admin/sites/${this.page.site.slug}/pages/${this.page.slug}`
       );
-
-      this.loading = false;
     },
     async updatePage() {
-      this.loading = true;
-
       await SitesService.updatePage(this.page);
 
       const currentSlug = this.$route.params.pageSlug;
@@ -143,13 +192,19 @@ export default {
           `/admin/sites/${this.page.site.slug}/pages/${this.page.slug}`
         );
       }
-
-      this.loading = false;
     },
     async deletePage() {
       this.loading = true;
       await SitesService.deletePage(this.page);
       this.$router.push(`/admin/sites/${this.page.site.slug}/pages`);
+    }
+  },
+  watch: {
+    page: {
+      handler() {
+        this.saved = false;
+      },
+      deep: true
     }
   },
   async mounted() {

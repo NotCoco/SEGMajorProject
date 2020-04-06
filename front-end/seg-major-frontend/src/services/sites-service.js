@@ -46,6 +46,11 @@ export default {
         return res.data
     },
 
+    async updatePageIndexes(pages) {
+        const res = await BackendService.updatePageIndexes(pages)
+        return res.data
+    },
+
     async deletePage(page) {
         const res = await BackendService.deletePage(page)
         return res.data

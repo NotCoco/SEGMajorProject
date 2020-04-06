@@ -1,5 +1,5 @@
 <template>
-  <div id="rich-text-editor">
+  <div id="rich-text-editor" :class="{ 'disabled': disabled }">
     <editor-menu-bar v-if="editable" :editor="editor" v-slot="{ commands, isActive }">
       <div class="rich-text-editor-menu">
         <button
@@ -109,6 +109,12 @@
 <style lang="scss" scoped>
 #rich-text-editor {
   height: 100%;
+  transition: opacity 0.2s;
+}
+
+.disabled {
+  opacity: 0.68;
+  pointer-events: none;
 }
 
 .rich-text-editor-menu {
@@ -147,6 +153,10 @@ export default {
     },
     value: {
       type: String
+    },
+    disabled: {
+      type: Boolean,
+      deafult: false
     }
   },
   data() {
@@ -179,6 +189,11 @@ export default {
         editable: this.editable,
         onUpdate: ({getJSON}) => {
           this.$emit("input", JSON.stringify(getJSON()));
+        },
+        onFocus: () => {
+          if (this.disabled) {
+            this.editor.blur()
+          }
         },
         content: this.value ? JSON.parse(this.value) : null
       })
