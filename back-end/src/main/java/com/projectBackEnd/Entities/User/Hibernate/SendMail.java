@@ -18,9 +18,15 @@ import com.sun.mail.util.MailSSLSocketFactory;
  * This is the SendMail class.
  * It will send a email to the end user`s address while signing up.
  */
-class SendMail
+public class SendMail
 
 {
+    private static String sender = "476070991@qq.com";
+    private static String authentication = "bxnxbljhsskqcaji";
+    private static String propertyHost = "mail.smtp.host";
+    private static String propertyMailServer = "smtp.qq.com";
+    private static String propertyAuth = "mail.smtp.auth";
+
     /**
      * This method will send a email to a specific email account.
      * The addresser account is my personal account.
@@ -30,42 +36,62 @@ class SendMail
      * @param content The content of email
      * @return The success of the call
      */
-    static boolean send(String to, String title, String content) {
-
-        String addresser = "476070991@qq.com";
-        String authentication = "bxnxbljhsskqcaji";
-
-        // Get the system properties and set up the host.
-        // Use simple mail transfer protocol.
-        Properties properties = System.getProperties();
-        properties.setProperty("mail.smtp.host", "smtp.qq.com");// qq mail server
-        properties.put("mail.smtp.auth", "true");
-        MailSSLSocketFactory MailSocket;
+    public static boolean send(String to, String title, String content) {
         try {
-            MailSocket = new MailSSLSocketFactory();
-        } catch (GeneralSecurityException e) { return false;}
-        MailSocket.setTrustAllHosts(true);
-        properties.put("mail.smtp.ssl.enable", "true");
-        properties.put("mail.smtp.ssl.socketFactory", MailSocket);
-        // Get a default session
-        // Include the user name and the authentication code
-        Session session = Session.getDefaultInstance(properties, new Authenticator()
-        {
-            public PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(addresser, authentication);
-            }
-        });
-        try {
-            MimeMessage message = new MimeMessage(session);// create a mimeMessage to contain the session.
-            message.setFrom(new InternetAddress(addresser, "Team Team", "UTF-8"));//use utf-8
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-            message.setSubject(title, "UTF-8");//set the title  (use utf-8)
-            message.setContent(content, "text/html;charset=UTF-8");////set the content fo mail (use utf-8)
-            message.setSentDate(new Date());
-            Transport.send(message);//send message
+            sendMessage(to, title, content, getDefaultSession());
         }
         catch (MessagingException | UnsupportedEncodingException mex) { return false; }
         return true;
+    }
+
+    /**
+     * Gets a default session set up using the sender and authentication
+     * @return The session created in this way
+     */
+    private static Session getDefaultSession() {
+        return Session.getDefaultInstance(getProperties(), new Authenticator()
+        {
+            public PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(sender, authentication);
+            }
+        });
+    }
+
+    /**
+     * Sends a message
+     * @param to The email to send the message to
+     * @param title The subject of the email
+     * @param content The content of the email
+     * @param session The session for authorization
+     * @throws MessagingException Error thrown with messages
+     * @throws UnsupportedEncodingException Errors thrown with bad Encodings
+     */
+    private static void sendMessage(String to, String title, String content, Session session) throws MessagingException, UnsupportedEncodingException {
+        MimeMessage message = new MimeMessage(session);// create a mimeMessage to contain the session.
+        message.setFrom(new InternetAddress(sender, "Team Team", "UTF-8"));//use utf-8
+        message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+        message.setSubject(title, "UTF-8");//set the title  (use utf-8)
+        message.setContent(content, "text/html;charset=UTF-8");////set the content fo mail (use utf-8)
+        message.setSentDate(new Date());
+        Transport.send(message);//send message
+    }
+
+    /**
+     * Get system properties to set up the host using a simple mail transfer protocol
+     * @return The set up properties to this account
+     */
+    private static Properties getProperties() {
+        Properties properties = System.getProperties();
+        properties.setProperty(propertyHost, propertyMailServer);// qq mail server
+        properties.put(propertyAuth, "true");
+        MailSSLSocketFactory MailSocket;
+        try {
+            MailSocket = new MailSSLSocketFactory();
+        } catch (GeneralSecurityException e) { return null;}
+        MailSocket.setTrustAllHosts(true);
+        properties.put("mail.smtp.ssl.enable", "true");
+        properties.put("mail.smtp.ssl.socketFactory", MailSocket);
+        return properties;
     }
 
 }
