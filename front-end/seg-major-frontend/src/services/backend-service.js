@@ -99,11 +99,7 @@ export default {
   },
 
   updateSite(site) {
-    return api.put(`/sites`, {
-      "id": site.primaryKey,
-      "name": site.name,
-      "slug": site.slug
-    })
+    return api.put(`/sites`, site)
   },
 
   deleteSite(site) {
