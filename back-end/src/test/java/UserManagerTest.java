@@ -18,14 +18,14 @@ import main.java.com.projectBackEnd.HibernateUtility;
 import main.java.com.projectBackEnd.EntityManager;
 
 /**
- * Test class to extensively unit test interactions between the user entity manager and the Users table in the database.
+ * Test class to extensively unit test interactions between the user entity manager and the Users table in the database
  */
 class UserManagerTest{
 	private static ConnectionLeakUtil connectionLeakUtil = null;
 	private static UserManagerInterface userManager = null;
 
 	/**
-	 * Prior to running, database information is set and a singleton manager is created for testing.
+	 * Prior to running, database information is set and a singleton manager is created for testing
 	 */
 	@BeforeAll
     static void setUpDatabase() {
@@ -37,7 +37,7 @@ class UserManagerTest{
 	}
 
 	/**
-	 * After the test, the factory is shut down and the LeakUtil can tell us whether any connections leaked.
+	 * After the test, the factory is shut down and the LeakUtil can tell us whether any connections leaked
 	 */
 	@AfterAll
 	static void assertNoLeaks() {
@@ -46,7 +46,7 @@ class UserManagerTest{
 	}
 
 	/**
-	 * Prior to each test, we'll delete all the users in the users table.
+	 * Prior to each test, we'll delete all the users in the users table
 	 */
 	@BeforeEach
 	void setUp() {
