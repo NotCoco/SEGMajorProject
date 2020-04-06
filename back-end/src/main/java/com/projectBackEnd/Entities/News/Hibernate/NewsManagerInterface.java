@@ -1,6 +1,5 @@
 package main.java.com.projectBackEnd.Entities.News.Hibernate;
 
-import java.io.Serializable;
 import java.util.List;
 
 
@@ -19,7 +18,7 @@ public interface NewsManagerInterface {
 
     List<News> getAllNews();
 
-    void delete(Serializable pk);
+    void delete(Integer pk);
 
     void deleteAll();
 

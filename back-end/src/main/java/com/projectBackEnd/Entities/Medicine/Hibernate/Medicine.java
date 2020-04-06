@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 public class Medicine implements TableEntity {
 
     // 'Medicine' database table name and attributes
-    public static final String TABLENAME = "Medicines";
+    static final String TABLENAME = "Medicines";
     private static final String ID = "ID";
     private static final String NAME = "Name";
     private static final String TYPE = "Type";

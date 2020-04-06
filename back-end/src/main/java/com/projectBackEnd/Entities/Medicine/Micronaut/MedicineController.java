@@ -23,16 +23,9 @@ import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 @Controller("/medicines")
 public class MedicineController {
 
-    protected final MedicineManagerInterface medicineManager = MedicineManager.getMedicineManager();
+    private final MedicineManagerInterface medicineManager = MedicineManager.getMedicineManager();
 
     protected final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
-
-
-    /**
-     * Default constructor
-     */
-    public MedicineController(){}
-
 
     /**
      * Insert a new medicine into the database using MedicineAddCommand methods via an HTTP Post request
@@ -45,7 +38,9 @@ public class MedicineController {
 
         if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
         Medicine med = medicineManager.addMedicine(new Medicine(command.getName(), command.getType()));
+
         if(medicineManager.getByPrimaryKey(med.getPrimaryKey()) == null) return HttpResponse.serverError();
+        //Will never happen as it is not possible for medicines to not be added.
 
         return HttpResponse
                 .created(med)
@@ -116,16 +111,6 @@ public class MedicineController {
      */
     private URI location(int id) {
         return URI.create("/medicines/" + id);
-    }
-
-
-    /**
-     * Create URI of an existing medicine object
-     * @param medicine Medicine object to locate
-     * @return created URI
-     */
-    private URI location(Medicine medicine) {
-        return location(medicine.getPrimaryKey());
     }
 
 }

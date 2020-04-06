@@ -6,9 +6,8 @@ import io.micronaut.http.annotation.*;
 
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URLEncoder;
+
+import static main.java.com.projectBackEnd.URLLocation.location;
 
 /**
  * AppInfoController creating REST API endpoints for the frontend to connect to.
@@ -47,23 +46,6 @@ public class AppInfoController {
 
         return HttpResponse
                 .noContent()
-                .header(HttpHeaders.LOCATION, location(info.getHospitalName()).getPath());
+                .header(HttpHeaders.LOCATION, location(info.getHospitalName(), "/appinfo/").getPath());
     }
-
-    /**
-     * Convert the string hospital name into a URI Location by encoding it.
-     * @param hospitalName The name of the hospital
-     * @return The encoded hospital name and its access location.
-     */
-    private URI location(String hospitalName) {
-        String encodedSlug;
-        try {
-            encodedSlug = URLEncoder.encode(hospitalName, java.nio.charset.StandardCharsets.UTF_8.toString());
-        } catch (UnsupportedEncodingException e) {
-            return null;
-        }
-        return URI.create("/appinfo/" + encodedSlug);
-    }
-
-
 }

@@ -10,10 +10,9 @@ import main.java.com.projectBackEnd.Entities.Site.Hibernate.Site;
 import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManager;
 import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManagerInterface;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URLEncoder;
 import java.util.List;
+
+import static main.java.com.projectBackEnd.URLLocation.location;
 
 /**
  * Site Controller is a REST API endpoint.
@@ -24,7 +23,7 @@ import java.util.List;
 @Controller("/sites")
 public class SiteController {
 
-    final SiteManagerInterface siteManager = SiteManager.getSiteManager();
+    private final SiteManagerInterface siteManager = SiteManager.getSiteManager();
 	private final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
 
     /**
@@ -39,7 +38,7 @@ public class SiteController {
      * @return List of all the sites
      */
     @Get("/")
-    public List<Site> index(){
+    public List<Site> getAll(){
         return siteManager.getAllSites();
     }
 
@@ -58,8 +57,27 @@ public class SiteController {
 
         return HttpResponse
                 .created(s)
-                .headers(headers -> headers.location(location(s.getSlug())));
+                .headers(headers -> headers.location(location(s.getSlug(), "/sites/")));
     }
+
+    /**
+     * Update a site with SiteUpdateCommand methods via an HTTP Put request
+     * @param session               Current session
+     * @param updatedSiteCommand    Dedicated SiteUpdateCommand class to update site
+     * @return TTP response resulting from the Put request with path
+     */
+    @Put("/")
+    public HttpResponse update(@Header("X-API-Key") String session, @Body SiteUpdateCommand updatedSiteCommand) {
+
+        if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
+        Site newSite = new Site(updatedSiteCommand.getPrimaryKey(), updatedSiteCommand.getSlug(), updatedSiteCommand.getName());
+        siteManager.update(newSite);
+
+        return HttpResponse
+                .noContent()
+                .header(HttpHeaders.LOCATION, location(updatedSiteCommand.getSlug(), "/sites/").getPath());
+    }
+
 
     /**
      * Get the specific Site corresponding to the given ID via an HTTP Get request
@@ -67,7 +85,7 @@ public class SiteController {
      * @return Site with the specified ID
      */
     @Get(value = "/id/{id}", produces = MediaType.TEXT_JSON)
-    public Site list(int id) {
+    public Site getByID(int id) {
         return siteManager.getByPrimaryKey(id);
     }
 
@@ -77,7 +95,7 @@ public class SiteController {
      * @return Site with the specified slug
      */
     @Get(value = "/{slug}")
-    public Site list(String slug){return siteManager.getSiteBySlug(slug);}
+    public Site getBySlug(String slug){return siteManager.getSiteBySlug(slug);}
 
     /**
      * Remove the Site corresponding to the given site slug from the database via an HTTP Delete request
@@ -94,39 +112,5 @@ public class SiteController {
 
         return HttpResponse.noContent();
     }
-
-    /**
-     * Update a site with SiteUpdateCommand methods via an HTTP Put request
-     * @param session               Current session
-     * @param updatedSiteCommand    Dedicated SiteUpdateCommand class to update site
-     * @return TTP response resulting from the Put request with path
-     */
-    @Put("/")
-    public HttpResponse update(@Header("X-API-Key") String session,@Body SiteUpdateCommand updatedSiteCommand) {
-  		  if(!sessionManager.verifySession(session))
-			    return HttpResponse.unauthorized();
-        System.out.println("+++++++++" + updatedSiteCommand.getPrimaryKey() + " " + updatedSiteCommand.getSlug() + " " + updatedSiteCommand.getName());
-        Site newSite = new Site(updatedSiteCommand.getPrimaryKey(), updatedSiteCommand.getSlug(), updatedSiteCommand.getName());
-        siteManager.update(newSite);
-        return HttpResponse
-                .noContent()
-                .header(HttpHeaders.LOCATION, location(updatedSiteCommand.getSlug()).getPath());
-    }
-
-    /**
-     * Create a URI with the specified site identified by its slug
-     * @param siteSlug  Slug of the site to locate
-     * @return URI for the site
-     */
-    private URI location(String siteSlug) {
-        String encodedSlug;
-        try {
-            encodedSlug = URLEncoder.encode(siteSlug, java.nio.charset.StandardCharsets.UTF_8.toString());
-        } catch (UnsupportedEncodingException e) {
-            return null;
-        }
-        return URI.create("/sites/" + encodedSlug);
-    }
-
-
 }
+

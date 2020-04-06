@@ -130,6 +130,8 @@ public class PageControllerTest {
         for(int i = 0; i < allPagesWithID.size(); ++i) assertEquals(i, allPagesWithID.get(i).getIndex());
 
     }
+
+
 	/**
 	* Test if patching with invalid token returns unauthorized HTTP response
 	*/
@@ -393,6 +395,21 @@ public class PageControllerTest {
 		assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
 
 	}
+
+    /**
+     * Tests getting all the pages
+     */
+    @Test
+    void testGetAllPages() {
+        addSite("testSiteA", "name1",token);
+        HttpRequest request = HttpRequest.GET(location("testSiteA") + "/pages/");
+        List<Page> allFound = client.toBlocking().retrieve(request, List.class);
+        assertEquals(pageManager.getAllPagesOfSite("testSiteA").size(), allFound.size());
+        addPage(new PageAddCommand("testSiteA", "nutr#g", 9, "Title", "nutri!tion/information"),token);
+
+        allFound = client.toBlocking().retrieve(request, List.class);
+        assertEquals(pageManager.getAllPagesOfSite("testSiteA").size(), allFound.size());
+    }
 
     /**
      * Quality of life method for updating a page via the REST API

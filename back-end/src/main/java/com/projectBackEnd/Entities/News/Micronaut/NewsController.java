@@ -4,7 +4,6 @@ import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 
 import main.java.com.projectBackEnd.Entities.News.Hibernate.News;
@@ -12,6 +11,8 @@ import main.java.com.projectBackEnd.Entities.News.Hibernate.NewsManager;
 import main.java.com.projectBackEnd.Entities.News.Hibernate.NewsManagerInterface;
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
+
+import static main.java.com.projectBackEnd.URLLocation.location;
 
 /**
  * News Controller is a REST API endpoint.
@@ -51,9 +52,9 @@ public class NewsController {
 
         if(newsManager.getByPrimaryKey(news.getPrimaryKey()) == null) return HttpResponse.serverError();
 
-        else return HttpResponse
+        return HttpResponse
                 .created(news)
-                .headers(headers -> headers.location(location(news.getSlug())));
+                .headers(headers -> headers.location(location(news.getSlug(), "/news/")));
     }
 
 
@@ -73,7 +74,7 @@ public class NewsController {
 
         return HttpResponse
                 .noContent()
-                .header(HttpHeaders.LOCATION, location(command.getSlug()).getPath());
+                .header(HttpHeaders.LOCATION, location(command.getSlug(), "/news/").getPath());
     }
 
     /**
@@ -89,15 +90,4 @@ public class NewsController {
         newsManager.delete(newsManager.getNewsBySlug(slug).getPrimaryKey());
         return HttpResponse.noContent();
     }
-
-
-    /**
-     * Create URI with the specified slug
-     * @param slug  Slug of the object to locate
-     * @return created URI
-     */
-    private URI location(String slug) {
-        return URI.create("/news/" + slug);
-    }
-
 }

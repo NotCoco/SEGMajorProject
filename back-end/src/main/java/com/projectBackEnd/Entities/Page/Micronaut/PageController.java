@@ -15,6 +15,8 @@ import java.net.URI;
 import java.net.URLEncoder;
 import java.util.List;
 
+import static main.java.com.projectBackEnd.URLLocation.location;
+
 
 /**
  * Page Controller is a REST API endpoint.
@@ -29,10 +31,6 @@ public class PageController {
 
     private final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
 
-    /**
-     * Default constructor
-     */
-    public PageController() {}
 
 
     /**
@@ -147,17 +145,7 @@ public class PageController {
      * @return URI of the page
      */
     private URI pageLocation(String siteName, String pageName) {
-
-        String encodedSlug;
-        String encodedPage;
-        try {
-            encodedSlug = URLEncoder.encode(siteName, java.nio.charset.StandardCharsets.UTF_8.toString());
-            encodedPage = URLEncoder.encode(pageName, java.nio.charset.StandardCharsets.UTF_8.toString());
-        } catch (UnsupportedEncodingException e) {
-            return null;
-        }
-        return URI.create("/sites/" + encodedSlug + "/pages/" + encodedPage);
-
+        return URI.create(location(siteName, "/sites/").toString() + location(pageName, "/pages/").toString());
     }
 
 }
