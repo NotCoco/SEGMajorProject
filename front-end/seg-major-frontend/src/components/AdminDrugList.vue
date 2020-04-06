@@ -2,10 +2,16 @@
   <div id="drug-list">
     <div class="columns">
       <div class="column">
-        <input class="input" type="text" v-model="search" placeholder="Search">
-        <select name="users-out" id="all-drugs" multiple="multiple" size="10">
-          <option type="button" @click="changeInfo(medicine)" v-for="medicine in searchResults" :key="medicine.id" class="list-group-item">{{ medicine.name }}</option>
-        </select>
+        <div class="field">
+          <div class="control">
+            <input class="input search" type="text" v-model="search" placeholder="Search">
+            <div class="select is-multiple is-fullwidth">
+              <select name="users-out" id="all-drugs" multiple="multiple" size="10">
+                <option type="button" @click="changeInfo(medicine)" v-for="medicine in searchResults" :key="medicine.id" class="list-group-item">{{ medicine.name }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
         <button class="button is-fullwidth is-primary" type="button" @click="addInfo()">Add</button>
       </div>
       <div class="column">
@@ -212,9 +218,16 @@
   }
 }
 
+.search {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
 #all-drugs {
   width: 100%;
   height: 450px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 
 ::v-deep .multiselect__content {
