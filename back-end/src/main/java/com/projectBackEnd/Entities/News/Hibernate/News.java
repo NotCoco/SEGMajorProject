@@ -9,7 +9,7 @@ import java.util.Date;
 
 /**
  * News objects are database entities for the table 'News' defined in this class.
- * Each news article has an ID, a Date, a Title, a Description, a Content and a Slug.
+ * Each news article has an ID as a auto-incremented primary key.
  * It can be Pinned, or Urgent, depending on its importance.
  *
  *    Inspiration : https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/

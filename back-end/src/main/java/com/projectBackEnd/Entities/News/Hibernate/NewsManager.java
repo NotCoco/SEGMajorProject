@@ -57,7 +57,7 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
 
     /**
      * Update a News object in the database
-     * @param news  News with updated attributes
+     * @param updatedVersion  News with updated attributes
      * @return updated object
      */
     public News update(News updatedVersion) {

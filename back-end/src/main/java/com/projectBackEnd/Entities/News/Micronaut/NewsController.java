@@ -35,21 +35,6 @@ public class NewsController {
         return newsManager.getAllNews();
     }
 
-    /**
-     * Delete news with specified slug by http Delete method
-     * @param session
-     * @param slug
-     * @return Http response with relevant information which depends on the result of
-     * deleting news
-     */
-    @Delete("/{slug}")
-    public HttpResponse delete(@Header("X-API-Key") String session,String slug) {
-
-        if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
-        newsManager.delete(newsManager.getNewsBySlug(slug).getPrimaryKey());
-        return HttpResponse.noContent();
-    }
-
 
     /**
      * Insert a news article into the database using NewsAddCommand methods via an HTTP Post request
@@ -76,7 +61,7 @@ public class NewsController {
      * Update a medicine in the database using MedicineUpdateCommand methods, via an HTTP Put request
      * @param session   Current session
      * @param command   Dedicated NewsUpdateCommand class to update news
-     * @return Http response with path
+     * @return HTTP response without content, containing the path
      */
     @Put("/")
     public HttpResponse update(@Header("X-API-Key") String session,@Body NewsUpdateCommand command) {
@@ -89,6 +74,20 @@ public class NewsController {
         return HttpResponse
                 .noContent()
                 .header(HttpHeaders.LOCATION, location(command.getSlug()).getPath());
+    }
+
+    /**
+     * Delete the news corresponding to the given slug via an HTTP Delete request
+     * @param session   Current session
+     * @param slug      Slug of the news
+     * @return HTTP response with relevant information resulting from the removal of the news
+     */
+    @Delete("/{slug}")
+    public HttpResponse delete(@Header("X-API-Key") String session,String slug) {
+
+        if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
+        newsManager.delete(newsManager.getNewsBySlug(slug).getPrimaryKey());
+        return HttpResponse.noContent();
     }
 
 
