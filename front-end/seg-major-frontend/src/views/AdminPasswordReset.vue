@@ -2,217 +2,203 @@
   <section class="section">
     <div style="overflow: hidden" class="custom-content-container">
       <h1 class="title">Password Reset</h1>
-      <!-- notifications -->
-      <div class="notification is-success" v-show="Success">
-        <strong>Success:</strong> Password has been reset, redirecting to login page.&nbsp;<font-awesome-icon icon="sync-alt" spin />
+      <div class="notification is-danger" v-if="resetFailed">
+        <strong>Error:</strong> Reset password failed. Please check your token.
       </div>
-      <div class="notification is-danger" v-show="submitError">
-        <strong>Error:</strong> Please fill in the required fields.
+      <div class="notification is-success" v-else-if="success">
+        <strong>Success:</strong> Password has been reset.
       </div>
-      <div class="notification is-danger" v-show="lengthError">
-        <strong>Error:</strong> Password must be at least 5 characters long.
+      <div>
+        <transition name="slide" mode="out-in">
+          <div class="field" id="step-one" key="step-one" v-if="!showStepTwo">
+            <div class="field">
+              <label class="label">Email</label>
+              <div class="control">
+                <input type="email" class="input" v-model="email">
+              </div>
+              <div v-if="$v.email.$dirty">
+                <p class="help is-danger" v-if="!$v.email.required">This field is required</p>
+                <p class="help is-danger" v-if="!$v.email.email">Please enter a valid email</p>
+              </div>
+            </div>
+            <div class="field is-grouped">
+              <div class="control">
+                <button class="button is-primary" :class="{'is-loading': requestingToken}" @click="requestToken()">Request password reset</button>
+              </div>
+              <div class="control">
+                <button class="button is-text no-underline" @click="alreadyHasToken()" :disabled="requestingToken">Already have a token?</button>
+              </div>
+            </div>
+          </div>
+          <div class="field" id="step-two" key="step-two" v-else>
+            <div class="field" v-if="requestSent">
+              <p>If the email address <b>{{ email }}</b> is associated with an account, you will receive an email with a reset token shortly. If the email does not arrive soon, please check your spam folder. 
+                <transition name="fade"><a @click="doesNotHaveToken()" v-if="showRequestAgainPrompt">Didn't receive an email? Request it again.</a></transition>
+              </p>
+            </div>
+            <div class="field">
+              <label class="label">Reset token</label>
+              <div class="control">
+                <input type="text" class="input" v-model="token">
+              </div>
+              <p class="help">Find this in the email we sent you</p>
+              <div v-if="$v.token.$dirty">
+                <p class="help is-danger" v-if="!$v.token.required">This field is required</p>
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">New password</label>
+              <div class="control">
+                <div class="field has-addons">
+                  <div class="control is-expanded">
+                    <input :type="showNewPassword ? 'text' : 'password'" class="input" v-model="newPassword">
+                  </div>
+                  <div class="control">
+                    <button class="button" @click="showNewPassword = !showNewPassword">
+                      <font-awesome-icon :icon="showPassword ? 'eye-slash' : 'eye'" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div v-if="$v.newPassword.$dirty">
+                <p class="help is-danger" v-if="!$v.newPassword.required">This field is required</p>
+                <p class="help is-danger" v-if="!$v.newPassword.minLength">Password too short</p>
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">New password again</label>
+              <div class="control">
+                <input type="password" class="input" v-model="newPasswordAgain">
+              </div>
+              <div v-if="$v.newPasswordAgain.$dirty">
+                <p class="help is-danger" v-if="!$v.newPasswordAgain.required">This field is required</p>
+                <p class="help is-danger" v-else-if="!$v.newPasswordAgain.sameAsNewPassword">Passwords do not match</p>
+              </div>
+            </div>
+            <div class="field is-grouped">
+              <div class="control">
+                <button class="button is-primary" :class="{'is-loading': resettingPassword}" @click="resetPassword()">Reset password</button>
+              </div>
+              <div class="control">
+                <button class="button is-text no-underline" @click="doesNotHaveToken()" v-if="!requestSent">Don't have a token?</button>
+              </div>
+            </div>
+          </div>
+        </transition>
       </div>
-      <div class="notification is-danger" v-show="matchError">
-        <strong>Error:</strong> Passwords do not match.
-      </div>
-      <div class="notification is-danger" v-show="verifyError">
-        <strong>Error:</strong> Verification failed. Please check your token.
-      </div>
-      <table class="passwordtable-layout">
-        <!-- password input box -->
-        <tr><b>First, enter the new password:</b><br></tr>
-        <tr>
-          <td>
-            <input id="newPw" class="input-layout input" type="password" v-model="newPw" v-show="!showNew" placeholder="Enter new password"> 
-            <input id="newPw" class="input-layout input" type="text" v-model="newPw" v-show="showNew" placeholder="Enter new password"> 
-            &nbsp;
-            <button class="button-layout button" @click="shownew()" id="saveButton" v-show="!showNew"><font-awesome-icon icon="eye" /></button>
-            <button class="button-layout button" @click="shownew()" id="saveButton" v-show="showNew"><font-awesome-icon icon="eye-slash" /></button>
-          </td>
-        </tr>
-        <!-- password input box -->
-        <tr><b>Please enter it again:</b><br></tr>
-        <tr><input id="newPw_2" class="input-layout input" type="password" placeholder="Enter again"></tr>
-        <!-- token input box -->
-        <tr><b>Last step, enter the verify code in the email:</b><br></tr>
-        <tr>
-          <td>
-            <input class="input-layout input" id="token" type="text" placeholder="Enter token">
-            &nbsp;
-            <button class="button" v-bind:disabled="!canClick" style="height: 30px;width: 85px;" @click="sendRequest()" id="sendButton">
-              <font-awesome-icon v-show="canClick" :icon="['far', 'paper-plane']" />
-              <font-awesome-icon v-show="!canClick" icon="sync-alt" spin />&nbsp;{{this.content}}
-            </button>
-          </td>
-        </tr>
-        <tr><button class="button" style="height: 40px;width: 240px;" @click="resetPw()" id="saveButton">Save</button></tr>
-      </table>
     </div>
   </section>
 </template>
 
 <script>
-	import userService from '../services/user-service.js'
+  import userService from '../services/user-service.js'
+  import { required, minLength, email, sameAs } from "vuelidate/lib/validators";
+
 	export default{
 		data: function() {
 			return{
-				content: 'Send',
-				time: 10,
-				password: '',
-				/**
-				 *  notifications
-				 */
-				showNew: false,
-				submitError: false,
-				verifyError: false,
-				matchError: false,
-				lengthError: false,
-				Success: false,
-				canClick: true
-			}
-		},
-		created() {
-			/**
-			 * Check if the countdown is still counting when refreshing pages
-			 */
-			var t = window.localStorage.getItem("time")
-			var fac = this.time
-			if ((fac- t)>0) {
-				this.time = t
-				this.send()
-			}
-		},
-		watch: {
-			/**
-			 * save countdown
-			 */
-			time: {
-				handler: function() {
-					if (window.localStorage) {
-						window.localStorage.setItem("time",JSON.stringify(this.time));
-					} else{
-						console.log("failed")
-					}
-				}
+        requestSent: false,
+        showStepTwo: false,
+        email: '',
+        requestingToken: false,
+        showRequestAgainPrompt: false,
+        requestAgainPromptTimeout: -1,
+        token: '',
+				showNewPassword: false,
+        newPassword: '',
+        newPasswordAgain: '',
+        resettingPassword: false,
+        resetFailed: false,
+        success: false,
 			}
 		},
 		methods: {
-			/**
-			 * password hide/display
-			 */
-			shownew: function() {
-				this.showNew = !this.showNew
-			},
-			/**
-			 * control whether resend button can be clicked
-			 */
-			send: function() {
-				this.canClick = false
-				this.content = this.time + 's'
-				let clock = window.setInterval(() => {
-					this.time--
-					this.content = this.time + 's'
-					if (this.time < 0) {
-						window.clearInterval(clock)
-						this.content = 'Resend'
-						this.time = 10
-						this.canClick = true
-					}
-				}, 1000)
-			},
-			/**
-			 * send the password reset request
-			 */
-			sendRequest: function() {
-				var email =  window.localStorage.getItem("email")
-				email = email.substr(0,email.length-1)
-				email = email.substr(1)
-				userService.getResetRequest(email)
-				this.canClick = false
-				this.content = this.time + 's'
-				let clock = window.setInterval(() => {
-					this.time--
-					this.content = this.time + 's'
-					if (this.time < 0) {
-						window.clearInterval(clock)
-						this.content = 'Resend'
-						this.time = 10
-						this.canClick = true
-					}
-				}, 1000)
-			},
-			/**
-			 * reset the password
-			 * control to display the notification
-			 */
-			async resetPw() {
-				var status = 0
-				var tk = document.getElementById('token').value
-				var pw = document.getElementById('newPw').value
-				var pw_len = pw.length
-				var pw_2 = document.getElementById('newPw_2').value
-				if (pw_len < 5) {
-					this.lengthError = true
-					this.submitError = false
-					this.verifyError = false
-					this.matchError = false
-				} else if (pw !== "" && pw_2 !== "" && pw === pw_2 && tk !== "") {
-          await userService.resetPassword(tk,pw)
-            .then(async function(response) {
-              console.log(response.data)
-              status = 1
-              userService.logout()
-              location.reload()
-            }).catch(function(error) {
-              console.log(error)
-              status = -1
-            })
-					if (status === -1) {
-						this.verifyError = true
-					} else if (status === 1) {
-						this.Success = true
-					}
-					this.lengthError = false
-					this.matchError = false
-					this.submitError = false
-				} else if (pw === "" || pw_2 === "" || tk==="" ) {
-					this.submitError = true
-					this.matchError = false
-					this.verifyError = false
-					this.lengthError = false
-				} else if (pw !== pw_2) {
-					this.matchError = true
-					this.submitError = false
-					this.verifyError = false
-					this.lengthError = false
-				}
-			}
-		}
+      async requestToken() {
+        this.$v.email.$touch();
+        if (this.$v.email.$invalid) return;
+
+        this.requestingToken = true;
+        const email = this.email;
+
+        await userService.getResetRequest(email);
+
+        this.requestSent = true;
+        this.showStepTwo = true;
+        this.requestingToken = false;
+        this.requestAgainPromptTimeout = setTimeout(() => this.showRequestAgainPrompt = true, 15000);
+      },
+      alreadyHasToken() {
+        this.requestingToken = false;
+        this.requestSent = false;
+        this.showStepTwo = true;
+      },
+      doesNotHaveToken() {
+        if (this.requestAgainPromptTimeout !== -1) {
+          clearTimeout(this.requestAgainPromptTimeout);
+          this.requestAgainPromptTimeout = -1;
+        }
+        this.showStepTwo = false;
+        this.requestSent = false;
+      },
+      async resetPassword() {
+        this.$v.$touch();
+        if (this.$v.token.$invalid || this.$v.newPassword.$invalid || this.$v.newPasswordAgain.$invalid) return;
+
+        this.resettingPassword = true;
+        const token = this.token;
+        const newPassword = this.newPassword;
+
+        try {
+          await userService.resetPassword(token, newPassword);
+          this.resetFailed = false;
+          this.success = true;
+        } catch {
+          this.resetFailed = true;
+        }
+
+        this.resettingPassword = false;
+      },
+    },
+    validations: {
+      email: {
+        required,
+        email
+      },
+      token: {
+        required
+      },
+      newPassword: {
+        required,
+        minLength: minLength(5)
+      },
+      newPasswordAgain: {
+        required,
+        sameAsNewPassword: sameAs('newPassword')
+      }
+    }
 	}
 </script>
 
 <style lang="scss" scoped>
+.slide-enter-active, .slide-leave-active {
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+}
+
+.slide-enter {
+  opacity: 0;
+  transform: translatex(12px);
+}
+
+.slide-leave-to {
+  opacity: 0;
+  transform: translatex(-12px);
+}
+
+.no-underline {
+  text-decoration: none;
+}
+
 .custom-content-container {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  justify-content: center;
-  width: 300%;
-  max-width: 600px;
-}
-
-.passwordtable-layout{
-  border-collapse:separate; 
-  border-spacing:0px 14px;
-}
-
-.input.input-layout{
-  height: 30px;
-  width: 200px;
-}
-
-.button.button-layout{
-  height: 30px;
-  width: 15px;
+  max-width: 550px;
 }
 </style>
