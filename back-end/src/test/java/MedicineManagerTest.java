@@ -41,6 +41,7 @@ class MedicineManagerTest {
      */
     @AfterAll
     static void assertNoLeaks() {
+        medicineManager.deleteAll();
         HibernateUtility.shutdown();
         connectionLeakUtil.assertNoLeaks();
     }

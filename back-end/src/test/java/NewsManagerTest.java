@@ -42,6 +42,7 @@ class NewsManagerTest {
      */
     @AfterAll
     static void assertNoLeaks() {
+        newsManager.deleteAll();
         HibernateUtility.shutdown();
         connectionLeakUtil.assertNoLeaks();
     }

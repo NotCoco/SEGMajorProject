@@ -48,7 +48,23 @@ class TestResetLinkManager{
         ((EntityManager)linkManager).deleteAll();
         ((EntityManager)userManager).deleteAll();
     }
-
+    /**
+     * Test the copy method for links
+     */
+    @Test
+    void testCopyBetweenLinks() {
+        Link link1 = new Link();
+        fill();
+        try {
+            String a = linkManager.create("test@test.com");
+            assertEquals("test@test.com", linkManager.getEmail(a));
+        } catch (EmailNotExistException e) {
+            fail();
+        }
+        Link link2 = (Link) ((EntityManager) linkManager).getAll().get(0);
+        link2.copy(link1);
+        assertNull(link2.getEmail());
+    }
     /**
      * Tests that the manager is able to create a new token for a link being reset
      */
@@ -75,7 +91,7 @@ class TestResetLinkManager{
     }
 
     /**
-     * Tests that the manager is able to retrieve an email via it's token, also tests that retrieval attempts
+     * Tests that the manager is able to retrieve an email via its token, also tests that retrieval attempts
      * with an invalid token are unsuccessful, expects success
      */
     @Test

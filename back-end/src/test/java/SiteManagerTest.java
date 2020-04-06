@@ -40,6 +40,7 @@ import org.junit.jupiter.api.BeforeEach;
      */
     @AfterAll
     static void assertNoLeaks() {
+        siteManager.deleteAll();
         HibernateUtility.shutdown();
         connectionLeakUtil.assertNoLeaks();
     }

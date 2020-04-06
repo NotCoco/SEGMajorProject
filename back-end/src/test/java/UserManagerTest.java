@@ -53,7 +53,18 @@ class UserManagerTest{
 		((EntityManager) userManager).deleteAll();
 	}
 
-
+	/**
+	 * Test the User copy method
+	 */
+	@Test
+	void testUserCopy() {
+		User user1 = new User("test@test.com", "passowrd2, ", "name");
+		User user2 = new User("test2@test2.com", "password", "sadnjkdsa");
+		user1.copy(user2);
+		assertEquals("test2@test2.com", user1.getEmail());
+		assertEquals("password", user1.getPassword());
+		assertEquals("sadnjkdsa", user1.getName());
+	}
 	/**
 	 * Attempts to add a user with an email missing an '@' to the database, expects an exception to be thrown
 	 * @throws InvalidEmailException The exception
