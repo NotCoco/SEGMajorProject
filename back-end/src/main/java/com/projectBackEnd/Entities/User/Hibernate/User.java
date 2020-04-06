@@ -126,15 +126,6 @@ public class User implements TableEntity {
 	}
 
 	/**
-	 * Check the equality of two user objects based on their emails
-	 * @param user User to compare
-	 * @return Objects equality
-	 */
-	public boolean equals(User user){
-		return user.email == email;
-	}
-
-	/**
 	 * Copy the values of the input TableEntity object
 	 * @param toCopy    User object to copy
 	 * @return this, updated User object
