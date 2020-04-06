@@ -74,10 +74,16 @@ public class HibernateUtility {
     }
 
     /**
-     * Closes the session factory ending SQL connection to it
+     * Closes the session factory ending SQL connection to it - a small delay allows for the database to
+     * fully close any outstanding connected threads.
      */
     public static void shutdown() {
         getSessionFactory().close();
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }
