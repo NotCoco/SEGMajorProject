@@ -1,4 +1,4 @@
-package main.java.com.projectBackEnd.Media;
+package main.java.com.projectBackEnd.Image;
 
 import java.io.File;
 

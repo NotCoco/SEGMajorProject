@@ -8,7 +8,7 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 
-import main.java.com.projectBackEnd.Media.*;
+import main.java.com.projectBackEnd.Image.*;
 
 import javax.inject.Inject;
 
@@ -30,8 +30,8 @@ import java.io.File;
  * The purpose of this class is to test the REST endpoints associated with the image related executions
  */
 @MicronautTest
-public class MediaControllerTest {
-	private static MediaManagerInterface imageManager;
+public class ImageControllerTest {
+	private static ImageManagerInterface imageManager;
     private static String token;
 
 	private File file;
@@ -40,8 +40,8 @@ public class MediaControllerTest {
 	/**
 	*	Constructor gets a new image manager Singleton
 	*/
-	public MediaControllerTest(){
-		imageManager = MediaManager.getImageManager();
+	public ImageControllerTest(){
+		imageManager = ImageManager.getImageManager();
 		file = new File(System.getProperty("user.dir")+"/src/test/resources/TestImages/UploadedImage/"+"testImage.jpg");
 		largeFile = new File(System.getProperty("user.dir")+"/src/test/resources/TestImages/UploadedImage/"+"17MB.jpg");
 	}
