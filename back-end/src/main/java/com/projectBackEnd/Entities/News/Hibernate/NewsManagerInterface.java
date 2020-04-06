@@ -1,6 +1,5 @@
 package main.java.com.projectBackEnd.Entities.News.Hibernate;
 
-import java.io.Serializable;
 import java.util.List;
 
 

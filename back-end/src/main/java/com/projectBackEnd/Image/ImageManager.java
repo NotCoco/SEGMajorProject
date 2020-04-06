@@ -1,7 +1,5 @@
 package main.java.com.projectBackEnd.Image;
 
-import main.java.com.projectBackEnd.Entities.News.Hibernate.NewsManager;
-
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;

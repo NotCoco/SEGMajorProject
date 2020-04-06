@@ -23,7 +23,7 @@ public class JSONLocation {
      * Get the json file from its location
      * @return The JSON file itself.
      */
-    public static File getJsonFile() {
+    static File getJsonFile() {
         return jsonFile;
     }
 }

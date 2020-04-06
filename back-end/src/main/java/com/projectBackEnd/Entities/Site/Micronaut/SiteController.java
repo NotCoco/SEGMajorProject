@@ -10,10 +10,9 @@ import main.java.com.projectBackEnd.Entities.Site.Hibernate.Site;
 import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManager;
 import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManagerInterface;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URLEncoder;
 import java.util.List;
+
+import static main.java.com.projectBackEnd.URLLocation.location;
 
 /**
  * Site Controller is a REST API endpoint.
@@ -24,7 +23,7 @@ import java.util.List;
 @Controller("/sites")
 public class SiteController {
 
-    final SiteManagerInterface siteManager = SiteManager.getSiteManager();
+    private final SiteManagerInterface siteManager = SiteManager.getSiteManager();
 	private final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
 
     /**
@@ -58,7 +57,7 @@ public class SiteController {
 
         return HttpResponse
                 .created(s)
-                .headers(headers -> headers.location(location(s.getSlug())));
+                .headers(headers -> headers.location(location(s.getSlug(), "/sites/")));
     }
 
     /**
@@ -109,23 +108,6 @@ public class SiteController {
         siteManager.update(newSite);
         return HttpResponse
                 .noContent()
-                .header(HttpHeaders.LOCATION, location(updatedSiteCommand.getSlug()).getPath());
+                .header(HttpHeaders.LOCATION, location(updatedSiteCommand.getSlug(), "/sites/").getPath());
     }
-
-    /**
-     * Create a URI with the specified site identified by its slug
-     * @param siteSlug  Slug of the site to locate
-     * @return URI for the site
-     */
-    private URI location(String siteSlug) {
-        String encodedSlug;
-        try {
-            encodedSlug = URLEncoder.encode(siteSlug, java.nio.charset.StandardCharsets.UTF_8.toString());
-        } catch (UnsupportedEncodingException e) {
-            return null; //Difficult to make this error be thrown, not covered by tests.
-        }
-        return URI.create("/sites/" + encodedSlug);
-    }
-
-
 }

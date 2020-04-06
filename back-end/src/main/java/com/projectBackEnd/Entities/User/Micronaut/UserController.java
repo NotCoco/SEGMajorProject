@@ -1,9 +1,7 @@
 package main.java.com.projectBackEnd.Entities.User.Micronaut;
 
 
-import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
-import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
 
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
@@ -12,12 +10,10 @@ import main.java.com.projectBackEnd.Entities.Session.NoSessionException;
 
 import main.java.com.projectBackEnd.Entities.User.Hibernate.*;
 
-import main.java.com.projectBackEnd.Entities.ResetLinks.ResetLinkManager;
-import main.java.com.projectBackEnd.Entities.ResetLinks.ResetLinkManagerInterface;
+
 import main.java.com.projectBackEnd.Entities.ResetLinks.EmailNotExistException;
 
 import java.util.List;
-import java.net.URI;
 
 /**
  * User Controller class is used for the interactions between frontend and backend
@@ -127,11 +123,13 @@ public class UserController {
 		}
 		catch(EmailNotExistException e){
 			//frontend does not want an exception
+            e.printStackTrace();
 		}
 		catch(ServerErrorException e){
 			//frontend does not want an exception
+            e.printStackTrace();
 		}
-		finally{
+		finally {
 			return HttpResponse.ok();
 		}
 	}
@@ -159,6 +157,11 @@ public class UserController {
 		}
 	}
 
+    /**
+     * Gets the user details
+     * @param session The current session
+     * @return The user details in a response
+     */
 	@Get("/user_details")
 	public HttpResponse<UserBody> getUserDetails(@Header("X-API-Key") String session){
 		if(!sessionManager.verifySession(session))
@@ -178,7 +181,7 @@ public class UserController {
 
   /**
 	 * Change user's email with by Http PUT method
-	 * @param session
+	 * @param session The current session
 	 * @param body Dedicated StringBody class to update email
 	 * @return Http response with relevant information which depends on the result of
 	 * updating email
@@ -205,8 +208,6 @@ public class UserController {
 			}
 		}
 	}
-
-
 
 	/**
 	 * Change the name of the user on the current session via an HTTP Put request

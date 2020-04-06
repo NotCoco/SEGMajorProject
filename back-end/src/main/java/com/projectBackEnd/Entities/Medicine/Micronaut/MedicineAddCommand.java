@@ -20,7 +20,7 @@ public class MedicineAddCommand {
     /**
      * Default constructor
      */
-    public MedicineAddCommand(){}
+    MedicineAddCommand(){}
 
 
     /**

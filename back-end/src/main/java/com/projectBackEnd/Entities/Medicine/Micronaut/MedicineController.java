@@ -23,16 +23,9 @@ import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 @Controller("/medicines")
 public class MedicineController {
 
-    protected final MedicineManagerInterface medicineManager = MedicineManager.getMedicineManager();
+    private final MedicineManagerInterface medicineManager = MedicineManager.getMedicineManager();
 
     protected final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
-
-
-    /**
-     * Default constructor
-     */
-    public MedicineController(){}
-
 
     /**
      * Insert a new medicine into the database using MedicineAddCommand methods via an HTTP Post request

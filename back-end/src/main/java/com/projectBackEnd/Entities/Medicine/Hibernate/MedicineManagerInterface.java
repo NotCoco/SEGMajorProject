@@ -9,16 +9,16 @@ import java.util.List;
  */
 public interface MedicineManagerInterface {
 
-    public Medicine addMedicine(Medicine med);
+    Medicine addMedicine(Medicine med);
 
-    public Medicine update(Medicine med);
+    Medicine update(Medicine med);
 
-    public Medicine getByPrimaryKey(Serializable id);
+    Medicine getByPrimaryKey(Serializable id);
 
-    public List<Medicine> getAllMedicines();
+    List<Medicine> getAllMedicines();
 
-    public void delete(Serializable pk);
+    void delete(Serializable pk);
 
-    public void deleteAll();
+    void deleteAll();
 
 }

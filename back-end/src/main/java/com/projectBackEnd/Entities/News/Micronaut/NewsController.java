@@ -4,7 +4,6 @@ import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 
 import main.java.com.projectBackEnd.Entities.News.Hibernate.News;
@@ -13,9 +12,7 @@ import main.java.com.projectBackEnd.Entities.News.Hibernate.NewsManagerInterface
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URLEncoder;
+import static main.java.com.projectBackEnd.URLLocation.location;
 
 /**
  * News Controller is a REST API endpoint.
@@ -53,11 +50,11 @@ public class NewsController {
         News news = newsManager.addNews(new News(command.getDate(), command.isPinned(), command.getDescription(),
                 command.getTitle(), command.isUrgent(), command.getContent(), command.getSlug()));
 
-        if(newsManager.getByPrimaryKey(news.getPrimaryKey()) == null) return HttpResponse.serverError();
+        //if(newsManager.getByPrimaryKey(news.getPrimaryKey()) == null) return HttpResponse.serverError();
 
-        else return HttpResponse
+        return HttpResponse
                 .created(news)
-                .headers(headers -> headers.location(location(news.getSlug())));
+                .headers(headers -> headers.location(location(news.getSlug(), "/news/")));
     }
 
 
@@ -77,7 +74,7 @@ public class NewsController {
 
         return HttpResponse
                 .noContent()
-                .header(HttpHeaders.LOCATION, location(command.getSlug()).getPath());
+                .header(HttpHeaders.LOCATION, location(command.getSlug(), "/news/").getPath());
     }
 
     /**
@@ -93,21 +90,4 @@ public class NewsController {
         newsManager.delete(newsManager.getNewsBySlug(slug).getPrimaryKey());
         return HttpResponse.noContent();
     }
-
-
-    /**
-     * Create a URI with the specified news identified by its slug
-     * @param newsSlug  Slug of the article to locate
-     * @return URI for the news
-     */
-    private URI location(String newsSlug) {
-        String encodedSlug;
-        try {
-            encodedSlug = URLEncoder.encode(newsSlug, java.nio.charset.StandardCharsets.UTF_8.toString());
-        } catch (UnsupportedEncodingException e) {
-            return null; //Difficult to make this error be thrown, not covered by tests.
-        }
-        return URI.create("/news/" + encodedSlug);
-    }
-
 }
