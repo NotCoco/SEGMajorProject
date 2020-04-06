@@ -17,7 +17,6 @@ import SiteContentViewerLayout from '../views/SiteContentViewerLayout.vue'
 import PageViewer from '../views/PageViewer.vue'
 import NewsViewer from '../views/NewsViewer.vue'
 import AdminSiteSettings from '../views/AdminSiteSettings.vue'
-import SearchResults from '../views/SearchResults.vue'
 import Login from '../views/Login.vue'
 import DrugChartCreator from '../views/DrugChartCreator.vue'
 import AdminPasswordReset from "../views/AdminPasswordReset.vue"
@@ -129,10 +128,6 @@ const routes = [
     path: '/:siteSlug',
     component: SiteContentViewerLayout,
     children: [
-      {
-        path: 'search',
-        component: SearchResults
-      },
       {
         path: 'all-pages',
         component: AllPages
