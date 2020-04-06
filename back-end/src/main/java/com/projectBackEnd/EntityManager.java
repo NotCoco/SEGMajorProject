@@ -166,7 +166,7 @@ public abstract class EntityManager <T extends TableEntity> {
 
 
     /**
-     * Queries the database on given session to find all objects of subclass T that it stores
+     * Query the database on given session to find all objects of subclass T that it stores
      * @param session   Current session
      * @return List of all objects of type T stored in database
      * @throws HibernateException
