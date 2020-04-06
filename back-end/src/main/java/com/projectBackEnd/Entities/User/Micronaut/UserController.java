@@ -150,7 +150,7 @@ public class UserController {
 		}
 	}
 
-	
+
 	/**
 	 * Get the details of the user on the current session via an HTTP Get request
 	 * @param session	current session
