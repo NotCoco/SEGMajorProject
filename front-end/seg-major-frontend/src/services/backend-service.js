@@ -169,4 +169,12 @@ export default {
   deleteMedicine(data) {
     return api.delete(`/medicines/${data.id}`)
   },
+
+  uploadImage(imageData) {
+    return api.post('/images', imageData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+  }
 }

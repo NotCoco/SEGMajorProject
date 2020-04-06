@@ -101,6 +101,35 @@
         <button class="button is-light rte-menu-button" @click="commands.redo">
           <i class="material-icons">redo</i>
         </button>
+
+        <div class="insert-image-bar">
+          <i class="material-icons" style="margin-right: 2px; font-size: 18px">image</i>
+
+          <p class="insert-image-bar-text">Insert Image</p>
+          <button
+            class="button is-light is-small"
+            style="margin-right: 12px"
+            @click="showImagePrompt(commands.image)"
+          >
+            <i class="material-icons" style="margin-right: 5px;">link</i>Using URL
+          </button>
+          <div class="file is-light is-small">
+            <label class="file-label">
+              <input
+                class="file-input"
+                type="file"
+                ref="file"
+                v-on:change="handleFileUpload(commands.image)"
+              />
+              <span class="file-cta">
+                <span class="file-icon" style="margin-right: 12px;">
+                  <i class="material-icons">cloud_upload</i>
+                </span>
+                <span class="file-label">Upload image</span>
+              </span>
+            </label>
+          </div>
+        </div>
       </div>
     </editor-menu-bar>
     <editor-content class="content fullheight-editor" :editor="editor" />
@@ -118,7 +147,26 @@
 }
 
 .rich-text-editor-menu {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.insert-image-bar {
+  display: flex;
+  align-items: center;
+  color: #555;
+  margin-top: 10px;
+
+  .insert-image-bar-text {
+    margin-right: 25px;
+    margin-left: 5px;
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: uppercase;
+  }
+
+  i.material-icons {
+    font-size: 18px;
+  }
 }
 </style>
 
@@ -136,10 +184,15 @@ import {
   Blockquote,
   HorizontalRule,
   History,
-  TrailingNode
+  TrailingNode,
+  Image
 } from "tiptap-extensions";
 
 import Notification from "../components/Notification.js";
+
+import ImagesService from "@/services/images-service";
+import { url } from "vuelidate/lib/validators";
+
 
 export default {
   components: {
@@ -184,7 +237,8 @@ export default {
             node: "paragraph",
             notAfter: ["paragraph"]
           }),
-          new Notification()
+          new Notification(),
+          new Image()
         ],
         editable: this.editable,
         onUpdate: ({getJSON}) => {
@@ -198,6 +252,25 @@ export default {
         content: this.value ? JSON.parse(this.value) : null
       })
     };
+  },
+  methods: {
+    async handleFileUpload(command) {
+      this.file = this.$refs.file.files[0];
+      const res = await ImagesService.uploadImage(this.file);
+      const src = res.config.baseURL + '/images/' + res.data;
+      command({src})
+    },
+    showImagePrompt(command) {
+      const src = prompt("Enter URL of the image you would like to insert");
+      if (src !== null) {
+        const isValidURL = url(src)
+        if (src != '' && isValidURL) {
+          command({ src });
+        } else {
+          alert("Image URL was invalid, please try again.")
+        }
+      }
+    }
   },
   watch: {
     value: function(val) {
