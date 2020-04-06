@@ -102,7 +102,7 @@ public class SiteControllerTest {
         assertNotNull(thrown.getResponse());
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
     }
-    
+
     /**
      * Tests that the endpoint is able to update and existing site with legal information
      */
