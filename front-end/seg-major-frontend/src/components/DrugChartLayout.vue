@@ -83,19 +83,19 @@ export default{
       var dose = document.getElementById("dose").value.toString();
       var unit = document.getElementById("unit").value.toString();
       var freq = document.getElementById("freq").value.toString();
-      var bold = document.getElementById("warn").value.toString();
       var drug = this.$refs.drug.getDrugName();
+      var bold = document.getElementById("weaning").value.toString();
       var items = this.$refs.print.getItems();
       if(time != null && drug != null && dose != null ){
         var drugWithUnit = dose.concat(unit)
         //check if added drug is in the drug list
         if(this.drugCheck(drug)){
             if(items.length<100){
-              if(dose.length == 0 && !document.getElementById("warn").checked){
                 window.alert("Please fill in all the info!");
               }
-              else if(time.length != 0 && (drugWithUnit.length!=0||document.getElementById("warn").checked)){
-                if(document.getElementById("warn").checked){
+              if (dose.length == 0 && !document.getElementById("weaning").checked) {
+              } else if (time.length != 0 && (drugWithUnit.length != 0 || document.getElementById("weaning").checked)) {
+                if (document.getElementById("weaning").checked) {
                   dose = "";
                 }
                 else{

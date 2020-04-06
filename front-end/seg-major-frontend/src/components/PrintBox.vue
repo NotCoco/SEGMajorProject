@@ -32,6 +32,7 @@
           <tr>The information below is an aid to help with the timing of your child's medicines after the Kasai Prucedure. Always read the Patient Information Leaflet supplied with the medication and the label on the front of each medication. A nurse on the ward will go through the medications with you prior to discharge.</tr>
         </tbody >
         <!-- The table displays all of the added medicines -->
+              <td class="print" v-if="item.Bold=='As per weaning regime'"><b>{{ item.Bold }}&nbsp;</b></td>
         <tr>
           <table style="width: 1000px;" >
             <!-- table head -->
@@ -48,7 +49,6 @@
                   <td class="print" v-else-if="items[index-1].Time === item.Time"></td>
                   <td class="print" v-else>{{item.Time}}&nbsp;</td>
                   <td class="print" >{{item.Drug}}&nbsp;</td>
-                  <td class="print" v-if="item.Bold=='As per warining regime'"><b>{{item.Bold}}&nbsp;</b></td>
                   <td class="print" v-else><b>{{item.Dose}}{{item.Unit}}</b><br>{{item.Freq}}&nbsp;</td>
                   <!-- delete items -->
                   <td class="print-hide" align="absmiddle"><button class="button" style="width: 10px;height: 30px;" @click="delCard(item)"><font-awesome-icon icon="times" /></button><br></td>
