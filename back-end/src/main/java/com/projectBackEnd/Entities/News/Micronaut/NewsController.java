@@ -96,17 +96,8 @@ public class NewsController {
      * @param slug  Slug of the object to locate
      * @return created URI
      */
-    protected URI location(String slug) {
+    private URI location(String slug) {
         return URI.create("/news/" + slug);
     }
 
-
-    /**
-     * Create URI with existing news object
-     * @param news  News object to locate
-     * @return created URI
-     */
-    protected URI location(News news) {
-        return location(news.getSlug());
-    }
 }

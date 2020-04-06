@@ -49,6 +49,7 @@ public class User implements TableEntity {
 	 * Main constructor
 	 * @param email		The email of the user
 	 * @param password	The password of the user
+	 * @param name		The name of the user
 	 */
 	public User(String email, String password, String name) {
 		this.email = email;

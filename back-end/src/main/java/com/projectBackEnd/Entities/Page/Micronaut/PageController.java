@@ -38,6 +38,7 @@ public class PageController {
     /**
      * Insert a new page into the database using PageAddCommand methods via an HTTP Post request
      * @param session   Current session
+     * @param name      Name of the page
      * @param pageToAdd Dedicated PageAddCommand class to add new page to the database
      * @return HTTP response with relevant information resulting from the insertion of the page
      */
@@ -56,6 +57,7 @@ public class PageController {
 
     /**
      * Update a page with PageUpdateCommand methods via an HTTP Put request
+     * @param session               Current session
      * @param name                  Name of the Page
      * @param updatedPageCommand    Dedicated PageUpdateCommand for updating the page
      * @return HTTP response resulting from the Put request with path
@@ -99,8 +101,9 @@ public class PageController {
 
     /**
      * Update multiple pages via an HTTP Patch request
+     * @param session           Current session
      * @param name              Name of the parent site
-     * @param patchCommandList  List of patch commands
+     * @param patchCommandList  List of patch command
      * @return HTTP response with no content
      */
     @Patch("/{name}/page-indices")
@@ -121,8 +124,9 @@ public class PageController {
 
     /**
      * Remove the Page corresponding to the given Page name and Site name from the database via an HTTP Delete request
-     * @param name  Name of the parent site
-     * @param page  Name of the page to remove
+     * @param session   Current session
+     * @param name      Name of the parent site
+     * @param page      Name of the page to remove
      * @return Http response with relevant information resulting from the deletion of the page
      */
     @Delete("/{name}/pages/{page}")
@@ -142,7 +146,7 @@ public class PageController {
      * @param pageName  Name of the page to locate
      * @return URI of the page
      */
-    protected URI pageLocation(String siteName, String pageName) {
+    private URI pageLocation(String siteName, String pageName) {
 
         String encodedSlug;
         String encodedPage;

@@ -99,7 +99,7 @@ public class ImageController {
 	 * @param imageName Add the location URI onto this image name
 	 * @return created URI
 	 */
-	protected URI location(String imageName) {
+	private URI location(String imageName) {
 		return URI.create("/images/" + imageName);
 	}
 
