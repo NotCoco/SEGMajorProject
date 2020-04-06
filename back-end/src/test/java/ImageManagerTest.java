@@ -57,7 +57,7 @@ public class ImageManagerTest {
      */
     @Test
     public void testSaveImage() {
-        String imageBytes = readLineByLine("ImageBytes.txt");
+        String imageBytes = readLineByLine("src/test/resources/ImageBytes.txt");
         String randomName = imageManager.saveImage(imageBytes, "png");
         List<String> urls = imageManager.getImageUrls();
         boolean check = urls.contains(imageManager.getDir()+randomName);
