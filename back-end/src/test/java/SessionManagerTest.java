@@ -18,8 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 public class SessionManagerTest {
 
-    public static ConnectionLeakUtil connectionLeakUtil = null;    
-	public static SessionManagerInterface sessionManager = null;
+    private static ConnectionLeakUtil connectionLeakUtil = null;
+	private static SessionManagerInterface sessionManager = null;
 
 
 	/**
@@ -27,7 +27,7 @@ public class SessionManagerTest {
 	 * the connection leak util attribute
 	 */
 	@BeforeAll
-    public static void setUpDatabase() {
+    static void setUpDatabase() {
 		HibernateUtility.setResource("testhibernate.cfg.xml");
 		sessionManager = SessionManager.getSessionManager();
         connectionLeakUtil = new ConnectionLeakUtil();
@@ -37,7 +37,7 @@ public class SessionManagerTest {
 	 * After the test, the factory is shut down and the LeakUtil can tell us whether any connections leaked.
 	 */
     @AfterAll
-    public static void assertNoLeaks() {
+    static void assertNoLeaks() {
         HibernateUtility.shutdown();
         connectionLeakUtil.assertNoLeaks();
     }
@@ -45,7 +45,7 @@ public class SessionManagerTest {
 	 * Prior to each test, we'll delete all the sessions in the sessions table.
 	 */
     @BeforeEach
-    public void setUp() {
+    void setUp() {
 	((SessionManager)sessionManager).deleteAll();
     }
 
@@ -54,7 +54,7 @@ public class SessionManagerTest {
 	 * Tests that the manager is able to create a new session with legal information, expects success
 	 */
 	@Test
-	public void testGetNewSession() {
+	void testGetNewSession() {
 		fillDatabase(getTestSessions());
 		String token = sessionManager.getNewSession("1",100);
 		List<Session> sessions = (List<Session>)((EntityManager) sessionManager).getAll();
@@ -67,7 +67,7 @@ public class SessionManagerTest {
 	 * expects success
 	 */
 	@Test
-	public void testVerifySession() {
+	void testVerifySession() {
 		fillDatabase(getTestSessions());
 		String token = sessionManager.getNewSession("1",100);
 		List<Session> sessions = (List<Session>)((EntityManager) sessionManager).getAll();
@@ -82,7 +82,7 @@ public class SessionManagerTest {
 	 * @throws InterruptedException This exception is not expected but may be thrown
 	 */
 	@Test
-	public void testTimeout() throws InterruptedException {
+	void testTimeout() throws InterruptedException {
 		fillDatabase(getTestSessions());
 		String token = sessionManager.getNewSession("1",2);
 		List<Session> sessions = (List<Session>)((EntityManager) sessionManager).getAll();
@@ -98,7 +98,7 @@ public class SessionManagerTest {
 	 * Tests that the manager is able to terminate an existing session, expects success
 	 */
 	@Test
-	public void testTerminateSession() {
+	void testTerminateSession() {
 		String token = sessionManager.getNewSession("1",100);
 		List<Session> sessions = (List<Session>)((EntityManager) sessionManager).getAll();
 		assertEquals(1,sessions.size());
@@ -111,7 +111,7 @@ public class SessionManagerTest {
 	 * Tests that the manager is able to add a valid email and retrieve it by it's token, expects success
 	 */
 	@Test
-	public void testAddGetEmail(){
+	void testAddGetEmail(){
 		try{
 			String token = sessionManager.getNewSession("email@email.com",100);
 			assertEquals("email@email.com", sessionManager.getEmail(token));
@@ -127,7 +127,7 @@ public class SessionManagerTest {
 	 * @throws NoSessionException The expected exception
 	 */
 	@Test
-	public void testGetEmailNotExistEmpty() throws NoSessionException{
+	void testGetEmailNotExistEmpty() throws NoSessionException{
 		assertThrows(NoSessionException.class,() -> {sessionManager.getEmail("");});
 	}
 
@@ -136,7 +136,7 @@ public class SessionManagerTest {
 	 * @throws NoSessionException The expected exception
 	 */
 	@Test
-	public void testGetEmailNotExistIncorrect() throws NoSessionException{
+	void testGetEmailNotExistIncorrect() throws NoSessionException{
 
 		assertThrows(NoSessionException.class,() -> {sessionManager.getEmail("very incorrect token that does not work");});
 	}
@@ -146,7 +146,7 @@ public class SessionManagerTest {
 	 * @throws NoSessionException The expected exception
 	 */
 	@Test
-	public void testGetEmailNotExistNull() throws NoSessionException{
+	void testGetEmailNotExistNull() throws NoSessionException{
 		assertThrows(NoSessionException.class,() -> {sessionManager.getEmail(null);});
 	}
 

@@ -1,9 +1,7 @@
 package main.java.com.projectBackEnd.Entities.User.Micronaut;
 
 
-import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
-import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
 
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;

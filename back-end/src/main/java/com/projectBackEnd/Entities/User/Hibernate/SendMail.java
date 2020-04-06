@@ -15,12 +15,10 @@ import javax.mail.internet.MimeMessage;
 import com.sun.mail.util.MailSSLSocketFactory;
 
 /**
- *
  * This is the SendMail class.
  * It will send a email to the end user`s address while signing up.
- *
  */
-public class SendMail
+class SendMail
 
 {
     /**
@@ -32,7 +30,7 @@ public class SendMail
      * @param content The content of email
      * @return The success of the call
      */
-    public static boolean send(String to, String title, String content) {
+    static boolean send(String to, String title, String content) {
 
         String addresser = "476070991@qq.com";
         String authentication = "bxnxbljhsskqcaji";

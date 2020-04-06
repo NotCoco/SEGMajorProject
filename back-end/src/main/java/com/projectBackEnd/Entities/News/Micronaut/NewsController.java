@@ -22,7 +22,7 @@ import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 @Controller("/news")
 public class NewsController {
 
-    protected final NewsManagerInterface newsManager = NewsManager.getNewsManager();
+    private final NewsManagerInterface newsManager = NewsManager.getNewsManager();
 	protected final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
 
 

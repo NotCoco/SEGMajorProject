@@ -79,7 +79,6 @@ public class SessionManager extends EntityManager implements SessionManagerInter
 		if(token == null || token.length() != 26) return false;
 
 		List<Session> sessions = getAll();
-		Session current = null;
 		Timestamp now;
 		for (Session s: sessions) {
 			if(s.getToken().equals(token)) {
@@ -107,7 +106,9 @@ public class SessionManager extends EntityManager implements SessionManagerInter
 			String email = getEmail(token);
 			deleteAllPast(email); // delete the unused session for sake of performance
 		}
-		catch(NoSessionException e){} // when there is no session to delete
+		catch(NoSessionException e){
+			e.printStackTrace();
+		} // when there is no session to delete
 
 		//delete current session
 		for (Session s: sessions) if(s.getToken().equals(token)) delete(s);
@@ -118,7 +119,7 @@ public class SessionManager extends EntityManager implements SessionManagerInter
 	 * Delete all the sessions that are timed out
 	 * @param email	User email
 	 */
-	public void deleteAllPast(String email){
+	private void deleteAllPast(String email){
 
 		List<Session> sessions = getAll();
 		Timestamp now;

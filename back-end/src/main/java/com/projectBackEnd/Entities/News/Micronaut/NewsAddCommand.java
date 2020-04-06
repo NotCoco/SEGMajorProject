@@ -2,13 +2,13 @@ package main.java.com.projectBackEnd.Entities.News.Micronaut;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-//import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.annotation.Introspected;
 
 /**
  * NewsAddCommand is used by the controller to insert a News object into the database.
  * It creates mock News objects to reduce memory use.
  */
-//@Introspected
+@Introspected
 public class NewsAddCommand {
 
     @NotNull

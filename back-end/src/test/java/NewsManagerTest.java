@@ -22,10 +22,10 @@ import org.junit.jupiter.api.BeforeEach;
 /**
  * Test class to extensively unit test interactions between software and the News table in the database.
  */
-public class NewsManagerTest {
+class NewsManagerTest {
     
-    public static ConnectionLeakUtil connectionLeakUtil = null;
-    public static NewsManagerInterface newsManager = null;
+    private static ConnectionLeakUtil connectionLeakUtil = null;
+    private static NewsManagerInterface newsManager = null;
 
     /**
      * Prior to running, database information location is set and a singleton newsManager is acquired for testing on

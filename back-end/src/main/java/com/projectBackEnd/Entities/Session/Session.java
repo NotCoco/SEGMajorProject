@@ -24,7 +24,7 @@ import java.io.Serializable;
 public class Session implements TableEntity {
 
 	// 'Session' database table name and columns
-	public final static String TABLENAME = "Sessions";
+	final static String TABLENAME = "Sessions";
 	private final static String TOKEN = "Token";
 	private final static String DATE = "Date";
 	private final static String TIMEOUT = "Timeout";
@@ -86,7 +86,7 @@ public class Session implements TableEntity {
 	private String generateToken() {
 
 		Random rand = new Random();
-		String s = null;
+		String s;
 		String alphaNum = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvxyz";
 		do {
 			StringBuilder sb = new StringBuilder();
@@ -111,7 +111,7 @@ public class Session implements TableEntity {
 	 * Get the Date attribute
 	 * @return Date
 	 */
-	public Timestamp getDate(){
+	private Timestamp getDate(){
 		return date;
 	}
 
@@ -120,7 +120,7 @@ public class Session implements TableEntity {
 	 * Get the timeout attribute (in seconds)
 	 * @return timeout
 	 */
-	public Timestamp getTimeout(){
+	Timestamp getTimeout(){
 		return timeout;
 	}
 

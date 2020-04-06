@@ -38,14 +38,14 @@ import static org.junit.jupiter.api.Assertions.fail;
  * The purpose of this class is to test the REST endpoints associated with the news entity through the news controller
  */
 @MicronautTest
-public class NewsControllerTest {
+class NewsControllerTest {
 
 
     @Inject
     @Client("/")
-    HttpClient client;
+    private HttpClient client;
 
-    static NewsManagerInterface newsManager;
+    private static NewsManagerInterface newsManager;
     private static String token;
 
 
@@ -53,7 +53,7 @@ public class NewsControllerTest {
      * Sets the config resource location and the news manager. Also generates the token attribute
      */
     @BeforeAll
-    public static void setUpDatabase() {
+    static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         newsManager = NewsManager.getNewsManager();
         try{
@@ -69,7 +69,7 @@ public class NewsControllerTest {
      * Closes the session factory and deletes the testing user
      */
     @AfterAll
-    public static void closeDatabase() {
+    static void closeDatabase() {
         try{
         	UserManager.getUserManager().deleteUser("test@test.com" , "123");
         }
@@ -84,7 +84,7 @@ public class NewsControllerTest {
      * Ensure that there are no pre-existing news entities in the database before each test via the 'deleteAll()' method
      */
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         newsManager.deleteAll();
     }
 
@@ -93,7 +93,7 @@ public class NewsControllerTest {
      * Tests that the endpoint is able to delete an existing news item, expects success
      */
    @Test
-    public void testDeleteNews(){
+    void testDeleteNews(){
         HttpResponse response = addNews(new NewsAddCommand(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics",
                 true, "COVID-19 originated from Wuhan, China", "slug"),token);
         assertEquals("slug", getEUrl(response));
@@ -108,17 +108,16 @@ public class NewsControllerTest {
      * Deletes an existing news item and attempts to retrieve it via the GET request
      */
     @Test
-    public void testDeleteAndGetNews(){
+    void testDeleteAndGetNews(){
         HttpResponse response = addNews(new NewsAddCommand(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics",
                 true, "COVID-19 originated from Wuhan, China", "TestSlug"),token);
         assertEquals(HttpStatus.CREATED, response.getStatus());
         String slug = getEUrl(response);
         News news = newsManager.getNewsBySlug(slug);
-        int id = news.getPrimaryKey();
 
         HttpRequest request = HttpRequest.DELETE("/news/"+"TestSlug").header("X-API-Key",token);
-        response = client.toBlocking().exchange(request);
-        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+        client.toBlocking().exchange(request);
+        assertThrows(HttpClientResponseException.class, () -> {
             client.toBlocking().exchange(HttpRequest.GET("/news/"+"TestSlug"));
         });
     }
@@ -128,7 +127,7 @@ public class NewsControllerTest {
 	*	Check if deleting a news article that doesn't exist returns an error
 	*/
 	@Test
-	public void testDeleteNonExistentArticle(){
+	void testDeleteNonExistentArticle(){
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
 			client.toBlocking().exchange(HttpRequest.DELETE("/news/"+"TestSlug").header("X-API-Key",token));
         });
@@ -144,7 +143,7 @@ public class NewsControllerTest {
 	*	Check if delete with an invalid session token returns unauthorized response
 	*/
 	@Test
-	public void testDeleteUnauthorized(){
+	void testDeleteUnauthorized(){
         HttpResponse response = addNews(new NewsAddCommand(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics",
                 true, "COVID-19 originated from Wuhan, China", "slug"), token);
         assertEquals(HttpStatus.CREATED, response.getStatus());
@@ -168,7 +167,7 @@ public class NewsControllerTest {
      * Tests the news request responsible for retrieving all news
      */
     @Test
-    public void testAddAndGetNews(){
+    void testAddAndGetNews(){
         HttpResponse response = addNews(new NewsAddCommand(new Date(34189213L) , true, "Test description", "Corona virus pandemics",
                 true, "COVID-19 originated from Wuhan, China", "slug"),token);
         assertEquals(HttpStatus.CREATED, response.getStatus());
@@ -181,7 +180,7 @@ public class NewsControllerTest {
      * Tests adding a legal news item
      */
     @Test
-    public void testAddNews(){
+    void testAddNews(){
         HttpResponse response = addNews(new NewsAddCommand(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics",
                 true, "COVID-19 originated from Wuhan, China", "slug"),token);
         assertEquals(HttpStatus.CREATED, response.getStatus());
@@ -197,7 +196,7 @@ public class NewsControllerTest {
 	*	Check if adding a news with empty or null field throws an error
 	*/
 	@Test
-	public void testAddIncorrect(){
+	void testAddIncorrect(){
 		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
 			addNews(new NewsAddCommand(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics",
                     true, "COVID-19 originated from Wuhan, China", ""),token);
@@ -245,7 +244,7 @@ public class NewsControllerTest {
      * Tests that the endpoint is able to add and update an existing news item with legal information
      */
     @Test
-    public void testAddAndUpdateNews(){
+    void testAddAndUpdateNews(){
         HttpResponse response = addNews(new NewsAddCommand(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics",
                 true, "COVID-19 originated from Wuhan, China", "slug"),token);
         assertEquals(HttpStatus.CREATED, response.getStatus());
@@ -265,7 +264,7 @@ public class NewsControllerTest {
 	* Check if adding news while using an invalid token returns an unauthorized exception
 	*/
 	@Test
-	public void testAddUnauthorized(){
+	void testAddUnauthorized(){
 		 HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
 			addNews(new NewsAddCommand(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics",
                     true, "COVID-19 originated from Wuhan, China", "slug"),"");
@@ -283,7 +282,7 @@ public class NewsControllerTest {
      * Tests that the endpoint is able to update a news item with legal information
      */
     @Test
-    public void testUpdateLegalNews(){
+    void testUpdateLegalNews(){
         HttpResponse response = addNews(new NewsAddCommand(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics",
                 true, "COVID-19 originated from Wuhan, China", "slug"),token);
         assertEquals("slug", getEUrl(response));
@@ -300,7 +299,7 @@ public class NewsControllerTest {
 	* Check if update with empty or null fields returns an error
 	*/
 	@Test
-	public void testUpdateIncorrect(){
+	void testUpdateIncorrect(){
         HttpResponse response = addNews(new NewsAddCommand(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics",
                 true, "COVID-19 originated from Wuhan, China", "slug"),token);
         assertEquals("slug", getEUrl(response));
@@ -355,7 +354,7 @@ public class NewsControllerTest {
 	* Test if updating with an invalid session token returns unauthorized
 	*/
 	@Test
-	public void testUpdateUnauthorized(){
+	void testUpdateUnauthorized(){
         HttpResponse response = addNews(new NewsAddCommand(new Date(34189213L) , true, "Health Alert", "Corona virus pandemics",
                 true, "COVID-19 originated from Wuhan, China", "slug"),token);
         assertEquals(HttpStatus.CREATED, response.getStatus());
@@ -395,8 +394,7 @@ public class NewsControllerTest {
      */
     private HttpResponse addNews(NewsAddCommand newsToAdd, String token){
         HttpRequest request = HttpRequest.POST("/news", newsToAdd).header("X-API-Key",token);
-        HttpResponse response = client.toBlocking().exchange(request);
-        return response;
+        return client.toBlocking().exchange(request);
     }
 
 

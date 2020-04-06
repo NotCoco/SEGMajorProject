@@ -9,20 +9,20 @@ import java.util.List;
 
 public interface PageManagerInterface {
 
-    public Page addPage(Page newPage);
+    Page addPage(Page newPage);
 
-    public Page update(Page updatedVersion);
+    Page update(Page updatedVersion);
 
-    public Page getByPrimaryKey(Integer pk);
+    Page getByPrimaryKey(Integer pk);
 
-    public List<Page> getAllPagesOfSite(String siteSlug);
+    List<Page> getAllPagesOfSite(String siteSlug);
 
-    public Page getPageBySiteAndSlug(String siteSlug, String slug);
+    Page getPageBySiteAndSlug(String siteSlug, String slug);
 
-    public List<Page> getAllPages();
+    List<Page> getAllPages();
 
-    public void delete(Serializable primaryKey);
+    void delete(Serializable primaryKey);
 
-    public void deleteAll();
+    void deleteAll();
 
 }

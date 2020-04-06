@@ -9,7 +9,7 @@ public class NoSessionException  extends Exception {
      * Class constructor
      * @param message The message to be sent back to the client
      */
-    public NoSessionException(String message) {
+    NoSessionException(String message) {
         super(message);
     }
 }

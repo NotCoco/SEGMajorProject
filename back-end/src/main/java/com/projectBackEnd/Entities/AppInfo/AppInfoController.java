@@ -2,10 +2,7 @@ package main.java.com.projectBackEnd.Entities.AppInfo;
 
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
-import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
-
-import main.java.com.projectBackEnd.Entities.AppInfo.*;
 
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
@@ -59,7 +56,7 @@ public class AppInfoController {
      * @return The encoded hospital name and its access location.
      */
     protected URI location(String hospitalName) {
-        String encodedSlug = null;
+        String encodedSlug;
         try {
             encodedSlug = URLEncoder.encode(hospitalName, java.nio.charset.StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {

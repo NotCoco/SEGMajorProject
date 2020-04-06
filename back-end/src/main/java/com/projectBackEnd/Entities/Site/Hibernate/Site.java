@@ -16,10 +16,10 @@ import javax.persistence.*;
 public class Site implements TableEntity {
 
     // Table columns
-    public static final String TABLENAME = "Sites";
+    static final String TABLENAME = "Sites";
     public static final String ID = "ID";
-    public static final String SITENAME = "Name";
-    public static final String SITESLUG = "Slug";
+    private static final String SITENAME = "Name";
+    private static final String SITESLUG = "Slug";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -103,7 +103,7 @@ public class Site implements TableEntity {
 	
      /**
      * Copy the values of the input site object
-     * @param toCopy
+     * @param toCopy The site object to be copied
      * @return updated site object
      */
     @Override

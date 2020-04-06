@@ -1,8 +1,11 @@
 package main.java.com.projectBackEnd.Entities.User.Micronaut;
 
+import io.micronaut.core.annotation.Introspected;
+
 /**
  * This class encapsulates the operations involved in resetting a password
  */
+@Introspected
 public class PasswordResetBody {
 
 	private String password;

@@ -19,7 +19,7 @@ import java.util.Date;
 public class News implements TableEntity {
 
     // 'News' database table name and attributes
-    public static final String TABLENAME = "News";
+    static final String TABLENAME = "News";
     private static final String ID = "ID";
     private static final String DATE = "Date";
     private static final String PINNED = "Pinned";
@@ -27,7 +27,7 @@ public class News implements TableEntity {
     private static final String TITLE = "Title";
     private static final String URGENT = "Urgent";
     private static final String CONTENT = "Content";
-    public static final String SLUG = "Slug";
+    static final String SLUG = "Slug";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

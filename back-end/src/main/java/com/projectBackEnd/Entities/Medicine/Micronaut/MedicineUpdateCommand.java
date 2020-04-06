@@ -1,13 +1,13 @@
 package main.java.com.projectBackEnd.Entities.Medicine.Micronaut;
 
 import javax.validation.constraints.NotNull;
-//import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.annotation.Introspected;
 
 /**
  * MedicineUpdateCommand creates mock medicine objects and reduces memory use.
  * It is used by the controller to update a medicine object.
  */
-//@Introspected
+@Introspected
 public class MedicineUpdateCommand extends MedicineAddCommand {
 
     @NotNull

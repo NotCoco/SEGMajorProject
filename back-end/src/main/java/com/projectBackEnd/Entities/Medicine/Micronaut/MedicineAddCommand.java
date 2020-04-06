@@ -1,12 +1,12 @@
 package main.java.com.projectBackEnd.Entities.Medicine.Micronaut;
 import javax.validation.constraints.NotNull;
-//import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.annotation.Introspected;
 
 /**
  * MedicineAddCommand creates mock medicine objects to reduce memory use.
  * It is used by the controller to insert a medicine object into the database.
  */
-//@Introspected
+@Introspected
 public class MedicineAddCommand {
 
 

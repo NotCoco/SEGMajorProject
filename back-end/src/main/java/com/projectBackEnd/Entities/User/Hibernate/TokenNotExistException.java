@@ -9,7 +9,7 @@ public class TokenNotExistException extends Exception {
      * Class constructor
      * @param message The message to be sent back to the client
      */
-    public TokenNotExistException(String message) {
+    TokenNotExistException(String message) {
         super(message);
     }
 }

@@ -8,18 +8,18 @@ import java.util.List;
  */
 public interface SiteManagerInterface {
 
-    public Site addSite(Site newSite);
+    Site addSite(Site newSite);
 
-    public Site update(Site updatedVersion);
+    Site update(Site updatedVersion);
 
-    public Site getByPrimaryKey(Integer pk);
+    Site getByPrimaryKey(Integer pk);
 
-    public Site getSiteBySlug(String slug);
+    Site getSiteBySlug(String slug);
 
-    public List<Site> getAllSites();
+    List<Site> getAllSites();
 
-    public void delete(Serializable primaryKey);
+    void delete(Serializable primaryKey);
 
-    public void deleteAll();
+    void deleteAll();
 
 }

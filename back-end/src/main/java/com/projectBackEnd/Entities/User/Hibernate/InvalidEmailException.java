@@ -9,7 +9,7 @@ public class InvalidEmailException extends Exception {
      * Class constructor
      * @param message The message to be sent back to the client
      */
-    public InvalidEmailException(String message) {
+    InvalidEmailException(String message) {
         super(message); // call to Exception constructor
     }
 }

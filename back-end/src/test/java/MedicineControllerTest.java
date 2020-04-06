@@ -38,20 +38,20 @@ import main.java.com.projectBackEnd.HibernateUtility;
  * The purpose of this class is to test the REST endpoints associated with the medicine entity through the medicine controller
  */
 @MicronautTest
-public class MedicineControllerTest{
+class MedicineControllerTest{
 
     @Inject
     @Client("/")
-    HttpClient client;
+    private HttpClient client;
 
-    static MedicineManagerInterface medicineManager;
+    private static MedicineManagerInterface medicineManager;
     private static String token;
 
     /**
      * Sets the config resource location and the medicine manager. Also generates the token attribute for auth.
      */
     @BeforeAll
-    public static void setUpDatabase() {
+    static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         medicineManager = MedicineManager.getMedicineManager();
         try{
@@ -65,7 +65,7 @@ public class MedicineControllerTest{
      * Closes the session factory and deletes the testing user
      */
     @AfterAll
-    public static void closeDatabase() {
+    static void closeDatabase() {
         try{
         	UserManager.getUserManager().deleteUser("test@test.com" , "123");
         }
@@ -78,7 +78,7 @@ public class MedicineControllerTest{
      * Ensure that there are no pre-existing medicine entities in the database before each test
      */
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         medicineManager.deleteAll();
 
     }
@@ -88,7 +88,7 @@ public class MedicineControllerTest{
      * Http error to be thrown
      */
     @Test
-    public void testNonExistingMedicineReturns404() {
+    void testNonExistingMedicineReturns404() {
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
             client.toBlocking().exchange(HttpRequest.GET("/medicines/3524"));
         });
@@ -102,7 +102,7 @@ public class MedicineControllerTest{
      * expects success
      */
     @Test
-    public void testAddAndGetAll(){
+    void testAddAndGetAll(){
         ArrayList<Integer> ids = new ArrayList<>();
         HttpResponse response;
         for (int i=0;i<3;i++) {
@@ -121,7 +121,7 @@ public class MedicineControllerTest{
      * Adds a medicine with an empty name and tests that validations auto generate a name for the object
      */
     @Test
-    public void testAddEmptyNameMedicine(){
+    void testAddEmptyNameMedicine(){
         HttpResponse response = addMedicine(new MedicineAddCommand("", "Topical"));
         int id =  getEId(response).intValue();
         Medicine testMed = getMedicine(id);
@@ -132,7 +132,7 @@ public class MedicineControllerTest{
      * Adds a medicine with an empty type and tests that validations auto generate a type string for the object
      */
     @Test
-    public void testAddEmptyTypeMedicine(){
+    void testAddEmptyTypeMedicine(){
         HttpResponse response = addMedicine(new MedicineAddCommand("Med1", ""));
         int id =  getEId(response).intValue();
         Medicine testMed = getMedicine(id);
@@ -143,7 +143,7 @@ public class MedicineControllerTest{
      * Tests that the endpoint is able to retrieve an existing medicine, expects success
      */
     @Test
-    public void testAddAndGetMedicine(){
+    void testAddAndGetMedicine(){
         HttpResponse response = addMedicine(new MedicineAddCommand("Med1", "Liquid"));
         int id =  getEId(response).intValue();
 
@@ -156,7 +156,7 @@ public class MedicineControllerTest{
      * Tests that the endpoint is able to add a legal medicine to the database, expects success
      */
     @Test
-    public void testAddLegalMedicine(){
+    void testAddLegalMedicine(){
         HttpResponse response= addMedicine(new MedicineAddCommand("Med1", "Liquid"));
         assertEquals(HttpStatus.CREATED, response.getStatus());
     }
@@ -164,7 +164,7 @@ public class MedicineControllerTest{
 	*	Check if adding medicine without a valid session token returns HTTP unauthorized exception
 	*/
 	@Test
-	public void testAddMedicineUnauthorised(){
+	void testAddMedicineUnauthorised(){
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
 			client.toBlocking().exchange(HttpRequest.POST("/medicines", new MedicineAddCommand("name", "type")).header("X-API-Key",""));
         });
@@ -179,7 +179,7 @@ public class MedicineControllerTest{
 	*	Test if adding a medicine with null fields renames them to correct default values
 	*/
 	@Test
-	public void testAddMedicineNull(){
+	void testAddMedicineNull(){
         HttpResponse response = addMedicine(new MedicineAddCommand(null, null));
         int id =  getEId(response).intValue();
         Medicine testMed = getMedicine(id);
@@ -201,15 +201,15 @@ public class MedicineControllerTest{
      * Attempts to delete an existing medicine and retrieve is via the GET request, expects an HTTP error to be thrown
      */
     @Test
-    public void testDeleteAndGetMedicine(){
+    void testDeleteAndGetMedicine(){
         HttpResponse response = addMedicine(new MedicineAddCommand("Med1", "Liquid"));
         int id =  getEId(response).intValue();
         // Asserting that we've added a medicine
         assertEquals(HttpStatus.CREATED, response.getStatus());
 
         HttpRequest request = HttpRequest.DELETE("/medicines/"+id).header("X-API-Key",token);
-        response = client.toBlocking().exchange(request);
-        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+        client.toBlocking().exchange(request);
+        assertThrows(HttpClientResponseException.class, () -> {
             client.toBlocking().exchange(HttpRequest.GET("/medicines/"+id));
         });
     }
@@ -217,7 +217,7 @@ public class MedicineControllerTest{
 	*	Test if delting medicine without correct session token return HTTP unauthorized exception
 	*/
 	@Test
-	public void testDeleteMedicinieUnauthorised(){
+	void testDeleteMedicinieUnauthorised(){
         int id =  getEId(addMedicine(new MedicineAddCommand("name", "type"))).intValue();
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
 			client.toBlocking().exchange(HttpRequest.DELETE("/medicines/0").header("X-API-Key",""));
@@ -233,7 +233,7 @@ public class MedicineControllerTest{
 	*	Test if deleting a medicine with wrong ID returns a HTTP exception
 	*/
 	@Test
-	public void testDeleteMedicineNotExist(){
+	void testDeleteMedicineNotExist(){
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
 			client.toBlocking().exchange(HttpRequest.DELETE("/medicines/-1").header("X-API-Key",token));
         });
@@ -247,7 +247,7 @@ public class MedicineControllerTest{
      * Tests that the endpoint is able to update an existing medicine with legal information
      */
     @Test
-    public void testPutLegalMedicine(){
+    void testPutLegalMedicine(){
         HttpResponse response= addMedicine(new MedicineAddCommand("Med1", "Liquid"));
         int id =  getEId(response).intValue();
         response = putMedicine(new MedicineUpdateCommand(id, "NewName", "NewType"));
@@ -257,7 +257,7 @@ public class MedicineControllerTest{
      * Updates an existing medicine with an empty name and tests that validations auto generate a type for the object
      */
     @Test
-    public void testUpdateMedicineEmptyType() {
+    void testUpdateMedicineEmptyType() {
         HttpResponse response = addMedicine(new MedicineAddCommand("Med1", "Liquid"));
         int id =  getEId(response).intValue();
         putMedicine(new MedicineUpdateCommand(id, "name", ""));
@@ -268,7 +268,7 @@ public class MedicineControllerTest{
      * Updates an existing medicine with an empty name and tests that validations auto generate a name for the object,
      */
     @Test
-    public void testUpdateMedicineEmptyName() {
+    void testUpdateMedicineEmptyName() {
         HttpResponse response = addMedicine(new MedicineAddCommand("Med1", "Liquid"));
         int id =  getEId(response).intValue();
         client.toBlocking().exchange(HttpRequest.PUT("/medicines", new MedicineUpdateCommand(id, "", "type")).header("X-API-Key",token));
@@ -279,7 +279,7 @@ public class MedicineControllerTest{
 	*	Tests if updating medicine to empty values sets the to defaulte ones
 	*/
 	@Test
-	public void testUpdateMedicineNull(){
+	void testUpdateMedicineNull(){
         HttpResponse response = addMedicine(new MedicineAddCommand("Med1", "Liquid"));
         int id =  getEId(response).intValue();
 
@@ -301,8 +301,8 @@ public class MedicineControllerTest{
 	*	Test if updating medicine without correct session token returns a HTTP unauthorized exception
 	*/
 	@Test
-	public void testUpdateMedicinieUnauthorised(){
-        int id =  getEId(addMedicine(new MedicineAddCommand("name", "type"))).intValue();
+	void testUpdateMedicinieUnauthorised(){
+        addMedicine(new MedicineAddCommand("name", "type"));
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
 			client.toBlocking().exchange(HttpRequest.PUT("/medicines", new MedicineUpdateCommand(0, "name", "type")).header("X-API-Key",""));
         });
@@ -317,11 +317,11 @@ public class MedicineControllerTest{
      * Tests that a medicine can be added and updated
      */
     @Test
-    public void testAddAndUpdateMedicine(){
+    void testAddAndUpdateMedicine(){
         HttpResponse response = addMedicine(new MedicineAddCommand("Med1", "Liquid"));
         int id =  getEId(response).intValue();
 
-        response = putMedicine(new MedicineUpdateCommand(id, "newName", "newType"));
+        putMedicine(new MedicineUpdateCommand(id, "newName", "newType"));
 
         Medicine m = getMedicine(id);
         assertEquals("newName", m.getName());
@@ -362,7 +362,7 @@ public class MedicineControllerTest{
      * @param response The response from an object
      * @return The ID of the object involved
      */
-    protected Long getEId(HttpResponse response) {
+    Long getEId(HttpResponse response) {
         String val = response.header(HttpHeaders.LOCATION);
         if (val != null) {
             int index = val.indexOf("/medicines/");

@@ -8,16 +8,16 @@ import java.io.File;
 
 public interface ImageManagerInterface {
 
-    public String saveImage(String imageBytes, String extension);
+    String saveImage(String imageBytes, String extension);
 
-    public File getImage(String imageName);
+    File getImage(String imageName);
 
-    public String getDir();
+    String getDir();
 
-    public List<String> getImageUrls();
+    List<String> getImageUrls();
 
-    public boolean deleteImage(String imageName);
+    boolean deleteImage(String imageName);
 
-    public void deleteAll();
+    void deleteAll();
 
 }

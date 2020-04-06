@@ -1,9 +1,12 @@
 package main.java.com.projectBackEnd.Entities.User.Micronaut;
 
+import io.micronaut.core.annotation.Introspected;
+
 /**
  * This class is used to encapsulate a string in order to facilitate the making of high level string transactions
  * with the micronaut framework.
  */
+@Introspected
 public class StringBody {
 
 	private String string;

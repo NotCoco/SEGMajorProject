@@ -5,8 +5,8 @@ package main.java.com.projectBackEnd.Entities.ResetLinks;
  * The interface for all ResetLinkManagers
  */
 public interface ResetLinkManagerInterface{
-	public void delete(String token);
-	public String create(String email) throws EmailNotExistException;
-	public String getEmail(String token);
-	public boolean exist(String token);
+	void delete(String token);
+	String create(String email) throws EmailNotExistException;
+	String getEmail(String token);
+	boolean exist(String token);
 }

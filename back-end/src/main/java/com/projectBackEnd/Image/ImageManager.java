@@ -15,12 +15,12 @@ public class ImageManager implements ImageManagerInterface {
 	private static ImageManager imageManager;
 
 	//Random name related variables
-	final static String lexicon = "ABCDEFGHIJKLMNOPQRSTUVWXYZ12345674890";
-	final java.util.Random rand = new java.util.Random();
-	final Set<String> identifiers = new HashSet<String>();
+	private final static String lexicon = "ABCDEFGHIJKLMNOPQRSTUVWXYZ12345674890";
+	private final java.util.Random rand = new java.util.Random();
+	private final Set<String> identifiers = new HashSet<String>();
 
 	//Directory of the folder where the images are saved
-	final String dir;
+	private final String dir;
 
 	/**
 	 * Private singleton constructor for ImageManager
@@ -61,7 +61,7 @@ public class ImageManager implements ImageManagerInterface {
 	 * Save a file with bytes and its extension
 	 * @param fileBytes		File as bytes
 	 * @param extension		File type of the media
-	 * @retun generated random name withe file extension
+	 * @return generated random name withe file extension
 	 */
 	public String saveImage(String fileBytes, String extension) {
 		if (extension == null) return null;
@@ -96,7 +96,7 @@ public class ImageManager implements ImageManagerInterface {
 	 */
 	public List<String> getImageUrls()	{
 		File[] fileArray = getFileArray(dir);
-		List<String> urls = new ArrayList<String>();
+		List<String> urls = new ArrayList<>();
 		for (int i = 0; i < fileArray.length; i++) {
 			if (fileArray[i].isFile()) urls.add(dir+fileArray[i].getName());
 		}

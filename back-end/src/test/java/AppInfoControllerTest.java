@@ -1,14 +1,10 @@
 package test.java;
 
 import io.micronaut.test.annotation.MicronautTest;
-import io.micronaut.core.type.Argument;
-import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
-import io.micronaut.http.HttpStatus;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
-import io.micronaut.http.client.exceptions.HttpClientResponseException;
 
 import javax.inject.Inject;
 
@@ -17,11 +13,8 @@ import main.java.com.projectBackEnd.Entities.AppInfo.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeEach;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManager;
@@ -31,11 +24,11 @@ import main.java.com.projectBackEnd.HibernateUtility;
  * Testing REST API endpoints for the controller and its interactions with HTTP Requests
  */
 @MicronautTest
-public class AppInfoControllerTest {
+class AppInfoControllerTest {
 
     @Inject
     @Client("/")
-    HttpClient client;
+    private HttpClient client;
 
     private static AppInfoManagerInterface infoManager;
     private static String token;
@@ -44,7 +37,7 @@ public class AppInfoControllerTest {
      * Set up the database to have a test administrator user with a token for restricted requests
      */
     @BeforeAll
-    public static void setUpDatabase() {
+    static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         JSONLocation.setJsonFile("src/test/resources/AppInfoTest.json");
         infoManager = AppInfoManager.getInfoManager();
@@ -60,7 +53,7 @@ public class AppInfoControllerTest {
      * Deletes the test user and shutsdown the database.
      */
     @AfterAll
-    public static void closeDatabase() {
+    static void closeDatabase() {
         try {
             UserManager.getUserManager().deleteUser("test@test.com", "123");
         } catch (Exception e) {
@@ -73,7 +66,7 @@ public class AppInfoControllerTest {
      * Tests updating information and that the getter returns the correct new information
      */
     @Test
-    public void testUpdatingInfo() {
+    void testUpdatingInfo() {
         updateInformation(new AppInfo("Interesting New Hospital", "Cool Department"));
         assertEquals(getInfo().getHospitalName(), "Interesting New Hospital");
     }
@@ -82,7 +75,7 @@ public class AppInfoControllerTest {
      * Test updating information again, to return the new information
      */
     @Test
-    public void testUpdatingAndGettingInfo() {
+    void testUpdatingAndGettingInfo() {
         updateInformation(new AppInfo("Cool", "Cool Department"));
         assertEquals(getInfo().getHospitalName(), "Cool");
     }
@@ -91,7 +84,7 @@ public class AppInfoControllerTest {
      * Test updating information once more, to return new information
      */
     @Test
-    public void testUpdatingAndGettingInfoAgain() {
+    void testUpdatingAndGettingInfoAgain() {
         updateInformation(new AppInfo("Fancy update", "Cool Department"));
         assertEquals(getInfo().getHospitalName(), "Fancy update");
     }

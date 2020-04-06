@@ -23,17 +23,17 @@ import static org.junit.Assert.*;
 /**
  * The purpose of this class is to extensively unit test the image manager's methods and validation checks
  */
-public class ImageManagerTest {
+class ImageManagerTest {
 
     private static ImageManagerInterface imageManager;
 
-    public ImageManagerTest(){ imageManager = ImageManager.getImageManager(); }
+    ImageManagerTest(){ imageManager = ImageManager.getImageManager(); }
 
     /**
      * Prior to running, set the directory to the test image folder
      */
     @BeforeAll
-    public static void setUpBefore() {
+    static void setUpBefore() {
         DirectoryHolder.getDirectoryHolder().setDir(System.getProperty("user.dir")+"/src/test/resources/TestImages/");
     }
 
@@ -41,13 +41,13 @@ public class ImageManagerTest {
      * Prior to each test, clean up the test image folder
      */
     @BeforeEach
-    public void setUp() { imageManager.deleteAll(); }
+    void setUp() { imageManager.deleteAll(); }
 
     /**
      * After all the tests, clean up the folder and set the directory back to default
      */
     @AfterAll
-    public static void cleanUp() {
+    static void cleanUp() {
         imageManager.deleteAll();
         DirectoryHolder.getDirectoryHolder().setDefaultDir();
     }
@@ -56,7 +56,7 @@ public class ImageManagerTest {
      * Test saving an image file
      */
     @Test
-    public void testSaveImage() {
+    void testSaveImage() {
         String imageBytes = readLineByLine("src/test/resources/ImageBytes.txt");
         String randomName = imageManager.saveImage(imageBytes, "png");
         List<String> urls = imageManager.getImageUrls();
@@ -68,7 +68,7 @@ public class ImageManagerTest {
      * Test deleting an image file
      */
     @Test
-    public void testDeleteImage() {
+    void testDeleteImage() {
         String imageBytes = readLineByLine("ImageBytes.txt");
         String randomName = imageManager.saveImage(imageBytes, "png");
         List<String> urls = imageManager.getImageUrls();
@@ -91,7 +91,7 @@ public class ImageManagerTest {
      * Deleting an image that doesn't exist should return false
      */
     @Test
-    public void testDeleteImageThatDoesntExist() {
+    void testDeleteImageThatDoesntExist() {
         assertFalse(imageManager.deleteImage("."));
     }
 
@@ -99,7 +99,7 @@ public class ImageManagerTest {
      * Getting an image that doesn't exist should return null
      */
     @Test
-    public void testGetImageThatDoesntExist() {
+    void testGetImageThatDoesntExist() {
         assertNull(imageManager.getImage("."));
     }
 
@@ -107,7 +107,7 @@ public class ImageManagerTest {
      * Getting a null image should return a null image
      */
     @Test
-    public void testGetNullImage() {
+    void testGetNullImage() {
         assertNull(imageManager.getImage(null));
     }
 
@@ -115,7 +115,7 @@ public class ImageManagerTest {
      * Deleting a null image should return false
      */
     @Test
-    public void testDeleteNullImage() {
+    void testDeleteNullImage() {
         assertFalse(imageManager.deleteImage(null));
     }
 
@@ -123,7 +123,7 @@ public class ImageManagerTest {
      * Test that no errors are thrown when attempting to delete all from empty file.
      */
     @Test
-    public void testDeleteAllWithNothing() {
+    void testDeleteAllWithNothing() {
         imageManager.deleteAll();
         assertEquals(0, imageManager.getImageUrls().size());
         imageManager.deleteAll();
@@ -134,7 +134,7 @@ public class ImageManagerTest {
      * Test saving an image file and deleting it
      */
     @Test
-    public void testSaveAndDeleteAll() {
+    void testSaveAndDeleteAll() {
         String imageBytes = readLineByLine("ImageBytes.txt");
         int counter = 10;
         List<String> generatedUrls = new ArrayList<>();

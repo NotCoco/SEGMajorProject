@@ -118,7 +118,7 @@ public class SiteController {
      * @param siteSlug  Slug of the site to locate
      * @return URI for the site
      */
-    protected URI location(String siteSlug) {
+    private URI location(String siteSlug) {
         String encodedSlug = null;
         try {
             encodedSlug = URLEncoder.encode(siteSlug, java.nio.charset.StandardCharsets.UTF_8.toString());

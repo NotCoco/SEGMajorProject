@@ -1,13 +1,10 @@
 package main.java.com.projectBackEnd.Entities.ResetLinks;
 import main.java.com.projectBackEnd.TableEntity;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import java.io.Serializable;
 import java.util.Random;
 
@@ -22,7 +19,7 @@ import java.util.Random;
 public class Link implements TableEntity{
 	
 	// 'Links' database table name and attributes
-	public final static String TABLENAME = "Links";
+	final static String TABLENAME = "Links";
 	private final static String TOKEN = "token";
 	private final static String EMAIL = "email";
 	
@@ -37,13 +34,13 @@ public class Link implements TableEntity{
 	/**
 	 * Default constructor
 	 */	
-	public Link(){};
+	public Link(){}
 	
 	/**
 	 * Constructor for class Link
 	 * @param email user's email
 	 */
-	public Link(String email){
+	Link(String email){
 		this.email = email;
 		token = generateToken();	
 	}
@@ -97,7 +94,7 @@ public class Link implements TableEntity{
 	 */
 	private String generateToken(){
 	Random rand = new Random();
-	String s = null;
+	String s;
         String alphaNum = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvxyz";
 	do{
 		StringBuilder sb = new StringBuilder();

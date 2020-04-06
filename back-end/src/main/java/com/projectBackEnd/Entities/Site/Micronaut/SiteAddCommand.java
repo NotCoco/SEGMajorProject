@@ -1,13 +1,13 @@
 package main.java.com.projectBackEnd.Entities.Site.Micronaut;
 
 import javax.validation.constraints.NotNull;
-//import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.annotation.Introspected;
 
 /**
  * SiteAddCommand creates mock Site objects to reduce memory use.
  * It is used by the controller to insert a Site object into the database
  */
-//@Introspected
+@Introspected
 public class SiteAddCommand {
 	
     @NotNull
@@ -19,7 +19,7 @@ public class SiteAddCommand {
     /**
      * Default constructor
      */
-    public SiteAddCommand(){}
+    SiteAddCommand(){}
 
     /**
      * Main constructor for SiteAddCommand objects creation

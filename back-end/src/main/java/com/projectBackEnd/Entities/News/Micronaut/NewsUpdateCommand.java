@@ -1,5 +1,7 @@
 package main.java.com.projectBackEnd.Entities.News.Micronaut;
 
+import io.micronaut.core.annotation.Introspected;
+
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -7,7 +9,7 @@ import java.util.Date;
  * NewsUpdateCommand is used by its controller to update a news object in the database.
  * It creates mock News objects to reduce memory use.
  */
-//@Introspected
+@Introspected
 public class NewsUpdateCommand extends NewsAddCommand {
 
     @NotNull
