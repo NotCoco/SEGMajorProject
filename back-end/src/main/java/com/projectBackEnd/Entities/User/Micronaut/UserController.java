@@ -209,6 +209,12 @@ public class UserController {
 
 
 
+	/**
+	 * Change the name of the user on the current session via an HTTP Put request
+	 * @param session	Current session
+	 * @param body		New value for the username
+	 * @return HTTP response resulting from the user name change
+	 */
 	@Put("/change_name") 
 	public HttpResponse<String> changeName(@Header("X-API-Key") String session, @Body StringBody body){
 		if(!sessionManager.verifySession(session))
@@ -230,7 +236,12 @@ public class UserController {
 			}
 		}
 	}
-
+	/**
+	 * Change the password of the user on the current session via an HTTP Put request
+	 * @param session	Current session
+	 * @param body		New password for the user
+	 * @return HTTP response resulting from the password change
+	 */
 	@Put("/change_password") 
 	public HttpResponse<String> changePassword(@Header("X-API-Key") String session,@Body StringBody body){
 		if(!sessionManager.verifySession(session))
