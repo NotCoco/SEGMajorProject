@@ -19,7 +19,7 @@ public interface NewsManagerInterface {
 
     List<News> getAllNews();
 
-    void delete(Serializable pk);
+    void delete(Integer pk);
 
     void deleteAll();
 
