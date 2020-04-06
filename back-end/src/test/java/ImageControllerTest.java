@@ -136,11 +136,10 @@ public class ImageControllerTest {
 		HttpResponse response2 = client.toBlocking().exchange(request);
 		assertEquals(HttpStatus.NO_CONTENT, response2.getStatus());
 	}
+
 	/**
 	 * Delete wrong image's name
 	 */
-
-
 	@Test
 	public void testDeleteIncorrect(){
         	HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
@@ -205,12 +204,8 @@ public class ImageControllerTest {
 		String imageName = getEUrl(response);
 		assertTrue(imageManager.getImageUrls().contains(imageManager.getDir()+imageName));
 	}
-	/**
-	 * Get the url of the image
-	 * @param response
-	 * @return url
-	 */
 
+	
 	private String getEUrl(HttpResponse response) {
 		String val = response.header(HttpHeaders.LOCATION);
 		if (val != null) {

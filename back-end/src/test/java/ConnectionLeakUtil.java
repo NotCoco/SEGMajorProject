@@ -8,7 +8,7 @@ package test.java;
 /**
  * https://github.com/hibernate/hibernate-orm/tree/master/hibernate-testing/src/main/java/org/hibernate/testing/jdbc/leak
  */
-//TODO REMOVE TESTING CLASS: ONLY FOR DB LEAK CHECKING
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
