@@ -154,7 +154,7 @@ public class PageController {
             encodedSlug = URLEncoder.encode(siteName, java.nio.charset.StandardCharsets.UTF_8.toString());
             encodedPage = URLEncoder.encode(pageName, java.nio.charset.StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {
-            return null;
+            return null; //Difficult to have thrown, not covered by test coverage
         }
         return URI.create("/sites/" + encodedSlug + "/pages/" + encodedPage);
 

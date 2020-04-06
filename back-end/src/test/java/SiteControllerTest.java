@@ -138,6 +138,17 @@ class SiteControllerTest {
     }
 
     /**
+     * Attempts to add a site with an empty slug, expects an HTTP error to be thrown
+     */
+    @Test
+    void testAddEmptySlugSite(){
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(HttpRequest.POST("/sites", new SiteAddCommand("", ".")).header("X-API-Key",token));
+        });
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
+    }
+
+    /**
      * Tests that the endpoint is able to add a site with legal information and also retrieve it
      */
     @Test

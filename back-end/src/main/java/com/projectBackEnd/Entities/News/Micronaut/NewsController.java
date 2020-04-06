@@ -13,6 +13,10 @@ import main.java.com.projectBackEnd.Entities.News.Hibernate.NewsManagerInterface
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URLEncoder;
+
 /**
  * News Controller is a REST API endpoint.
  * It deals with the interactions between the server and the News table in the database.
@@ -92,12 +96,18 @@ public class NewsController {
 
 
     /**
-     * Create URI with the specified slug
-     * @param slug  Slug of the object to locate
-     * @return created URI
+     * Create a URI with the specified news identified by its slug
+     * @param newsSlug  Slug of the article to locate
+     * @return URI for the news
      */
-    private URI location(String slug) {
-        return URI.create("/news/" + slug);
+    private URI location(String newsSlug) {
+        String encodedSlug;
+        try {
+            encodedSlug = URLEncoder.encode(newsSlug, java.nio.charset.StandardCharsets.UTF_8.toString());
+        } catch (UnsupportedEncodingException e) {
+            return null; //Difficult to make this error be thrown, not covered by tests.
+        }
+        return URI.create("/news/" + encodedSlug);
     }
 
 }
