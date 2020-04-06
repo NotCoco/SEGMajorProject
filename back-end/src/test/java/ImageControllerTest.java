@@ -71,8 +71,9 @@ public class ImageControllerTest {
 	 */
 	@BeforeEach
 	public void setUp() {imageManager.deleteAll();}
+
 	/**
-	* delete all images, delete the user, close the factory
+	* Delete all images, delete the user, close the factory after.
 	*/
 	@AfterAll
 	public static void deleteCreatedImages() {
@@ -99,7 +100,7 @@ public class ImageControllerTest {
 	}
 
 	/**
-	 * Test if adding a image without a correct session token returns http unauthorized exception
+	 * Test if adding a image without a correct session token returns HTTP unauthorized exception
 	 */
 	@Test
 	public void testAddUnauthorized(){
@@ -114,18 +115,20 @@ public class ImageControllerTest {
         	});
 		assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
 	}
+
 	/**
-	 * Add image with wrong directory / null image
+	 * Testing adding an image with wrong directory / null image
 	 */
 	@Test
-	public void testAddIncorrect(){
+	public void testAddIncorrectDirectory(){
 		File badFile = new File(System.getProperty("user.dir")+"/src/");
 		assertThrows(java.lang.IllegalArgumentException.class, () -> {
 			addImage(badFile, token);
-        	});
+		});
 	}
+
 	/**
-	 * Delete an image
+	 * Testing deleting an image
 	 */
 	@Test
 	public void testDeleteImage(){
@@ -138,7 +141,7 @@ public class ImageControllerTest {
 	}
 
 	/**
-	 * Delete wrong image's name
+	 * Delete an image that doesn't exist
 	 */
 	@Test
 	public void testDeleteIncorrect(){
@@ -157,8 +160,7 @@ public class ImageControllerTest {
 	}
 
 	/**
-	 * Delete with unionization
-	 * test if deleting a image without a correct session token returns http unauthorized excepiton
+	 * Test that deleting while unauthorised throws an exception
 	 */
 	@Test
 	public void testDeleteUnauthorized(){
@@ -180,7 +182,7 @@ public class ImageControllerTest {
 	}
 
 	/**
-	 * Add and get the same image
+	 * Testing adding and getting the same image
 	 */
 	@Test
 	public void testAddAndGetImage(){
@@ -195,7 +197,7 @@ public class ImageControllerTest {
 	}
 
 	/**
-	 * Add an large image
+	 * Test adding a large image
 	 */
 	@Test
 	public void testAddLargeImage(){
@@ -205,7 +207,11 @@ public class ImageControllerTest {
 		assertTrue(imageManager.getImageUrls().contains(imageManager.getDir()+imageName));
 	}
 
-	
+	/**
+	 * Get the URL location of an image
+	 * @param response The HTTP response which contains the image URL
+	 * @return The image string URL
+	 */
 	private String getEUrl(HttpResponse response) {
 		String val = response.header(HttpHeaders.LOCATION);
 		if (val != null) {
@@ -217,13 +223,14 @@ public class ImageControllerTest {
 		}
 		return null;
 	}
+
 	/**
-	 * Add image by http POST request
-	 * @param file image file
-	 * @param token
-	 * @return http response
+	 * Adds a file by POST Request
+	 * @param file The file to be added
+	 * @param token The User authorisation token
+	 * @return The response from adding the image
 	 */
-	protected HttpResponse addImage(File file, String token){
+	private HttpResponse addImage(File file, String token){
 		MultipartBody body = MultipartBody.builder()
 				.addPart("file","testImage.jpg",MULTIPART_FORM_DATA_TYPE,file)
 				.build();

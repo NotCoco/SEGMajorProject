@@ -37,7 +37,7 @@ public class AppInfoControllerTest {
     @Client("/")
     HttpClient client;
 
-    static AppInfoManagerInterface infoManager;
+    private static AppInfoManagerInterface infoManager;
     private static String token;
 
     /**

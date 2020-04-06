@@ -48,7 +48,7 @@ public class MedicineControllerTest{
     private static String token;
 
     /**
-     * Sets the config resource location and the medicine manager. Also generates the token attribute
+     * Sets the config resource location and the medicine manager. Also generates the token attribute for auth.
      */
     @BeforeAll
     public static void setUpDatabase() {
@@ -57,8 +57,7 @@ public class MedicineControllerTest{
         try{
         	UserManager.getUserManager().addUser("test@test.com" , "123","name");
         	token = UserManager.getUserManager().verifyUser("test@test.com" , "123");
-        }
-        catch(Exception e){
+        } catch(Exception e){
         	fail();
         }    
 	}
@@ -76,7 +75,7 @@ public class MedicineControllerTest{
         HibernateUtility.shutdown();
     }
     /**
-     * Ensure that there are no pre-existing medicine entities in the database before each test via the 'deleteAll()' method
+     * Ensure that there are no pre-existing medicine entities in the database before each test
      */
     @BeforeEach
     public void setUp() {
@@ -106,7 +105,7 @@ public class MedicineControllerTest{
     public void testAddAndGetAll(){
         ArrayList<Integer> ids = new ArrayList<>();
         HttpResponse response;
-        for(int i=0;i<3;i++){
+        for (int i=0;i<3;i++) {
             response = addMedicine("ShouldBeDeleted", "Liquid");
             ids.add(getEId(response).intValue());
         }
@@ -128,6 +127,7 @@ public class MedicineControllerTest{
         Medicine testMed = getMedicine(id);
         assertEquals("Unnamed", testMed.getName());
     }
+
     /**
      * Adds a medicine with an empty type and tests that validations auto generate a type string for the object
      */
@@ -138,6 +138,7 @@ public class MedicineControllerTest{
         Medicine testMed = getMedicine(id);
         assertEquals("Undefined", testMed.getType());
     }
+
     /**
      * Tests that the endpoint is able to retrieve an existing medicine, expects success
      */
@@ -150,6 +151,7 @@ public class MedicineControllerTest{
 
         assertEquals("Med1", testMed.getName());
     }
+
     /**
      * Tests that the endpoint is able to add a legal medicine to the database, expects success
      */
@@ -159,7 +161,7 @@ public class MedicineControllerTest{
         assertEquals(HttpStatus.CREATED, response.getStatus());
     }
 	/**
-	*	check if adding medicine without correct session token returns http unauthorized exception
+	*	Check if adding medicine without a valid session token returns HTTP unauthorized exception
 	*/
 	@Test
 	public void testAddMedicineUnauthorised(){
@@ -174,7 +176,7 @@ public class MedicineControllerTest{
         assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
 	}
 	/**
-	*	test if adding medicine with null fields renames them to correct defaulte values
+	*	Test if adding a medicine with null fields renames them to correct default values
 	*/
 	@Test
 	public void testAddMedicineNull(){
@@ -195,8 +197,6 @@ public class MedicineControllerTest{
         assertEquals("Unnamed", testMed2.getName());
 	}
 
-
-
     /**
      * Attempts to delete an existing medicine and retrieve is via the GET request, expects an HTTP error to be thrown
      */
@@ -214,7 +214,7 @@ public class MedicineControllerTest{
         });
     }
 	/**
-	*	test if delting medicine without correct session token return http unauthorized exception
+	*	Test if delting medicine without correct session token return HTTP unauthorized exception
 	*/
 	@Test
 	public void testDeleteMedicinieUnauthorised(){
@@ -230,7 +230,7 @@ public class MedicineControllerTest{
         assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
 	}
 	/**
-	*	test if deleting a medicine with wrong index returns an http exception
+	*	Test if deleting a medicine with wrong ID returns a HTTP exception
 	*/
 	@Test
 	public void testDeleteMedicineNotExist(){
@@ -244,7 +244,7 @@ public class MedicineControllerTest{
         assertEquals(HttpStatus.METHOD_NOT_ALLOWED, thrown1.getStatus());
 	}
     /**
-     * Tests that the endpoint is able to update an existing medicine with legal information, expects success
+     * Tests that the endpoint is able to update an existing medicine with legal information
      */
     @Test
     public void testPutLegalMedicine(){
@@ -254,8 +254,7 @@ public class MedicineControllerTest{
         assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
     }
     /**
-     * Updates an existing medicine with an empty name and tests that validations auto generate a type for the object,
-     * expects success
+     * Updates an existing medicine with an empty name and tests that validations auto generate a type for the object
      */
     @Test
     public void testUpdateMedicineEmptyType() {
@@ -267,7 +266,6 @@ public class MedicineControllerTest{
     }
     /**
      * Updates an existing medicine with an empty name and tests that validations auto generate a name for the object,
-     * expects success
      */
     @Test
     public void testUpdateMedicineEmptyName() {
@@ -278,7 +276,7 @@ public class MedicineControllerTest{
         assertEquals("Unnamed", found.getName());
     }
 	/**
-	*	test if updating medicine to empty values sets the to defaulte ones
+	*	Tests if updating medicine to empty values sets the to defaulte ones
 	*/
 	@Test
 	public void testUpdateMedicineNull(){
@@ -300,7 +298,7 @@ public class MedicineControllerTest{
 
 	}
 	/**
-	*	test if updating medicine without correct session token return http unauthorized exception
+	*	Test if updating medicine without correct session token returns a HTTP unauthorized exception
 	*/
 	@Test
 	public void testUpdateMedicinieUnauthorised(){
@@ -316,8 +314,7 @@ public class MedicineControllerTest{
         assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
 	}
     /**
-     * Tests that a medicine can be added and updated,
-     * expects success
+     * Tests that a medicine can be added and updated
      */
     @Test
     public void testAddAndUpdateMedicine(){
@@ -331,41 +328,42 @@ public class MedicineControllerTest{
         assertEquals("newType", m.getType());
     }
     /**
-     * Quality of life method for updating a medicine via the REST api
-     * @param id the id
-     * @param name the name
-     * @param type the type
+     * Quality of life method for updating a medicine via the REST API
+     * @param id The ID of the medicine to be updated
+     * @param name The replacement name for the medicine
+     * @param type The replacement type for the medicine
      * @return The HTTP response produced by the operation
      */
-    protected HttpResponse putMedicine(int id, String name, String type){
+    private HttpResponse putMedicine(int id, String name, String type){
         HttpRequest request = HttpRequest.PUT("/medicines", new MedicineUpdateCommand(id, name, type)).header("X-API-Key",token);
         return client.toBlocking().exchange(request);
     }
     /**
      * Quality of life method for adding a medicine via the REST api
-     * @param name the name
-     * @param type the type
+     * @param name The name of the medicine to be added
+     * @param type The type of the medicine to be added
      * @return The HTTP response produced by the operation
      */
-    protected HttpResponse addMedicine(String name, String type){
+    private HttpResponse addMedicine(String name, String type){
         HttpRequest request = HttpRequest.POST("/medicines", new MedicineAddCommand(name, type)).header("X-API-Key",token);
         HttpResponse response = client.toBlocking().exchange(request);
         return response;
     }
     /**
      * Quality of life method for retrieving a medicine via the REST api
-     * @param id the id
+     * @param id The ID of the medicine to get
      * @return The medicine object returned
      */
-    protected Medicine getMedicine(int id){
+    private Medicine getMedicine(int id){
         HttpRequest request = HttpRequest.GET("/medicines/" + id);
         return client.toBlocking().retrieve(request, Medicine.class);
 
     }
+    
     /**
      * Method for returning the ID of an object involved in a HTTP response
-     * @param response the response
-     * @return The ID
+     * @param response The response from an object
+     * @return The ID of the object involved
      */
     protected Long getEId(HttpResponse response) {
         String val = response.header(HttpHeaders.LOCATION);
