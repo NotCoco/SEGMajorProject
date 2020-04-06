@@ -24,10 +24,10 @@ import javax.persistence.*;
 public class Page implements TableEntity {
 
     // 'Page' database table name and attributes
-    public static final String TABLENAME = "Pages";
+    static final String TABLENAME = "Pages";
     private static final String ID = "ID";
-    public static final String SITE = "Site";
-    public static final String SLUG = "Slug";
+    static final String SITE = "Site";
+    static final String SLUG = "Slug";
     private static final String INDEX = "`Index`";
     private static final String TITLE = "Title";
     private static final String CONTENT = "Content";

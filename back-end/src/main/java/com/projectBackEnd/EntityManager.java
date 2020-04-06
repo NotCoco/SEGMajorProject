@@ -32,7 +32,7 @@ public abstract class EntityManager <T extends TableEntity> {
     /** Set input Entity class as current subclass of EntityManager for database interactions
      * @param subclass  Entity class currently used by the manager
      */
-    public void setSubclass(Class<T> subclass) {
+    protected void setSubclass(Class<T> subclass) {
         this.subclass = subclass;
     }
 
@@ -62,7 +62,7 @@ public abstract class EntityManager <T extends TableEntity> {
      * Save a new object into the database
      * @param newObject Entity object to be inserted
      * @param session   Current session
-     * @throws HibernateException
+     * @throws HibernateException If the tuple cannot be inserted
      */
     private void insertTuple(T newObject, Session session) throws HibernateException {
 
@@ -99,7 +99,7 @@ public abstract class EntityManager <T extends TableEntity> {
      * @param updatedCopy   Entity object with updated attributes
      * @param session       Current session
      * @return updated object
-     * @throws HibernateException
+     * @throws HibernateException If the tuple cannot be updated
      */
     private T update(T updatedCopy, Session session) throws HibernateException {
 
@@ -139,7 +139,7 @@ public abstract class EntityManager <T extends TableEntity> {
      * @param pk        Object primary key
      * @param session   Current session
      * @return Entity object corresponding to primary key in database (or null if not found)
-     * @throws HibernateException
+     * @throws HibernateException If the object cannot be obtained
      */
     private T getByPrimaryKey(Serializable pk, Session session) throws HibernateException {
 
@@ -157,7 +157,7 @@ public abstract class EntityManager <T extends TableEntity> {
      */
     public List<T> getAll() {
 
-        List<T> results = null;
+        List<T> results;
         try (Session session = HibernateUtility.getSessionFactory().openSession()) {
             results = getAll(session);
         }
@@ -169,7 +169,7 @@ public abstract class EntityManager <T extends TableEntity> {
      * Query the database on given session to find all objects of subclass T that it stores
      * @param session   Current session
      * @return List of all objects of type T stored in database
-     * @throws HibernateException
+     * @throws HibernateException If they cannot be obtained
      */
     private List<T> getAll(Session session) throws HibernateException  {
 
@@ -203,7 +203,7 @@ public abstract class EntityManager <T extends TableEntity> {
      * Find input Entity object in database and delete it
      * @param object    Entity object to remove from database
      * @param session   Current session
-     * @throws HibernateException
+     * @throws HibernateException If the object cannot be deleted
      */
     private void delete(T object, Session session) throws HibernateException {
 
@@ -238,7 +238,7 @@ public abstract class EntityManager <T extends TableEntity> {
      * Find Entity object by its given primary key and remove it from database
      * @param pk        Primary key of Entity object to find and remove
      * @param session   Current session
-     * @throws HibernateException
+     * @throws HibernateException If the object cannot be deleted
      */
     private void delete(Serializable pk, Session session) throws HibernateException {
 
@@ -271,7 +271,7 @@ public abstract class EntityManager <T extends TableEntity> {
     /**
      * Remove all objects from subclass currently stored in database
      * @param session   Current session
-     * @throws HibernateException
+     * @throws HibernateException If the table's tuples cannot be deleted
      */
     private void deleteAll(Session session) throws  HibernateException {
 

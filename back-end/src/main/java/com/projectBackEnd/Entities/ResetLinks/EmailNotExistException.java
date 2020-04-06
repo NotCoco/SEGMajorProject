@@ -10,7 +10,7 @@ public class EmailNotExistException extends Exception {
      * Class constructor
      * @param message The message to be sent back to the client
      */
-    public EmailNotExistException(String message) {
+    EmailNotExistException(String message) {
         super(message);
     }
 }

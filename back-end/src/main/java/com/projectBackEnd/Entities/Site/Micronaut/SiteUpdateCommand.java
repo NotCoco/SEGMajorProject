@@ -1,13 +1,13 @@
 package main.java.com.projectBackEnd.Entities.Site.Micronaut;
 
 import javax.validation.constraints.NotNull;
-//import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.annotation.Introspected;
 
 /**
  * SiteUpdateCommand is used by its controller to update a site object stored in the database.
  * It creates mock Site objects to reduce memory use.
  */
-//@Introspected
+@Introspected
 public class SiteUpdateCommand extends SiteAddCommand {
 
     @NotNull

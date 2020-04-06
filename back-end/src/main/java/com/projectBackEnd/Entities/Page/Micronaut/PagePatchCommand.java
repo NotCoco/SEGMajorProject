@@ -1,14 +1,14 @@
 package main.java.com.projectBackEnd.Entities.Page.Micronaut;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-//import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.annotation.Introspected;
 
 
 /**
  * PagePatchCommand is used by its controller to patch a page object in the database
  * It creates mock Page objects to reduce memory use.
  */
-//@Introspected
+@Introspected
 public class PagePatchCommand {
 
     @NotNull

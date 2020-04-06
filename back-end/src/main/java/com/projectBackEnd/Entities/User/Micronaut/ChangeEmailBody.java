@@ -1,8 +1,11 @@
 package main.java.com.projectBackEnd.Entities.User.Micronaut;
 
+import io.micronaut.core.annotation.Introspected;
+
 /**
  * This class encapsulates the operations involved in changing an email of a user
  */
+@Introspected
 public class ChangeEmailBody {
 
 	private String oldEmail;

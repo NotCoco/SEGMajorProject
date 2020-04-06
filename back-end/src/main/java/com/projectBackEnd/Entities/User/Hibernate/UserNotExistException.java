@@ -8,7 +8,7 @@ public class UserNotExistException extends Exception {
      * Class constructor
      * @param message The message to be sent back to the client
      */
-    public UserNotExistException(String message) {
+    UserNotExistException(String message) {
         super(message);
     }
 }

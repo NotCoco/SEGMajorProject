@@ -39,21 +39,21 @@ import main.java.com.projectBackEnd.HibernateUtility;
  * The purpose of this class is to test the REST endpoints associated with the site entity through the site controller
  */
 @MicronautTest
-public class SiteControllerTest {
+class SiteControllerTest {
 
     @Inject
     @Client("/")
     HttpClient client;
 
-    static SiteManagerInterface siteManager;
-    static PageManagerInterface pageManager;
+    private static SiteManagerInterface siteManager;
+    private static PageManagerInterface pageManager;
     private static String token;
 
     /**
      * Sets the config resource location and the site manager. Also generates the token attribute
      */
     @BeforeAll
-    public static void setUpDatabase() {
+    static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         siteManager = SiteManager.getSiteManager();
         pageManager = PageManager.getPageManager();
@@ -70,7 +70,7 @@ public class SiteControllerTest {
      * Closes the session factory and deletes the testing user
      */
     @AfterAll
-    public static void closeDatabase() {
+    static void closeDatabase() {
         try{
         	UserManager.getUserManager().deleteUser("test@test.com" , "123");
         }
@@ -84,7 +84,7 @@ public class SiteControllerTest {
      * Ensure that there are no pre-existing site or page entities in the database before each test
      */
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         siteManager.deleteAll();
         //Automatically deletes all pages too due to cascade, but:
         pageManager.deleteAll();
@@ -94,7 +94,7 @@ public class SiteControllerTest {
      * Attempts to retrieve a site that does not exist in the database via the GET request expects error
      */
     @Test
-    public void testNonExistingSiteReturns404() {
+    void testNonExistingSiteReturns404() {
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
             client.toBlocking().exchange(HttpRequest.GET("/sites/IpsumLoremSite"));
         });
@@ -107,7 +107,7 @@ public class SiteControllerTest {
      * Tests that the endpoint is able to update and existing site with legal information
      */
     @Test
-    public void testPutLegalSite(){
+    void testPutLegalSite(){
         HttpResponse response= addSite("testSlug", "legalSite");
         String url = getEUrl(response);
         int id =  getSitePKBySlug(url);
@@ -119,7 +119,7 @@ public class SiteControllerTest {
      * Tests that the endpoint is able to add a site with legal information
      */
     @Test
-    public void testAddLegalSite(){
+    void testAddLegalSite(){
         HttpResponse response= addSite("testSlug", "legalSite");
         assertEquals(HttpStatus.CREATED, response.getStatus());
     }
@@ -128,7 +128,7 @@ public class SiteControllerTest {
      * Attempts to add a site with an empty name, expects an HTTP error to be thrown
      */
     @Test
-    public void testAddEmptyNameSite(){
+    void testAddEmptyNameSite(){
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
             client.toBlocking().exchange(HttpRequest.POST("/sites", new SiteAddCommand("slug", "")).header("X-API-Key",token));
         });
@@ -139,7 +139,7 @@ public class SiteControllerTest {
      * Tests that the endpoint is able to add a site with legal information and also retrieve it
      */
     @Test
-    public void testAddAndGetSite(){
+    void testAddAndGetSite(){
         HttpResponse response = addSite("testSlug", "testSite");
         String id =  getEUrl(response);
 
@@ -152,7 +152,7 @@ public class SiteControllerTest {
 	*	Test if adding site while using incorrect session tokens returns HTTP unauthorized exception
 	*/
 	@Test
-	public void testAddUnauthorized(){
+	void testAddUnauthorized(){
 		String correctToken = token;
 		token = "";
 
@@ -175,7 +175,7 @@ public class SiteControllerTest {
      * Attempts to delete an existing site and then retrieve it, expects an HTTP error to be thrown
      */
     @Test
-    public void testDeleteAndGetSite(){
+    void testDeleteAndGetSite(){
         HttpResponse response = addSite("testSlug", "testSite");
         String url =  getEUrl(response);
         int id = getSitePKBySlug(url);
@@ -183,7 +183,7 @@ public class SiteControllerTest {
         assertEquals(HttpStatus.CREATED, response.getStatus());
 
         HttpRequest request = HttpRequest.DELETE("/sites/"+url).header("X-API-Key",token);
-        response = client.toBlocking().exchange(request);
+        client.toBlocking().exchange(request);
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
             client.toBlocking().exchange(HttpRequest.GET("/sites/"+url));
         });
@@ -194,7 +194,7 @@ public class SiteControllerTest {
 	*	Test if deleting while using an invalid session token returns HTTP unauthorized exception
 	*/
 	@Test
-	public void testDeleteUnauthorized(){
+	void testDeleteUnauthorized(){
         HttpResponse response = addSite("testSlug", "testSite");
         String url =  getEUrl(response);
         assertEquals(HttpStatus.CREATED, response.getStatus());
@@ -213,7 +213,7 @@ public class SiteControllerTest {
      * Tests that the endpoint is able to add and update a site with legal information, expects success
      */
     @Test
-    public void testAddAndUpdateSite(){
+    void testAddAndUpdateSite(){
         HttpResponse response = addSite("testSlug", "testSite");
         String url =  getEUrl(response);
 
@@ -227,7 +227,7 @@ public class SiteControllerTest {
      * Attempts to update an existing site with an empty name, expects an HTTP error to be thrown
      */
     @Test
-    public void testUpdateToEmptyNameSite(){
+    void testUpdateToEmptyNameSite(){
         HttpResponse response = addSite("testSlug","testSite");
         String url =  getEUrl(response);
         int id = getSitePKBySlug(url);
@@ -240,7 +240,7 @@ public class SiteControllerTest {
 	*	Test if updating while using incorrect session token returns an HTTP unauthorized exception
 	*/
 	@Test
-	public void testUpdateUnauthorized(){
+	void testUpdateUnauthorized(){
         HttpResponse response = addSite("testSlug","testSite");
         String url =  getEUrl(response);
         int id = getSitePKBySlug(url);
@@ -277,8 +277,8 @@ public class SiteControllerTest {
      */
     private HttpResponse addSite(String slug, String name) {
         HttpRequest request = HttpRequest.POST("/sites", new SiteAddCommand(slug, name)).header("X-API-Key",token);
-        HttpResponse response = client.toBlocking().exchange(request);
-        return response;
+        return client.toBlocking().exchange(request);
+
     }
 
     /**
@@ -315,7 +315,7 @@ public class SiteControllerTest {
      * @return The generated URI
      */
     private URI location(String siteName) {
-        String encodedSlug = null;
+        String encodedSlug;
         try {
             encodedSlug = URLEncoder.encode(siteName, java.nio.charset.StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {

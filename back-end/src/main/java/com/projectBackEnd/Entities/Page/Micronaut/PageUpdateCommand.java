@@ -1,13 +1,14 @@
 package main.java.com.projectBackEnd.Entities.Page.Micronaut;
 import javax.validation.constraints.NotNull;
 
-//import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.annotation.Introspected;
 
 
 /**
  * PageUpdateCommand is used by its controller to update a page object stored in the database.
  * It creates mock Page objects to reduce memory use.
  */
+@Introspected
 public class PageUpdateCommand extends PageAddCommand {
 
     @NotNull

@@ -1,8 +1,11 @@
 package main.java.com.projectBackEnd.Entities.User.Micronaut;
 
+import io.micronaut.core.annotation.Introspected;
+
 /**
  * This class encapsulates a user entity, excluding the ID.
  */
+@Introspected
 public class UserBody {
 
 	private String name;

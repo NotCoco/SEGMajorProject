@@ -55,7 +55,7 @@ public class DirectoryHolder {
 	 * Retrieve the directory attribute
 	 * @return The directory
 	 */
-	public static String getDir() {
+	static String getDir() {
 		return dir;
 	}
 }

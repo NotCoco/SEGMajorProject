@@ -1,9 +1,9 @@
 package main.java.com.projectBackEnd.Entities.Medicine.Hibernate;
-        import java.util.List;
-        import java.io.Serializable;
+import java.util.List;
+import java.io.Serializable;
 
-        import main.java.com.projectBackEnd.EntityManager;
-        import main.java.com.projectBackEnd.HibernateUtility;
+import main.java.com.projectBackEnd.EntityManager;
+import main.java.com.projectBackEnd.HibernateUtility;
 
 /**
  * MedicineManager defines methods to interact with the Medicine table in the database.

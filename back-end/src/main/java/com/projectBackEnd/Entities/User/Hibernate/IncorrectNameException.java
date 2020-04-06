@@ -8,7 +8,7 @@ public class IncorrectNameException extends Exception {
      * Class constructor
      * @param message The message to be sent back to the client
      */
-    public IncorrectNameException(String message) {
+    IncorrectNameException(String message) {
         super(message); // call to Exception constructor
     }
 }

@@ -9,7 +9,7 @@ public class ServerErrorException extends Exception {
      * Class constructor
      * @param message The message to be sent back to the client
      */
-    public ServerErrorException(String message) {
+    ServerErrorException(String message) {
         super(message);
     }
 }

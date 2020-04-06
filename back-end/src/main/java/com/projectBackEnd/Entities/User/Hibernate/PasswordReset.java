@@ -8,7 +8,7 @@ import main.java.com.projectBackEnd.Entities.ResetLinks.EmailNotExistException;
  */
 public class PasswordReset implements PasswordResetInterface {
 
-	public static PasswordResetInterface passwordResetManager;
+	private static PasswordResetInterface passwordResetManager;
 
 	/**
 	 * Private constructor implementing Singleton design pattern

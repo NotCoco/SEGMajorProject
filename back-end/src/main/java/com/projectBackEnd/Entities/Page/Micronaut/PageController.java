@@ -25,9 +25,9 @@ import java.util.List;
 @Controller("/sites")
 public class PageController {
 
-    final PageManagerInterface pageManager = PageManager.getPageManager();
+    private final PageManagerInterface pageManager = PageManager.getPageManager();
 
-    final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
+    private final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
 
     /**
      * Default constructor
@@ -144,8 +144,8 @@ public class PageController {
      */
     protected URI pageLocation(String siteName, String pageName) {
 
-        String encodedSlug = null;
-        String encodedPage = null;
+        String encodedSlug;
+        String encodedPage;
         try {
             encodedSlug = URLEncoder.encode(siteName, java.nio.charset.StandardCharsets.UTF_8.toString());
             encodedPage = URLEncoder.encode(pageName, java.nio.charset.StandardCharsets.UTF_8.toString());

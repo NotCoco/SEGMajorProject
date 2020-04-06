@@ -24,7 +24,7 @@ import javax.validation.constraints.Size;
 @Controller("/images")
 public class ImageController {
 
-	protected final ImageManagerInterface imageManager;
+	private final ImageManagerInterface imageManager;
 	protected final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
 
 	/** Main constructor */
@@ -96,7 +96,7 @@ public class ImageController {
 
 	/**
 	 * Create URI with existing image name
-	 * @param imageName
+	 * @param imageName Add the location URI onto this image name
 	 * @return created URI
 	 */
 	protected URI location(String imageName) {

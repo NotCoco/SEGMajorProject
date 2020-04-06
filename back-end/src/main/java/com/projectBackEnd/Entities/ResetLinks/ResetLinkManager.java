@@ -38,8 +38,8 @@ public class ResetLinkManager extends EntityManager implements ResetLinkManagerI
 	/**
 	 * This method will return the new token generated for link being reset.
 	 * @param email user's email
-	 * @return new Token
-	 * @throws EmailNotExistException
+	 * @return new Token for authorization
+	 * @throws EmailNotExistException When the Email doesn't exist
 	 */
 	public String create(String email) throws EmailNotExistException{
 		if(UserManager.getUserManager().verifyEmail(email)){
@@ -88,7 +88,6 @@ public class ResetLinkManager extends EntityManager implements ResetLinkManagerI
 	 */
 	public boolean exist(String token){
 		List<Link> links = getAll();
-		boolean found = false;
 		for(Link l: links){
 			if(l.getToken().equals(token)){
 				return true;

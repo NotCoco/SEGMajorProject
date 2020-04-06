@@ -9,18 +9,18 @@ import java.util.List;
  */
 public interface NewsManagerInterface {
 
-    public News addNews(News news);
+    News addNews(News news);
 
-    public News update(News news);
+    News update(News news);
 
-    public News getByPrimaryKey(Integer id);
+    News getByPrimaryKey(Integer id);
 
-    public News getNewsBySlug(String slug);
+    News getNewsBySlug(String slug);
 
-    public List<News> getAllNews();
+    List<News> getAllNews();
 
-    public void delete(Serializable pk);
+    void delete(Serializable pk);
 
-    public void deleteAll();
+    void deleteAll();
 
 }

@@ -22,7 +22,7 @@ import java.io.Serializable;
 public class User implements TableEntity {
 
 	// table columns (attributes)
-	public final static String TABLENAME = "Users";
+	final static String TABLENAME = "Users";
 	private final static String KEY = "id";
 	private final static String EMAIL = "email";
 	private final static String PASSWORD = "password";

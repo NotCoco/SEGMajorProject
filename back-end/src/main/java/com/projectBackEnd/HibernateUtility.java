@@ -70,7 +70,7 @@ public class HibernateUtility {
      * Get an open session factory that can be used for sessions
      * @return The open session factory
      */
-    public static SessionFactory getSessionFactory() {
+    static SessionFactory getSessionFactory() {
         if (sessionFactory != null && !sessionFactory.isClosed() && sessionFactory.isOpen()) return sessionFactory;
         else return getOpenSessionFactory();
     }

@@ -29,7 +29,7 @@ import org.hibernate.testing.jdbc.leak.*;
 /**
  * @author Vlad Mihalcea
  */
-public class ConnectionLeakUtil {
+class ConnectionLeakUtil {
 
     private JdbcProperties jdbcProperties = JdbcProperties.INSTANCE;
 
@@ -47,7 +47,7 @@ public class ConnectionLeakUtil {
     /**
      * Constructor for Util to count different kinds of leaks
      */
-    public ConnectionLeakUtil() {
+    ConnectionLeakUtil() {
         for ( IdleConnectionCounter connectionCounter : idleConnectionCounters ) {
             if ( connectionCounter.appliesTo( Dialect.getDialect().getClass() ) ) {
                 this.connectionCounter = connectionCounter;
@@ -62,7 +62,7 @@ public class ConnectionLeakUtil {
     /**
      * Checks the number of leaks before and after
      */
-    public void assertNoLeaks() {
+    void assertNoLeaks() {
         if ( connectionCounter != null ) {
             int currentConnectionLeakCount = countConnectionLeaks();
             int diff = currentConnectionLeakCount - connectionLeakCount;

@@ -3,7 +3,7 @@ package main.java.com.projectBackEnd.Entities.Page.Micronaut;
 import javax.validation.constraints.NotNull;
 import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManager;
 import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManagerInterface;
-//import io.micronaut.core.annotation.Introspected;
+import io.micronaut.core.annotation.Introspected;
 
 
 /**
@@ -11,7 +11,7 @@ import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManagerInterface
  * It creates mock Page objects to reduce memory use.
  */
 
-//@Introspected
+@Introspected
 public class PageAddCommand {
 
     private String site;

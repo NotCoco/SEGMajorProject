@@ -49,16 +49,16 @@ public class PageControllerTest {
 
     @Inject
     @Client("/")
-    HttpClient client;
+    private HttpClient client;
 
-    static SiteManagerInterface siteManager;
-    static PageManagerInterface pageManager;
+    private static SiteManagerInterface siteManager;
+    private static PageManagerInterface pageManager;
     private static String token;
     /**
      * Sets the config resource location and the page manager. Also generates the token attribute
      */
     @BeforeAll
-    public static void setUpDatabase() {
+    static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         siteManager = SiteManager.getSiteManager();
         pageManager = PageManager.getPageManager();
@@ -74,7 +74,7 @@ public class PageControllerTest {
      * Closes the session factory and deletes the testing user
      */
     @AfterAll
-    public static void closeDatabase() {
+    static void closeDatabase() {
 
         try{
         	UserManager.getUserManager().deleteUser("test@test.com" , "123");
@@ -89,7 +89,7 @@ public class PageControllerTest {
      * Ensure that there are no pre-existing site or page entities in the database before each test via the 'deleteAll()' method
      */
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         siteManager.deleteAll();
         //Automatically deletes all pages too due to cascade, but:
         pageManager.deleteAll();
@@ -99,7 +99,7 @@ public class PageControllerTest {
      * Attempts to retrieve a page that does not exist in the database via the GET request
      */
     @Test
-    public void testNonExistingPageReturns404() {
+    void testNonExistingPageReturns404() {
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
             client.toBlocking().exchange(HttpRequest.GET("nothing"));
         });
@@ -110,7 +110,7 @@ public class PageControllerTest {
      * Tests that the endpoint is able to patch the index of 5 existing site
      */
     @Test
-    public void testPatchingPageIndex() {
+    void testPatchingPageIndex() {
         addSite("testSiteA", "name1",token);
         addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 9, "Title", "nutri!tion/information"),token);
         addPage(new PageAddCommand("testSiteA", "anotherPage", 12, "Title", "nutri!tion/information"),token);
@@ -134,7 +134,7 @@ public class PageControllerTest {
 	* Test if patching with invalid token returns unauthorized HTTP response
 	*/
 	@Test
-	public void testPatchingUnauthorized(){
+	void testPatchingUnauthorized(){
         addSite("testSiteA", "name1",token);
         addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 9, "Title", "nutri!tion/information"),token);
         addPage(new PageAddCommand("testSiteA", "anotherPage", 12, "Title", "nutri!tion/information"),token);
@@ -163,12 +163,11 @@ public class PageControllerTest {
      * Tests that the endpoint is able to add a legal page
      */
     @Test
-    public void testAddingRegularPage() {
+    void testAddingRegularPage() {
         addSite("testSiteA", "name1",token);
         HttpResponse response = addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
         assertNotNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
 
-        //String id =  getEUrl(response);
         Page testPage = getPage("testSiteA","nutrition/slu!#g");
         assertEquals("Title", testPage.getTitle());
     }
@@ -176,19 +175,19 @@ public class PageControllerTest {
      * Attempts to create a page with null information
      */
     @Test
-    public void testAddingPageWithNulls() {
+    void testAddingPageWithNulls() {
         assertThrows(NullPointerException.class, () -> {
-            HttpResponse response = addPage(new PageAddCommand(null, null, null, null, null),token);
+            addPage(new PageAddCommand(null, null, null, null, null),token);
         });
     }
     /**
      * Attempts to create a page with a null site attribute
      */
     @Test
-    public void testAddingNullSitePage() {
+    void testAddingNullSitePage() {
         addSite("TestSite", "name1",token);
         HttpRequest request = HttpRequest.POST(("/sites/"+ "TestSite" +"/pages"), new PageAddCommand(null, "slug", 3, "", ""));
-        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+        assertThrows(HttpClientResponseException.class, () -> {
             client.toBlocking().exchange(request);
         });
 
@@ -198,13 +197,13 @@ public class PageControllerTest {
      * Attempts to create a page with a null index attribute
      */
     @Test
-    public void testAddingNullIndexPage() {
+    void testAddingNullIndexPage() {
         addSite("testSiteA", "name1",token);
         assertThrows(NullPointerException.class, () -> {
             HttpRequest.POST(("/sites/"+ "testSiteA" +"/pages"), new PageAddCommand("testSiteA", "slug", null, "", ""));
         });
         HttpRequest request = HttpRequest.POST(("/sites/"+ "testSiteA" +"/pages"), new Page("testSiteA", "slug", null, "", ""));
-        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+        assertThrows(HttpClientResponseException.class, () -> {
             client.toBlocking().exchange(request);
         });
     }
@@ -213,7 +212,7 @@ public class PageControllerTest {
 	*	Test if adding a page with an invalid session token returns HTTP unauthorized
 	*/
 	@Test
-	public void testAddUnauthorized(){
+	void testAddUnauthorized(){
         addSite("testSiteA", "name1",token);
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
             addPage(new PageAddCommand( "testSiteA", "nutrition/slu!#g", 1, "newTitle", "nutri!tion/information"),"");
@@ -231,10 +230,10 @@ public class PageControllerTest {
      * Attempts to create a page with a pre existing page's slug value - shouldn't be allowed
      */
     @Test
-    public void testCreateSameKeys() {
+    void testCreateSameKeys() {
         addSite("testSiteA", "name1",token);
-        HttpResponse response = addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
-        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+        addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
+        assertThrows(HttpClientResponseException.class, () -> {
         	addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
         });
     }
@@ -243,8 +242,8 @@ public class PageControllerTest {
      * Attempts to delete a page that does not exist in the database
      */
     @Test
-    public void testDeleteNonExistentPage() {
-        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+    void testDeleteNonExistentPage() {
+        assertThrows(HttpClientResponseException.class, () -> {
             client.toBlocking().exchange(HttpRequest.DELETE("nothing").header("X-API-Key",token));
         });
     }
@@ -253,9 +252,9 @@ public class PageControllerTest {
      * Tests that the endpoint is able to delete a pre-existing legal page
      */
     @Test
-    public void testDeletePage() {
+    void testDeletePage() {
         addSite("testSiteA", "name1",token);
-        HttpResponse response = addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
+        addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
         URI pLoc = pageLocation("testSiteA", "nutrition/slu!#g");
         HttpRequest request = HttpRequest.DELETE(pLoc.toString()).header("X-API-Key",token);
         client.toBlocking().exchange(request);
@@ -266,10 +265,10 @@ public class PageControllerTest {
 	*	Test if trying to delete a page without a valid session token returns unauthorized
 	*/
 	@Test
-	public void testDeleteUnauthorized(){
+	void testDeleteUnauthorized(){
 
         addSite("testSiteA", "name1",token);
-        HttpResponse response = addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
+        addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
         URI pLoc = pageLocation("testSiteA", "nutrition/slu!#g");
 
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
@@ -289,10 +288,10 @@ public class PageControllerTest {
      * Attempts to update a page's slug value to the slug of a pre existing page, expects a Null pointer exception to be thrown
      */
     @Test
-    public void updateToDuplicateKeysPage() {
+    void updateToDuplicateKeysPage() {
         addSite("testSiteA", "name1",token);
-        HttpResponse response = addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
-        response = addPage(new PageAddCommand("testSiteA", "sameKey", 1, "Title", "nutri!tion/information"),token);
+        addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
+        addPage(new PageAddCommand("testSiteA", "sameKey", 1, "Title", "nutri!tion/information"),token);
         int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
         try {
             putPage(new PageUpdateCommand(idOfMadePage, "notvalid", "sameKey", 1, "newTitle", "nutri!tion/information"),token);
@@ -307,13 +306,13 @@ public class PageControllerTest {
      * Tests that the endpoint is able to update an existing legal page's title to a legal value
      */
     @Test
-    public void testUpdatePageTitle() {
+    void testUpdatePageTitle() {
         addSite("testSiteA", "name1",token);
-        HttpResponse response = addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
+        addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
         assertNotNull(pageManager.getAllPages().get(0));
         int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
         //protected HttpResponse putPage(new PageUpdateCommand(int id, String siteName, String slug, int index, String title, String content) {
-        response = putPage(new PageUpdateCommand(idOfMadePage, "testSiteA", "nutrition/slu!#g", 1, "newTitle", "nutri!tion/information"),token);
+        putPage(new PageUpdateCommand(idOfMadePage, "testSiteA", "nutrition/slu!#g", 1, "newTitle", "nutri!tion/information"),token);
         assertEquals("newTitle",pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getTitle());
         Page testPage = getPage("testSiteA", "nutrition/slu!#g");
         assertEquals("newTitle", testPage.getTitle());
@@ -323,7 +322,7 @@ public class PageControllerTest {
      * Tests that the endpoint is able to update the slug value of an existing page to a different legal slug
      */
     @Test
-    public void testUpdatePageSiteToValid() {
+    void testUpdatePageSiteToValid() {
         addSite("testSiteA", "name!",token);
         addSite("testSiteB", "name!",token);
         addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
@@ -340,7 +339,7 @@ public class PageControllerTest {
      * Tests that the endpoint is able to update the slug value of an existing page to a different legal slug
      */
     @Test
-    public void testUpdatePageSlugToValid() {
+    void testUpdatePageSlugToValid() {
         addSite("testSiteA", "name1",token);
         addSite("testSiteB", "name1",token);
         addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
@@ -361,9 +360,9 @@ public class PageControllerTest {
      * Attempts to update an existing page's site to an invalid value, expects a Null pointer exception to be thrown
      */
     @Test
-    public void testUpdatePageToInvalid() {
+    void testUpdatePageToInvalid() {
         addSite("testSiteA", "name1",token);
-        HttpResponse response = addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
+        addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
         int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
         try {
             putPage(new PageUpdateCommand(idOfMadePage, "notvalid", "nutrition/slu!#g", 1, "newTitle", "nutri!tion/information"),token);
@@ -378,9 +377,9 @@ public class PageControllerTest {
 	*	Test if updating page without a correct session token returns HTTP unauthorized
 	*/
 	@Test
-	public void testUpdateUnauthorized(){
+	void testUpdateUnauthorized(){
         addSite("testSiteA", "name1",token);
-        HttpResponse response = addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
+        addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
         int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
 
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
@@ -440,8 +439,8 @@ public class PageControllerTest {
      * @return The URI produced
      */
     private URI pageLocation(String siteSlug, String pageName) {
-        String encodedSlug = null;
-        String encodedPage = null;
+        String encodedSlug;
+        String encodedPage;
         try {
             encodedSlug = URLEncoder.encode(siteSlug, java.nio.charset.StandardCharsets.UTF_8.toString());
             encodedPage = URLEncoder.encode(pageName, java.nio.charset.StandardCharsets.UTF_8.toString());
@@ -460,8 +459,7 @@ public class PageControllerTest {
      */
     private HttpResponse addSite(String slug, String name,String token) {
         HttpRequest request = HttpRequest.POST("/sites", new SiteAddCommand(slug,name)).header("X-API-Key",token);
-        HttpResponse response = client.toBlocking().exchange(request);
-        return response;
+        return client.toBlocking().exchange(request);
     }
     /**
      * Method for producing a URI encoded URI for a site
@@ -469,7 +467,7 @@ public class PageControllerTest {
      * @return Encoded URI of the site name
      */
     private URI location(String siteName) {
-        String encodedSlug = null;
+        String encodedSlug;
         try {
             encodedSlug = URLEncoder.encode(siteName, java.nio.charset.StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {
