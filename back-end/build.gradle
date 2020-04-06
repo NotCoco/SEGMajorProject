@@ -1,6 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'com.adarshr.test-logger'
+apply plugin: 'jacoco'
 mainClassName = 'main.java.com.projectBackEnd.BackEndMain'
 
 dependencies {
@@ -57,6 +58,13 @@ test {
 }
 
 
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination file("${buildDir}/jacocoHtml")
+    }
+}
 
 
 repositories {

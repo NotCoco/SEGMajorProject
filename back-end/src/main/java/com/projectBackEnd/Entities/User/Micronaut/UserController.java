@@ -127,11 +127,14 @@ public class UserController {
 			return HttpResponse.ok();
 		}
 		catch(EmailNotExistException e){
-			return HttpResponse.notFound("incorrect email");
+			//frontend does not want an exception
 		}
 		catch(ServerErrorException e){
-			return HttpResponse.serverError();
-		}	
+			//frontend does not want an exception
+		}
+		finally{
+			return HttpResponse.ok();
+		}
 	}
 
 	/**

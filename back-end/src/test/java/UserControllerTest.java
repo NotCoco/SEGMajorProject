@@ -420,30 +420,16 @@ public class UserControllerTest{
 	*/
 	@Test
 	public void testGetPasswordResetIncorrect(){
-        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-			client.toBlocking().exchange(HttpRequest.POST("/user/password_reset_request",new StringBody("")));
-		});
-		assertEquals(HttpStatus.NOT_FOUND , thrown.getStatus());
 
- 		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
-			client.toBlocking().exchange(HttpRequest.POST("/user/password_reset_request",new StringBody(null)));
-		});
-		assertEquals(HttpStatus.NOT_FOUND , thrown1.getStatus());
+		assertEquals(HttpStatus.OK , client.toBlocking().exchange(HttpRequest.POST("/user/password_reset_request",new StringBody(""))).getStatus());
 
-		 HttpClientResponseException thrown2 = assertThrows(HttpClientResponseException.class, () -> {
-			client.toBlocking().exchange(HttpRequest.POST("/user/password_reset_request",new StringBody("test@gmail.com")));
-		});
-		assertEquals(HttpStatus.NOT_FOUND , thrown2.getStatus());
+		assertEquals(HttpStatus.OK , client.toBlocking().exchange(HttpRequest.POST("/user/password_reset_request",new StringBody(null))).getStatus());
+
+		assertEquals(HttpStatus.OK , client.toBlocking().exchange(HttpRequest.POST("/user/password_reset_request",new StringBody("test@gmail.com"))).getStatus());
 		
-	 HttpClientResponseException thrown3 = assertThrows(HttpClientResponseException.class, () -> {
-			client.toBlocking().exchange(HttpRequest.POST("/user/password_reset_request",new StringBody("test@")));
-		});
-		assertEquals(HttpStatus.NOT_FOUND , thrown3.getStatus());
+		assertEquals(HttpStatus.OK , client.toBlocking().exchange(HttpRequest.POST("/user/password_reset_request",new StringBody("test@"))).getStatus());
 
-	 HttpClientResponseException thrown4 = assertThrows(HttpClientResponseException.class, () -> {
-			client.toBlocking().exchange(HttpRequest.POST("/user/password_reset_request",new StringBody("@gmail.com")));
-		});
-		assertEquals(HttpStatus.NOT_FOUND , thrown4.getStatus());
+		assertEquals(HttpStatus.OK , client.toBlocking().exchange(HttpRequest.POST("/user/password_reset_request",new StringBody("@gmail.com"))).getStatus());
 	}
 	/**
 	* test if changing password with correct token behaves correctly
