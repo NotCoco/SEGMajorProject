@@ -7,37 +7,40 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
- * ImageManager class is used to handle image related executions:
- * - Upload images
- * - Delete images
- * - Get images
+ * Class responsible for saving and getting images from their saved location
  */
-
 public class ImageManager {
 
 	private static ImageManager imageManager;
 	//Random name related variables
-	final String lexicon = "ABCDEFGHIJKLMNOPQRSTUVWXYZ12345674890";
+	final static String lexicon = "ABCDEFGHIJKLMNOPQRSTUVWXYZ12345674890";
 	final java.util.Random rand = new java.util.Random();
 	final Set<String> identifiers = new HashSet<String>();
 	//Directory of the folder where the images are saved
 	final String dir;
-	//Constructor
+
+	/**
+	 * Private singleton constructor for an ImageManager
+	 */
 	private ImageManager() {
 		imageManager = this;
 		dir = DirectoryHolder.getDir();
 	}
 
+	/**
+	 * Get the image manager singleton object
+	 * @return The image manager
+	 */
 	public static ImageManager getImageManager() {
 		if (imageManager != null) return imageManager;
 		else return new ImageManager();
 	}
 
 	/**
-	 * Return a random name
-	 * @retunn random name
+	 * Generate a random name using the lexicon
+	 * @return random name
 	 */
-	public String randomIdentifier() {
+	private String randomIdentifier() {
 		StringBuilder builder = new StringBuilder();
 		while(builder.toString().length() == 0) {
 			int length = rand.nextInt(5)+5;
@@ -51,121 +54,93 @@ public class ImageManager {
 		return builder.toString();
 	}
 
-	public static byte[] hexStringToByteArray(String s) {
-		int len = s.length();
-		byte[] data = new byte[len / 2];
-		for (int i = 0; i < len; i += 2) {
-			data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
-					+ Character.digit(s.charAt(i+1), 16));
-		}
-		return data;
-	}
 	/**
 	 * Save a image with bytes and its extension
 	 * @param imageBytes
 	 * @param extension
 	 * @retunn random name
 	 */
-	public String saveImage(String imageBytes, String extension)
-	{
-		if(extension == null){ return "Failed"; }
-		extension = extension.toLowerCase();
-		//convert base64 string to binary data
-		byte[] data = hexStringToByteArray("e04fd020ea3a6910a2d808002b30309d");
-		try {
-			data = Base64.getDecoder().decode(imageBytes.getBytes(StandardCharsets.UTF_8));
-		}catch (IllegalArgumentException e){
-		}
+	public String saveImage(String imageBytes, String extension) {
+		if (extension == null) return null;
+		byte[] data = Base64.getDecoder().decode(imageBytes.getBytes(StandardCharsets.UTF_8));
 		String randomName = randomIdentifier();
-		String path = dir + randomName + "." + extension;
-		System.out.println(path);
-		File file = new File(path);
-		try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
+		String path = dir + randomName + "." + extension.toLowerCase();
+		try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(new File(path)))) {
 			outputStream.write(data);
 		} catch (IOException e) {
 			e.printStackTrace();
-			return "Failed";
+			return null;
 		}
 		return (randomName + "." + extension);
 	}
 
 	/**
-	 * Delete image
-	 * @param imageName
-	 * @retunn boolean value to check if its deleted
+	 * Delete an image based on its name
+ 	 * @param imageName The name of the image to be deleted
+	 * @return Whether delete was successful
 	 */
 	public boolean deleteImage(String imageName)
 	{
-		File folder = new File(dir);
-		File[] listOfFiles = folder.listFiles();
-		for (int i = 0; i < listOfFiles.length; i++)
-		{
-			System.out.println(dir+listOfFiles[i].getName());
-			if (listOfFiles[i].isFile() && listOfFiles[i].getName().equals(imageName)) {
-				File file = new File(dir+listOfFiles[i].getName());
-				return file.delete();
-			}
-		}
-		return false;
+		File foundImage = getImage(imageName);
+		return (foundImage == null) ? false : foundImage.delete();
 	}
 
 	/**
 	 * Delete all the images
 	 */
-	public void deleteAll()
-	{
+	public void deleteAll() {
 		List<String> listOfImageUrls = getImageUrls();
-		if(!listOfImageUrls.isEmpty()){
-			for (String imageUrl : listOfImageUrls)
-			{
-				deleteImage(imageUrl.substring(imageUrl.lastIndexOf("/") + 1));
-			}
+		for (String imageUrl : listOfImageUrls) {
+			deleteImage(imageUrl.substring(imageUrl.lastIndexOf("/") + 1));
 		}
 	}
 
 	/**
-	 * Get the image by image name
-	 * @param imageName
-	 * @return
+	 * Get a file based on its name
+	 * @param imageName The name of the file to be searched for
+	 * @return The matching file
 	 */
 	public File getImage(String imageName){
-		File folder = new File(dir);
-		File targetFile = null;
-		File[] listOfFiles = folder.listFiles();
-		for (File f: listOfFiles) {
-			if(f.getName().equals(imageName)){
-				targetFile = f;
-			}
+		File[] fileArray = getFileArray(dir);
+		for (File file : fileArray) {
+			if (file.isFile() && file.getName().equals(imageName)) return file;
 		}
-		return targetFile;
+		return null;
 	}
 
 	/**
-	 * Get the all the image urls
-	 * @return list of urls
+	 * Get a list of all the image URLs in the directory
+	 * @return String list of all the Image URLs in dir.
 	 */
-	public  List<String> getImageUrls()
-	{
-		File folder = new File(dir);
-		File[] listOfFiles = null;
-		try{listOfFiles = folder.listFiles();}
-		catch (Exception e){}
+	public List<String> getImageUrls()	{
+		File[] fileArray = getFileArray(dir);
 		List<String> urls = new ArrayList<String>();
-		for (int i = 0; i < listOfFiles.length; i++)
-		{
-			if (listOfFiles[i].isFile()) {
-				urls.add(dir+listOfFiles[i].getName());
-			}
+		for (int i = 0; i < fileArray.length; i++) {
+			if (fileArray[i].isFile()) urls.add(dir+fileArray[i].getName());
 		}
 		return urls;
+	}
+
+	/**
+	 * Using a string directory, return an array of the files in the directory.
+	 * @param directory The string location of the directory to be searched
+	 * @return All the files in the directory
+	 */
+	private static File[] getFileArray(String directoryPath) {
+		File directory = new File(directoryPath);
+		try {
+			return directory.listFiles();
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**
 	 * Get the output directory
 	 * @return directory
 	 */
-	public String getDir()
-	{
+	public String getDir() {
 		return dir;
 	}
 }
