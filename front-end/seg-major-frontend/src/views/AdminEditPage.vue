@@ -200,7 +200,7 @@ export default {
       } else {
         // Check if page slug conflicts with an existing page
         const existingPageSlugs = this.pagesInSite
-          .filter(p => p.slug !== this.page.slug)
+          .filter(p => p.primaryKey !== this.page.primaryKey)
           .map(p => p.slug);
         if (existingPageSlugs.includes(this.page.slug)) {
           this.slugAlreadyExists = true;
