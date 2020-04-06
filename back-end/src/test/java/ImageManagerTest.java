@@ -3,6 +3,7 @@ package test.java;
 
 import main.java.com.projectBackEnd.Image.DirectoryHolder;
 import main.java.com.projectBackEnd.Image.ImageManager;
+import main.java.com.projectBackEnd.Image.ImageManagerInterface;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -24,7 +25,7 @@ import static org.junit.Assert.*;
  */
 public class ImageManagerTest {
 
-    private static ImageManager imageManager;
+    private static ImageManagerInterface imageManager;
 
     public ImageManagerTest(){ imageManager = ImageManager.getImageManager(); }
 
