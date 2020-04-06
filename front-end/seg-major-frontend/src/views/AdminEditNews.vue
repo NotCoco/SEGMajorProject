@@ -78,6 +78,10 @@
             >Slug can only contain lowercase letters, numbers, and hyphens</p>
             <p
               class="help is-danger"
+              v-else-if="!$v.article.slug.siteSlug"
+            >This slug is not allowed because it is reserved</p>
+            <p
+              class="help is-danger"
               v-else-if="slugAlreadyExists"
             >This slug is already in use by another article</p>
           </div>
@@ -203,7 +207,7 @@ import RichTextEditor from "@/components/RichTextEditor";
 import NewsService from "@/services/news-service";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { required } from "vuelidate/lib/validators";
-import { slug } from "@/custom-validators";
+import { slug, articleSlug } from "@/custom-validators";
 
 export default {
   components: {
@@ -244,7 +248,8 @@ export default {
       },
       slug: {
         required,
-        slug
+        slug,
+        articleSlug
       },
       content: {
         required
@@ -261,7 +266,6 @@ export default {
         const existingArticleSlugs = this.news
           .filter(a => a.primaryKey !== this.article.primaryKey)
           .map(a => a.slug);
-        console.log(existingArticleSlugs);
         if (existingArticleSlugs.includes(this.article.slug)) {
           this.slugAlreadyExists = true;
           return;
@@ -269,10 +273,10 @@ export default {
 
         if (this.article.urgent) {
           // Check if another article is already urgent
-          const existingUrgentArticles = this.news.find(
+          const existingUrgentArticle = this.news.find(
             a => a.primaryKey !== this.article.primaryKey && a.urgent
           );
-          if (existingUrgentArticles) {
+          if (existingUrgentArticle) {
             this.urgentAlreadyExists = true;
             return;
           }

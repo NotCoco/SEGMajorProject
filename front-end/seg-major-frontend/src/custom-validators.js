@@ -11,3 +11,8 @@ export const siteSlug = (value) => {
   const reservedSiteSlugs = ['new', 'news', 'drug-chart', 'password-reset', 'admin', 'login'];
   return !reservedSiteSlugs.includes(value);
 }
+
+export const articleSlug = (value) => {
+  const reservedArticleSlugs = ['new'];
+  return !reservedArticleSlugs.includes(value);
+}
