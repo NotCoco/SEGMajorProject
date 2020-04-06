@@ -286,7 +286,7 @@ public class PageControllerTest {
 	}
 
     /**
-     * Attempts to update a page's slug value to the slug of a pre existing page, expects and HTTP exception to be thrown
+     * Attempts to update a page's slug value to the slug of a pre existing page, expects a Null pointer exception to be thrown
      */
     @Test
     public void updateToDuplicateKeysPage() {
@@ -294,9 +294,12 @@ public class PageControllerTest {
         HttpResponse response = addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
         response = addPage(new PageAddCommand("testSiteA", "sameKey", 1, "Title", "nutri!tion/information"),token);
         int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
-        HttpClientResponseException thrown = assertThrows(NullPointerException.class, () -> {
+        try {
             putPage(new PageUpdateCommand(idOfMadePage, "notvalid", "sameKey", 1, "newTitle", "nutri!tion/information"),token);
-        });
+            fail();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
         assertNotNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
     }
 
@@ -355,16 +358,19 @@ public class PageControllerTest {
     }
 
     /**
-     * Attempts to update an existing page's site to an invalid value, expects an HTTP exception to be thrown
+     * Attempts to update an existing page's site to an invalid value, expects a Null pointer exception to be thrown
      */
     @Test
     public void testUpdatePageToInvalid() {
         addSite("testSiteA", "name1",token);
         HttpResponse response = addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
         int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
-        HttpClientResponseException thrown = assertThrows(NullPointerException.class, () -> {
+        try {
             putPage(new PageUpdateCommand(idOfMadePage, "notvalid", "nutrition/slu!#g", 1, "newTitle", "nutri!tion/information"),token);
-        });
+            fail();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
         assertNotNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
     }
 
