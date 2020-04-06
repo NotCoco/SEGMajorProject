@@ -30,7 +30,7 @@ import java.io.File;
  * The purpose of this class is to test the REST endpoints associated with the image related executions
  */
 @MicronautTest
-public class ImageControllerTest {
+class ImageControllerTest {
 	private static ImageManagerInterface imageManager;
     private static String token;
 
@@ -40,20 +40,20 @@ public class ImageControllerTest {
 	/**
 	*	Constructor gets a new image manager Singleton
 	*/
-	public ImageControllerTest(){
+	ImageControllerTest(){
 		imageManager = ImageManager.getImageManager();
 		file = new File(System.getProperty("user.dir")+"/src/test/resources/TestImages/UploadedImage/"+"testImage.jpg");
 		largeFile = new File(System.getProperty("user.dir")+"/src/test/resources/TestImages/UploadedImage/"+"17MB.jpg");
 	}
 	@Inject
 	@Client("/")
-	HttpClient client;
+	private HttpClient client;
  
 	/**
 	 * Set up the user table for sessions and set the target directory of generated images to the specified folder
 	 */
 	@BeforeAll
-	public static void setUpBefore() {
+	static void setUpBefore() {
 		DirectoryHolder.getDirectoryHolder().setDir(System.getProperty("user.dir")+"/src/test/resources/TestImages/Generated/");
 		HibernateUtility.setResource("testhibernate.cfg.xml");
 		try{
@@ -67,15 +67,16 @@ public class ImageControllerTest {
 	}
 
 	/**
-	 * Delete all images
+	 * Deletes all images in the database before each test
 	 */
 	@BeforeEach
-	public void setUp() {imageManager.deleteAll();}
+	void setUp() {imageManager.deleteAll();}
+
 	/**
-	* delete all images, delete the user, close the factory
+	* Delete all images, delete the user, close the factory after.
 	*/
 	@AfterAll
-	public static void deleteCreatedImages() {
+	static void deleteCreatedImages() {
 		imageManager.deleteAll();
 		try{
 			UserManager.getUserManager().deleteUser("test@test.com" , "123");
@@ -88,20 +89,21 @@ public class ImageControllerTest {
 
 
 	/**
-	 * Add an image with POST request
+	 * Tests that legal images can be added to the database via the endpoint, using a POST request
 	 */
 	@Test
-	public void testAddLegalImage(){
+	void testAddLegalImage(){
 		HttpResponse response = addImage(file,token);
 		assertEquals(HttpStatus.CREATED, response.getStatus());
 		String imageName = getEUrl(response);
 		assertTrue(imageManager.getImageUrls().contains(imageManager.getDir()+imageName));
 	}
+
 	/**
-	 * test if adding a image without a correct session token returns http unauthorized excepiton
+	 * Test if adding a image without a correct session token returns HTTP unauthorized exception
 	 */
 	@Test
-	public void testAddUnauthorized(){
+	void testAddUnauthorized(){
         	HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
 			addImage(file,"");
         	});
@@ -113,21 +115,23 @@ public class ImageControllerTest {
         	});
 		assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
 	}
+
 	/**
-	 * Add image with wrong directory / null image
+	 * Testing adding an image with wrong directory / null image
 	 */
 	@Test
-	public void testAddIncorrect(){
+	void testAddIncorrectDirectory(){
 		File badFile = new File(System.getProperty("user.dir")+"/src/");
 		assertThrows(java.lang.IllegalArgumentException.class, () -> {
 			addImage(badFile, token);
-        	});
+		});
 	}
+
 	/**
-	 * Delete an image
+	 * Testing deleting an image
 	 */
 	@Test
-	public void testDeleteImage(){
+	void testDeleteImage(){
 		HttpResponse response = addImage(file,token);
 		assertEquals(HttpStatus.CREATED, response.getStatus());
 		String imageName = getEUrl(response);
@@ -135,13 +139,12 @@ public class ImageControllerTest {
 		HttpResponse response2 = client.toBlocking().exchange(request);
 		assertEquals(HttpStatus.NO_CONTENT, response2.getStatus());
 	}
+
 	/**
-	 * Delete wrong image's name
+	 * Testing deleting an image that doesn't exist
 	 */
-
-
 	@Test
-	public void testDeleteIncorrect(){
+	void testDeleteIncorrect(){
         	HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
 			client.toBlocking().exchange(HttpRequest.DELETE("/images/27182").header("X-API-Key",token));
         	});
@@ -157,11 +160,10 @@ public class ImageControllerTest {
 	}
 
 	/**
-	 * Delete with unionization
-	 * test if deleting a image without a correct session token returns http unauthorized excepiton
+	 * Test that deleting while unauthorised throws an exception
 	 */
 	@Test
-	public void testDeleteUnauthorized(){
+	void testDeleteUnauthorized(){
 		HttpResponse response = addImage(file, token);
 		assertEquals(HttpStatus.CREATED, response.getStatus());
 		String imageName = getEUrl(response);
@@ -180,10 +182,10 @@ public class ImageControllerTest {
 	}
 
 	/**
-	 * Add and get the same image
+	 * Testing adding and getting the same image
 	 */
 	@Test
-	public void testAddAndGetImage(){
+	void testAddAndGetImage(){
 		HttpResponse response = addImage(file,token);
 		assertEquals(HttpStatus.CREATED, response.getStatus());
 		String imageName = getEUrl(response);
@@ -195,21 +197,21 @@ public class ImageControllerTest {
 	}
 
 	/**
-	 * Add an large image
+	 * Test adding a large image
 	 */
 	@Test
-	public void testAddLargeImage(){
+	void testAddLargeImage(){
 		HttpResponse response = addImage(largeFile,token);
 		assertEquals(HttpStatus.CREATED, response.getStatus());
 		String imageName = getEUrl(response);
 		assertTrue(imageManager.getImageUrls().contains(imageManager.getDir()+imageName));
 	}
-	/**
-	 * Get the url of the image
-	 * @param response
-	 * @return url
-	 */
 
+	/**
+	 * Get the URL location of an image
+	 * @param response The HTTP response which contains the image URL
+	 * @return The image string URL
+	 */
 	private String getEUrl(HttpResponse response) {
 		String val = response.header(HttpHeaders.LOCATION);
 		if (val != null) {
@@ -221,13 +223,14 @@ public class ImageControllerTest {
 		}
 		return null;
 	}
+
 	/**
-	 * Add image by http POST request
-	 * @param file image file
-	 * @param token
-	 * @return http response
+	 * Adds a file by POST Request
+	 * @param file The file to be added
+	 * @param token The User authorisation token
+	 * @return The response from adding the image
 	 */
-	protected HttpResponse addImage(File file, String token){
+	private HttpResponse addImage(File file, String token){
 		MultipartBody body = MultipartBody.builder()
 				.addPart("file","testImage.jpg",MULTIPART_FORM_DATA_TYPE,file)
 				.build();

@@ -12,92 +12,35 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * EntityManager is the super class of managers, responsible for database queries.
- * It requires a subclass parameter using generic type to define which database table the manager is interacting with.
- * It is responsible for opening and closing the hibernate session.
- * @param <T> The TableEntity class type this manager will represent (required for working, defined by inheriting classes)
- */
+* EntityManager is the super class of managers, all responsible for database queries for their respective
+* database entity.
+*
+* The subclass parameter defines which database table the manager is currently interacting with.
+* This ensures that one object only is used to coordinate actions and queries across the system
+* in accordance with the Singleton design pattern.
+*
+* EntityManager deals with the opening and the closing of the hibernate session when processing queries.
+*
+* @param <T> TableEntity class type this manager will represent (required for working, defined by inheriting classes)
+*/
 public abstract class EntityManager <T extends TableEntity> {
 
     private Class<T> subclass;
 
 
-    /** Set input class as subclass
-     * @param subclass
+
+    /** Set input Entity class as current subclass of EntityManager for database interactions
+     * @param subclass  Entity class currently used by the manager
      */
-    public void setSubclass(Class<T> subclass) {
+    protected void setSubclass(Class<T> subclass) {
         this.subclass = subclass;
-    }
-        /**
-     * Open the session to get all the objects of type T from the database
-     * Sources : https://stackoverflow.com/questions/43037814/how-to-get-all-data-in-the-table-with-hibernate/43067399
-     * @return List of all objects of type T found in database
-     */
-    public List<T> getAll() {
-
-        List<T> results = null;
-        try (Session session = HibernateUtility.getSessionFactory().openSession()) {
-            results = getAll(session);
-        }
-        return results;
-    }
-
-
-    /**
-     * Queries the database to find all objects of subclass T that it stores
-     * @param session
-     * @return List of all objects of type T stored in db
-     * @throws HibernateException
-     */
-    private List<T> getAll(Session session) throws HibernateException  {
-
-        CriteriaBuilder builder = session.getCriteriaBuilder();
-        CriteriaQuery<T>  criteria = builder.createQuery(subclass);
-        criteria.from(subclass);
-        return session.createQuery(criteria).getResultList();
-
-    }
-
-
-    /**
-     * Open Session to delete all objects of subclass from database
-     */
-    public void deleteAll() {
-
-        SessionFactory sf = HibernateUtility.getSessionFactory();
-        Session session = sf.openSession();
-        try {
-            deleteAll(session);
-        } catch(HibernateException ex) {
-            if (session.getTransaction() != null) session.getTransaction().rollback();
-        } finally {
-            session.close();
-        }
-
-    }
-
-
-    /**
-     * Get all objects from subclass currently stored in database
-     * @param session
-     * @throws HibernateException
-     */
-    private void deleteAll(Session session) throws  HibernateException {
-
-        session.beginTransaction();
-        for (Object tuple : getAll()) {
-            //Deleting one by one is recommended to deal with cascading.
-            session.delete(tuple);
-        }
-        session.getTransaction().commit();
-
     }
 
 
     /**
      * Open the session and insert a new object into the subclass entity table
-     * @param newObject
-     * @return object added to database
+     * @param newObject Entity object to be inserted
+     * @return Entity object added to database
      */
     public T insertTuple(T newObject) {
 
@@ -117,9 +60,9 @@ public abstract class EntityManager <T extends TableEntity> {
 
     /**
      * Save a new object into the database
-     * @param newObject
-     * @param session
-     * @throws HibernateException
+     * @param newObject Entity object to be inserted
+     * @param session   Current session
+     * @throws HibernateException If the tuple cannot be inserted
      */
     private void insertTuple(T newObject, Session session) throws HibernateException {
 
@@ -129,11 +72,51 @@ public abstract class EntityManager <T extends TableEntity> {
 
     }
 
+    /**
+     * Open Session and update input object from subclass entity table in database
+     * @param updatedCopy   Entity object with updated attributes
+     * @return updated object
+     */
+    public T update(T updatedCopy) {
+
+        SessionFactory sf = HibernateUtility.getSessionFactory(); //Gets sf
+        Session session = sf.openSession();
+        T fromDatabase = null;
+        try {
+            fromDatabase = update(updatedCopy, session);
+        } catch(HibernateException ex) {
+            if (session.getTransaction() != null) session.getTransaction().rollback();
+        } finally {
+            session.close();
+        }
+        return fromDatabase;
+
+    }
+
 
     /**
-     * Open the session and look for the object corresponding to pk in database
-     * @param pk
-     * @return Object found in database (or null)
+     * Look for object to update in database and replace it with updatedCopy or insert it if not found
+     * @param updatedCopy   Entity object with updated attributes
+     * @param session       Current session
+     * @return updated object
+     * @throws HibernateException If the tuple cannot be updated
+     */
+    private T update(T updatedCopy, Session session) throws HibernateException {
+
+        session.beginTransaction();
+        T fromDatabase = (T) session.load(updatedCopy.getClass(), updatedCopy.getPrimaryKey());
+        if (fromDatabase != null) fromDatabase.copy(updatedCopy);
+        else insertTuple(updatedCopy);
+        session.getTransaction().commit();
+        return fromDatabase;
+
+    }
+
+
+    /**
+     * Open the session and look for the object corresponding to input primary key in database
+     * @param pk Object primary key
+     * @return Entity object corresponding to primary key in database (or null if not found)
      */
     public T getByPrimaryKey(Serializable pk) {
 
@@ -152,11 +135,11 @@ public abstract class EntityManager <T extends TableEntity> {
 
 
     /**
-     * Query database and find object corresponding to pk
-     * @param pk
-     * @param session
-     * @return object found at pk
-     * @throws HibernateException
+     * Query database and find object corresponding to input primary key on given session
+     * @param pk        Object primary key
+     * @param session   Current session
+     * @return Entity object corresponding to primary key in database (or null if not found)
+     * @throws HibernateException If the object cannot be obtained
      */
     private T getByPrimaryKey(Serializable pk, Session session) throws HibernateException {
 
@@ -167,10 +150,39 @@ public abstract class EntityManager <T extends TableEntity> {
 
     }
 
+    /**
+     * Open the session to get all the objects of Entity type T from the database
+     * Sources : https://stackoverflow.com/questions/43037814/how-to-get-all-data-in-the-table-with-hibernate/43067399
+     * @return List of all objects of type T found in database
+     */
+    public List<T> getAll() {
+
+        List<T> results;
+        try (Session session = HibernateUtility.getSessionFactory().openSession()) {
+            results = getAll(session);
+        }
+        return results;
+    }
+
+
+    /**
+     * Query the database on given session to find all objects of subclass T that it stores
+     * @param session   Current session
+     * @return List of all objects of type T stored in database
+     * @throws HibernateException If they cannot be obtained
+     */
+    private List<T> getAll(Session session) throws HibernateException  {
+
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<T>  criteria = builder.createQuery(subclass);
+        criteria.from(subclass);
+        return session.createQuery(criteria).getResultList();
+
+    }
 
     /**
      * Open Session and delete input object from subclass entity table in database
-     * @param object
+     * @param object    Entity object to remove from database
      */
     public void delete(T object) {
 
@@ -188,10 +200,10 @@ public abstract class EntityManager <T extends TableEntity> {
 
 
     /**
-     * Find object in database and delete it
-     * @param object
-     * @param session
-     * @throws HibernateException
+     * Find input Entity object in database and delete it
+     * @param object    Entity object to remove from database
+     * @param session   Current session
+     * @throws HibernateException If the object cannot be deleted
      */
     private void delete(T object, Session session) throws HibernateException {
 
@@ -204,8 +216,8 @@ public abstract class EntityManager <T extends TableEntity> {
 
 
     /**
-     * Open Session and find object associated to input pk
-     * @param pk
+     * Open Session and remove object associated to input primary key
+     * @param pk    Primary key of entity object to delete
      */
     public void delete(Serializable pk) {
 
@@ -223,10 +235,10 @@ public abstract class EntityManager <T extends TableEntity> {
 
 
     /**
-     * Find object by its given primary key and remove it from database
-     * @param pk
-     * @param session
-     * @throws HibernateException
+     * Find Entity object by its given primary key and remove it from database
+     * @param pk        Primary key of Entity object to find and remove
+     * @param session   Current session
+     * @throws HibernateException If the object cannot be deleted
      */
     private void delete(Serializable pk, Session session) throws HibernateException {
 
@@ -239,42 +251,36 @@ public abstract class EntityManager <T extends TableEntity> {
 
 
     /**
-     * Open Session and update input object from subclass entity table in database
-     * @param updatedCopy
-     * @return
+     * Open Session to delete all objects of current subclass from database
      */
-    public T update(T updatedCopy) {
+    public void deleteAll() {
 
-        SessionFactory sf = HibernateUtility.getSessionFactory(); //Gets sf
+        SessionFactory sf = HibernateUtility.getSessionFactory();
         Session session = sf.openSession();
-        T fromDatabase = null;
         try {
-            fromDatabase = update(updatedCopy, session);
+            deleteAll(session);
         } catch(HibernateException ex) {
             if (session.getTransaction() != null) session.getTransaction().rollback();
         } finally {
             session.close();
         }
 
-        return fromDatabase;
-
     }
 
+
     /**
-     * Find object to update in database and replace it with updatedCopy or insert it if not found
-     * @param updatedCopy
-     * @param session
-     * @return Updated object
-     * @throws HibernateException
+     * Remove all objects from subclass currently stored in database
+     * @param session   Current session
+     * @throws HibernateException If the table's tuples cannot be deleted
      */
-    private T update(T updatedCopy, Session session) throws HibernateException {
+    private void deleteAll(Session session) throws  HibernateException {
 
         session.beginTransaction();
-        T fromDatabase = (T) session.load(updatedCopy.getClass(), updatedCopy.getPrimaryKey());
-        if (fromDatabase != null) fromDatabase.copy(updatedCopy);
-        else insertTuple(updatedCopy);
+        for (Object tuple : getAll()) {
+            //Deleting one by one is recommended to deal with cascading.
+            session.delete(tuple);
+        }
         session.getTransaction().commit();
-        return fromDatabase;
 
     }
 

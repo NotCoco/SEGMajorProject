@@ -9,21 +9,17 @@ import java.util.Date;
 
 /**
  * News objects are database entities for the table 'News' defined in this class.
- * Attributes :
- *    - auto-increment primary key as 'ID'
- *    - slug
- *    - date as 'Date',
- *    - pinned and/or urgent
- *    - title, description
- *    https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
+ * Each news article has an ID as a auto-incremented primary key.
+ * It can be Pinned, or Urgent, depending on its importance.
+ *
+ *    Inspiration : https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
-
 @Entity
 @Table(name = News.TABLENAME, uniqueConstraints = {@UniqueConstraint(columnNames = {News.SLUG})})
 public class News implements TableEntity {
 
-    // Table columns (attributes)
-    public static final String TABLENAME = "News";
+    // 'News' database table name and attributes
+    static final String TABLENAME = "News";
     private static final String ID = "ID";
     private static final String DATE = "Date";
     private static final String PINNED = "Pinned";
@@ -31,17 +27,15 @@ public class News implements TableEntity {
     private static final String TITLE = "Title";
     private static final String URGENT = "Urgent";
     private static final String CONTENT = "Content";
-    public static final String SLUG = "Slug";
+    static final String SLUG = "Slug";
 
-    // Private fields
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ID, nullable = false)
     private Integer primaryKey;
 
-
     @NotNull
-    @Temporal(TemporalType.DATE) //Change here if unsuitable.
+    @Temporal(TemporalType.DATE)
     @Column(name = DATE, nullable = false)
     private Date date;
 
@@ -73,12 +67,24 @@ public class News implements TableEntity {
     @Column(name = PINNED, nullable = false)
     private boolean pinned;
 
+
     /**
-     * Constructors for News
+     * Constructor for News
      */
     public News() {}
 
-    // Auto-increment primary key
+
+    /**
+     *  Main constructor for News object creation
+     * The primary key is auto-incremented in the database
+     * @param date          Date of publication for the News object
+     * @param pinned        Pinned status of the News object
+     * @param description   Description of the News object
+     * @param title         Title of the News object
+     * @param urgent        Urgency status of the News object
+     * @param content       Content of the News object
+     * @param slug          Slug of the News object
+     */
     public News(Date date, boolean pinned, String description, String title, boolean urgent, String content, String slug) {
         this.primaryKey = -1;
         this.date = date;
@@ -90,7 +96,18 @@ public class News implements TableEntity {
         this.slug = slug;
     }
 
-    // Constructor taking id
+
+    /**
+     * Constructor taking primary key
+     * @param primaryKey    Primary key of the News object
+     * @param date          Date of publication for the News object
+     * @param pinned        Pinned status of the News object
+     * @param description   Description of the News object
+     * @param title         Title of the News object
+     * @param urgent        Urgency status of the News object
+     * @param content       Content of the News object
+     * @param slug          Slug of the News object
+     */
     public News(Integer primaryKey, Date date, boolean pinned, String description, String title, boolean urgent, String content, String slug) {
         this.date = date;
         this.pinned = pinned;
@@ -102,79 +119,151 @@ public class News implements TableEntity {
         this.slug = slug;
     }
 
-    /**
-     * Getters and setters
-     * Primary key cannot be changed in the database
-     */
 
+    /**
+     * Get primary key of the object
+     * @return primary key value
+     */
     @Override
     public Integer getPrimaryKey() {
         return primaryKey;
     }
 
+
+    /**
+     * Get date of the object
+     * @return date value
+     */
     public Date getDate() {
         return date;
     }
 
+
+    /**
+     * Set date as input date
+     * @param date New date value
+     */
     public void setDate(Date date) {
         this.date = date;
     }
 
+
+    /**
+     * Get description of the object
+     * @return description
+     */
     public String getDescription() {
         return description;
     }
 
+
+    /**
+     * Set description as input description
+     * @param description New description value
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+
+    /**
+     * Get content of the object
+     * @return content value
+     */
     public String getContent() {
         return content;
     }
 
+
+    /**
+     * Set content of the object as input content
+     * @param content New content value
+     */
     public void setContent(String content) {
         this.content = content;
     }
 
+
+    /**
+     * Get slug of the object
+     * @return slug value
+     */
     public String getSlug() {
         return slug;
     }
 
+
+    /**
+     * Set slug of the object as input slug
+     * @param slug New slug value
+     */
     public void setSlug(String slug) {
         this.slug = slug;
     }
 
+
+    /**
+     * Get title of the object
+     * @return title value
+     */
     public String getTitle() {
         return title;
     }
 
+
+    /**
+     * Set title as input title
+     * @param title New title value
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+
+    /**
+     * Get the urgency status of the News object
+     * @return true if urgent, else false
+     */
     public boolean isUrgent() { //Might need to become getUrgent since Jackson conversion
         return urgent;
     }
 
+
+    /**
+     * Set the urgency status of the object to input urgency status
+     * @param urgent New urgency value
+     */
     public void setUrgent(boolean urgent) {
         this.urgent = urgent;
     }
 
+
+    /**
+     * Get the pinned status of the News object
+     * @return true if pinned, else false
+     */
     public boolean isPinned() {
         return pinned;
     }
 
+
+    /**
+     * Set the pinned status of the object to input pinned status
+     * @param pinned New pinned value
+     */
     public void setPinned(boolean pinned) {
         this.pinned = pinned;
     }
 
+
     /**
      * Copy the values of the input TableEntity object
-     * @param toCopy
+     * @param toCopy    News object to copy
      * @return this, updated news object
      */
     @Override
     public TableEntity copy(TableEntity toCopy) {
+
         News newsToCopy = (News) toCopy;
         setDate(newsToCopy.getDate());
         setDescription(newsToCopy.getDescription());
@@ -184,6 +273,7 @@ public class News implements TableEntity {
         setUrgent(newsToCopy.isUrgent());
         setSlug(newsToCopy.getSlug());
         return this;
+
     }
 
 }

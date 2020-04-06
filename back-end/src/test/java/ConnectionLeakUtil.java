@@ -7,8 +7,12 @@ package test.java;
  */
 /**
  * https://github.com/hibernate/hibernate-orm/tree/master/hibernate-testing/src/main/java/org/hibernate/testing/jdbc/leak
+ *
+ * Class which uses hibernate.properties to latch onto a database and check after each test whether ther were any leaks
  */
-//TODO REMOVE TESTING CLASS: ONLY FOR DB LEAK CHECKING
+/*
+This is not our class! Source has been sited.
+ */
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -25,7 +29,7 @@ import org.hibernate.testing.jdbc.leak.*;
 /**
  * @author Vlad Mihalcea
  */
-public class ConnectionLeakUtil {
+class ConnectionLeakUtil {
 
     private JdbcProperties jdbcProperties = JdbcProperties.INSTANCE;
 
@@ -40,7 +44,10 @@ public class ConnectionLeakUtil {
 
     private int connectionLeakCount;
 
-    public ConnectionLeakUtil() {
+    /**
+     * Constructor for Util to count different kinds of leaks
+     */
+    ConnectionLeakUtil() {
         for ( IdleConnectionCounter connectionCounter : idleConnectionCounters ) {
             if ( connectionCounter.appliesTo( Dialect.getDialect().getClass() ) ) {
                 this.connectionCounter = connectionCounter;
@@ -52,7 +59,10 @@ public class ConnectionLeakUtil {
         }
     }
 
-    public void assertNoLeaks() {
+    /**
+     * Checks the number of leaks before and after
+     */
+    void assertNoLeaks() {
         if ( connectionCounter != null ) {
             int currentConnectionLeakCount = countConnectionLeaks();
             int diff = currentConnectionLeakCount - connectionLeakCount;
@@ -67,6 +77,10 @@ public class ConnectionLeakUtil {
         }
     }
 
+    /**
+     * Counts connection leaks
+     * @return The number of leaks
+     */
     private int countConnectionLeaks() {
         try ( Connection connection = newConnection() ) {
             return connectionCounter.count( connection );

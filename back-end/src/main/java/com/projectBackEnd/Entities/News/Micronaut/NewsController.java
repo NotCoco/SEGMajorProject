@@ -14,74 +14,59 @@ import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 
 /**
- * News Controller class is used for the interactions between frontend and backend
- * There are functionalites :
- *    - get all the news
- *    - update a news
- *    - delete a news
- *    - add news
+ * News Controller is a REST API endpoint.
+ * It deals with the interactions between the server and the News table in the database.
+ * It provides HTTP requests for each of the queries that need to be made to add, remove, update and retrieve
+ * news articles from the database.
  */
 @Controller("/news")
 public class NewsController {
 
-    protected final NewsManagerInterface newsManager = NewsManager.getNewsManager();
+    private final NewsManagerInterface newsManager = NewsManager.getNewsManager();
 	protected final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
 
+
     /**
-     * Get all news by http GET method
-     * @return get a list of all the News
+     * Get the list of all news stored in the database via an HTTP Get request
+     * @return List of all the News in the database
      */
     @Get("/")
-    public List<News> index(){
+    public List<News> getAllNews(){
         return newsManager.getAllNews();
     }
 
-    /**
-     * Delete news with specified slug by http Delete method
-     * @param session
-     * @param slug
-     * @return Http response with relevant information which depends on the result of
-     * deleting news
-     */
-    @Delete("/{slug}")
-    public HttpResponse delete(@Header("X-API-Key") String session,String slug) {
-		if(!sessionManager.verifySession(session))
-			return HttpResponse.unauthorized();
-        newsManager.delete(newsManager.getNewsBySlug(slug).getPrimaryKey());
-        return HttpResponse.noContent();
-    }
 
     /**
-     * Add new news to the database with NewsAddCommand by http POST method
-     * @param session
-     * @param command Dedicated NewsAddCommand class to add new news
-     * @return Http response with relevant information which depends on the result of
-     * inserting new news
+     * Insert a news article into the database using NewsAddCommand methods via an HTTP Post request
+     * @param session   Current session
+     * @param command   Dedicated NewsAddCommand class to add a news to the database
+     * @return HTTP response with relevant information resulting from the insertion of a news into the database
      */
     @Post("/")
     public HttpResponse<News> add(@Header("X-API-Key") String session,@Body NewsAddCommand command) {
-		if(!sessionManager.verifySession(session))
-			return HttpResponse.unauthorized();
+
+        if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
         News news = newsManager.addNews(new News(command.getDate(), command.isPinned(), command.getDescription(),
                 command.getTitle(), command.isUrgent(), command.getContent(), command.getSlug()));
 
-        if(newsManager.getByPrimaryKey(news.getPrimaryKey()) == null)return HttpResponse.serverError();
+        if(newsManager.getByPrimaryKey(news.getPrimaryKey()) == null) return HttpResponse.serverError();
 
         else return HttpResponse
                 .created(news)
                 .headers(headers -> headers.location(location(news.getSlug())));
     }
 
+
     /**
-     * Update medicine with MedicineUpdateCommand
-     * @param session
-     * @param command Dedicated NewsUpdateCommand class to update news
-     * @return Http response with path
+     * Update a medicine in the database using MedicineUpdateCommand methods, via an HTTP Put request
+     * @param session   Current session
+     * @param command   Dedicated NewsUpdateCommand class to update news
+     * @return HTTP response without content, containing the path
      */
     @Put("/")
     public HttpResponse update(@Header("X-API-Key") String session,@Body NewsUpdateCommand command) {
-		if(!sessionManager.verifySession(session))
-			return HttpResponse.unauthorized();
+
+        if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
         News news= new News(command.getPrimaryKey(), command.getDate(), command.isPinned(), command.getDescription(),
                 command.getTitle(), command.isUrgent(), command.getContent(), command.getSlug());
         newsManager.update(news);
@@ -92,21 +77,27 @@ public class NewsController {
     }
 
     /**
-     * Create URI with the specified slug
-     * @param slug
-     * @return created URI
+     * Delete the news corresponding to the given slug via an HTTP Delete request
+     * @param session   Current session
+     * @param slug      Slug of the news
+     * @return HTTP response with relevant information resulting from the removal of the news
      */
-    protected URI location(String slug) {
-        return URI.create("/news/" + slug);
+    @Delete("/{slug}")
+    public HttpResponse delete(@Header("X-API-Key") String session,String slug) {
+
+        if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
+        newsManager.delete(newsManager.getNewsBySlug(slug).getPrimaryKey());
+        return HttpResponse.noContent();
     }
 
+
     /**
-     * Create URI with existing news object
-     * @param news news object
+     * Create URI with the specified slug
+     * @param slug  Slug of the object to locate
      * @return created URI
      */
-    protected URI location(News news) {
-        return location(news.getSlug());
+    private URI location(String slug) {
+        return URI.create("/news/" + slug);
     }
 
 }

@@ -2,10 +2,7 @@ package main.java.com.projectBackEnd.Entities.AppInfo;
 
 import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
-import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
-
-import main.java.com.projectBackEnd.Entities.AppInfo.*;
 
 import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
@@ -37,16 +34,17 @@ public class AppInfoController {
     }
 
     /**
-     * Update the AppInfo saved in the manager.
-     * @param session The login session with X-API Key to check permissions
-     * @param info The new information to be saved
-     * @return A HTTP Response regarding success of the action
+     * Update the AppInfo saved in the manager via an HTTP Put request
+     * @param session   The login session with X-API Key to check permissions
+     * @param info      The new information to be saved
+     * @return A HTTP Response regarding success of the operation
      */
     @Put("/")
     public HttpResponse update(@Header("X-API-Key") String session, @Body AppInfo info) {
-        if(!sessionManager.verifySession(session))
-            return HttpResponse.unauthorized();
+
+        if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
         infoManager.updateInfo(info);
+
         return HttpResponse
                 .noContent()
                 .header(HttpHeaders.LOCATION, location(info.getHospitalName()).getPath());
@@ -57,8 +55,8 @@ public class AppInfoController {
      * @param hospitalName The name of the hospital
      * @return The encoded hospital name and its access location.
      */
-    protected URI location(String hospitalName) {
-        String encodedSlug = null;
+    private URI location(String hospitalName) {
+        String encodedSlug;
         try {
             encodedSlug = URLEncoder.encode(hospitalName, java.nio.charset.StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {

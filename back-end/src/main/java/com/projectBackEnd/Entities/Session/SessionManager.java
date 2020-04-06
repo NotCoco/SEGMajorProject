@@ -3,8 +3,8 @@ import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
 
 import java.util.List;
-import java.util.ArrayList;
 import java.sql.Timestamp;
+
 
 /**
  * SessionManager defines methods for Session objects to interact with the database.
@@ -17,14 +17,21 @@ public class SessionManager extends EntityManager implements SessionManagerInter
 
 	private static SessionManagerInterface sessionManager;
 
+	/**
+	 * Private constructor implementing the singleton design pattern
+	 */
 	private SessionManager() {
+
 		super();
 		setSubclass(Session.class);
 		HibernateUtility.addAnnotation(Session.class);
 		sessionManager = this;
+
 	}
 
+
 	/**
+	 * Get session manager interface
 	 * @return sessionManager ; if none has been defined, create a new SessionManager
 	 */
 	public static SessionManagerInterface getSessionManager() {
@@ -33,74 +40,97 @@ public class SessionManager extends EntityManager implements SessionManagerInter
 	}
 
 
-	public String getNewSession(String email, int timeout){
+	/**
+	 * Create a new session
+	 * @param email		User email
+	 * @param timeout	Session timeout
+	 * @return token of the created session
+	 */
+	public String getNewSession(String email, int timeout) {
+
 		Session s = new Session(email,timeout);
 		insertTuple(s);
 		return s.getToken();
+
 	}
 
-	public String getEmail(String token) throws NoSessionException{
+
+	/**
+	 * Get the Email address of the session corresponding to the given Token
+	 * @param token	Primary key 'Token'
+	 * @return Email address
+	 */
+	public String getEmail(String token) throws NoSessionException {
+
 		List<Session> sessions = getAll();
 		for (Session s: sessions) if(s.getToken().equals(token)) return s.getEmail();
 		throw new NoSessionException("no such session");
+
 	}
 
 
-
+	/**
+	 * Verify the session corresponding to the given Token
+	 * @param token	Primary key of the session
+	 * @return true if the session is open; else false
+	 */
 	public boolean verifySession(String token) {
-		if(token == null || token.length() != 26)
-			return false;
+
+		if(token == null || token.length() != 26) return false;
+
 		List<Session> sessions = getAll();
-		Session current = null;
 		Timestamp now;
-		for (Session s: sessions){
-			if(s.getToken().equals(token)){
+		for (Session s: sessions) {
+			if(s.getToken().equals(token)) {
 				now = new Timestamp(System.currentTimeMillis());
-				if(s.getTimeout().after(now)){
-					return true;
-				}
-				else{	
+				if(s.getTimeout().after(now)) return true;
+				else {
 					delete(s);
-					return false;	
+					return false;
 				}
 			}
-			
+
 		}
 		return false;
 	}
 
 
-
+	/**
+	 * Terminate the session corresponding to the given token
+	 * @param token	Primary key 'Token'
+	 */
 	public void terminateSession(String token) {
+
 		List<Session> sessions = getAll();
-		try{
+		try {
 			String email = getEmail(token);
 			deleteAllPast(email); // delete the unused session for sake of performance
 		}
-		catch(NoSessionException e){ // when there is no session to delete 
-		}
+		catch(NoSessionException e){
+			e.printStackTrace();
+		} // when there is no session to delete
+
 		//delete current session
-		for (Session s: sessions){
-			if(s.getToken().equals(token)){
-				delete(s);
-			}
-		}
-		
+		for (Session s: sessions) if(s.getToken().equals(token)) delete(s);
+
 	}
-	
-	public void deleteAllPast(String email){
+
+	/**
+	 * Delete all the sessions that are timed out
+	 * @param email	User email
+	 */
+	private void deleteAllPast(String email){
+
 		List<Session> sessions = getAll();
 		Timestamp now;
-		for (Session s: sessions){
-			if(s.getEmail().equals(email)){
+
+		for (Session s: sessions) {
+			if(s.getEmail().equals(email)) {
 				now = new Timestamp(System.currentTimeMillis());
-				if(!s.getTimeout().after(now)){
-					delete(s);
-				}
-			
+				if(!s.getTimeout().after(now)) delete(s);
 			}
 		}
 	}
-	
+
 
 }
