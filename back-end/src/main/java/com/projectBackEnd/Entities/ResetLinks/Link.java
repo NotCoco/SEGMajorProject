@@ -77,14 +77,10 @@ public class Link implements TableEntity{
 	 *
 	 */
     public TableEntity copy(TableEntity newCopy){
-		if(newCopy instanceof Link){		
-			token = ((Link)newCopy).getToken();
-			email = ((Link)newCopy).getEmail();
-			return this;
-		}
-		else
-			return null;
-		
+		Link newLink = (Link) newCopy;
+		token = newLink.getToken();
+		email = newLink.getEmail();
+		return newLink;
 	}
 
 
