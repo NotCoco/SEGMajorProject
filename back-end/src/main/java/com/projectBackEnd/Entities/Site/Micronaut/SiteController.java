@@ -64,7 +64,7 @@ public class SiteController {
     /**
      * Get the specific Site corresponding to the given ID via an HTTP Get request
      * @param id    Primary key of the site to retrieve
-     * @return      Site with the specified ID
+     * @return Site with the specified ID
      */
     @Get(value = "/id/{id}", produces = MediaType.TEXT_JSON)
     public Site list(int id) {
@@ -74,7 +74,7 @@ public class SiteController {
     /**
      * Get the specific Site corresponding to the given site slug via an HTTP Get request
      * @param slug  Slug of the site to retrieve
-     * @return      Site with the specified slug
+     * @return Site with the specified slug
      */
     @Get(value = "/{slug}")
     public Site list(String slug){return siteManager.getSiteBySlug(slug);}

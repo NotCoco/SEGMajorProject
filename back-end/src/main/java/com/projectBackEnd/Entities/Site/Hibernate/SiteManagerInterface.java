@@ -22,6 +22,4 @@ public interface SiteManagerInterface {
 
     public void deleteAll();
 
-
-
-    }
+}

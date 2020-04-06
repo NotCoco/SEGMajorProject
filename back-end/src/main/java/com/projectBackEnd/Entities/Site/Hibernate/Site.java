@@ -108,6 +108,7 @@ public class Site implements TableEntity {
      */
     @Override
     public TableEntity copy(TableEntity toCopy) {
+
         Site siteToCopy = (Site) toCopy;
         setName(siteToCopy.getName());
         setSlug(siteToCopy.getSlug());
