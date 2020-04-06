@@ -11,9 +11,6 @@ import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 import main.java.com.projectBackEnd.Entities.Session.NoSessionException;
 
 import main.java.com.projectBackEnd.Entities.User.Hibernate.*;
-
-import main.java.com.projectBackEnd.Entities.ResetLinks.ResetLinkManager;
-import main.java.com.projectBackEnd.Entities.ResetLinks.ResetLinkManagerInterface;
 import main.java.com.projectBackEnd.Entities.ResetLinks.EmailNotExistException;
 
 import java.util.List;
@@ -33,9 +30,9 @@ public class UserController {
 
 
 	/**
-	 * Add a new user to the database with user by http POST method
-	 * @param user to add to the database
-	 * @return HTTP response with relevant information which depends on the result of inserting a new user
+	 * Insert a new user into the database with user via an HTTP POST method
+	 * @param user	User to add to the database
+	 * @return HTTP response with relevant information resulting from the insertion of the user
 	 */
 	@Post("/create")
 	public HttpResponse createUser(@Body UserBody user) {
@@ -60,9 +57,9 @@ public class UserController {
 	}
 
 	/**
-	 * Login of user by HTTP POST method
-	 * @param user to log in
-	 * @return Http response with relevant information which depends on the result of login
+	 * Login for a user via an HTTP Post method
+	 * @param user	to log in
+	 * @return HTTP response with relevant information resulting from the logging in of the user
 	 */
 	@Post("/login")
 	public HttpResponse<String> login(@Body UserBody user){
@@ -71,25 +68,34 @@ public class UserController {
 		else return HttpResponse.unauthorized();
 	}
 
+	/**
+	 * Logout for a user via an HTTP Get method
+	 * @param session	current session
+	 * @return HTTP response resulting from the logging out of the user
+	 */
 	@Get("/logout")
-	public HttpResponse logout(@Header("X-API-Key") String session){
+	public HttpResponse logout(@Header("X-API-Key") String session) {
 		if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
 		sessionManager.terminateSession(session);
 		return HttpResponse.ok();
 	}
 
+	/**
+	 * Get a list of all users stored in the database via an HTTP Get request
+	 * @param session	current session
+	 * @return	HTTP response resulting from the Get request of all users
+	 */
 	@Get("/")
-	public HttpResponse<List<User>> index(@Header("X-API-Key") String session){
+	public HttpResponse<List<User>> getAllUsers(@Header("X-API-Key") String session){
 		if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
 		return HttpResponse.ok(userManager.getUsers());
 	}
 
 
 	/**
-	 * Delete a user by http Delete method
-	 * @param user
-	 * @return Http response with relevant information which depends on the result of
-	 * deleting
+	 * Remove a user from the database via an HTTP Delete request
+	 * @param user	Name of the user to remove
+	 * @return HTTP response with relevant information resulting from the deletion of the user
 	 */
 	@Delete("/delete")
 	public HttpResponse deleteUser(@Body UserBody user){
@@ -103,16 +109,14 @@ public class UserController {
 	}
 
 	/**
-	 * Reset the password by http POST method
-	 * @param body
-	 * @return Http response with relevant information which depends on the result of
-	 * resetting a user's password
+	 * Reset the password of a user via an HTTP Post request
+	 * @param body new value for password
+	 * @return HTTP response with relevant information resulting from the password reset
 	 */
 	@Post("/password_reset_request")
 	public HttpResponse<String> getPasswordReset(@Body StringBody body){
 
 		try{
-
 			PasswordReset.getPasswordResetManager().sendPasswordResetLink(body.getString());
 			return HttpResponse.ok();
 		}
@@ -125,10 +129,9 @@ public class UserController {
 	}
 
 	/**
-	 * Change user's password with PasswordResetBody
-	 * @param body Dedicated PasswordResetBody class to update password
-	 * @return Http response with relevant information which depends on the result of
-	 * updating password
+	 * Reset the user's password with PasswordResetBody
+	 * @param body	PasswordResetBody class to update password
+	 * @return HTTP response with relevant information resulting on the password reset
 	 */
 	@Put("/password_reset_change") 
 	public HttpResponse<String> passwordReset(@Body PasswordResetBody body){
@@ -147,10 +150,15 @@ public class UserController {
 		}
 	}
 
+	/**
+	 * Get the details of the user on the current session via an HTTP Get request
+	 * @param session	current session
+	 * @return HTTP response resulting from the Get request
+	 */
 	@Get("/user_details")
-	public HttpResponse<UserBody> getUserDetails(@Header("X-API-Key") String session){
-		if(!sessionManager.verifySession(session))
-			return HttpResponse.unauthorized();
+	public HttpResponse<UserBody> getUserDetails(@Header("X-API-Key") String session) {
+
+		if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
 		try{
 			String email = sessionManager.getEmail(session);
 			return HttpResponse.ok(new UserBody(email,"",userManager.getName(email)));
@@ -165,11 +173,10 @@ public class UserController {
 	}	
 
   /**
-	 * Change user's email with by Http PUT method
-	 * @param session
-	 * @param body Dedicated StringBody class to update email
-	 * @return Http response with relevant information which depends on the result of
-	 * updating email
+	 * Change the email of the user on the current session via an HTTP Put request
+	 * @param session	current session
+	 * @param body		new value for the user email
+	 * @return HTTP response with relevant information resulting from the email change
 	 */
 
 	@Put("/change_email") 
@@ -195,11 +202,16 @@ public class UserController {
 	}
 
 
-
+	/**
+	 * Change the name of the user on the current session via an HTTP Put request
+	 * @param session	current session
+	 * @param body		new value for the username
+	 * @return HTTP response resulting from the user name change
+	 */
 	@Put("/change_name") 
-	public HttpResponse<String> changeName(@Header("X-API-Key") String session, @Body StringBody body){
-		if(!sessionManager.verifySession(session))
-			return HttpResponse.unauthorized();
+	public HttpResponse<String> changeName(@Header("X-API-Key") String session, @Body StringBody body) {
+
+		if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
 		else{
 			try{
 				String email = sessionManager.getEmail(session);
@@ -218,8 +230,14 @@ public class UserController {
 		}
 	}
 
+	/**
+	 * Change the password of the user on the current session via an HTTP Put request
+	 * @param session	current session
+	 * @param body		new password for the user
+	 * @return HTTP response resulting from the password change
+	 */
 	@Put("/change_password") 
-	public HttpResponse<String> changePassword(@Header("X-API-Key") String session,@Body StringBody body){
+	public HttpResponse<String> changePassword(@Header("X-API-Key") String session, @Body StringBody body){
 		if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
 		else{
 			try{
