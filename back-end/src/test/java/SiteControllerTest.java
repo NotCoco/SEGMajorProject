@@ -28,6 +28,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -148,6 +150,35 @@ class SiteControllerTest {
         assertEquals("testSite", testSite.getName());
     }
 
+    /**
+     * Tests getting all the sites
+     */
+    @Test
+    void testGetAllSites() {
+        HttpRequest request = HttpRequest.GET("/sites/");
+        List<Site> allFound = client.toBlocking().retrieve(request, List.class);
+        assertEquals(siteManager.getAllSites().size(), allFound.size());
+        addSite("NewSite2, ","NewerSiteName");
+
+        allFound = client.toBlocking().retrieve(request, List.class);
+        assertEquals(siteManager.getAllSites().size(), allFound.size());
+    }
+
+    /**
+     * Tests that the endpoint is able to add a site with legal information and also retrieve it by primary key ID
+     */
+    @Test
+    void testAddAndGetSiteByPrimaryKey(){
+        HttpResponse response = addSite("testSlug", "testSite");
+        String slug =  getEUrl(response);
+
+        Site testSite = siteManager.getSiteBySlug(slug);
+        int foundKey = testSite.getPrimaryKey();
+        HttpRequest request = HttpRequest.GET("/sites/"+"/id/"+ foundKey);
+        testSite = client.toBlocking().retrieve(request, Site.class);
+
+        assertEquals("testSite", testSite.getName());
+    }
 	/**
 	*	Test if adding site while using incorrect session tokens returns HTTP unauthorized exception
 	*/

@@ -39,7 +39,7 @@ public class SiteController {
      * @return List of all the sites
      */
     @Get("/")
-    public List<Site> index(){
+    public List<Site> getAll(){
         return siteManager.getAllSites();
     }
 
@@ -67,7 +67,7 @@ public class SiteController {
      * @return Site with the specified ID
      */
     @Get(value = "/id/{id}", produces = MediaType.TEXT_JSON)
-    public Site list(int id) {
+    public Site getByID(int id) {
         return siteManager.getByPrimaryKey(id);
     }
 
@@ -77,7 +77,7 @@ public class SiteController {
      * @return Site with the specified slug
      */
     @Get(value = "/{slug}")
-    public Site list(String slug){return siteManager.getSiteBySlug(slug);}
+    public Site getBySlug(String slug){return siteManager.getSiteBySlug(slug);}
 
     /**
      * Remove the Site corresponding to the given site slug from the database via an HTTP Delete request
