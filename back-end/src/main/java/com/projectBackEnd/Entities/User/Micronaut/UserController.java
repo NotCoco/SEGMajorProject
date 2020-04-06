@@ -45,7 +45,6 @@ public class UserController {
 	@Post("/create")
 	public HttpResponse createUser(@Body UserBody user){
 		try{
-			System.out.println("kurwa " + user.getEmail() + " " + user.getPassword() + " " + user.getName());
 			userManager.addUser(user.getEmail(),user.getPassword(),user.getName());
 			return HttpResponse.created("user created"); 
 		}

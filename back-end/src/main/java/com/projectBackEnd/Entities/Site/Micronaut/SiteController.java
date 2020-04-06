@@ -105,7 +105,6 @@ public class SiteController {
     public HttpResponse update(@Header("X-API-Key") String session,@Body SiteUpdateCommand updatedSiteCommand) {
   		  if(!sessionManager.verifySession(session))
 			    return HttpResponse.unauthorized();
-        System.out.println("+++++++++" + updatedSiteCommand.getPrimaryKey() + " " + updatedSiteCommand.getSlug() + " " + updatedSiteCommand.getName());
         Site newSite = new Site(updatedSiteCommand.getPrimaryKey(), updatedSiteCommand.getSlug(), updatedSiteCommand.getName());
         siteManager.update(newSite);
         return HttpResponse
@@ -123,7 +122,7 @@ public class SiteController {
         try {
             encodedSlug = URLEncoder.encode(siteSlug, java.nio.charset.StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {
-            return null;
+            return null; //Difficult to make this error be thrown, not covered by tests.
         }
         return URI.create("/sites/" + encodedSlug);
     }

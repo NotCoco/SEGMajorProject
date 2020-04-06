@@ -41,9 +41,6 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
      * @return added object
      */
     public Site addSite(Site newSite) {
-
-        System.out.println(newSite.getSlug() + "++++++SLUG");
-        if (getSiteBySlug(newSite.getSlug()) != null) System.out.println(newSite.getSlug() + "++++--------++SLUG");
         if (getSiteBySlug(newSite.getSlug()) != null) throw new PersistenceException();
         super.insertTuple(newSite);
 
