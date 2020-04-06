@@ -29,10 +29,18 @@
                   type="text"
                   v-model="site.slug"
                   placeholder="Enter URL Slug here..."
-                  v-on:keyup="$v.$touch()"
+                  v-on:input="onSlugChanged()"
                 />
               </p>
               <p class="help is-danger" v-if="!$v.site.slug.required">This field is required</p>
+              <p
+                class="help is-danger"
+                v-else-if="!$v.site.slug.slug"
+              >Slug can only contain lowercase letters, numbers, and hyphens</p>
+              <p
+                class="help is-danger"
+                v-else-if="slugAlreadyExists"
+              >This slug is already in use by another site</p>
             </div>
 
             <div class="level is-mobile">
@@ -66,6 +74,7 @@
 import SitesService from "@/services/sites-service";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { required } from "vuelidate/lib/validators";
+import { slug } from "@/custom-validators";
 
 export default {
   components: {
@@ -73,8 +82,10 @@ export default {
   },
   data() {
     return {
+      sites: null,
       site: {},
-      loading: true
+      loading: true,
+      slugAlreadyExists: false
     };
   },
   validations: {
@@ -83,16 +94,30 @@ export default {
         required
       },
       slug: {
-        required
+        required,
+        slug
       }
     }
   },
   methods: {
+    onSlugChanged() {
+      this.$v.site.slug.$touch();
+      this.slugAlreadyExists = false;
+    },
     async save() {
       this.$v.$touch();
       if (this.$v.$invalid) {
-        console.log("Form invalid. Not attempting to save site settings.")
+        console.log("Form invalid. Not attempting to save site settings.");
       } else {
+        // Check if page slug conflicts with an existing page
+        const existingSiteSlugs = this.sites
+          .filter(s => s.primaryKey !== this.site.primaryKey)
+          .map(s => s.slug);
+        if (existingSiteSlugs.includes(this.site.slug)) {
+          this.slugAlreadyExists = true;
+          return;
+        }
+
         this.loading = true;
 
         await SitesService.updateSite(this.site);
@@ -116,6 +141,7 @@ export default {
   async mounted() {
     const siteSlug = this.$route.params.siteSlug;
     this.site = await SitesService.getSite(siteSlug);
+    this.sites = await SitesService.getAllSites();
     this.loading = false;
   }
 };
