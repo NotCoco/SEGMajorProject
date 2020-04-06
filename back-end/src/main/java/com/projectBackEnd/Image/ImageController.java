@@ -22,7 +22,7 @@ import javax.validation.constraints.Size;
 @Controller("/images")
 public class ImageController {
 
-	protected final ImageManager imageManager;
+	protected final ImageManagerInterface imageManager;
 	protected final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
 	public ImageController(){imageManager = ImageManager.getImageManager();}
 
