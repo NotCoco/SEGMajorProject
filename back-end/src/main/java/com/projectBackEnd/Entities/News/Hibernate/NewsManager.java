@@ -60,8 +60,12 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
      * @param news  News with updated attributes
      * @return updated object
      */
-    public News update(News news) {
-        return (News) super.update(news);
+    public News update(News updatedVersion) {
+        News newsMatch = getNewsBySlug(updatedVersion.getSlug());
+        if (newsMatch != null && !newsMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey())) {
+            throw new PersistenceException();
+        }
+        return (News) super.update(updatedVersion);
     }
 
 
