@@ -18,9 +18,8 @@ import javax.validation.constraints.Size;
 
 /**
  * Image Controller is a REST API endpoint.
- * It deals with the image related requests users might need.
- * It provides HTTP requests for each of the queries that carry out the adding, deletion and retrieval of images
- * from the server-side storage directories.
+ * It deals with the image related requests users might need : it provides HTTP requests for each of the queries
+ * that carry out the adding, deletion and retrieval of different kinds of media from the server-side storage directories.
  */
 @Controller("/images")
 public class ImageController {
@@ -32,11 +31,10 @@ public class ImageController {
 	public ImageController(){imageManager = ImageManager.getImageManager();}
 
 	/**
-	 * Add a new image by http POST method
-	 * @param session
-	 * @param file
-	 * @return Http response with relevant information which depends on the result of
-	 * inserting new image
+	 * Add a new image to the server via an HTTP Post request
+	 * @param session	Current session
+	 * @param file		File to add to the server
+	 * @return HTTP response with relevant information resulting on the insertion of the file
 	 */
 	@Post(value = "/", consumes = MediaType.MULTIPART_FORM_DATA)
 	public HttpResponse<String> add(@Header("X-API-Key") String session, @Body CompletedFileUpload file) {
@@ -52,10 +50,10 @@ public class ImageController {
 	}
 
 	/**
-	 * Saves an image by passing its encodings to the imageManager
-	 * @param file File to be encoded for saving
-	 * @return HTTP response based on success.
-	 * @throws Encoding may throw IOExceptions
+	 * Save an image by passing its encodings to the imageManager
+	 * @param file	File to be encoded for saving
+	 * @return HTTP response based on success of the operation
+	 * @throws IOException may throw IOExceptions
 	 */
 	private HttpResponse saveImage(CompletedFileUpload file) throws IOException {
 
@@ -72,28 +70,28 @@ public class ImageController {
 	}
 
 	/**
-	 * Delete an image with the image name by http Delete method
-	 * @param session
-	 * @param imageName
-	 * @return Http response with relevant information which depends on the result of
-	 * deleting the image
+	 * Retrieve the file corresponding to the given name via an HTTP Get method
+	 * @param imageName	Name of the fie to retrieve
+	 * @return The retrieved file
+	 */
+	@Get(value = "/{imageName}", produces = MediaType.MULTIPART_FORM_DATA)
+	@Size
+	public File get(String imageName) {
+		return imageManager.getImage(imageName);
+	}
+
+
+	/**
+	 * Delete the image corresponding to the given name via an HTTP Delete request
+	 * @param session	Current session
+	 * @param imageName	Name of the file to remove
+	 * @return HTTP response with relevant information resulting on the file removal
 	 */
 	@Delete("/{imageName}")
 	public HttpResponse delete(@Header("X-API-Key") String session, String imageName) {
 		if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
 		if(imageManager.deleteImage(imageName)) return HttpResponse.noContent();
 		else return HttpResponse.serverError();
-	}
-
-	/**
-	 * Get an image with the image name by http Get method
-	 * @param imageName
-	 * @return the image file
-	 */
-	@Get(value = "/{imageName}", produces = MediaType.MULTIPART_FORM_DATA)
-	@Size
-	public File get(String imageName) {
-		return imageManager.getImage(imageName);
 	}
 
 	/**

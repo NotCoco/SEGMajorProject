@@ -8,10 +8,17 @@ public class PasswordResetBody {
 	private String password;
 	private String token;// token used for user validation
 
+
+	/**
+	 * Default constructor
+	 */
+	public PasswordResetBody(){}
+
+
 	/**
 	 * Main constructor
-	 * @param token Validation token
-	 * @param password Password to reset
+	 * @param token		Validation token
+	 * @param password	Password to reset
 	 */
 	public PasswordResetBody(String token, String password){
 		this.token = token;
@@ -19,20 +26,21 @@ public class PasswordResetBody {
 	}
 
 	/**
-	 * Default constructor
-	 */
-	public PasswordResetBody(){}
-
-	/**
-	 * Gets the user password
-	 * @return The password
+	 * Get the user password
+	 * @return The password for this password
 	 */
 	public String getPassword(){
 		return password;
 	}
 
 	/**
-	 * Gets the authentication token
+	 * Set the user password as the given password
+	 * @param password The new password
+	 */
+	public void setPassword(String password){this.password = password; }
+
+	/**
+	 * Get the authentication token
 	 * @return The token
 	 */
 	public String getToken(){
@@ -40,14 +48,8 @@ public class PasswordResetBody {
 	}
 
 	/**
-	 * Sets the user password
-	 * @param password The new password
-	 */
-	public void setPassword(String password){this.password = password; }
-
-	/**
-	 * Sets the token value
-	 * @param token The new token
+	 * Set the token value as the given token
+	 * @param token The new token value
 	 */
 	public void setToken(String token){
 		this.token= token;
