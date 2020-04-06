@@ -28,9 +28,9 @@ public class PasswordReset implements PasswordResetInterface {
 
 	/**
 	 * Sends a reset verification link to a provided email
-	 * @param email the email to send the link to
-	 * @throws EmailNotExistException Non-existing email provided
-	 * @throws ServerErrorException Internal server error
+	 * @param email	The email to send the link to
+	 * @throws EmailNotExistException	Non-existing email provided
+	 * @throws ServerErrorException		Internal server error
 	 */
 	public void sendPasswordResetLink(String email) throws EmailNotExistException, ServerErrorException {
 
@@ -44,10 +44,10 @@ public class PasswordReset implements PasswordResetInterface {
 
 	/**
 	 * Invokes the password-changing business logic methods in the manager
-	 * @param token The validation token used to authenticate the user
-	 * @param password The new password
-	 * @throws TokenNotExistException Invalid token
-	 * @throws UserNotExistException Invalid user
+	 * @param token		The validation token used to authenticate the user
+	 * @param password	The new password
+	 * @throws TokenNotExistException	Invalid token
+	 * @throws UserNotExistException	Invalid user
 	 * @throws InvalidPasswordException Invalid password
 	 */
 	public void changePassword(String token, String password) throws TokenNotExistException, UserNotExistException, InvalidPasswordException {
