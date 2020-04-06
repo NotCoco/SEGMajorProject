@@ -46,7 +46,7 @@ export default {
   async created() {
     this.loading = true;
     const slug = this.$route.params.newsSlug;
-    this.news = await NewsService.getNews(slug);
+    this.news = await NewsService.getArticle(slug);
     this.loading = false;
   }
 };

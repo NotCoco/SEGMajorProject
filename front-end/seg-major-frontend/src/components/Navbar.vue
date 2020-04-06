@@ -107,7 +107,7 @@ export default {
     }
   },
   async created() {
-    const items = await NewsService.getAllNews();
+    const items = await NewsService.getAllArticles();
     if (items.length > 0) {
       const firstItem = items[0];
       if (firstItem.urgent) this.urgentNews = firstItem;

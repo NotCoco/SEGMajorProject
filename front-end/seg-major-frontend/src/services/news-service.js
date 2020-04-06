@@ -3,9 +3,9 @@ import BackendService from './backend-service'
 export default {
   newsPromise: null,
 
-  async getAllNews() {
+  async getAllArticles() {
     if (!this.newsPromise) {
-      this.newsPromise = BackendService.getAllNews()
+      this.newsPromise = BackendService.getAllArticles()
                                        .then(function(res) {
         let data = res.data;
         data.forEach(news => news.date = new Date(news.date));
@@ -16,8 +16,8 @@ export default {
     return await this.newsPromise;
   },
 
-  async getNews(slug) {
-    return (await this.getAllNews())
+  async getArticle(slug) {
+    return (await this.getAllArticles())
             .find(elem => elem.slug === slug) ?? null;
   }
 }

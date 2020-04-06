@@ -126,7 +126,7 @@ export default {
   },
   async created() {
     this.loading = true;
-    this.items = await NewsService.getAllNews();
+    this.items = await NewsService.getAllArticles();
 
     let newPageNumber;
     if (this.currentPageNumber > this.pageCount) newPageNumber = Math.min(this.pageCount, this.currentPageNumber);

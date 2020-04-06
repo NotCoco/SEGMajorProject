@@ -146,19 +146,19 @@ export default {
     return api.delete(`/sites/${page.site.slug}/pages/${page.slug}`)
   },
 
-  getAllNews() {
+  getAllArticles() {
     return api.get('/news')
   },
 
-  createNews(data) {
+  createArticle(data) {
     return api.post('/news', data)
   },
 
-  updateNews(data) {
+  updateArticle(data) {
     return api.put('/news', data)
   },
 
-  deleteNews(data) {
+  deleteArticle(data) {
     return api.delete(`/news/${data.slug}`)
   },
 

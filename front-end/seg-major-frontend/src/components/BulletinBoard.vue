@@ -43,7 +43,7 @@ export default {
   },
   async created() {
     this.loading = true;
-    this.items = await NewsService.getAllNews();
+    this.items = await NewsService.getAllArticles();
     this.loading = false;
   }
 };
