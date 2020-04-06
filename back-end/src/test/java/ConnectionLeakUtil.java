@@ -8,7 +8,9 @@ package test.java;
 /**
  * https://github.com/hibernate/hibernate-orm/tree/master/hibernate-testing/src/main/java/org/hibernate/testing/jdbc/leak
  */
-
+/*
+This is not our class and so we did not document it.
+ */
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;

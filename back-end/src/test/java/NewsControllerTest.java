@@ -65,7 +65,6 @@ public class NewsControllerTest {
         }  
     }
 
-
     /**
      * Closes the session factory and deletes the testing user
      */
@@ -106,8 +105,7 @@ public class NewsControllerTest {
 
 
     /**
-     * Deletes an existing news item and attempts to retrieve it via the GET request, expects an HTTP error to
-     * be thrown
+     * Deletes an existing news item and attempts to retrieve it via the GET request
      */
     @Test
     public void testDeleteAndGetNews(){
@@ -127,10 +125,10 @@ public class NewsControllerTest {
 
 
 	/**
-	*	check if delete news that does not exist returns error
+	*	Check if deleting a news article that doesn't exist returns an error
 	*/
 	@Test
-	public void testDeleteIncorrect(){
+	public void testDeleteNonExistentArticle(){
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
 			client.toBlocking().exchange(HttpRequest.DELETE("/news/"+"TestSlug").header("X-API-Key",token));
         });
@@ -143,7 +141,7 @@ public class NewsControllerTest {
 	}
 
 	/**
-	*	check if delete with wrong session token returns unauthorized response
+	*	Check if delete with an invalid session token returns unauthorized response
 	*/
 	@Test
 	public void testDeleteUnauthorized(){
@@ -167,8 +165,7 @@ public class NewsControllerTest {
 
 
     /**
-     * Tests the news request responsible for retrieving all newsas a list, via the GET request,
-     * expects success
+     * Tests the news request responsible for retrieving all news
      */
     @Test
     public void testAddAndGetNews(){
@@ -181,7 +178,7 @@ public class NewsControllerTest {
 
 
     /**
-     * Tests that the endpoint is able to add a legal news item, expects success
+     * Tests adding a legal news item
      */
     @Test
     public void testAddNews(){
@@ -197,7 +194,7 @@ public class NewsControllerTest {
 
 
 	/**
-	*	check if adding a news with empty or null field throws an error
+	*	Check if adding a news with empty or null field throws an error
 	*/
 	@Test
 	public void testAddIncorrect(){
@@ -245,7 +242,7 @@ public class NewsControllerTest {
 
 
     /**
-     * Tests that the endpoint is able to add and update an existing news item with legal information, expects success
+     * Tests that the endpoint is able to add and update an existing news item with legal information
      */
     @Test
     public void testAddAndUpdateNews(){
@@ -265,7 +262,7 @@ public class NewsControllerTest {
 
 
 	/**
-	* check if adding news while using wrong token returns unauthorized exception
+	* Check if adding news while using an invalid token returns an unauthorized exception
 	*/
 	@Test
 	public void testAddUnauthorized(){
@@ -283,7 +280,7 @@ public class NewsControllerTest {
 
 
     /**
-     * Tests that the endpoint is able to update a news item with legal information, expects success
+     * Tests that the endpoint is able to update a news item with legal information
      */
     @Test
     public void testUpdateLegalNews(){
@@ -300,7 +297,7 @@ public class NewsControllerTest {
 
 
 	/**
-	* check if update with empty or null fields returns an error
+	* Check if update with empty or null fields returns an error
 	*/
 	@Test
 	public void testUpdateIncorrect(){
@@ -355,7 +352,7 @@ public class NewsControllerTest {
 
 
 	/**
-	* test if updating with wrong session token returns unauthorized
+	* Test if updating with an invalid session token returns unauthorized
 	*/
 	@Test
 	public void testUpdateUnauthorized(){
@@ -379,18 +376,18 @@ public class NewsControllerTest {
 
 
     /**
-     * Quality of life method for updating a news item via the REST api
-     * @param primaryKey the primary key
-     * @param date the date
-     * @param pinned whether its pinned or not
-     * @param description the description
-     * @param title the title
-     * @param urgent if its urgent or not
-     * @param content the content
-     * @param slug the slug
+     * Quality of life method for updating a news item via the REST API
+     * @param primaryKey The primary key of the news to be updated
+     * @param date The updated date
+     * @param pinned The updated pinning boolean
+     * @param description The updated description
+     * @param title The updated title
+     * @param urgent The updated urgency boolean
+     * @param content The updated content
+     * @param slug The updated slug
      * @return The HTTP response produced by the operation
      */
-    protected HttpResponse putNews(Integer primaryKey, Date date, boolean pinned, String description, String title,
+    private HttpResponse putNews(Integer primaryKey, Date date, boolean pinned, String description, String title,
                                    boolean urgent, String content, String slug,String token) {
         HttpRequest request = HttpRequest.PUT("/news", new NewsUpdateCommand(primaryKey, date, pinned, description,
                 title, urgent, content,slug)).header("X-API-Key",token);
@@ -399,17 +396,17 @@ public class NewsControllerTest {
 
 
     /**
-     * Quality of life method for adding a news item via the REST api
-     * @param date the date value
-     * @param pinned whether its pinned or not
-     * @param description the description
-     * @param title the title
-     * @param urgent the urgent
-     * @param content the content
-     * @param slug the slug
+     * Quality of life method for adding a news item via the REST API
+     * @param date The date for the item added
+     * @param pinned Whether the article is pinned or not
+     * @param description The description of the item added
+     * @param title The title of the item added
+     * @param urgent Whether the article is urgent or not
+     * @param content The content of the item added
+     * @param slug The slug of the item added
      * @return The HTTP response produced by the operation
      */
-    protected HttpResponse addNews(Date date, boolean pinned, String description, String title, boolean urgent,
+    private HttpResponse addNews(Date date, boolean pinned, String description, String title, boolean urgent,
                                    String content, String slug,String token){
         HttpRequest request = HttpRequest.POST("/news", new NewsAddCommand(date, pinned, description, title,
                 urgent, content, slug)).header("X-API-Key",token);
@@ -419,10 +416,10 @@ public class NewsControllerTest {
 
 
     /**
-     * Quality of life method for retrieving all news items via the REST api
+     * Quality of life method for retrieving all news items via the REST API
      * @return The list of news items
      */
-    protected List<News> getAllNews(){
+    private List<News> getAllNews(){
         HttpRequest request = HttpRequest.GET("/news");
         return client.toBlocking().retrieve(request, Argument.of(List.class, News.class));
     }
@@ -431,7 +428,7 @@ public class NewsControllerTest {
     /**
      * Method for returning the url of an object involved in a HTTP response
      * @param response the response
-     * @return the url
+     * @return the url of the object
      */
     private String getEUrl(HttpResponse response) {
         String val = response.header(HttpHeaders.LOCATION);

@@ -359,7 +359,7 @@ public class MedicineControllerTest{
         return client.toBlocking().retrieve(request, Medicine.class);
 
     }
-    
+
     /**
      * Method for returning the ID of an object involved in a HTTP response
      * @param response The response from an object
