@@ -8,7 +8,6 @@ import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManagerInterface
 
 /**
  * PageAddCommand is used by the controller to insert a new page into the database.
- * It is an implementation of the Command design pattern.
  * It creates mock Page objects to reduce memory use.
  */
 

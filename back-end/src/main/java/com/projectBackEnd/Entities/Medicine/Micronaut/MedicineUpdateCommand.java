@@ -4,8 +4,7 @@ import javax.validation.constraints.NotNull;
 //import io.micronaut.core.annotation.Introspected;
 
 /**
- * MedicineUpdateCommand is an implementation of the Command design pattern.
- * It creates mock medicine objects and reduced memory use.
+ * MedicineUpdateCommand creates mock medicine objects and reduces memory use.
  * It is used by the controller to update a medicine object.
  */
 //@Introspected

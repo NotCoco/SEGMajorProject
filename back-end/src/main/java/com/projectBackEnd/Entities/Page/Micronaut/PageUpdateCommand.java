@@ -6,8 +6,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * PageUpdateCommand is used by its controller to update a page object stored in the database.
- * It is an implementation of the Command design pattern.
- * It creates mock Page objects and reduce memory use.
+ * It creates mock Page objects to reduce memory use.
  */
 public class PageUpdateCommand extends PageAddCommand {
 

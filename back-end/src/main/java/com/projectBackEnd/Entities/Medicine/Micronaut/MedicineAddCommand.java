@@ -3,8 +3,7 @@ import javax.validation.constraints.NotNull;
 //import io.micronaut.core.annotation.Introspected;
 
 /**
- * MedicineAddCommand is an implementation of the Command design pattern.
- * It creates mock medicine objects and reduce memory use.
+ * MedicineAddCommand creates mock medicine objects to reduce memory use.
  * It is used by the controller to insert a medicine object into the database.
  */
 //@Introspected

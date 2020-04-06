@@ -2,7 +2,6 @@ package main.java.com.projectBackEnd.Entities.User.Micronaut;
 
 /**
  * This class encapsulates a user entity, excluding the ID.
- * This is for the implementation of the command design pattern.
  */
 public class UserBody{
 

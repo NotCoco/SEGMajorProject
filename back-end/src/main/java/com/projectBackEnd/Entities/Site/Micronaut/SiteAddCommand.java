@@ -4,8 +4,7 @@ import javax.validation.constraints.NotNull;
 //import io.micronaut.core.annotation.Introspected;
 
 /**
- * SiteAddCommand is an implementation of the Command design pattern.
- * It creates mock Site objects and reduced memory use.
+ * SiteAddCommand creates mock Site objects to reduce memory use.
  * It is used by the controller to insert a Site object into the database
  */
 //@Introspected

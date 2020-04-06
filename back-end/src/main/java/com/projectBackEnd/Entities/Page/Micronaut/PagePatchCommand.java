@@ -6,8 +6,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * PagePatchCommand is used by its controller to patch a page object in the database
- * It is an implementation of the Command design pattern.
- * It creates mock Page objects and reduce memory use.
+ * It creates mock Page objects to reduce memory use.
  */
 //@Introspected
 public class PagePatchCommand {

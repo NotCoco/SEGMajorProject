@@ -5,8 +5,7 @@ import java.util.Date;
 
 /**
  * NewsUpdateCommand is used by its controller to update a news object in the database.
- * It is an implementation of the Command design pattern.
- * It creates mock News objects and reduce memory use.
+ * It creates mock News objects to reduce memory use.
  */
 //@Introspected
 public class NewsUpdateCommand extends NewsAddCommand {

@@ -5,7 +5,6 @@ import javax.validation.constraints.NotNull;
 
 /**
  * SiteUpdateCommand is used by its controller to update a site object stored in the database.
- * It is an implementation of the Command design pattern.
  * It creates mock Site objects to reduce memory use.
  */
 //@Introspected
