@@ -14,9 +14,9 @@ public class AppInfo {
     public AppInfo(){}
 
     /**
-     * Creating data storage objects
-     * @param hospitalName The name of the hospital
-     * @param departmentName The name of the department using the software
+     * Create data storage objects
+     * @param hospitalName      The name of the hospital
+     * @param departmentName    The name of the department using the software
      */
     public AppInfo(String hospitalName, String departmentName) {
         this.hospitalName = hospitalName;
