@@ -32,12 +32,16 @@
                 v-model="page.title"
                 placeholder="Enter page title here..."
                 :disabled="saving"
+                v-on:change="$v.page.title.$touch()"
               />
+            </div>
+            <div v-if="$v.page.title.$dirty">
+              <p class="help is-danger" v-if="!$v.page.title.required">This field is required</p>
             </div>
           </div>
 
           <label class="label">URL Slug</label>
-          <div class="field has-addons" style="margin-bottom: 35px;">
+          <div class="field has-addons is-marginless">
             <p class="control">
               <a
                 class="button is-static"
@@ -52,18 +56,34 @@
                 v-model="page.slug"
                 placeholder="Enter URL Slug here..."
                 :disabled="saving"
+                v-on:input="onSlugChanged()"
               />
             </p>
           </div>
-
-          <div style="flex-grow: 1;">
+          <div v-if="$v.page.slug.$dirty">
+            <p class="help is-danger" v-if="!$v.page.slug.required">This field is required</p>
+            <p
+              class="help is-danger"
+              v-if="slugNotAllowed"
+            >This slug is not allowed because it is reserved</p>
+            <p
+              class="help is-danger"
+              v-if="slugAlreadyExists"
+            >This slug is already in use by another page</p>
+          </div>
+          <div style="flex-grow: 1; margin-top: 25px;">
             <rich-text-editor v-model="page.content" :disabled="saving"></rich-text-editor>
           </div>
 
           <div class="buttons" style="justify-content: flex-end; margin-bottom: 7px;">
             <router-link to="../" class="button is-light">Cancel</router-link>
             <button class="button is-danger" @click="deletePage()">Delete</button>
-            <button class="button is-success" :class="{ 'is-loading': saving }" @click="save()">Save</button>
+            <button
+              class="button is-success"
+              :class="{ 'is-loading': saving }"
+              @click="save()"
+              v-bind:disabled="$v.$anyError || !page.title || !page.slug"
+            >Save</button>
           </div>
           <div class="saved-notification-container">
             <transition name="fade" mode="out-in">
@@ -135,6 +155,8 @@ import SitesService from "@/services/sites-service";
 
 import LoadingSpinner from "@/components/LoadingSpinner";
 
+import { required } from "vuelidate/lib/validators";
+
 export default {
   components: {
     RichTextEditor,
@@ -148,25 +170,62 @@ export default {
   },
   data() {
     return {
+      pagesInSite: [],
       page: {},
       loading: true,
       saving: false,
-      saved: false
+      saved: false,
+      slugNotAllowed: false,
+      slugAlreadyExists: false
     };
+  },
+  validations: {
+    page: {
+      title: {
+        required
+      },
+      slug: {
+        required
+      }
+    }
   },
   methods: {
     async save() {
-      this.saving = true;
-      this.saved = false;
-
-      if (this.newPage === true) {
-        await this.createNewPage();
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        console.error("Form invalid. Not attempting to save page.");
       } else {
-        await this.updatePage();
-      }
+        const disallowedSlugs = ["new"];
 
-      this.saving = false;
-      this.saved = true;
+        if (disallowedSlugs.includes(this.page.slug)) {
+          this.slugNotAllowed = true;
+          return;
+        }
+
+        // Check if page slug conflicts with an existing page
+        const existingPageSlugs = this.pagesInSite.map(p => p.slug);
+        if (existingPageSlugs.includes(this.page.slug)) {
+          this.slugAlreadyExists = true;
+          return;
+        }
+
+        this.saving = true;
+        this.saved = false;
+
+        if (this.newPage === true) {
+          await this.createNewPage();
+        } else {
+          await this.updatePage();
+        }
+
+        this.saving = false;
+        this.saved = true;
+      }
+    },
+    onSlugChanged() {
+      this.$v.page.slug.$touch();
+      this.slugNotAllowed = false;
+      this.slugAlreadyExists = false;
     },
     async createNewPage() {
       // Generate Page index
@@ -210,6 +269,8 @@ export default {
   async mounted() {
     const siteSlug = this.$route.params.siteSlug;
     const pageSlug = this.$route.params.pageSlug;
+
+    this.pagesInSite = await SitesService.getAllPages(siteSlug);
 
     if (!this.newPage) {
       this.page = await SitesService.getPage(siteSlug, pageSlug);
