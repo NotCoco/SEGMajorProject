@@ -58,7 +58,7 @@ public class UserController {
 
 	/**
 	 * Login for a user via an HTTP Post method
-	 * @param user	to log in
+	 * @param user	User to log in
 	 * @return HTTP response with relevant information resulting from the logging in of the user
 	 */
 	@Post("/login")
@@ -70,7 +70,7 @@ public class UserController {
 
 	/**
 	 * Logout for a user via an HTTP Get method
-	 * @param session	current session
+	 * @param session	Current session
 	 * @return HTTP response resulting from the logging out of the user
 	 */
 	@Get("/logout")
@@ -82,7 +82,7 @@ public class UserController {
 
 	/**
 	 * Get a list of all users stored in the database via an HTTP Get request
-	 * @param session	current session
+	 * @param session	Current session
 	 * @return	HTTP response resulting from the Get request of all users
 	 */
 	@Get("/")
@@ -153,7 +153,7 @@ public class UserController {
 
 	/**
 	 * Get the details of the user on the current session via an HTTP Get request
-	 * @param session	current session
+	 * @param session	Current session
 	 * @return HTTP response resulting from the Get request
 	 */
 	@Get("/user_details")
@@ -175,8 +175,8 @@ public class UserController {
 
   /**
 	 * Change the email of the user on the current session via an HTTP Put request
-	 * @param session	current session
-	 * @param body		new value for the user email
+	 * @param session	Current session
+	 * @param body		New value for the user email
 	 * @return HTTP response with relevant information resulting from the email change
 	 */
 
@@ -205,8 +205,8 @@ public class UserController {
 
 	/**
 	 * Change the name of the user on the current session via an HTTP Put request
-	 * @param session	current session
-	 * @param body		new value for the username
+	 * @param session	Current session
+	 * @param body		New value for the username
 	 * @return HTTP response resulting from the user name change
 	 */
 	@Put("/change_name") 
@@ -233,8 +233,8 @@ public class UserController {
 
 	/**
 	 * Change the password of the user on the current session via an HTTP Put request
-	 * @param session	current session
-	 * @param body		new password for the user
+	 * @param session	Current session
+	 * @param body		New password for the user
 	 * @return HTTP response resulting from the password change
 	 */
 	@Put("/change_password") 

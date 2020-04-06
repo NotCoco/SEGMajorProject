@@ -38,7 +38,7 @@ public class ImageManager implements ImageManagerInterface {
 		if (imageManager != null) return imageManager;
 		else return new ImageManager();
 	}
-	
+
 	/**
 	 * Generate a random name using the lexicon
 	 * @return generated name

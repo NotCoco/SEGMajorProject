@@ -3,7 +3,7 @@ package main.java.com.projectBackEnd.Image;
 import java.io.File;
 
 /**
- * This class is responsible for generating and providing user-specific directory information to allow
+ * DirectoryHolder is responsible for generating and providing user-specific directory information to allow
  * for image-access operations which require dynamic accessing of specific directories
  */
 public class DirectoryHolder {
