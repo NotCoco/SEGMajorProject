@@ -15,81 +15,65 @@ import main.java.com.projectBackEnd.Entities.Session.SessionManager;
 import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
 
 /**
- * Medicine Controller class is used for the interactions between frontend and backend
- * There are functionalites :
- *    - get all medicine
- *    - get a medicine
- *    - add a medicine
- *    - delete a medicine
- *    - update a medicine
+ * Medicine Controller is a REST API endpoint.
+ * It deals with the interactions between the server and the Medicine table in the database.
+ * It provides HTTP requests for each of the queries that need to be made to add, remove, update and retrieve
+ * medicines from the database.
  */
 @Controller("/medicines")
 public class MedicineController {
 
     protected final MedicineManagerInterface medicineManager = MedicineManager.getMedicineManager();
 
-	protected final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
+    protected final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
 
 
+    /**
+     * Default constructor
+     */
     public MedicineController(){}
 
-    /**
-     * Get the specific medicine by http GET method
-     * @param id
-     * @return get the Medicine with the specified id
-     */
-    @Get(value = "/{id}", produces = MediaType.TEXT_JSON)
-    public Medicine list(int id) {
-        return medicineManager.getByPrimaryKey(id);
-    }
 
     /**
-     * Get all the medicines by http GET method
-     * @return get a list of all the Medicines
-     */
-    @Get("/")
-    public List<Medicine> index(){
-        return medicineManager.getAllMedicines();
-    }
-
-    /**
-     * Add a new medicine to the database with MedicineAddCommand by http POST method
-     * @param session
-     * @param command Dedicated MedicineAddCommand class to add new medicine
-     * @return Http response with relevant information which depends on the result of
-     * inserting the new medicine
+     * Insert a new medicine into the database using MedicineAddCommand methods via an HTTP Post request
+     * @param session   Current session
+     * @param command   Dedicated MedicineAddCommand class to add new medicine to the database
+     * @return HTTP response with relevant information resulting from the insertion of the medicine
      */
     @Post("/")
-    public HttpResponse<Medicine> add(@Header("X-API-Key") String session,@Body MedicineAddCommand command) {
-		if(!sessionManager.verifySession(session))
-			return HttpResponse.unauthorized();
+    public HttpResponse<Medicine> add(@Header("X-API-Key") String session, @Body MedicineAddCommand command) {
+
+        if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
         Medicine med = medicineManager.addMedicine(new Medicine(command.getName(), command.getType()));
-        if(medicineManager.getByPrimaryKey(med.getPrimaryKey()) == null){
-            return HttpResponse.serverError();
-        }
+        if(medicineManager.getByPrimaryKey(med.getPrimaryKey()) == null) return HttpResponse.serverError();
+
         return HttpResponse
                 .created(med)
                 .headers(headers -> headers.location(location(med.getPrimaryKey())));
     }
+
+
     /**
-     * Delete a medicine with specified id by http Delete method
-     * @param session
-     * @param id
-     * @return Http response with relevant information which depends on the result of
-     * the deleting medicine
+     * Remove the medicine corresponding to the given ID from database via an HTTP Delete request
+     * @param session   Current session
+     * @param id        Primary key of the medicine to delete
+     * @return Http response with relevant information resulting from the deletion of the medicine
      */
     @Delete("/{id}")
-    public HttpResponse delete(@Header("X-API-Key") String session,int id) {
-		if(!sessionManager.verifySession(session))
-			return HttpResponse.unauthorized();
+    public HttpResponse delete(@Header("X-API-Key") String session, int id) {
+
+        if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
         medicineManager.delete(id);
+
         return HttpResponse.noContent();
     }
+
+
     /**
-     * Update a medicine with MedicineUpdateCommand
-     * @param session
-     * @param command Dedicated MedicineUpdateCommand class to update the medicine
-     * @return Http response with path
+     * Update a medicine with MedicineUpdateCommand methods via an HTTP Put request
+     * @param session   Current session
+     * @param command   Dedicated MedicineUpdateCommand class to update the medicine
+     * @return HTTP response resulting from the Put request with path
      */
     @Put("/")
     public HttpResponse update(@Header("X-API-Key") String session,@Body MedicineUpdateCommand command) {
@@ -102,21 +86,45 @@ public class MedicineController {
                 .noContent()
                 .header(HttpHeaders.LOCATION, location(command.getPrimaryKey()).getPath());
     }
+
+
     /**
-     * Create URI with the specified id
-     * @param id medicine id
+     * Get the specific medicine by HTTP GET method
+     * @param id   Primary key of the medicine to retrieve
+     * @return get the Medicine with the specified id
+     */
+    @Get(value = "/{id}", produces = MediaType.TEXT_JSON)
+    public Medicine getMedicine(int id) {
+        return medicineManager.getByPrimaryKey(id);
+    }
+
+
+    /**
+     * Get all the medicines from the database by HTTP GET method
+     * @return list of all the Medicines
+     */
+    @Get("/")
+    public List<Medicine> getAllMedicines(){
+        return medicineManager.getAllMedicines();
+    }
+
+
+    /**
+     * Create URI of the medicine with its specified id
+     * @param id Primary key of the medicine to locate
      * @return created URI
      */
-    protected URI location(int id) {
+    private URI location(int id) {
         return URI.create("/medicines/" + id);
     }
 
+
     /**
-     * Create URI with existing medicine object
-     * @param medicine medicine object
+     * Create URI of an existing medicine object
+     * @param medicine Medicine object to locate
      * @return created URI
      */
-    protected URI location(Medicine medicine) {
+    private URI location(Medicine medicine) {
         return location(medicine.getPrimaryKey());
     }
 

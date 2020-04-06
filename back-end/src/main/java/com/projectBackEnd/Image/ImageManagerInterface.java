@@ -7,10 +7,17 @@ import java.io.File;
  */
 
 public interface ImageManagerInterface {
-    public String saveImage(String imageBytes, String extension);
-    public boolean deleteImage(String imageName);
-    public List<String> getImageUrls();
-    public void deleteAll();
-    public File getImage(String imageName);
-    public String getDir();
+
+    String saveImage(String imageBytes, String extension);
+
+    File getImage(String imageName);
+
+    String getDir();
+
+    List<String> getImageUrls();
+
+    boolean deleteImage(String imageName);
+
+    void deleteAll();
+
 }

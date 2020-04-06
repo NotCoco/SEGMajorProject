@@ -9,18 +9,23 @@ import main.java.com.projectBackEnd.HibernateUtility;
  * MedicineManager defines methods to interact with the Medicine table in the database.
  * This class extends the EntityManager - supplying it with the rest of its interface methods.
  *
- * https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
+ * Inspiration : https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
 public class MedicineManager extends EntityManager implements MedicineManagerInterface {
 
     private static MedicineManagerInterface medicineManager;
 
+
+    /**
+     * Private constructor implementing the Singleton design pattern
+     */
     private MedicineManager() {
         super();
         setSubclass(Medicine.class);
         HibernateUtility.addAnnotation(Medicine.class);
         medicineManager = this;
     }
+
 
     /**
      * Get medicine manager interface
@@ -30,16 +35,10 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
         return (medicineManager != null) ? medicineManager : new MedicineManager();
     }
 
-    /**
-     * @return a list of all medicines in database
-     */
-    public List<Medicine> getAllMedicines() {
-        return (List<Medicine>) super.getAll();
-    }
 
     /**
-     * Insert input medicine object t/into database
-     * @param med
+     * Insert a medicine object into database
+     * @param med   Medicine object to add to the db
      * @return added object with a replaced ID.
      */
     public Medicine addMedicine(Medicine med) {
@@ -47,20 +46,35 @@ public class MedicineManager extends EntityManager implements MedicineManagerInt
         return med;
     }
 
+
     /**
-     * @return primary key
+     * Update attributes of Medicine object
+     * @param med Medicine object with updated attributes
+     * @return updated object
+     */
+    public Medicine update(Medicine med) {
+        return (Medicine) super.update(med);
+    }
+
+
+    /**
+     * Retrieve Medicine object corresponding to input 'ID' in the database
+     * @param id Primary key
+     * @return Medicine object with corresponding ID
      */
     @Override
     public Medicine getByPrimaryKey(Serializable id) {
         return (Medicine) super.getByPrimaryKey(id);
     }
 
+
     /**
-     * Update attributes of the object
-     * Transactional annotation is inherited so no need to tag these methods
-     * @return updated object
+     * Get all the Medicine objects stored in the Medicine table of the database
+     * @return a list of all medicines in database
      */
-    public Medicine update(Medicine med) {
-        return (Medicine) super.update(med);
+    public List<Medicine> getAllMedicines() {
+        return (List<Medicine>) super.getAll();
     }
+
+
 }

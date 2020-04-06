@@ -1,28 +1,25 @@
 package test.java;
 
-import main.java.com.projectBackEnd.Entities.AppInfo.*;
+import main.java.com.projectBackEnd.Entities.AppInfo.AppInfo;
+import main.java.com.projectBackEnd.Entities.AppInfo.AppInfoManager;
+import main.java.com.projectBackEnd.Entities.AppInfo.AppInfoManagerInterface;
+import main.java.com.projectBackEnd.Entities.AppInfo.JSONLocation;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
 import static org.junit.Assert.*;
 
 /**
  * Testing the two methods in the AppInfoManagerInterface
  */
-public class AppInfoManagerTest {
+class AppInfoManagerTest {
 
     private static AppInfoManagerInterface infoManager;
 
     /**
      * Default Constructor
      */
-    public AppInfoManagerTest() {
+    AppInfoManagerTest() {
 
     }
 
@@ -30,7 +27,7 @@ public class AppInfoManagerTest {
      * Set the JSON's location and initialise a manager for testing
      */
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         JSONLocation.setJsonFile("src/test/resources/AppInfoTest.json");
         //Setting this will create the file itself before the AppInfoManager is initialised
         infoManager = AppInfoManager.getInfoManager();
@@ -41,7 +38,7 @@ public class AppInfoManagerTest {
      * Test setting hospital's information, multiple times to show rewrites
      */
     @Test
-    public void testUpdateAndGetInformation() {
+    void testUpdateAndGetInformation() {
         infoManager.updateInfo(new AppInfo("Interesting Hospital", "Cool Department"));
         assertEquals(infoManager.getInfo().getHospitalName(), "Interesting Hospital");
     }
@@ -51,7 +48,7 @@ public class AppInfoManagerTest {
      * Test setting hospital's information, multiple times to show rewrites
      */
     @Test
-    public void testUpdateAndGetInformationAgain() {
+    void testUpdateAndGetInformationAgain() {
         infoManager.updateInfo(new AppInfo("Interesting New Hospital", "Cool Department"));
         assertEquals(infoManager.getInfo().getHospitalName(), "Interesting New Hospital");
     }
@@ -60,7 +57,7 @@ public class AppInfoManagerTest {
      * Test setting hospital's information, multiple times to show rewrites
      */
     @Test
-    public void testUpdateAndGetInformationOnceMore() {
+    void testUpdateAndGetInformationOnceMore() {
         infoManager.updateInfo(new AppInfo("Interesting New Hospital", "Cool Department in a different dep"));
         assertEquals(infoManager.getInfo().getDepartmentName(), "Cool Department in a different dep");
     }
@@ -69,7 +66,7 @@ public class AppInfoManagerTest {
      * Test that changing the json file once the AppInfoManager has been initialised has no effect.
      */
     @Test
-    public void testEmptyJSONFile() {
+    void testEmptyJSONFile() {
         JSONLocation.setJsonFile("");
         infoManager.updateInfo(new AppInfo("Interesting New Hospital", "Cool Department in a different dep"));
             assertEquals(infoManager.getInfo().getDepartmentName(), "Cool Department in a different dep");
@@ -80,7 +77,7 @@ public class AppInfoManagerTest {
      * (If runtime changing is enabled, this will create a new file with the spam name)
      */
     @Test
-    public void testUnfoundJSONFile() {
+    void testUnfoundJSONFile() {
         JSONLocation.setJsonFile("fr43fdasdf");
         infoManager.updateInfo(new AppInfo("Interesting New Hospital", "resettospaghetto"));
         assertEquals(infoManager.getInfo().getDepartmentName(), "resettospaghetto");

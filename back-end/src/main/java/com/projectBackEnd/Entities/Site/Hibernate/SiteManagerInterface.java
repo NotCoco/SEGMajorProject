@@ -3,16 +3,23 @@ package main.java.com.projectBackEnd.Entities.Site.Hibernate;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ *  Methods used by SiteManager for database queries with the 'Site' table
+ */
 public interface SiteManagerInterface {
-    public List<Site> getAllSites();
 
-    public void deleteAll();
-    public Site addSite(Site newSite);
+    Site addSite(Site newSite);
 
-    public void delete(Serializable primaryKey);
+    Site update(Site updatedVersion);
 
-    public Site getByPrimaryKey(Integer pk);
-    public Site getSiteBySlug(String slug);
-    public Site update(Site updatedVersion);
+    Site getByPrimaryKey(Integer pk);
 
-    }
+    Site getSiteBySlug(String slug);
+
+    List<Site> getAllSites();
+
+    void delete(Serializable primaryKey);
+
+    void deleteAll();
+
+}

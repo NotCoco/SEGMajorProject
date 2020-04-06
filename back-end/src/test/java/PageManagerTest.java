@@ -21,7 +21,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 
 /**
- * Test class to extensively unit test interactions between software and the Pages table
+ * Test class to extensively unit test interactions between the page entity manager and the Pages table in the database.
  */
 public class PageManagerTest {
 
@@ -32,10 +32,11 @@ public class PageManagerTest {
     private static Site testSiteB = null;
 
     /**
-     * Prior to running, databaste information location is set and siteManagers and pageManagers are intialised
+     * Prior to running, database information is set the singleton managers for page and site are created for testing.
+     * Also two sites are added to the database which the pages will use during the tests
      */
     @BeforeAll
-    public static void setUpDatabase() {
+    static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         pageManager = PageManager.getPageManager();
         assignSites();
@@ -54,21 +55,21 @@ public class PageManagerTest {
     }
 
     /**
-     * After the tests, the factory is shut down and we can see if any connections were leaked with the Database.
-     * The created sites are cleansed too.
+     * After the test, the factory is shut down, created sites are deleted
+     * and the LeakUtil can tell us whether any connections leaked.
      */
     @AfterAll
-    public static void assertNoLeaks() {
+    static void assertNoLeaks() {
         siteManager.deleteAll();
         HibernateUtility.shutdown();
         connectionLeakUtil.assertNoLeaks();
     }
 
     /**
-     * Prior to each test, we delete all the existing pages.
+     * Prior to each test, we'll delete all the pages in the pages table.
      */
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         pageManager.deleteAll();
     }
 
@@ -80,7 +81,7 @@ public class PageManagerTest {
      * Test pages are created properly with their foreign key assignments
      */
     @Test
-    public void testCreateValidPage() {
+    void testCreateValidPage() {
         Page page = new Page(testSiteB.getSlug(), "cool slug", 1, "Interesting", "Content");
         assertEquals("cool slug", page.getSlug());
         assertEquals(1, page.getIndex());
@@ -91,7 +92,7 @@ public class PageManagerTest {
      * Test that pages with a bad site name are given a null Site field
      */
     @Test
-    public void testCreatePageWithBadSite() {
+    void testCreatePageWithBadSite() {
         Page page = new Page("this is not a slug of a given site", "cool slug", 1, "Interesting", "Content");
         assertNull(page.getSite());
     }
@@ -100,7 +101,7 @@ public class PageManagerTest {
      * Test that a page object with null values can still be created
      */
     @Test
-    public void testCreateWithNullValuesPage() {
+    void testCreateWithNullValuesPage() {
         Page page = new Page(null,null,null,null,null);
         assertNotNull(page);
         assertNull(page.getSlug());
@@ -114,7 +115,7 @@ public class PageManagerTest {
      * Test that a page object with empty values will still be created
      */
     @Test
-    public void testCreatePageWithEmptyValues() {
+    void testCreatePageWithEmptyValues() {
         Page page = new Page("","",0,"","");
         assertNotNull(page);
         assertEquals("", page.getSlug());
@@ -122,10 +123,10 @@ public class PageManagerTest {
     }
 
     /**
-     * Test that pages when copying eachother become identical
+     * Tests that the manager is able to copy the attributes of one page onto another, expects success
      */
     @Test
-    public void testPageCopy() {
+    void testPageCopy() {
         Page page1 = new Page(testSiteA.getSlug(), "sameSlug", 1, "TitleA", "ContentA");
         Page page2 = new Page(testSiteA.getSlug(), "Slug", 5, "newTitle", "newContent");
         page1.copy(page2);
@@ -138,10 +139,10 @@ public class PageManagerTest {
     //Testing Foreign Key constraints
 
     /**
-     * Test a deleted site removes its associated page
+     * Tests that deleting the site of an existing page will also cause the page to be deleted, expects success
      */
     @Test
-    public void testEffectOfSiteDelete() {
+    void testEffectOfSiteDelete() {
         siteManager.addSite(new Site("toDeleteSite", "siteName"));
         pageManager.addPage(new Page("toDeleteSite", "Slug", 3, "Title", "content"));
         siteManager.delete(siteManager.getSiteBySlug("toDeleteSite").getPrimaryKey());
@@ -149,10 +150,11 @@ public class PageManagerTest {
     }
 
     /**
-     * Test an update to a site will trickle onto its pages
+     * Tests that updating the site of an existing page will cause the page's site attribute to also change,
+     * expects success
      */
     @Test
-    public void testSiteUpdateEffectOnPage() {
+    void testSiteUpdateEffectOnPage() {
         siteManager.addSite(new Site("toUpdateSite", "siteName"));
         pageManager.addPage(new Page("toUpdateSite", "Slug", 3, "title", "content"));
         Site updatedSite = siteManager.getSiteBySlug("toUpdateSite");
@@ -167,7 +169,7 @@ public class PageManagerTest {
      * Test the fill database method below, and the getAllPages method to show that all are successfully added.
      */
     @Test
-    public void testFillingAndGetting() {
+    void testFillingAndGetting() {
         fillDatabase(getListOfPages());
         assertEquals(getListOfPages().size(), pageManager.getAllPages().size());
     }
@@ -176,7 +178,7 @@ public class PageManagerTest {
      * Test the fill database method such that all the pages stored have matching values to the ones added.
      */
     @Test
-    public void testFillingAndGettingValues() {
+    void testFillingAndGettingValues() {
         ArrayList<Page> addedPages = getListOfPages();
         fillDatabase(addedPages);
         List<Page> foundPages = pageManager.getAllPages();
@@ -193,16 +195,16 @@ public class PageManagerTest {
      * Test that an empty table returns no pages
      */
     @Test
-    public void testGetAllOnEmptyTable() {
+    void testGetAllOnEmptyTable() {
         assertEquals(0, pageManager.getAllPages().size());
     }
 
     //Test PageManagerInterface: getAllPagesBySite
     /**
-     * Test that the order returned by getAllPages sorts the pages in the database by index before returning.
+     * Tests that the manager is able to retrieve existing sites in the correct (increasing) order, expects success
      */
     @Test
-    public void testGetAllBySiteOrder() {
+    void testGetAllBySiteOrder() {
         pageManager.addPage(new Page(testSiteB.getSlug(), "I'm from a different site!", 3, "TitleA","ContentA"));
         pageManager.addPage(new Page(testSiteA.getSlug(), "Slug3", 3, "TitleA","ContentA"));
         pageManager.addPage(new Page(testSiteA.getSlug(), "Slug0", 0, "TitleB","ContentB"));
@@ -221,7 +223,7 @@ public class PageManagerTest {
      * Test what is returned from a site slug that doesn't exist
      */
     @Test
-    public void testGetAllWithNonExistentSite() {
+    void testGetAllWithNonExistentSite() {
         assertEquals(0, pageManager.getAllPagesOfSite("not an existing site slug").size());
     }
 
@@ -229,7 +231,7 @@ public class PageManagerTest {
      * Test what is returned from a site that has no pages
      */
     @Test
-    public void testGetAllBySiteWithNoPages() {
+    void testGetAllBySiteWithNoPages() {
         siteManager.addSite(new Site("this site has no pages", "name"));
         assertEquals(0, pageManager.getAllPagesOfSite("this site has no pages").size());
     }
@@ -238,7 +240,7 @@ public class PageManagerTest {
      * Test what is returned when a null is given as the site
      */
     @Test
-    public void testGetAllByNullSite() {
+    void testGetAllByNullSite() {
         assertEquals(0, pageManager.getAllPagesOfSite(null).size());
     }
 
@@ -248,7 +250,7 @@ public class PageManagerTest {
      * Expected: The number of entries in the database remains zero.
      */
     @Test
-    public void testDeleteAllEmptyDatabase() {
+    void testDeleteAllEmptyDatabase() {
         pageManager.deleteAll();
         assertEquals(0, pageManager.getAllPages().size());
         pageManager.deleteAll();
@@ -259,7 +261,7 @@ public class PageManagerTest {
      * Testing a database will be flushed by the deleteAll method used between tests
      */
     @Test
-    public void testDeleteAllFilledDatabase() {
+    void testDeleteAllFilledDatabase() {
         fillDatabase(getListOfPages());
         assertEquals(getListOfPages().size(), pageManager.getAllPages().size());
         pageManager.deleteAll();
@@ -269,10 +271,10 @@ public class PageManagerTest {
     //Testing PageManagerInterface: addPage
 
     /**
-     * Test that pages with valid sites can be added provided they don't violate constraints
+     * Tests that the manager is able to add valid pages to the database, expects success
      */
     @Test
-    public void testAddRegularPagesKey() {
+    void testAddRegularPagesKey() {
         Page page1 = new Page(testSiteA.getSlug(), "sameSlug", 1, "TitleA", "ContentA");
         Page page2 = new Page(testSiteB.getSlug(), "sameSlug", 1, "TitleB", "ContentB");
         pageManager.addPage(page1);
@@ -282,10 +284,11 @@ public class PageManagerTest {
     }
 
     /**
-     * Test that pages which violate the constraints of same site slug / slug will not be added
+     * Attempts to add two valid pages with the same site and page slug to the database,
+     * expects only one page to be added to the database
      */
     @Test
-    public void testViolateDuplicateCompositeKey() {
+    void testViolateDuplicateCompositeKey() {
         Page page1 = new Page(testSiteA.getSlug(), "sameSlug", 1, "TitleA", "ContentA");
         Page page2 = new Page(testSiteA.getSlug(), "sameSlug", 1, "TitleB", "ContentB");
         pageManager.addPage(page1);
@@ -302,16 +305,16 @@ public class PageManagerTest {
      * Test that a page with null values will not be added
      */
     @Test
-    public void testAddPageWithNullValues() {
+    void testAddPageWithNullValues() {
         pageManager.addPage(new Page(testSiteA.getSlug(), null, null, null, null));
         assertEquals(0, pageManager.getAllPages().size());
     }
 
     /**
-     * Test that a page with an invalid site will not be added
+     * Attempts to add a page with invalid site slug to the database, expects the page to not be added to the database
      */
     @Test
-    public void testAddPageWithInvalidSite() {
+    void testAddPageWithInvalidSite() {
         try {
             pageManager.addPage(new Page("", "",2, "", ""));
             fail();
@@ -325,16 +328,16 @@ public class PageManagerTest {
      * Test that pages with forbidden/strange characters will still be added safely
      */
     @Test
-    public void testAddPageWithUnsafeValues() {
+    void testAddPageWithUnsafeValues() {
         pageManager.addPage(new Page(testSiteA.getSlug(),";DROP TABLE Pages", 2, "';'''", "sdafds"));
         assertEquals(pageManager.getAllPages().size(), 1);
     }
 
     /**
-     * Test Pages with empty values can still be added provided they don't violate constraints
+     * Tests that the manager is able to add a page with empty content to the database, expects success
      */
     @Test
-    public void testEmptyContent() {
+    void testEmptyContent() {
         pageManager.addPage(new Page(testSiteB.getSlug(),"", 0, "", ""));
         assertEquals(pageManager.getAllPages().size(), 1);
     }
@@ -344,7 +347,7 @@ public class PageManagerTest {
      * Testing that page objects can be found and made from their primary key.
      */
     @Test
-    public void testGetByPrimaryKey() {
+    void testGetByPrimaryKey() {
         fillDatabase(getListOfPages());
         Page foundPage = pageManager.getAllPages().get(0);
         int pagePK = foundPage.getPrimaryKey();
@@ -358,7 +361,7 @@ public class PageManagerTest {
      * Testing that attempting to obtain a page article with a primary key that doesn't exist returns null
      */
     @Test
-    public void testGetUnfoundPrimaryKey() {
+    void testGetUnfoundPrimaryKey() {
         assertNull(pageManager.getByPrimaryKey(-1));
     }
 
@@ -366,7 +369,7 @@ public class PageManagerTest {
      * Testing an error is thrown if a primary key searched for is null
      */
     @Test
-    public void testGetNullPrimaryKey() {
+    void testGetNullPrimaryKey() {
         fillDatabase(getListOfPages());
         int previousSize = pageManager.getAllPages().size();
         try {
@@ -381,10 +384,10 @@ public class PageManagerTest {
     //Testing PageManagerInterface: getBySiteAndSlug
 
     /**
-     * Test the correct site can be found by giving its slug and site's slug
+     * Tests that the manager is able to retrieve a page by it's site and slug value alone, expects success
      */
     @Test
-    public void testGetPageBySiteAndSlug() {
+    void testGetPageBySiteAndSlug() {
         Page newPage = new Page(testSiteB.getSlug(),"Slug3", 10, "Title3", "New content!");
         pageManager.addPage(newPage);
         assertNotNull(pageManager.getPageBySiteAndSlug(testSiteB.getSlug(), "Slug3"));
@@ -394,7 +397,7 @@ public class PageManagerTest {
      * Test how the getBySiteAndSlug reacts to a site that cannot be found
      */
     @Test
-    public void testGetBySiteSlugUnfoundSite() {
+    void testGetBySiteSlugUnfoundSite() {
         Page newPage = new Page(testSiteB.getSlug(),"Slug3", 10, "Title3", "New content!");
         pageManager.addPage(newPage);
         assertNull(pageManager.getPageBySiteAndSlug("Not found site sorry", "Slug3"));
@@ -403,14 +406,14 @@ public class PageManagerTest {
      * Test how the getBySiteAndSlug reacts to a page slug that cannot be found
      */
     @Test
-    public void testGetBySiteSlugUnfoundPageSlug() {
+    void testGetBySiteSlugUnfoundPageSlug() {
         assertNull(pageManager.getPageBySiteAndSlug(testSiteB.getSlug(), "not a real page sorry"));
     }
     /**
      * Test how the getBySiteAndSlug reacts to a null site input
      */
     @Test
-    public void testGetBySiteSlugNullSite() {
+    void testGetBySiteSlugNullSite() {
         Page newPage = new Page(testSiteB.getSlug(),"Slug3", 10, "Title3", "New content!");
         pageManager.addPage(newPage);
         assertNull(pageManager.getPageBySiteAndSlug(null, "Slug3"));
@@ -419,7 +422,7 @@ public class PageManagerTest {
      * Test how the getBySiteAndSlug reacts to a null page input
      */
     @Test
-    public void testGetBySiteSlugNullPageSlug() {
+    void testGetBySiteSlugNullPageSlug() {
         assertNull(pageManager.getPageBySiteAndSlug(testSiteB.getSlug(), null));
     }
 
@@ -427,18 +430,18 @@ public class PageManagerTest {
      * Test how getBySiteAndSlug reacts to double null input
      */
     @Test
-    public void testGetBySiteSlugNulls() {
+    void testGetBySiteSlugNulls() {
         assertNull(pageManager.getPageBySiteAndSlug(null, null));
     }
 
     //Testing PageManagerInterface: delete
 
     /**
-     * Test the delete function removes a page from the database table
+     * Tests that the manager is able to delete a valid existing page, expects success
      */
     @Test
-    public void testDelete() {
-        Page replacementPage = pageManager.addPage(new Page(testSiteB.getSlug(),"Slug3", 10, "Title3", "New content!"));
+    void testDelete() {
+        pageManager.addPage(new Page(testSiteB.getSlug(),"Slug3", 10, "Title3", "New content!"));
         pageManager.delete(pageManager.getAllPages().get(0).getPrimaryKey());
         assertEquals(pageManager.getAllPages().size(), 0);
     }
@@ -447,7 +450,7 @@ public class PageManagerTest {
      * Test that an error is thrown if the primary key sent to delete could not be found
      */
     @Test
-    public void testWithDeleteUnfoundPrimaryKey() {
+    void testWithDeleteUnfoundPrimaryKey() {
         int previousSize = pageManager.getAllPages().size();
         try {
             pageManager.delete(-1);
@@ -462,7 +465,7 @@ public class PageManagerTest {
      * Test the correct page was infact deleted when using delete
      */
     @Test
-    public void testCorrectPageDeletedUsingPrimaryKey() {
+    void testCorrectPageDeletedUsingPrimaryKey() {
         Page toBeDeleted = pageManager.addPage(new Page(testSiteB.getSlug(),"Slug3", 10, "Title3", "New content!"));
         Page alsoAdded = pageManager.addPage(new Page(testSiteA.getSlug(),"Slug2", 1, "Title", "New!"));
         assertEquals(2, pageManager.getAllPages().size());
@@ -477,7 +480,7 @@ public class PageManagerTest {
      * Test interaction when a null primary key is sent
      */
     @Test
-    public void testDeleteWithNullPrimaryKey() {
+    void testDeleteWithNullPrimaryKey() {
         int previousSize = pageManager.getAllPages().size();
         try {
             pageManager.delete(null);
@@ -492,10 +495,10 @@ public class PageManagerTest {
     //Testing PageManagerInterface: update
 
     /**
-     * Test that updating a page works - including changing unique slug
+     * Tests that the manager is able to update an existing page with valid information, expects success
      */
     @Test
-    public void testUpdatePage() {
+    void testUpdatePage() {
         assertNotNull(siteManager.getSiteBySlug("Disease1"));
         fillDatabase(getListOfPages());
         int assignedID = pageManager.getAllPages().get(0).getPrimaryKey();
@@ -512,7 +515,7 @@ public class PageManagerTest {
      * Test that updating a page works without changing the unique slug
      */
     @Test
-    public void testUpdatePageNotSlug() {
+    void testUpdatePageNotSlug() {
         assertNotNull(siteManager.getSiteBySlug("Disease1"));
         fillDatabase(getListOfPages());
         Page existingPage = pageManager.getAllPages().get(0);
@@ -529,14 +532,12 @@ public class PageManagerTest {
      * Test what happens if a null page is updated
      */
     @Test
-    public void testUpdateNullPage() {
+    void testUpdateNullPage() {
         try {
             pageManager.update(new Page());
             fail();
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException|NullPointerException e) {
             e.printStackTrace();
-        } catch (NullPointerException n) {
-            n.printStackTrace();
         }
     }
 
@@ -544,7 +545,7 @@ public class PageManagerTest {
      * Test updating a page that doesn't exist
      */
     @Test
-    public void testUpdateUnfoundPage() {
+    void testUpdateUnfoundPage() {
         int previousSize = pageManager.getAllPages().size();
         assertNull(pageManager.getByPrimaryKey(-100));
         Page newPage = new Page(-100, "Disease1","Slug3", 10, "Title3", "New content!");
@@ -553,10 +554,11 @@ public class PageManagerTest {
     }
 
     /**
-     * Test updating with null data throws an error
+     * Attempts to update an existing page with null attribute values (excluding primary key and site slug), expects an
+     * exception to be thrown
      */
     @Test
-    public void testUpdateWithNullData() {
+    void testUpdateWithNullData() {
         fillDatabase(getListOfPages());
         int previousSize = pageManager.getAllPages().size();
         int pkOfObjectToUpdate =pageManager.getAllPages().get(0).getPrimaryKey();
@@ -575,8 +577,8 @@ public class PageManagerTest {
      * Test updating a page to be the same as another page is not allowed
      */
     @Test
-    public void testUpdateToViolateDuplicateSlugs() {
-        Page page1 = pageManager.addPage(new Page(testSiteA.getSlug(), "sameSlug", 1, "TitleA", "ContentA"));
+    void testUpdateToViolateDuplicateSlugs() {
+        pageManager.addPage(new Page(testSiteA.getSlug(), "sameSlug", 1, "TitleA", "ContentA"));
         Page page2 = pageManager.addPage(new Page(testSiteB.getSlug(), "sameSlug", 1, "TitleB", "ContentB"));
         Page replacement = new Page(page2.getPrimaryKey(), testSiteA.getSlug(), "sameSlug", 1, "TitleB", "ContentB");
         try {
@@ -616,8 +618,7 @@ public class PageManagerTest {
     }
 
     /**
-     * Fills the database with a list of pages
-     * @param pagesToAdd The list of pages to be inserted to the database.
+     * Quality of life method to fill database with the pages created from the 'getListOfPages()' method
      */
     private void fillDatabase(ArrayList<Page> pagesToAdd) {
         for (int i = 0; i<pagesToAdd.size(); ++i) pageManager.addPage(pagesToAdd.get(i));

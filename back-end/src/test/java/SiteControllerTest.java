@@ -36,23 +36,24 @@ import static org.junit.jupiter.api.Assertions.fail;
 import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManager;
 import main.java.com.projectBackEnd.HibernateUtility;
 /**
-* class to unit test interactions between rest calls and system with respect to site functionality
-*/
+ * The purpose of this class is to test the REST endpoints associated with the site entity through the site controller
+ */
 @MicronautTest
-public class SiteControllerTest {
+class SiteControllerTest {
 
     @Inject
     @Client("/")
     HttpClient client;
 
-    static SiteManagerInterface siteManager;
-    static PageManagerInterface pageManager;
+    private static SiteManagerInterface siteManager;
+    private static PageManagerInterface pageManager;
     private static String token;
-	/**
-	*	run before class, aquire siteManager, pageManager objects, set testing db and create and login a user whose credentials are used for testing
-	*/
+
+    /**
+     * Sets the config resource location and the site manager. Also generates the token attribute
+     */
     @BeforeAll
-    public static void setUpDatabase() {
+    static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         siteManager = SiteManager.getSiteManager();
         pageManager = PageManager.getPageManager();
@@ -64,11 +65,12 @@ public class SiteControllerTest {
         	fail();
         }  
     }
-	/**
-	* delete the user and close factory
-	*/
+
+    /**
+     * Closes the session factory and deletes the testing user
+     */
     @AfterAll
-    public static void closeDatabase() {
+    static void closeDatabase() {
         try{
         	UserManager.getUserManager().deleteUser("test@test.com" , "123");
         }
@@ -77,20 +79,22 @@ public class SiteControllerTest {
         }    
         HibernateUtility.shutdown();
     }
-	/**
-	*	delete all site and page objects from db
-	*/
+
+    /**
+     * Ensure that there are no pre-existing site or page entities in the database before each test
+     */
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         siteManager.deleteAll();
         //Automatically deletes all pages too due to cascade, but:
         pageManager.deleteAll();
     }
-	/**
-	* check if geting a page that does not request returns 404 error
-	*/
+
+    /**
+     * Attempts to retrieve a site that does not exist in the database via the GET request expects error
+     */
     @Test
-    public void testNonExistingSiteReturns404() {
+    void testNonExistingSiteReturns404() {
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
             client.toBlocking().exchange(HttpRequest.GET("/sites/IpsumLoremSite"));
         });
@@ -98,41 +102,44 @@ public class SiteControllerTest {
         assertNotNull(thrown.getResponse());
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
     }
-	/**
-	* tests if updating a correct site to correct fields returns correct response
-	*/
+
+    /**
+     * Tests that the endpoint is able to update and existing site with legal information
+     */
     @Test
-    public void testPutLegalSite(){
+    void testPutLegalSite(){
         HttpResponse response= addSite("testSlug", "legalSite");
         String url = getEUrl(response);
         int id =  getSitePKBySlug(url);
         response = putSite(id,"newSlug", "NewName");
         assertEquals(HttpStatus.NO_CONTENT, response.getStatus());
     }
-	/**
-	*	test if adding a correct site returns correct http response
-	*/
+
+    /**
+     * Tests that the endpoint is able to add a site with legal information
+     */
     @Test
-    public void testAddLegalSite(){
+    void testAddLegalSite(){
         HttpResponse response= addSite("testSlug", "legalSite");
         assertEquals(HttpStatus.CREATED, response.getStatus());
     }
 
-	/**
-	*	test if adding a site witth an empty name returns a http exception
-	*/
+    /**
+     * Attempts to add a site with an empty name, expects an HTTP error to be thrown
+     */
     @Test
-    public void testAddEmptyNameSite(){
+    void testAddEmptyNameSite(){
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
             client.toBlocking().exchange(HttpRequest.POST("/sites", new SiteAddCommand("slug", "")).header("X-API-Key",token));
         });
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
     }
-	/**
-	*	test if add and get site behave correctly on correct input
-	*/
+
+    /**
+     * Tests that the endpoint is able to add a site with legal information and also retrieve it
+     */
     @Test
-    public void testAddAndGetSite(){
+    void testAddAndGetSite(){
         HttpResponse response = addSite("testSlug", "testSite");
         String id =  getEUrl(response);
 
@@ -140,11 +147,12 @@ public class SiteControllerTest {
 
         assertEquals("testSite", testSite.getName());
     }
+
 	/**
-	*	test if adding site while using incorrect session tokens returns http unauthorized exception
+	*	Test if adding site while using incorrect session tokens returns HTTP unauthorized exception
 	*/
 	@Test
-	public void testAddUnauthorized(){
+	void testAddUnauthorized(){
 		String correctToken = token;
 		token = "";
 
@@ -161,12 +169,13 @@ public class SiteControllerTest {
 
 
 		token = correctToken;
-	}	
-	/**
-	*	test if deleting an existing site behaves correctly and than getting it returns an http not found exception
-	*/
+	}
+
+    /**
+     * Attempts to delete an existing site and then retrieve it, expects an HTTP error to be thrown
+     */
     @Test
-    public void testDeleteAndGetSite(){
+    void testDeleteAndGetSite(){
         HttpResponse response = addSite("testSlug", "testSite");
         String url =  getEUrl(response);
         int id = getSitePKBySlug(url);
@@ -174,17 +183,18 @@ public class SiteControllerTest {
         assertEquals(HttpStatus.CREATED, response.getStatus());
 
         HttpRequest request = HttpRequest.DELETE("/sites/"+url).header("X-API-Key",token);
-        response = client.toBlocking().exchange(request);
+        client.toBlocking().exchange(request);
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
             client.toBlocking().exchange(HttpRequest.GET("/sites/"+url));
         });
         assertEquals(HttpStatus.NOT_FOUND, thrown.getStatus());
     }
+
 	/**
-	*	test if deleting while using incorrect session token returns http unauthorized exception
+	*	Test if deleting while using an invalid session token returns HTTP unauthorized exception
 	*/
 	@Test
-	public void testDeleteUnauthorized(){
+	void testDeleteUnauthorized(){
         HttpResponse response = addSite("testSlug", "testSite");
         String url =  getEUrl(response);
         assertEquals(HttpStatus.CREATED, response.getStatus());
@@ -198,11 +208,12 @@ public class SiteControllerTest {
         });
 		assertEquals(HttpStatus.UNAUTHORIZED,thrown1.getStatus());
 	}
-	/**
-	*	test if adding and updating site while using correct field values behaves correctly
-	*/
+
+    /**
+     * Tests that the endpoint is able to add and update a site with legal information, expects success
+     */
     @Test
-    public void testAddAndUpdateSite(){
+    void testAddAndUpdateSite(){
         HttpResponse response = addSite("testSlug", "testSite");
         String url =  getEUrl(response);
 
@@ -212,11 +223,11 @@ public class SiteControllerTest {
         Site m = getSite("newSlug");
         assertEquals("newName", m.getName());
     }
-	/**
-	*	test if updating site to empty name raises a http error
-	*/
+    /**
+     * Attempts to update an existing site with an empty name, expects an HTTP error to be thrown
+     */
     @Test
-    public void testUpdateToEmptyNameSite(){
+    void testUpdateToEmptyNameSite(){
         HttpResponse response = addSite("testSlug","testSite");
         String url =  getEUrl(response);
         int id = getSitePKBySlug(url);
@@ -226,10 +237,10 @@ public class SiteControllerTest {
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
     }
 	/**
-	*	test if updating while using incorrect session token returns http unauthorized exception
+	*	Test if updating while using incorrect session token returns an HTTP unauthorized exception
 	*/
 	@Test
-	public void testUpdateUnauthorized(){
+	void testUpdateUnauthorized(){
         HttpResponse response = addSite("testSlug","testSite");
         String url =  getEUrl(response);
         int id = getSitePKBySlug(url);
@@ -245,35 +256,47 @@ public class SiteControllerTest {
         });
 		assertEquals(HttpStatus.UNAUTHORIZED,thrown1.getStatus());
 	}
-	/**
-	* creates a put request for updating a site
-	* @returns http response to the request
-	*/
-    protected HttpResponse putSite(int id, String newSlug, String newName) {
+
+    /**
+     * Quality of life method for updating a site via the REST API
+     * @param id The ID of the site to be updated
+     * @param newSlug The new slug value
+     * @param newName The new name
+     * @return The HTTP response produced by the operation
+     */
+    private HttpResponse putSite(int id, String newSlug, String newName) {
         HttpRequest request = HttpRequest.PUT("/sites", new SiteUpdateCommand(id, newSlug, newName)).header("X-API-Key",token);
         return client.toBlocking().exchange(request);
     }
-	/**
-	*	creates a post request for adding a site
-	* 	@returns a http response to the request
-	*/
-    protected HttpResponse addSite(String slug, String name) {
+
+    /**
+     * Quality of life method for adding a site via the REST API
+     * @param slug The slug
+     * @param name The name
+     * @return The HTTP response produced by the operation
+     */
+    private HttpResponse addSite(String slug, String name) {
         HttpRequest request = HttpRequest.POST("/sites", new SiteAddCommand(slug, name)).header("X-API-Key",token);
-        HttpResponse response = client.toBlocking().exchange(request);
-        return response;
+        return client.toBlocking().exchange(request);
+
     }
-	/**
-	* get site object by the slug
-	*/
-    protected Site getSite(String slug) {
+
+    /**
+     * Quality of life method for retrieving a site via the REST api
+     * @param slug The slug
+     * @return The site retrieved
+     */
+    private Site getSite(String slug) {
         URI loc = location(slug);
         HttpRequest request = HttpRequest.GET(loc);
         return client.toBlocking().retrieve(request, Site.class);
     }
 
-	/**
-	* get url from http response and
-	*/
+    /**
+     * Method for producing the URL of a site from its associated response
+     * @param response the HTTP response to be searched
+     * @return The String of the URL for a site
+     */
     private String getEUrl(HttpResponse response) {
         String val = response.header(HttpHeaders.LOCATION);
         if (val != null) {
@@ -286,14 +309,13 @@ public class SiteControllerTest {
         return null;
     }
 
-
-
-	/**
-	* gets uri of site by site name
-	* @returns URI of site
-	*/
-    protected URI location(String siteName) {
-        String encodedSlug = null;
+    /**
+     * Method for generating a urlencoded URI for a site
+     * @param siteName The string to be encoded
+     * @return The generated URI
+     */
+    private URI location(String siteName) {
+        String encodedSlug;
         try {
             encodedSlug = URLEncoder.encode(siteName, java.nio.charset.StandardCharsets.UTF_8.toString());
         } catch (UnsupportedEncodingException e) {
@@ -301,11 +323,13 @@ public class SiteControllerTest {
         }
         return URI.create("/sites/" + encodedSlug);
     }
-	/**
-	* get sites primary key by slug
-	* @returns sites primary key
-	*/
-    protected int getSitePKBySlug(String slug){
+
+    /**
+     * Quality of life method for retrieving a site's ID by its slug
+     * @param slug the site's slug
+     * @return the site's ID
+     */
+    private int getSitePKBySlug(String slug){
         return getSite(slug).getPrimaryKey();
     }
 }
