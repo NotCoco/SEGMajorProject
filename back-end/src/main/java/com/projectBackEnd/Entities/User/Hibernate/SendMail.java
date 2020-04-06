@@ -67,13 +67,13 @@ public class SendMail
      * @throws UnsupportedEncodingException Errors thrown with bad Encodings
      */
     private static void sendMessage(String to, String title, String content, Session session) throws MessagingException, UnsupportedEncodingException {
-        MimeMessage message = new MimeMessage(session);// create a mimeMessage to contain the session.
-        message.setFrom(new InternetAddress(sender, "Team Team", "UTF-8"));//use utf-8
+        MimeMessage message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(sender, "Team Team", "UTF-8"));
         message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-        message.setSubject(title, "UTF-8");//set the title  (use utf-8)
-        message.setContent(content, "text/html;charset=UTF-8");////set the content fo mail (use utf-8)
+        message.setSubject(title, "UTF-8");
+        message.setContent(content, "text/html;charset=UTF-8");
         message.setSentDate(new Date());
-        Transport.send(message);//send message
+        Transport.send(message);
     }
 
     /**
@@ -82,7 +82,7 @@ public class SendMail
      */
     private static Properties getProperties() {
         Properties properties = System.getProperties();
-        properties.setProperty(propertyHost, propertyMailServer);// qq mail server
+        properties.setProperty(propertyHost, propertyMailServer);
         properties.put(propertyAuth, "true");
         MailSSLSocketFactory MailSocket;
         try {
