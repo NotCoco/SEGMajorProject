@@ -16,152 +16,144 @@ import main.java.com.projectBackEnd.Entities.ResetLinks.EmailNotExistException;
 import java.util.List;
 
 /**
- * User Controller class is used for the interactions between frontend and backend
- * There are functionalites :
- *    - add a new user
- *    - login
- *    - delete a user
- *    - change password
- *    - reset password
- *    - change email
+ * User Controller is a REST API endpoint.
+ * It deals with the interactions between the server and the Users table in the database.
+ * It provides HTTP requests for each of the queries that carry out the creation, deletion, retrieval, updating
+ * and logging in & out of users
  */
 @Controller("/user")
 public class UserController {
+
+
     private final UserManagerInterface userManager = UserManager.getUserManager();
     private final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
 
 
 	/**
-	 * Add a new user to the database with user by http POST method
-	 * @param user
-	 * @return Http response with relevant information which depends on the result of
-	 * inserting a new user
+	 * Insert a new user into the database with user via an HTTP POST method
+	 * @param user	User to add to the database
+	 * @return HTTP response with relevant information resulting from the insertion of the user
 	 */
-
 	@Post("/create")
-	public HttpResponse createUser(@Body UserBody user){
-		try{
+	public HttpResponse createUser(@Body UserBody user) {
+
+		try {
 			userManager.addUser(user.getEmail(),user.getPassword(),user.getName());
 			return HttpResponse.created("user created"); 
-		}
-		catch(EmailExistsException e){
+		} catch(EmailExistsException e) {
 			return HttpResponse.badRequest("user already exsits");
-		}
-		catch(InvalidEmailException e){
+		} catch(InvalidEmailException e) {
 			return HttpResponse.badRequest("invalid email address");
-		}
-		catch(InvalidPasswordException e){
+		} catch(InvalidPasswordException e) {
 			return HttpResponse.badRequest("invalid password");
-		}		
-		catch(IncorrectNameException e){
+		} catch(IncorrectNameException e) {
 			return HttpResponse.badRequest("invalid name");
 		}
 		
 	}
 
 	/**
-	 * Login of user by http POST method
-	 * @param user
-	 * @return Http response with relevant information which depends on the result of
-	 * login
+	 * Login for a user via an HTTP Post method
+	 * @param user	User to log in
+	 * @return HTTP response with relevant information resulting from the logging in of the user
 	 */
 	@Post("/login")
-	public HttpResponse<String> login(@Body UserBody user){
-		String token = userManager.verifyUser(user.getEmail(),user.getPassword());
-		if(token != null)
-			return HttpResponse.ok(token);
-		else
-			return HttpResponse.unauthorized();
+	public HttpResponse<String> login(@Body UserBody user) {
+
+		String token = userManager.verifyUser(user.getEmail(), user.getPassword());
+		if(token != null) return HttpResponse.ok(token);
+		else return HttpResponse.unauthorized();
+
 	}
 
+	/**
+	 * Logout for a user via an HTTP Get method
+	 * @param session	Current session
+	 * @return HTTP response resulting from the logging out of the user
+	 */
 	@Get("/logout")
-	public HttpResponse logout(@Header("X-API-Key") String session){
-		if(!sessionManager.verifySession(session))
-			return HttpResponse.unauthorized();
+	public HttpResponse logout(@Header("X-API-Key") String session) {
+
+		if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
 		sessionManager.terminateSession(session);
 		return HttpResponse.ok();
+
 	}
 
+	/**
+	 * Get a list of all users stored in the database via an HTTP Get request
+	 * @param session	Current session
+	 * @return	HTTP response resulting from the Get request of all users
+	 */
 	@Get("/")
-	public HttpResponse<List<User>> index(@Header("X-API-Key") String session){
-		if(!sessionManager.verifySession(session))
-			return HttpResponse.unauthorized();
+	public HttpResponse<List<User>> getAllUsers(@Header("X-API-Key") String session){
+		if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
 		return HttpResponse.ok(userManager.getUsers());
 	}
 
 
 	/**
-	 * Delete a user by http Delete method
-	 * @param user
-	 * @return Http response with relevant information which depends on the result of
-	 * deleting
+	 * Remove a user from the database via an HTTP Delete request
+	 * @param user	Name of the user to remove
+	 * @return HTTP response with relevant information resulting from the deletion of the user
 	 */
-    	@Delete("/delete")
-	public HttpResponse deleteUser(@Body UserBody user){
-		try{
+	@Delete("/delete")
+	public HttpResponse deleteUser(@Body UserBody user) {
+		try {
 			userManager.deleteUser(user.getEmail(), user.getPassword());
 			return HttpResponse.ok();
-		}
-		catch(UserNotExistException e){
+		} catch(UserNotExistException e){
 			return HttpResponse.notFound("user does not exsist");
 		}
 	}
 
 	/**
-	 * Reset the password by http POST method
-	 * @param body
-	 * @return Http response with relevant information which depends on the result of
-	 * resetting a user's password
+	 * Request a password reset via an HTTP Post request
+	 * @param body	StringBody containing the reset link for the user
+	 * @return HTTP response with relevant information resulting from the password reset request
 	 */
 	@Post("/password_reset_request")
 	public HttpResponse<String> getPasswordReset(@Body StringBody body){
 
-		try{
-
+		try {
 			PasswordReset.getPasswordResetManager().sendPasswordResetLink(body.getString());
 			return HttpResponse.ok();
-		}
-		catch(EmailNotExistException e){
+		} catch(EmailNotExistException e){
 			//frontend does not want an exception
             e.printStackTrace();
-		}
-		catch(ServerErrorException e){
+		} catch(ServerErrorException e){
 			//frontend does not want an exception
             e.printStackTrace();
-		}
-		finally {
+		} finally {
 			return HttpResponse.ok();
 		}
 	}
 
 	/**
-	 * Change user's password with PasswordResetBody
-	 * @param body Dedicated PasswordResetBody class to update password
-	 * @return Http response with relevant information which depends on the result of
-	 * updating password
+	 * Changes the password of a user after a reset request via an HTTP Put request
+	 * @param body	StringBody containing the new password and the token for the user
+	 * @return HTTP response with relevant information resulting on the password change
 	 */
 	@Put("/password_reset_change") 
-	public HttpResponse<String> passwordReset(@Body PasswordResetBody body){
+	public HttpResponse<String> passwordReset(@Body PasswordResetBody body) {
+
 		try{
         	PasswordReset.getPasswordResetManager().changePassword(body.getToken(), body.getPassword());
 			return HttpResponse.ok();
-		}
-		catch(TokenNotExistException e){
+		} catch(TokenNotExistException e){
 			return HttpResponse.notFound("incorrect token");
-		}
-		catch(UserNotExistException e){
+		} catch(UserNotExistException e){
 			return HttpResponse.notFound("token did not match any user");
-		}	
-		catch(InvalidPasswordException e){
+		} catch(InvalidPasswordException e){
 			return HttpResponse.badRequest("invalid password");
 		}
 	}
 
-    /**
-     * Gets the user details
-     * @param session The current session
-     * @return The user details in a response
-     */
+	/**
+	 * Get the details of the user on the current session via an HTTP Get request
+	 * @param session	Current session
+	 * @return HTTP response resulting from the Get request
+	 */
 	@Get("/user_details")
 	public HttpResponse<UserBody> getUserDetails(@Header("X-API-Key") String session){
 		if(!sessionManager.verifySession(session))
@@ -177,33 +169,28 @@ public class UserController {
 		catch(UserNotExistException e){
 			return HttpResponse.notFound();
 		}
-	}	
+	}
 
-  /**
-	 * Change user's email with by Http PUT method
-	 * @param session The current session
-	 * @param body Dedicated StringBody class to update email
-	 * @return Http response with relevant information which depends on the result of
-	 * updating email
+	/**
+	 * Change the email of the user on the current session via an HTTP Put request
+	 * @param session	Current session
+	 * @param body		New value for the user email
+	 * @return HTTP response with relevant information resulting from the email change
 	 */
-
 	@Put("/change_email") 
-	public HttpResponse<String> changeEmail(@Header("X-API-Key") String session, @Body StringBody body){
-		if(!sessionManager.verifySession(session))
-			return HttpResponse.unauthorized();
-		else{
-			try{
+	public HttpResponse<String> changeEmail(@Header("X-API-Key") String session, @Body StringBody body) {
+
+		if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
+		else {
+			try {
 				String email = sessionManager.getEmail(session);
 				userManager.changeEmail(email, body.getString());
 				return HttpResponse.ok();
-			}
-			catch(NoSessionException e){
+			} catch(NoSessionException e){
 				return HttpResponse.unauthorized();
-			}
-			catch(UserNotExistException e){
+			} catch(UserNotExistException e){
 				return HttpResponse.notFound("user does not exist");
-			}
-			catch(EmailExistsException e){
+			} catch(EmailExistsException e){
 				return HttpResponse.badRequest("email already exists");
 			}
 		}
@@ -224,18 +211,17 @@ public class UserController {
 				String email = sessionManager.getEmail(session);
 				userManager.changeName(email, body.getString());
 				return HttpResponse.ok();
-			}
-			catch(NoSessionException e){
+			} catch(NoSessionException e){
 				return HttpResponse.unauthorized();
-			}
-			catch(UserNotExistException e){
+			} catch(UserNotExistException e){
 				return HttpResponse.notFound("user does not exist");
-			}
-			catch(IncorrectNameException e){
+			} catch(IncorrectNameException e){
 				return HttpResponse.badRequest("incorrect name");
 			}
 		}
 	}
+
+
 	/**
 	 * Change the password of the user on the current session via an HTTP Put request
 	 * @param session	Current session
@@ -243,7 +229,7 @@ public class UserController {
 	 * @return HTTP response resulting from the password change
 	 */
 	@Put("/change_password") 
-	public HttpResponse<String> changePassword(@Header("X-API-Key") String session,@Body StringBody body){
+	public HttpResponse<String> changePassword(@Header("X-API-Key") String session, @Body StringBody body) {
 		if(!sessionManager.verifySession(session))
 			return HttpResponse.unauthorized();
 		else{
@@ -251,14 +237,11 @@ public class UserController {
 				String email = sessionManager.getEmail(session);
 				userManager.changePassword(email, body.getString());
 				return HttpResponse.ok();
-			}
-			catch(NoSessionException e){
+			} catch(NoSessionException e){
 				return HttpResponse.unauthorized();
-			}
-			catch(UserNotExistException e){
+			} catch(UserNotExistException e){
 				return HttpResponse.notFound("user does not exist");
-			}
-			catch(InvalidPasswordException e){
+			} catch(InvalidPasswordException e){
 				return HttpResponse.badRequest("invalid password");
 			}
 		}
