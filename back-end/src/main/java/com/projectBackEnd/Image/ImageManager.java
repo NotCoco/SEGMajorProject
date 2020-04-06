@@ -38,7 +38,7 @@ public class ImageManager implements ImageManagerInterface {
 		if (imageManager != null) return imageManager;
 		else return new ImageManager();
 	}
-
+	
 	/**
 	 * Generate a random name using the lexicon
 	 * @return generated name
@@ -75,27 +75,6 @@ public class ImageManager implements ImageManagerInterface {
 			return null;
 		}
 		return (randomName + "." + extension);
-	}
-
-	/**
-	 * Delete an file based on its name
-	 * @param fileName The name of the file to be deleted
-	 * @return Whether delete was successful
-	 */
-	public boolean deleteImage(String fileName)
-	{
-		File foundImage = getImage(fileName);
-		return (foundImage == null) ? false : foundImage.delete();
-	}
-
-	/**
-	 * Delete all the media from the server
-	 */
-	public void deleteAll() {
-		List<String> listOfImageUrls = getImageUrls();
-		for (String imageUrl : listOfImageUrls) {
-			deleteImage(imageUrl.substring(imageUrl.lastIndexOf("/") + 1));
-		}
 	}
 
 	/**
@@ -146,4 +125,26 @@ public class ImageManager implements ImageManagerInterface {
 	public String getDir() {
 		return dir;
 	}
+
+	/**
+	 * Delete an file based on its name
+	 * @param fileName The name of the file to be deleted
+	 * @return Whether delete was successful
+	 */
+	public boolean deleteImage(String fileName)
+	{
+		File foundImage = getImage(fileName);
+		return (foundImage == null) ? false : foundImage.delete();
+	}
+
+	/**
+	 * Delete all the media from the server
+	 */
+	public void deleteAll() {
+		List<String> listOfImageUrls = getImageUrls();
+		for (String imageUrl : listOfImageUrls) {
+			deleteImage(imageUrl.substring(imageUrl.lastIndexOf("/") + 1));
+		}
+	}
+
 }
