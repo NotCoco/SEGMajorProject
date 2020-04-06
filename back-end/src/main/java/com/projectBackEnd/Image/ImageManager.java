@@ -9,7 +9,7 @@ import java.util.*;
 /**
  * Class responsible for saving and getting images from their saved location
  */
-public class ImageManager {
+public class ImageManager implements ImageManagerInterface {
 
 	private static ImageManager imageManager;
 	//Random name related variables
@@ -100,7 +100,7 @@ public class ImageManager {
 	 * @param imageName The name of the file to be searched for
 	 * @return The matching file
 	 */
-	public File getImage(String imageName){
+	public File getImage(String imageName) {
 		File[] fileArray = getFileArray(dir);
 		for (File file : fileArray) {
 			if (file.isFile() && file.getName().equals(imageName)) return file;

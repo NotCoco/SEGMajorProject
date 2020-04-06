@@ -31,7 +31,7 @@ import java.io.File;
  */
 @MicronautTest
 public class ImageControllerTest {
-	private static ImageManager imageManager;
+	private static ImageManagerInterface imageManager;
     private static String token;
 
 	private File file;
