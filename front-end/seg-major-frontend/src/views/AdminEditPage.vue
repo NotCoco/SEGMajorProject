@@ -62,14 +62,9 @@
           </div>
           <div v-if="$v.page.slug.$dirty">
             <p class="help is-danger" v-if="!$v.page.slug.required">This field is required</p>
-            <p
-              class="help is-danger"
-              v-if="slugNotAllowed"
-            >This slug is not allowed because it is reserved</p>
-            <p
-              class="help is-danger"
-              v-if="slugAlreadyExists"
-            >This slug is already in use by another page</p>
+            <p class="help is-danger" v-else-if="!$v.page.slug.slug">Slug can only contain lowercase letters, numbers, and hyphens</p>
+            <p class="help is-danger" v-else-if="!$v.page.slug.pageSlug">This slug is not allowed because it is reserved</p>
+            <p class="help is-danger" v-else-if="slugAlreadyExists">This slug is already in use by another page</p>
           </div>
           <div style="flex-grow: 1; margin-top: 25px;">
             <rich-text-editor v-model="page.content" :disabled="saving"></rich-text-editor>
@@ -150,12 +145,10 @@ input,
 
 <script>
 import RichTextEditor from "@/components/RichTextEditor";
-
 import SitesService from "@/services/sites-service";
-
 import LoadingSpinner from "@/components/LoadingSpinner";
-
 import { required } from "vuelidate/lib/validators";
+import { slug, pageSlug } from "@/custom-validators";
 
 export default {
   components: {
@@ -175,7 +168,6 @@ export default {
       loading: true,
       saving: false,
       saved: false,
-      slugNotAllowed: false,
       slugAlreadyExists: false
     };
   },
@@ -185,7 +177,9 @@ export default {
         required
       },
       slug: {
-        required
+        required,
+        slug,
+        pageSlug
       }
     }
   },
@@ -195,13 +189,6 @@ export default {
       if (this.$v.$invalid) {
         console.error("Form invalid. Not attempting to save page.");
       } else {
-        const disallowedSlugs = ["new"];
-
-        if (disallowedSlugs.includes(this.page.slug)) {
-          this.slugNotAllowed = true;
-          return;
-        }
-
         // Check if page slug conflicts with an existing page
         const existingPageSlugs = this.pagesInSite.map(p => p.slug);
         if (existingPageSlugs.includes(this.page.slug)) {
@@ -224,7 +211,6 @@ export default {
     },
     onSlugChanged() {
       this.$v.page.slug.$touch();
-      this.slugNotAllowed = false;
       this.slugAlreadyExists = false;
     },
     async createNewPage() {
