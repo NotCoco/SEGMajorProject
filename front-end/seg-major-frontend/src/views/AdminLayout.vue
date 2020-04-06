@@ -24,7 +24,8 @@
                 active-class="is-active"
               >Drug Chart</router-link>
 
-              <a class="navbar-item">News</a>
+              <router-link to="/admin/news" class="navbar-item" active-class="is-active">News</router-link>
+
               <router-link
                 to="/admin/settings"
                 class="navbar-item"
@@ -112,7 +113,7 @@ export default {
 
 .navbar {
   height: 55px;
-  
+
   .navbar-burger {
     display: flex;
     align-items: center;

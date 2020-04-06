@@ -25,6 +25,8 @@ import PageEmptyState from '../views/PageEmptyState.vue'
 import AdminSettings from '../views/AdminSettings.vue'
 import AdminDeleteAccount from '../views/AdminDeleteAccount.vue'
 import AdminCreateNewUser from '../views/AdminCreateNewUser.vue'
+import AdminNews from '../views/AdminNews.vue'
+import AdminEditNews from '../views/AdminEditNews.vue'
 
 import UserService from "@/services/user-service";
 
@@ -46,7 +48,7 @@ const routes = [
     }
   },
   {
-    path: '/news/:newsSlug',
+    path: '/news/:articleSlug',
     component: NewsViewer
   },
   {
@@ -68,6 +70,20 @@ const routes = [
       {
         path: 'drug-chart',
         component: AdminDrugChart,
+      },
+      {
+        path: 'news',
+        component: AdminNews,
+      },
+      {
+        path: 'news/new',
+        component: AdminEditNews,
+        props: { newArticle: true }
+      },
+      {
+        path: 'news/:articleSlug',
+        component: AdminEditNews,
+        props: { newArticle: false }
       },
       {
         path: 'settings',
