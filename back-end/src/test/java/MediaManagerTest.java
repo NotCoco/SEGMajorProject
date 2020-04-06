@@ -1,9 +1,9 @@
 package test.java;
 
 
-import main.java.com.projectBackEnd.Image.DirectoryHolder;
-import main.java.com.projectBackEnd.Image.ImageManager;
-import main.java.com.projectBackEnd.Image.ImageManagerInterface;
+import main.java.com.projectBackEnd.Media.DirectoryHolder;
+import main.java.com.projectBackEnd.Media.MediaManager;
+import main.java.com.projectBackEnd.Media.MediaManagerInterface;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -23,11 +23,11 @@ import static org.junit.Assert.*;
 /**
  * The purpose of this class is to extensively unit test the image manager's methods and validation checks
  */
-public class ImageManagerTest {
+public class MediaManagerTest {
 
-    private static ImageManagerInterface imageManager;
+    private static MediaManagerInterface imageManager;
 
-    public ImageManagerTest(){ imageManager = ImageManager.getImageManager(); }
+    public MediaManagerTest(){ imageManager = MediaManager.getImageManager(); }
 
     /**
      * Prior to running, set the directory to the test image folder

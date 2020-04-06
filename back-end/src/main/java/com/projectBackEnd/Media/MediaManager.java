@@ -1,69 +1,71 @@
-package main.java.com.projectBackEnd.Image;
-
-import main.java.com.projectBackEnd.Entities.News.Hibernate.NewsManager;
+package main.java.com.projectBackEnd.Media;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
- * The ImageManager class deals with low level business logic transactions regarding images. These are stored
- * on the server so no database interaction is involved
+ * The MediaManager class deals with low level business logic transactions regarding medias. These are stored
+ * on the server so no database interaction is involved.
  */
-public class ImageManager implements ImageManagerInterface {
+public class MediaManager implements MediaManagerInterface {
 
-	private static ImageManager imageManager;
+	private static MediaManager mediaManager;
+
 	//Random name related variables
 	final static String lexicon = "ABCDEFGHIJKLMNOPQRSTUVWXYZ12345674890";
 	final java.util.Random rand = new java.util.Random();
 	final Set<String> identifiers = new HashSet<String>();
-	//Directory of the folder where the images are saved
+
+	//Directory of the folder where the medias are saved
 	final String dir;
 
 	/**
-	 * Private singleton constructor for an ImageManager
+	 * Private singleton constructor for an MediaManager
 	 */
-	private ImageManager() {
-		imageManager = this;
+	private MediaManager() {
+		mediaManager = this;
 		dir = DirectoryHolder.getDir();
 	}
 
 	/**
-	 * Get the image manager singleton object
-	 * @return The image manager
+	 * Get the media manager singleton object
+	 * @return media manager
 	 */
-	public static ImageManager getImageManager() {
-		if (imageManager != null) return imageManager;
-		else return new ImageManager();
+	public static MediaManager getMediaManager() {
+		if (mediaManager != null) return mediaManager;
+		else return new MediaManager();
 	}
 
 	/**
 	 * Generate a random name using the lexicon
-	 * @return random name
+	 * @return generated name
 	 */
 	private String randomIdentifier() {
+
 		StringBuilder builder = new StringBuilder();
 		while(builder.toString().length() == 0) {
+
 			int length = rand.nextInt(5)+5;
 			for(int i = 0; i < length; i++) {
 				builder.append(lexicon.charAt(rand.nextInt(lexicon.length())));
 			}
-			if(identifiers.contains(builder.toString())) {
-				builder = new StringBuilder();
-			}
+
+			if(identifiers.contains(builder.toString())) builder = new StringBuilder();
 		}
 		return builder.toString();
 	}
 
 	/**
-	 * Save a image with bytes and its extension
-	 * @param imageBytes
-	 * @param extension
+	 * Save a media with bytes and its extension
+	 * @param mediaBytes	media as binary file
+	 * @param extension		type of the media
 	 * @retunn random name
 	 */
-	public String saveImage(String imageBytes, String extension) {
+	public String saveMedia(String mediaBytes, String extension) {
+
 		if (extension == null) return null;
-		byte[] data = Base64.getDecoder().decode(imageBytes.getBytes(StandardCharsets.UTF_8));
+		byte[] data = Base64.getDecoder().decode(mediaBytes.getBytes(StandardCharsets.UTF_8));
 		String randomName = randomIdentifier();
 		String path = dir + randomName + "." + extension.toLowerCase();
 		try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(new File(path)))) {
@@ -72,48 +74,48 @@ public class ImageManager implements ImageManagerInterface {
 			e.printStackTrace();
 			return null;
 		}
+
 		return (randomName + "." + extension);
 	}
 
 	/**
-	 * Delete an image based on its name
-	 * @param imageName The name of the image to be deleted
+	 * Delete an media based on its name
+	 * @param mediaName The name of the media to be deleted
 	 * @return Whether delete was successful
 	 */
-	public boolean deleteImage(String imageName)
-	{
-		File foundImage = getImage(imageName);
-		return (foundImage == null) ? false : foundImage.delete();
+	public boolean deleteMedia(String mediaName) {
+		File foundMedia = getMedia(mediaName);
+		return (foundMedia == null) ? false : foundMedia.delete();
 	}
 
 	/**
-	 * Delete all the images
+	 * Delete all the medias in the database
 	 */
 	public void deleteAll() {
-		List<String> listOfImageUrls = getImageUrls();
-		for (String imageUrl : listOfImageUrls) {
-			deleteImage(imageUrl.substring(imageUrl.lastIndexOf("/") + 1));
+		List<String> listOfMediaUrls = getMediaUrls();
+		for (String mediaUrl : listOfMediaUrls) {
+			deleteMedia(mediaUrl.substring(mediaUrl.lastIndexOf("/") + 1));
 		}
 	}
 
 	/**
 	 * Get a file based on its name
-	 * @param imageName The name of the file to be searched for
+	 * @param mediaName The name of the file to be searched for
 	 * @return The matching file
 	 */
-	public File getImage(String imageName) {
+	public File getMedia(String mediaName) {
 		File[] fileArray = getFileArray(dir);
 		for (File file : fileArray) {
-			if (file.isFile() && file.getName().equals(imageName)) return file;
+			if (file.isFile() && file.getName().equals(mediaName)) return file;
 		}
 		return null;
 	}
 
 	/**
-	 * Get a list of all the image URLs in the directory
-	 * @return String list of all the Image URLs in dir.
+	 * Get a list of all the media URLs in the directory
+	 * @return String list of all the Media URLs in dir.
 	 */
-	public List<String> getImageUrls()	{
+	public List<String> getMediaUrls()	{
 		File[] fileArray = getFileArray(dir);
 		List<String> urls = new ArrayList<String>();
 		for (int i = 0; i < fileArray.length; i++) {
