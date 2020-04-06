@@ -62,9 +62,18 @@
           </div>
           <div v-if="$v.page.slug.$dirty">
             <p class="help is-danger" v-if="!$v.page.slug.required">This field is required</p>
-            <p class="help is-danger" v-else-if="!$v.page.slug.slug">Slug can only contain lowercase letters, numbers, and hyphens</p>
-            <p class="help is-danger" v-else-if="!$v.page.slug.pageSlug">This slug is not allowed because it is reserved</p>
-            <p class="help is-danger" v-else-if="slugAlreadyExists">This slug is already in use by another page</p>
+            <p
+              class="help is-danger"
+              v-else-if="!$v.page.slug.slug"
+            >Slug can only contain lowercase letters, numbers, and hyphens</p>
+            <p
+              class="help is-danger"
+              v-else-if="!$v.page.slug.pageSlug"
+            >This slug is not allowed because it is reserved</p>
+            <p
+              class="help is-danger"
+              v-else-if="slugAlreadyExists"
+            >This slug is already in use by another page</p>
           </div>
           <div style="flex-grow: 1; margin-top: 25px;">
             <rich-text-editor v-model="page.content" :disabled="saving"></rich-text-editor>
@@ -190,7 +199,9 @@ export default {
         console.error("Form invalid. Not attempting to save page.");
       } else {
         // Check if page slug conflicts with an existing page
-        const existingPageSlugs = this.pagesInSite.map(p => p.slug);
+        const existingPageSlugs = this.pagesInSite
+          .filter(p => p.slug !== this.page.slug)
+          .map(p => p.slug);
         if (existingPageSlugs.includes(this.page.slug)) {
           this.slugAlreadyExists = true;
           return;
