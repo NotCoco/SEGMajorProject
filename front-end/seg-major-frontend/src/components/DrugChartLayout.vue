@@ -1,5 +1,5 @@
 <template>
-  <div id="first-layout">
+  <div id="drug-chart-layout">
     <section class="section">
       <div class="container">
         <table class="table-layout">
@@ -57,18 +57,18 @@
 <script>
 import SearchBox from "@/components/SearchBox.vue"
 import PrintBox from "@/components/PrintBox.vue"
+
 export default{
   name: "DrugChart",
-  data(){
+  data() {
     return {
       // control unit for printing
-      printObj:{
+      printObj: {
         id: "printableTable",
-        popTitle: 'Biliary Atresia',
-        extraCss: 'https://www.google.com,https://www.google.com',
-        }
-      };
-    },
+        popTitle: 'Drug Chart',
+      }
+    };
+  },
   components: {
     SearchBox,
     PrintBox
@@ -77,82 +77,65 @@ export default{
     /**
      * This method controls adding drug to printbox
      */ 
-    addCard : function(){
+    addCard: function() {
       //get all the info it needs
       var time = document.getElementById("time").value;
       var dose = document.getElementById("dose").value.toString();
       var unit = document.getElementById("unit").value.toString();
       var freq = document.getElementById("freq").value.toString();
-      var drug = this.$refs.drug.getDrugName();
       var bold = document.getElementById("weaning").value.toString();
+      var drug = this.$refs.drug.selectedDrugName;
       var items = this.$refs.print.getItems();
-      if(time != null && drug != null && dose != null ){
+
+      if (time != null && drug != null && dose != null ) {
         var drugWithUnit = dose.concat(unit)
         //check if added drug is in the drug list
-        if(this.drugCheck(drug)){
-            if(items.length<100){
-                window.alert("Please fill in all the info!");
-              }
+        if (drug !== "") {
+            if (items.length < 100) {
               if (dose.length == 0 && !document.getElementById("weaning").checked) {
+                window.alert("Please enter the dose");
               } else if (time.length != 0 && (drugWithUnit.length != 0 || document.getElementById("weaning").checked)) {
                 if (document.getElementById("weaning").checked) {
                   dose = "";
-                }
-                else{
+                } else {
                   bold = "";
                 }
                 items.push({ Time: time, Drug: drug, Bold: bold, Unit: unit, Freq: freq, Dose: dose})
                 items = items.sort(function (a, b) {
-                return a.Time > b.Time ? 1 : -1;
+                  return a.Time > b.Time ? 1 : -1;
                 });
+              } else {
+                window.alert("Please fill in all required fields");
               }
-              else{
-                window.alert("Please fill in all the info!");
-              }
+            } else { //can not print more than 100 medicines in one page.
+              window.alert("You can only add up to 100 medicines")
             }
-            else{ //can not print more than 100 medicines in one page.
-                window.alert("You can only add 100 medicines at a time!")
-            }
-        }
-        else{
-          window.alert("Please fill in the right name!")
+        } else {
+          window.alert("Please select a medicine")
         }
       }
     },
-    /**
-     * @param {Object} drug
-     * This method will check whether the drug selected is in the list
-     */
-    drugCheck : function (drug){
-      var i = 0
-      for(i;i<this.$refs.drug.Medicines.length;i++)
-      {
-        if(this.$refs.drug.Medicines[i].name === drug){
-          return true;
-        }
-      }
-      return false;
-
-
-    }
-
   }
 };
 </script>
-<style >
+
+<style>
+@media print {
   html, body {
     height: 100%;
     overflow: unset;
   }
-
+}
 </style>
+
 <style lang="scss" scoped>
- .table-layout{
-    border-collapse:separate; 
-    border-spacing:15px 10px;
-    .subtable-layout{
-      border-collapse:separate;
-      border-spacing:15px 25px;
-    }
- }
+.table-layout{
+  border-collapse: separate; 
+  border-spacing: 15px 10px;
+
+  .subtable-layout {
+    border-collapse: separate;
+    border-spacing: 15px 25px;
+  }
+}
 </style>

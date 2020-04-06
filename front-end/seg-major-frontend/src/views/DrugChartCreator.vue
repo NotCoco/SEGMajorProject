@@ -13,7 +13,7 @@
     <section class="section">
       <div class="container">
         <transition name="fade-transform" mode="out-in">
-          <DrugChartLayout ></DrugChartLayout>
+          <DrugChartLayout></DrugChartLayout>
         </transition>
       </div>
     </section>
