@@ -24,7 +24,7 @@
 import DrugChartLayout from "@/components/DrugChartLayout.vue";
 import Navbar from "@/components/Navbar.vue";
 export default{
-  name: "DrugChart",
+  name: "DrugChartCreator",
   components: {
     DrugChartLayout,
     Navbar

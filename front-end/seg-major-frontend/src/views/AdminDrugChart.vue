@@ -1,24 +1,23 @@
 <template>
-
   <div id="admin-all-pages">
     <section class="section">
       <div class="custom-content-container">
         <h1 class="title">Drug Chart Configuration</h1>
-    <DrugList></DrugList>
+        <admin-drug-list></admin-drug-list>
       </div>
     </section>
   </div>
 </template>
 
 <script  type="text/javascript">
-import DrugList from "@/components/DrugList.vue"
-export default{
+import AdminDrugList from "@/components/AdminDrugList.vue"
+
+export default {
   components: {
-    DrugList,
+    AdminDrugList,
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
 </style>

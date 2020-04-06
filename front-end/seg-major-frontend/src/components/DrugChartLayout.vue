@@ -11,7 +11,7 @@
                   <input class="input" type="time" id="time" name="appt" min="00:00" max="24:00" required>
                 </div>
               </div>
-              <SearchBox ref="drug"></SearchBox>
+              <drug-chart-search-box ref="drug"></drug-chart-search-box>
               <div class="field">
                 <label class="label">Dose</label>
                 <div class="control">
@@ -63,7 +63,7 @@
             <td class="vertical-separator"></td>
             <td>
               <!-- The printing unit -->
-              <PrintBox ref="print"></PrintBox>
+              <drug-chart-print-box ref="print"></drug-chart-print-box>
             </td>
           </tr>
         </table>
@@ -73,11 +73,11 @@
 </template>
 
 <script>
-import SearchBox from "@/components/SearchBox.vue"
-import PrintBox from "@/components/PrintBox.vue"
+import DrugChartSearchBox from "@/components/DrugChartSearchBox.vue"
+import DrugChartPrintBox from "@/components/DrugChartPrintBox.vue"
 
 export default{
-  name: "DrugChart",
+  name: "DrugChartLayout",
   data() {
     return {
       // control unit for printing
@@ -88,8 +88,8 @@ export default{
     };
   },
   components: {
-    SearchBox,
-    PrintBox
+    DrugChartSearchBox,
+    DrugChartPrintBox
   },
   methods: {
     /**

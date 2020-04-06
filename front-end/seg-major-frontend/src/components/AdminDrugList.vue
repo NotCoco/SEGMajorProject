@@ -14,12 +14,12 @@
 
           <div v-if="changingDrug" class="field">
             <label class="label">Name</label>
-            <input v-model="selectedMedicine.name" class="DrugList input is-fullwidth" />
+            <input v-model="selectedMedicine.name" class="input is-fullwidth" />
           </div>
 
           <div v-if="addingDrug" class="field">
             <label class="label">Name</label>
-            <input class="DrugList input is-fullwidth" id="add_name" />
+            <input class="input is-fullwidth" id="add_name" />
           </div>
 
           <div class="field" v-if="addingDrug || changingDrug">
@@ -53,7 +53,7 @@
   import MedicineService from '../services/medicine-service.js'
   
 	export default{
-    name: "DrugList",
+    name: "AdminDrugList",
     components: { 
       Multiselect,
     },

@@ -69,7 +69,7 @@
 
 <script>
 export default {
-  name: "DrugChart",
+  name: "DrugChartPrintBox",
   data() {
     return {
       //empty list for current added drugs

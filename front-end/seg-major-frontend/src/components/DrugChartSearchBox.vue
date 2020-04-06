@@ -16,7 +16,7 @@
 import medicineService from '../services/medicine-service.js'
 
 export default {
-  name: "SearchBox",
+  name: "DrugChartSearchBox",
   data: function() { 
     return {
       medicines: [],
