@@ -33,13 +33,6 @@ export default{
 </script>
 
 <style lang="scss" scoped>
-  html, body {
-    height: 100%;
-    overflow: unset;
-  }
-
-</style>
-<style lang="scss" scoped>
  .table-layout{
     border-collapse:separate; 
     border-spacing:15px 10px;
