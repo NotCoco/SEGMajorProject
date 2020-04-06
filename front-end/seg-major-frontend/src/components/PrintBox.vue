@@ -34,7 +34,7 @@
           <!-- table head -->
           <thead class="thead-light">
             <th valign="left">Time&nbsp;</th>
-            <th valign="left">Drug&nbsp;</th>
+            <th valign="left">Medicine&nbsp;</th>
             <th style="width:90px;" valign="left">Dose&nbsp;<br></th>
           </thead>
             
