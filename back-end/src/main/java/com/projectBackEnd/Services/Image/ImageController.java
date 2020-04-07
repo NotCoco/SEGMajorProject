@@ -42,8 +42,7 @@ public class ImageController {
 		if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
 		try {
 			return saveImage(file);
-		}
-		catch (IOException e){
+		} catch (IOException e){
 			e.printStackTrace();
 			return HttpResponse.noContent();
 		}

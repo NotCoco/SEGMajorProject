@@ -104,13 +104,13 @@ class ImageControllerTest {
 	 */
 	@Test
 	void testAddUnauthorized(){
-        	HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
 			addImage(file,"");
         	});
 		assertEquals(HttpStatus.UNAUTHORIZED, thrown.getStatus());
 
 
-        	HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
+		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
 			addImage(file,"Ve2R7y5Co3215r8re7CtTok5En13");
         	});
 		assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
@@ -205,6 +205,16 @@ class ImageControllerTest {
 		assertEquals(HttpStatus.CREATED, response.getStatus());
 		String imageName = getEUrl(response);
 		assertTrue(imageManager.getImageUrls().contains(imageManager.getDir()+imageName));
+	}
+
+	/**
+	 * Test adding invalid extension image
+	 */
+	@Test
+	void testAddInvalidExtension() {
+		HttpResponse response = addImage(new File(System.getProperty("user.dir")+"/src/test/resources/TestImages/UploadedImage/"+"noextension"
+		), token);
+
 	}
 
 	/**

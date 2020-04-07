@@ -9,7 +9,7 @@ import java.io.IOException;
 public class AppInfoManager implements AppInfoManagerInterface {
 
     private static AppInfoManagerInterface infoManager;
-    private static ObjectMapper mapper = new ObjectMapper();;
+    private static ObjectMapper mapper = new ObjectMapper();
     private static File file = JSONLocation.getJsonFile();
     //Set this before initialising the AppInfoManager for it to work.
 

@@ -71,7 +71,7 @@ class ImageManagerTest {
     void testSaveNullExtensionImage() {
         assertNull(imageManager.saveImage("", null));
     }
-    
+
     /**
      * Test deleting an image file
      */
