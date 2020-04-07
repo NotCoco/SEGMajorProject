@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Class for testing the Hibernate Utility works as expected
  */
-public class HibernateUtilTest {
+class HibernateUtilTest {
 
     private HibernateUtilTest() {
 
