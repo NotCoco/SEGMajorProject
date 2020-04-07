@@ -27,7 +27,7 @@ class ImageManagerTest {
 
     private static ImageManagerInterface imageManager;
 
-    ImageManagerTest(){ imageManager = ImageManager.getImageManager(); }
+    private ImageManagerTest(){ imageManager = ImageManager.getImageManager(); }
 
     /**
      * Prior to running, set the directory to the test image folder

@@ -47,6 +47,7 @@ public class HibernateUtility {
         return sessionFactory.isOpen() ? sessionFactory : createFactory(cfg);
 
     }
+    
     /**
      * Set the location of the hibernate config file which contains database information
      * @param location The location and name of the config file

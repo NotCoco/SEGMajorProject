@@ -17,13 +17,6 @@ class AppInfoManagerTest {
     private static AppInfoManagerInterface infoManager;
 
     /**
-     * Default Constructor
-     */
-    AppInfoManagerTest() {
-
-    }
-
-    /**
      * Set the JSON's location and initialise a manager for testing
      */
     @BeforeEach

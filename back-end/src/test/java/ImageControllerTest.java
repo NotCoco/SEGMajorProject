@@ -40,7 +40,7 @@ class ImageControllerTest {
 	/**
 	*	Constructor gets a new image manager Singleton
 	*/
-	ImageControllerTest(){
+	private ImageControllerTest(){
 		imageManager = ImageManager.getImageManager();
 		file = new File(System.getProperty("user.dir")+"/src/test/resources/TestImages/UploadedImage/"+"testImage.jpg");
 		largeFile = new File(System.getProperty("user.dir")+"/src/test/resources/TestImages/UploadedImage/"+"17MB.jpg");

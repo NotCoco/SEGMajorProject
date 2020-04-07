@@ -45,7 +45,7 @@ class SiteControllerTest {
 
     @Inject
     @Client("/")
-    HttpClient client;
+    private HttpClient client;
 
     private static SiteManagerInterface siteManager;
     private static PageManagerInterface pageManager;
