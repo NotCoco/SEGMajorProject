@@ -214,7 +214,7 @@ class ImageControllerTest {
 	void testAddInvalidExtension() {
 		HttpResponse response = addImage(new File(System.getProperty("user.dir")+"/src/test/resources/TestImages/UploadedImage/"+"noextension"
 		), token);
-
+		assertEquals(HttpStatus.CREATED, response.getStatus());
 	}
 
 	/**

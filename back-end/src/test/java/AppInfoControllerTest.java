@@ -5,9 +5,9 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
-
+import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import javax.inject.Inject;
-
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import main.java.com.projectBackEnd.Services.AppInfo.*;
 
 import org.junit.jupiter.api.Test;
@@ -95,9 +95,11 @@ class AppInfoControllerTest {
      */
     @Test
     void testUnauthorizedUpdate() {
-        AppInfo updatedInfo = new AppInfo("Wowwee", "Cool");
-        HttpRequest request = HttpRequest.PUT("/appinfo", updatedInfo).header("X-API-Key","lol");
-        client.toBlocking().exchange(request);
+        assertThrows(HttpClientResponseException.class, () -> {
+            AppInfo updatedInfo = new AppInfo("Wowwee", "Cool");
+            HttpRequest request = HttpRequest.PUT("/appinfo", updatedInfo).header("X-API-Key","lol");
+            client.toBlocking().exchange(request);
+        });
     }
 
     /**
