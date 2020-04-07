@@ -90,6 +90,15 @@ class AppInfoControllerTest {
         assertEquals(getInfo().getHospitalName(), "Fancy update");
     }
 
+    /**
+     * Test unauthorised addition of an image
+     */
+    @Test
+    void testUnauthorisedUpdate() {
+        AppInfo updatedInfo = new AppInfo("Wowwee", "Cool");
+        HttpRequest request = HttpRequest.PUT("/appinfo", updatedInfo).header("X-API-Key","lol");
+        client.toBlocking().exchange(request);
+    }
 
     /**
      * Creates a PUT request with the updated information supplying API Key and new information
