@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class HibernateUtilTest {
 
-    private HibernateUtilTest() {
+    HibernateUtilTest() {
 
     }
 

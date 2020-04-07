@@ -34,13 +34,13 @@ class ImageControllerTest {
 	private static ImageManagerInterface imageManager;
     private static String token;
 
-	private File file;
-	private File largeFile;
+	private final File file;
+	private final File largeFile;
 
 	/**
 	*	Constructor gets a new image manager Singleton
 	*/
-	private ImageControllerTest(){
+	ImageControllerTest(){
 		imageManager = ImageManager.getImageManager();
 		file = new File(System.getProperty("user.dir")+"/src/test/resources/TestImages/UploadedImage/"+"testImage.jpg");
 		largeFile = new File(System.getProperty("user.dir")+"/src/test/resources/TestImages/UploadedImage/"+"17MB.jpg");
@@ -237,8 +237,7 @@ class ImageControllerTest {
 
 			HttpRequest request = HttpRequest.POST("/images", body).header("X-API-Key", token)
 					.contentType(MediaType.MULTIPART_FORM_DATA_TYPE);
-			HttpResponse response = client.toBlocking().exchange(request);
-			return response;
+			return client.toBlocking().exchange(request);
 	}
 }
 

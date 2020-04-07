@@ -221,7 +221,6 @@ class SiteControllerTest {
     void testDeleteAndGetSite(){
         HttpResponse response = addSite("testSlug", "testSite");
         String url =  getEUrl(response);
-        int id = getSitePKBySlug(url);
         // Asserting that we've added a site
         assertEquals(HttpStatus.CREATED, response.getStatus());
 

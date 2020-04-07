@@ -51,7 +51,7 @@ class AppInfoControllerTest {
     }
 
     /**
-     * Deletes the test user and shutsdown the database.
+     * Deletes the test user and shuts down the database.
      */
     @AfterAll
     static void closeDatabase() {

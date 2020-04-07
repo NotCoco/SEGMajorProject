@@ -69,8 +69,7 @@ class MedicineControllerTest{
     static void closeDatabase() {
         try{
         	UserManager.getUserManager().deleteUser("MedicineTest@test.com" , "123");
-        }
-        catch(Exception e){
+        } catch(Exception e){
         	fail();
         }    
         HibernateUtility.shutdown();
@@ -215,11 +214,11 @@ class MedicineControllerTest{
         });
     }
 	/**
-	*	Test if delting medicine without correct session token return HTTP unauthorized exception
+	*	Test if deleting medicine without correct session token return HTTP unauthorized exception
 	*/
 	@Test
-	void testDeleteMedicinieUnauthorised(){
-        int id =  getEId(addMedicine(new MedicineAddCommand("name", "type"))).intValue();
+	void testDeleteMedicineUnauthorised(){
+        addMedicine(new MedicineAddCommand("name", "type"));
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
 			client.toBlocking().exchange(HttpRequest.DELETE("/medicines/0").header("X-API-Key",""));
         });
@@ -277,8 +276,8 @@ class MedicineControllerTest{
         assertEquals("Unnamed", found.getName());
     }
 	/**
-	*	Tests if updating medicine to empty values sets the to defaulte ones
-	*/
+	 * Tests if updating medicine to empty values sets the values to default ones
+	 */
 	@Test
 	void testUpdateMedicineNull(){
         HttpResponse response = addMedicine(new MedicineAddCommand("Med1", "Liquid"));
@@ -302,7 +301,7 @@ class MedicineControllerTest{
 	*	Test if updating medicine without correct session token returns a HTTP unauthorized exception
 	*/
 	@Test
-	void testUpdateMedicinieUnauthorised(){
+	void testUpdateMedicineUnauthorised(){
         addMedicine(new MedicineAddCommand("name", "type"));
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
 			client.toBlocking().exchange(HttpRequest.PUT("/medicines", new MedicineUpdateCommand(0, "name", "type")).header("X-API-Key",""));
@@ -344,8 +343,7 @@ class MedicineControllerTest{
      */
     private HttpResponse addMedicine(MedicineAddCommand medicineToAdd){
         HttpRequest request = HttpRequest.POST("/medicines", medicineToAdd).header("X-API-Key",token);
-        HttpResponse response = client.toBlocking().exchange(request);
-        return response;
+        return client.toBlocking().exchange(request);
     }
     /**
      * Quality of life method for retrieving a medicine via the REST API

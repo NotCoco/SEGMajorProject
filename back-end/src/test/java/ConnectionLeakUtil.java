@@ -5,14 +5,8 @@ package test.java;
  * License: GNU Lesser General Public License (LGPL), version 2.1 or later.
  * See the lgpl.txt file in the root directory or <http://www.gnu.org/licenses/lgpl-2.1.html>.
  */
-/**
- * https://github.com/hibernate/hibernate-orm/tree/master/hibernate-testing/src/main/java/org/hibernate/testing/jdbc/leak
- *
- * Class which uses hibernate.properties to latch onto a database and check after each test whether ther were any leaks
- */
-/*
-This is not our class! Source has been sited.
- */
+
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -25,13 +19,19 @@ import org.hibernate.testing.jdbc.JdbcProperties;
 import org.hibernate.testing.jdbc.leak.H2IdleConnectionCounter;
 import org.hibernate.testing.jdbc.leak.IdleConnectionCounter;
 import org.hibernate.testing.jdbc.leak.*;
-
 /**
+ * https://github.com/hibernate/hibernate-orm/tree/master/hibernate-testing/src/main/java/org/hibernate/testing/jdbc/leak
+ *
+ * Class which uses hibernate.properties to latch onto a database and check after each test whether there were any leaks
+ * to the databaste - not our class
+ * Only used in testing.
+ * Original Author:
  * @author Vlad Mihalcea
+ *
  */
 class ConnectionLeakUtil {
 
-    private JdbcProperties jdbcProperties = JdbcProperties.INSTANCE;
+    private final JdbcProperties jdbcProperties = JdbcProperties.INSTANCE;
 
     private List<IdleConnectionCounter> idleConnectionCounters = Arrays.asList(
             H2IdleConnectionCounter.INSTANCE,

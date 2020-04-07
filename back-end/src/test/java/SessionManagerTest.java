@@ -12,7 +12,6 @@ import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * Test class to extensively unit test interactions between the session entity manager and the Sessions table in the database.
  */
@@ -153,7 +152,7 @@ class SessionManagerTest {
 	 * @return The list of sessions
 	 */
 	private ArrayList<Session> getTestSessions() {
-		ArrayList<Session> sessions = new ArrayList<Session>();
+		ArrayList<Session> sessions = new ArrayList<>();
 		sessions.add(new Session("1",100));
 		sessions.add(new Session("2",100));
 		sessions.add(new Session("3",100));

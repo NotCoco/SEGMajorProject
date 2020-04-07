@@ -180,7 +180,7 @@ class UserManagerTest{
 
 	/**
 	 * Tests that the manager is able to change the password of an existing user to a legal value, expects succest
-	 * @throws UserNotExistException
+	 * @throws UserNotExistException Thrown when a user doesn't exist
 	 */
 	@Test
 	void testChangePassword() throws UserNotExistException{

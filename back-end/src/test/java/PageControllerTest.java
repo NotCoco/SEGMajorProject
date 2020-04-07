@@ -45,7 +45,7 @@ import main.java.com.projectBackEnd.HibernateUtility;
  * The purpose of this class is to test the REST endpoints associated with the page entity through the page controller
  */
 @MicronautTest
-public class PageControllerTest {
+class PageControllerTest {
 
     @Inject
     @Client("/")
@@ -168,6 +168,7 @@ public class PageControllerTest {
     void testAddingRegularPage() {
         addSite("testSiteA", "name1",token);
         HttpResponse response = addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
+        assertEquals(HttpStatus.CREATED, response.getStatus());
         assertNotNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
 
         Page testPage = getPage("testSiteA","nutrition/slu!#g");
@@ -352,7 +353,7 @@ public class PageControllerTest {
 
         Page testPage = getPage("testSiteA", "nutrition/sl123u!#g");
         assertEquals("newTitle", testPage.getTitle());
-        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+        assertThrows(HttpClientResponseException.class, () -> {
             getPage("testSiteA", "nutrition/slu!#g");
         });
         assertNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
@@ -432,8 +433,7 @@ public class PageControllerTest {
     private HttpResponse addPage(PageAddCommand pageToAdd,String token) {
         URI sLoc = location(pageToAdd.getSite());
         HttpRequest request = HttpRequest.POST((sLoc +"/pages"), pageToAdd).header("X-API-Key",token);
-        HttpResponse response = client.toBlocking().exchange(request);
-        return response;
+        return client.toBlocking().exchange(request);
     }
 
     /**

@@ -246,7 +246,7 @@ class MedicineManagerTest {
     }
 
     /**
-     * Test adding medicines with whitespaced names to the database
+     * Test adding medicines with whitespace names to the database
      * Expected: The medicines are added as expected with preserved names.
      */
     @Test

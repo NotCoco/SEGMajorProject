@@ -323,7 +323,7 @@ class NewsManagerTest {
         }
     }
     /**
-     * Test the correct article was infact deleted when using delete
+     * Test the correct article was deleted when using delete
      */
     @Test
     void testCorrectNewsDeletedUsingPrimaryKey() {
@@ -384,7 +384,7 @@ class NewsManagerTest {
         News replacementNews = new News(id ,new Date(12343212L), true, "changedDescrption",
                 "newTitle", false, "content1", "slug1");
         try {
-            News n = newsManager.update(replacementNews);
+            newsManager.update(replacementNews);
             fail();
         } catch (PersistenceException e) {
             e.printStackTrace();
@@ -517,7 +517,7 @@ class NewsManagerTest {
     }
 
     /**
-     * Fill the databaes with a list of news articles
+     * Fill the database with a list of news articles
      * @param listOfNews The list of news articles to fill the database with.
      */
     private void fillDatabase(ArrayList<News> listOfNews) {
