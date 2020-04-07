@@ -80,10 +80,10 @@ class ImageControllerTest {
 		imageManager.deleteAll();
 		try{
 			UserManager.getUserManager().deleteUser("ImageTest@test.com" , "123");
-			HibernateUtility.shutdown();
 		} catch(Exception e){
 			fail();
 		}
+		HibernateUtility.shutdown();
 		DirectoryHolder.getDirectoryHolder().setDefaultDir();
 	}
 

@@ -74,10 +74,9 @@ class SiteControllerTest {
      */
     @AfterAll
     static void closeDatabase() {
-        try{
+        try {
         	UserManager.getUserManager().deleteUser("SiteTest@test.com" , "123");
-        }
-        catch(Exception e){
+        } catch(Exception e){
         	fail();
         }    
         HibernateUtility.shutdown();

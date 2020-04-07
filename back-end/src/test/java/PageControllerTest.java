@@ -76,10 +76,9 @@ class PageControllerTest {
     @AfterAll
     static void closeDatabase() {
 
-        try{
+        try {
         	UserManager.getUserManager().deleteUser("PageTest@test.com" , "123");
-        }
-        catch(Exception e){
+        } catch(Exception e){
         	fail();
         }   
         HibernateUtility.shutdown(); 
