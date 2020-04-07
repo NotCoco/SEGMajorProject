@@ -175,7 +175,7 @@ export default {
   },
 
   deleteMedicine(data) {
-    return api.delete(`/medicines/${data.id}`)
+    return api.delete(`/medicines/${data.primaryKey}`)
   },
 
   uploadImage(imageData) {

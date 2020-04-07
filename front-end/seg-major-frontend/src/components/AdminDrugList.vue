@@ -7,7 +7,7 @@
             <input class="input search" type="text" v-model="search" placeholder="Search">
             <div class="select is-multiple is-fullwidth">
               <select name="users-out" id="all-drugs" multiple="multiple" size="10">
-                <option type="button" @click="changeInfo(medicine)" v-for="medicine in searchResults" :key="medicine.id" class="list-group-item">{{ medicine.name }}</option>
+                <option type="button" @click="changeInfo(medicine)" v-for="medicine in searchResults" :key="medicine.primaryKey" class="list-group-item">{{ medicine.name }}</option>
               </select>
             </div>
           </div>
@@ -121,14 +121,11 @@
       //add drug to db
       addDrug: async function() {
         this.isSaving = true
-        //add drug to backend
-        var name = document.getElementById('add_name').value
-        var type = this.selected.title
-        var name_len = name.length
+        const name = document.getElementById('add_name').value
+        const type = this.selected.title
         
         if (name !== "" && type !== "") {
-          console.log(name_len)
-          if (name_len > 40) {
+          if (name.length > 40) {
             window.alert("Medicine name cannot be longer than 40 characters.")
           } else {
             if (this.regTest(name)) {
@@ -136,48 +133,54 @@
             } else {
               var data = {"name": name, "type": type}
               await MedicineService.createMedicine(data);
-              location.reload()
+              location.reload();
+              return;
             }  
           }
         } else {
           window.alert("Please enter both the name and type of the medicine.")
         }
+        this.isSaving = false;
       },
       //delete drug from db
       deleteDrug: async function() {
         this.isDeleting = true
-        var id = this.selectedMedicine.primaryKey
-        var name = this.selectedMedicine.name
-        var type = this.selected.title
-        if (id !== "" && name !== "" && type !== "") {
-          var data = {"id": id, "name": name, "type": type}
+        const primaryKey = this.selectedMedicine.primaryKey
+        const name = this.selectedMedicine.name
+        const type = this.selected.title
+
+        if (primaryKey !== "" && name !== "" && type !== "") {
+          var data = {"primaryKey": primaryKey, "name": name, "type": type}
           await MedicineService.deleteMedicine(data);
-          location.reload()
+          location.reload();
+          return;
         }
+        this.isDeleting = false;
       },
       //update drug
       updateDrug: async function() {
         this.isSaving = true
-        var id = this.selectedMedicine.primaryKey
-        var name = this.selectedMedicine.name
-        var type = this.selected.title
-        var name_len = name.length
+        const primaryKey = this.selectedMedicine.primaryKey
+        const name = this.selectedMedicine.name
+        const type = this.selected.title
         
-        if (id !== "" && name !== "" && type !== "") {
-          if (name_len > 40) {
+        if (primaryKey !== "" && name !== "" && type !== "") {
+          if (name.length > 40) {
             window.alert("Medicine name cannot be longer than 40 characters.")
           } else {
             if (this.regTest(name)) {
               window.alert("Medicine name contains invalid characters.")
             } else {
-              var data = {"primaryKey": id, "name": name, "type": type}
+              var data = {"primaryKey": primaryKey, "name": name, "type": type}
               await MedicineService.updateMedicine(data);
-              location.reload()
+              location.reload();
+              return;
             }
           }
         } else{
           window.alert("Please enter both the name and type of the medicine.")
         }
+        this.isSaving = false;
       },
       // This method will display the drug info
       // which user selected.
