@@ -65,6 +65,14 @@ class ImageManagerTest {
     }
 
     /**
+     * Test Saving an image with a null extension
+     */
+    @Test
+    void testSaveNullExtensionImage() {
+        assertNull(imageManager.saveImage("", null));
+    }
+    
+    /**
      * Test deleting an image file
      */
     @Test
