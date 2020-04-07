@@ -12,11 +12,11 @@ import io.micronaut.http.client.exceptions.HttpClientResponseException;
 
 import javax.inject.Inject;
 
-import main.java.com.projectBackEnd.Entities.Medicine.Hibernate.Medicine;
-import main.java.com.projectBackEnd.Entities.Medicine.Hibernate.MedicineManager;
-import main.java.com.projectBackEnd.Entities.Medicine.Hibernate.MedicineManagerInterface;
-import main.java.com.projectBackEnd.Entities.Medicine.Micronaut.MedicineAddCommand;
-import main.java.com.projectBackEnd.Entities.Medicine.Micronaut.MedicineUpdateCommand;
+import main.java.com.projectBackEnd.Services.Medicine.Hibernate.Medicine;
+import main.java.com.projectBackEnd.Services.Medicine.Hibernate.MedicineManager;
+import main.java.com.projectBackEnd.Services.Medicine.Hibernate.MedicineManagerInterface;
+import main.java.com.projectBackEnd.Services.Medicine.Micronaut.MedicineAddCommand;
+import main.java.com.projectBackEnd.Services.Medicine.Micronaut.MedicineUpdateCommand;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManager;
+import main.java.com.projectBackEnd.Services.User.Hibernate.UserManager;
 import main.java.com.projectBackEnd.HibernateUtility;
 
 /**

@@ -1,9 +1,9 @@
 package test.java;
 
-import main.java.com.projectBackEnd.Entities.AppInfo.AppInfo;
-import main.java.com.projectBackEnd.Entities.AppInfo.AppInfoManager;
-import main.java.com.projectBackEnd.Entities.AppInfo.AppInfoManagerInterface;
-import main.java.com.projectBackEnd.Entities.AppInfo.JSONLocation;
+import main.java.com.projectBackEnd.Services.AppInfo.AppInfo;
+import main.java.com.projectBackEnd.Services.AppInfo.AppInfoManager;
+import main.java.com.projectBackEnd.Services.AppInfo.AppInfoManagerInterface;
+import main.java.com.projectBackEnd.Services.AppInfo.JSONLocation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
@@ -15,13 +15,6 @@ import static org.junit.Assert.*;
 class AppInfoManagerTest {
 
     private static AppInfoManagerInterface infoManager;
-
-    /**
-     * Default Constructor
-     */
-    AppInfoManagerTest() {
-
-    }
 
     /**
      * Set the JSON's location and initialise a manager for testing

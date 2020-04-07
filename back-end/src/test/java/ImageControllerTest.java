@@ -8,7 +8,7 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 
-import main.java.com.projectBackEnd.Image.*;
+import main.java.com.projectBackEnd.Services.Image.*;
 
 import javax.inject.Inject;
 
@@ -21,7 +21,7 @@ import static io.micronaut.http.MediaType.MULTIPART_FORM_DATA_TYPE;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManager;
+import main.java.com.projectBackEnd.Services.User.Hibernate.UserManager;
 
 import main.java.com.projectBackEnd.HibernateUtility;
 
@@ -40,7 +40,7 @@ class ImageControllerTest {
 	/**
 	*	Constructor gets a new image manager Singleton
 	*/
-	ImageControllerTest(){
+	private ImageControllerTest(){
 		imageManager = ImageManager.getImageManager();
 		file = new File(System.getProperty("user.dir")+"/src/test/resources/TestImages/UploadedImage/"+"testImage.jpg");
 		largeFile = new File(System.getProperty("user.dir")+"/src/test/resources/TestImages/UploadedImage/"+"17MB.jpg");

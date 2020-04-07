@@ -1,9 +1,9 @@
 package test.java;
 
 
-import main.java.com.projectBackEnd.Image.DirectoryHolder;
-import main.java.com.projectBackEnd.Image.ImageManager;
-import main.java.com.projectBackEnd.Image.ImageManagerInterface;
+import main.java.com.projectBackEnd.Services.Image.DirectoryHolder;
+import main.java.com.projectBackEnd.Services.Image.ImageManager;
+import main.java.com.projectBackEnd.Services.Image.ImageManagerInterface;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -27,7 +27,7 @@ class ImageManagerTest {
 
     private static ImageManagerInterface imageManager;
 
-    ImageManagerTest(){ imageManager = ImageManager.getImageManager(); }
+    private ImageManagerTest(){ imageManager = ImageManager.getImageManager(); }
 
     /**
      * Prior to running, set the directory to the test image folder

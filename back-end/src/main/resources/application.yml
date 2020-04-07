@@ -9,7 +9,7 @@ datasources:
 jpa:
   default:
     packages-to-scan:
-      - 'com.projectBackEnd.Entities'
+      - 'com.projectBackEnd.Services'
     properties:
       hibernate:
         hbm2ddl:
