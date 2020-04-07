@@ -91,10 +91,10 @@ class AppInfoControllerTest {
     }
 
     /**
-     * Test unauthorised addition of an image
+     * Test unauthorized addition of an image
      */
     @Test
-    void testUnauthorisedUpdate() {
+    void testUnauthorizedUpdate() {
         AppInfo updatedInfo = new AppInfo("Wowwee", "Cool");
         HttpRequest request = HttpRequest.PUT("/appinfo", updatedInfo).header("X-API-Key","lol");
         client.toBlocking().exchange(request);

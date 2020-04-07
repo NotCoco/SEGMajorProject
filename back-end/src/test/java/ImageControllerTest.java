@@ -160,7 +160,7 @@ class ImageControllerTest {
 	}
 
 	/**
-	 * Test that deleting while unauthorised throws an exception
+	 * Test that deleting while unauthorized throws an exception
 	 */
 	@Test
 	void testDeleteUnauthorized(){

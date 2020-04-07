@@ -164,7 +164,7 @@ class MedicineControllerTest{
 	*	Check if adding medicine without a valid session token returns HTTP unauthorized exception
 	*/
 	@Test
-	void testAddMedicineUnauthorised(){
+	void testAddMedicineUnauthorized(){
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
 			client.toBlocking().exchange(HttpRequest.POST("/medicines", new MedicineAddCommand("name", "type")).header("X-API-Key",""));
         });
@@ -217,7 +217,7 @@ class MedicineControllerTest{
 	*	Test if deleting medicine without correct session token return HTTP unauthorized exception
 	*/
 	@Test
-	void testDeleteMedicineUnauthorised(){
+	void testDeleteMedicineUnauthorized(){
         addMedicine(new MedicineAddCommand("name", "type"));
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
 			client.toBlocking().exchange(HttpRequest.DELETE("/medicines/0").header("X-API-Key",""));
@@ -301,7 +301,7 @@ class MedicineControllerTest{
 	*	Test if updating medicine without correct session token returns a HTTP unauthorized exception
 	*/
 	@Test
-	void testUpdateMedicineUnauthorised(){
+	void testUpdateMedicineUnauthorized(){
         addMedicine(new MedicineAddCommand("name", "type"));
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
 			client.toBlocking().exchange(HttpRequest.PUT("/medicines", new MedicineUpdateCommand(0, "name", "type")).header("X-API-Key",""));
