@@ -4,7 +4,7 @@
       <div class="navbar-brand">
         <router-link to="/" class="navbar-item">
           <svg
-            height="35px"
+            class="nhs-logo"
             version="1.1"
             viewBox="0 0 370.61 150"
             xmlns="http://www.w3.org/2000/svg"
@@ -19,8 +19,6 @@
               <path d="m93.06 11.15a16.18 16.18 0 0 0-7.06-1.48c-3.41 0-6.18 0.51-6.18 3.09 0 4.57 12.5 2.86 12.5 12.64 0 8.9-8.26 11.21-15.73 11.21a36 36 0 0 1-10-1.66l2-6.55c1.71 1.11 5.12 1.85 7.93 1.85s6.87-0.51 6.87-3.83c0-5.17-12.5-3.23-12.5-12.32 0-8.3 7.29-10.8 14.35-10.8 4 0 7.7 0.42 9.87 1.43z" />
             </g>
           </svg>
-        </router-link>
-        <router-link to="/" class="navbar-item">
           <div class="brand-text">
             <h1 class="brand-top">King's College Hospital</h1>
             <h1 class="brand-bottom">Paediatric Liver Service</h1>
@@ -30,23 +28,21 @@
         <div class="navbar-burger is-hidden-desktop" @click="mobileNavActive=!mobileNavActive">
           <font-awesome-icon icon="bars" size="2x" />
         </div>
-
-
       </div>
 
-<transition name="fade" mode="out-in">
-      <div class="navbar-menu" ref="navMenu" :class="{ 'is-active': mobileNavActive }" v-bind:key="mobileNavActive">
-        <div class="navbar-start" style="margin-left: 35px">
-          <router-link to="/" class="navbar-item">Home</router-link>
-          <router-link to="/news" class="navbar-item">News</router-link>
-          <router-link to="/drug-chart" class="navbar-item">Drug Chart</router-link>
-        </div>
+      <transition name="fade" mode="out-in">
+        <div class="navbar-menu" ref="navMenu" :class="{ 'is-active': mobileNavActive }" v-bind:key="mobileNavActive">
+          <div class="navbar-start">
+            <router-link to="/" class="navbar-item">Home</router-link>
+            <router-link to="/news" class="navbar-item">News</router-link>
+            <router-link to="/drug-chart" class="navbar-item">Drug Chart</router-link>
+          </div>
 
-        <div class="navbar-end search is-hidden-touch">
-          <search-bar v-if="showSearchBar" :pages="pages" />
+          <div class="navbar-end search is-hidden-touch">
+            <search-bar v-if="showSearchBar" :pages="pages" />
+          </div>
         </div>
-      </div>
-</transition>
+      </transition>
     </nav>
     <transition name="vertical-slide" v-if="displayUrgentNews" appear>
       <router-link class="link" :to="`/news/${urgentNews.slug}`">
@@ -122,6 +118,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "~bulma/sass/utilities/functions";          // \
+@import "~bulma/sass/utilities/initial-variables";  //  | Remove after Bulma issue #2773 fixed
+@import "~bulma/sass/utilities/derived-variables";  // /
+@import "~bulma/sass/utilities/mixins";
+
 .vertical-slide-leave, .vertical-slide-enter-to {
   top: 0;
 }
@@ -169,6 +170,19 @@ nav.navbar {
   .navbar-brand {
     padding-left: 14px;
     height: 100%;
+
+    @include mobile {
+      padding-left: 0;
+    }
+
+    svg.nhs-logo {
+      height: 35px;
+      margin-right: 24px;
+
+      @include mobile {
+        margin-right: 12px;
+      }
+    }
   }
 
   .navbar-burger {
@@ -176,6 +190,7 @@ nav.navbar {
     align-items: center;
     justify-content: center;
     height: 100%;
+    width: 68px;
   }
 
   .brand-text {
