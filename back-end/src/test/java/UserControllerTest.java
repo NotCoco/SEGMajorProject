@@ -3,7 +3,6 @@ package test.java;
 
 import io.micronaut.test.annotation.MicronautTest;
 import io.micronaut.core.type.Argument;
-import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
@@ -11,11 +10,12 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 
-import main.java.com.projectBackEnd.Entities.User.Hibernate.*;
-import main.java.com.projectBackEnd.Entities.User.Micronaut.*;
-import main.java.com.projectBackEnd.Entities.Session.SessionManager;
-import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
-import main.java.com.projectBackEnd.Entities.ResetLinks.*;
+import main.java.com.projectBackEnd.Services.User.Hibernate.*;
+import main.java.com.projectBackEnd.Services.User.Hibernate.Exceptions.*;
+import main.java.com.projectBackEnd.Services.User.Micronaut.*;
+import main.java.com.projectBackEnd.Services.Session.SessionManager;
+import main.java.com.projectBackEnd.Services.Session.SessionManagerInterface;
+import main.java.com.projectBackEnd.Services.ResetLinks.*;
 
 
 import javax.inject.Inject;
@@ -210,7 +210,7 @@ public class UserControllerTest{
 		try{
 			userManager.addUser("username@mail.com","password","name");
 		}
-		catch(InvalidEmailException|EmailExistsException|IncorrectNameException|InvalidPasswordException e){
+		catch(InvalidEmailException | EmailExistsException | IncorrectNameException | InvalidPasswordException e){
 			fail();
 		}
 		String token = userManager.verifyUser("username@mail.com","password");

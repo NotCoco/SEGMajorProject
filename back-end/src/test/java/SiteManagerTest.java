@@ -1,9 +1,9 @@
 
 package test.java;
 
-import main.java.com.projectBackEnd.Entities.Site.Hibernate.Site;
-import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManager;
-import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManagerInterface;
+import main.java.com.projectBackEnd.Services.Site.Hibernate.Site;
+import main.java.com.projectBackEnd.Services.Site.Hibernate.SiteManager;
+import main.java.com.projectBackEnd.Services.Site.Hibernate.SiteManagerInterface;
 import main.java.com.projectBackEnd.HibernateUtility;
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;

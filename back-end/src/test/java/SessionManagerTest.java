@@ -1,10 +1,10 @@
 package test.java;
 
 import main.java.com.projectBackEnd.*;
-import main.java.com.projectBackEnd.Entities.Session.Session;
-import main.java.com.projectBackEnd.Entities.Session.SessionManager;
-import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
-import main.java.com.projectBackEnd.Entities.Session.NoSessionException;
+import main.java.com.projectBackEnd.Services.Session.Session;
+import main.java.com.projectBackEnd.Services.Session.SessionManager;
+import main.java.com.projectBackEnd.Services.Session.SessionManagerInterface;
+import main.java.com.projectBackEnd.Services.Session.NoSessionException;
 
 import java.util.ArrayList;
 import java.util.List;

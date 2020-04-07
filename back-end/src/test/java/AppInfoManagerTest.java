@@ -1,9 +1,9 @@
 package test.java;
 
-import main.java.com.projectBackEnd.Entities.AppInfo.AppInfo;
-import main.java.com.projectBackEnd.Entities.AppInfo.AppInfoManager;
-import main.java.com.projectBackEnd.Entities.AppInfo.AppInfoManagerInterface;
-import main.java.com.projectBackEnd.Entities.AppInfo.JSONLocation;
+import main.java.com.projectBackEnd.Services.AppInfo.AppInfo;
+import main.java.com.projectBackEnd.Services.AppInfo.AppInfoManager;
+import main.java.com.projectBackEnd.Services.AppInfo.AppInfoManagerInterface;
+import main.java.com.projectBackEnd.Services.AppInfo.JSONLocation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 

@@ -9,16 +9,16 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 
-import main.java.com.projectBackEnd.Entities.Page.Hibernate.PageManager;
-import main.java.com.projectBackEnd.Entities.Page.Hibernate.PageManagerInterface;
+import main.java.com.projectBackEnd.Services.Page.Hibernate.PageManager;
+import main.java.com.projectBackEnd.Services.Page.Hibernate.PageManagerInterface;
 
 import javax.inject.Inject;
 
-import main.java.com.projectBackEnd.Entities.Site.Hibernate.Site;
-import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManager;
-import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManagerInterface;
-import main.java.com.projectBackEnd.Entities.Site.Micronaut.SiteAddCommand;
-import main.java.com.projectBackEnd.Entities.Site.Micronaut.SiteUpdateCommand;
+import main.java.com.projectBackEnd.Services.Site.Hibernate.Site;
+import main.java.com.projectBackEnd.Services.Site.Hibernate.SiteManager;
+import main.java.com.projectBackEnd.Services.Site.Hibernate.SiteManagerInterface;
+import main.java.com.projectBackEnd.Services.Site.Micronaut.SiteAddCommand;
+import main.java.com.projectBackEnd.Services.Site.Micronaut.SiteUpdateCommand;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManager;
+import main.java.com.projectBackEnd.Services.User.Hibernate.UserManager;
 import main.java.com.projectBackEnd.HibernateUtility;
 /**
  * The purpose of this class is to test the REST endpoints associated with the site entity through the site controller

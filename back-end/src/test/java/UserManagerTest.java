@@ -1,7 +1,8 @@
 package test.java;
 
-import main.java.com.projectBackEnd.Entities.User.Hibernate.*;
+import main.java.com.projectBackEnd.Services.User.Hibernate.*;
 
+import main.java.com.projectBackEnd.Services.User.Hibernate.Exceptions.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -148,7 +149,7 @@ class UserManagerTest{
 		try{
 			userManager.addUser("user8@email.com","password8","name");
 		}
-		catch(EmailExistsException|InvalidEmailException|IncorrectNameException|InvalidPasswordException e){
+		catch(EmailExistsException |InvalidEmailException|IncorrectNameException| InvalidPasswordException e){
 			fail();
 		}
 		List<User> users = (List<User>)((EntityManager) userManager).getAll();

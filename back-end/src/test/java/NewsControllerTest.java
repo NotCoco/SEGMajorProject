@@ -12,11 +12,11 @@ import io.micronaut.http.client.exceptions.HttpClientResponseException;
 
 import javax.inject.Inject;
 
-import main.java.com.projectBackEnd.Entities.News.Hibernate.News;
-import main.java.com.projectBackEnd.Entities.News.Hibernate.NewsManager;
-import main.java.com.projectBackEnd.Entities.News.Hibernate.NewsManagerInterface;
-import main.java.com.projectBackEnd.Entities.News.Micronaut.NewsAddCommand;
-import main.java.com.projectBackEnd.Entities.News.Micronaut.NewsUpdateCommand;
+import main.java.com.projectBackEnd.Services.News.Hibernate.News;
+import main.java.com.projectBackEnd.Services.News.Hibernate.NewsManager;
+import main.java.com.projectBackEnd.Services.News.Hibernate.NewsManagerInterface;
+import main.java.com.projectBackEnd.Services.News.Micronaut.NewsAddCommand;
+import main.java.com.projectBackEnd.Services.News.Micronaut.NewsUpdateCommand;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
@@ -26,7 +26,7 @@ import java.util.Date;
 import java.util.List;
 
 
-import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManager;
+import main.java.com.projectBackEnd.Services.User.Hibernate.UserManager;
 import main.java.com.projectBackEnd.HibernateUtility;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

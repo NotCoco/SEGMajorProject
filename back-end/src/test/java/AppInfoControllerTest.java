@@ -8,7 +8,7 @@ import io.micronaut.http.client.annotation.Client;
 
 import javax.inject.Inject;
 
-import main.java.com.projectBackEnd.Entities.AppInfo.*;
+import main.java.com.projectBackEnd.Services.AppInfo.*;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,7 +17,7 @@ import org.junit.jupiter.api.AfterAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManager;
+import main.java.com.projectBackEnd.Services.User.Hibernate.UserManager;
 import main.java.com.projectBackEnd.HibernateUtility;
 
 /**

@@ -8,7 +8,7 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 
-import main.java.com.projectBackEnd.Image.*;
+import main.java.com.projectBackEnd.Services.Image.*;
 
 import javax.inject.Inject;
 
@@ -21,7 +21,7 @@ import static io.micronaut.http.MediaType.MULTIPART_FORM_DATA_TYPE;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManager;
+import main.java.com.projectBackEnd.Services.User.Hibernate.UserManager;
 
 import main.java.com.projectBackEnd.HibernateUtility;
 

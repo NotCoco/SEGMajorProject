@@ -1,11 +1,11 @@
 package test.java;
 
-import main.java.com.projectBackEnd.Entities.Page.Hibernate.Page;
-import main.java.com.projectBackEnd.Entities.Page.Hibernate.PageManager;
-import main.java.com.projectBackEnd.Entities.Page.Hibernate.PageManagerInterface;
-import main.java.com.projectBackEnd.Entities.Site.Hibernate.Site;
-import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManager;
-import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManagerInterface;
+import main.java.com.projectBackEnd.Services.Page.Hibernate.Page;
+import main.java.com.projectBackEnd.Services.Page.Hibernate.PageManager;
+import main.java.com.projectBackEnd.Services.Page.Hibernate.PageManagerInterface;
+import main.java.com.projectBackEnd.Services.Site.Hibernate.Site;
+import main.java.com.projectBackEnd.Services.Site.Hibernate.SiteManager;
+import main.java.com.projectBackEnd.Services.Site.Hibernate.SiteManagerInterface;
 import main.java.com.projectBackEnd.HibernateUtility;
 
 import javax.persistence.PersistenceException;
