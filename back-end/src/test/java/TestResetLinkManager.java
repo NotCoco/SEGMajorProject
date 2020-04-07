@@ -82,12 +82,21 @@ class TestResetLinkManager{
 
     /**
      * Attempts to create a token for an email which does not exist, expects and exception to be thrown
-     * @throws EmailNotExistException The exception to be thrown
+     * 
      */
     @Test
-    void testCreateEmailNotExist() throws EmailNotExistException{
+    void testCreateEmailNullExist() {
         fill();
         assertThrows(EmailNotExistException.class,() -> {linkManager.create("test2@test.com");});
+    }
+  /**
+     * Attempts to create a token for an null email, expects and exception to be thrown
+     * 
+     */
+    @Test
+    void testCreateEmailNotExist() {
+        fill();
+        assertThrows(EmailNotExistException.class,() -> {linkManager.create(null);});
     }
 
     /**
