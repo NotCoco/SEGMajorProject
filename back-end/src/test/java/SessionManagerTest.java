@@ -124,29 +124,26 @@ class SessionManagerTest {
 
 	/**
 	 * Attempts to retrieve an email via an empty token, expects an exception to be thrown
-	 * @throws NoSessionException The expected exception
 	 */
 	@Test
-	void testGetEmailNotExistEmpty() throws NoSessionException{
+	void testGetEmailNotExistEmpty()  {
 		assertThrows(NoSessionException.class,() -> {sessionManager.getEmail("");});
 	}
 
 	/**
 	 * Attempts to retrieve an email via an incorrect token, expects an exception to be thrown
-	 * @throws NoSessionException The expected exception
 	 */
 	@Test
-	void testGetEmailNotExistIncorrect() throws NoSessionException{
+	void testGetEmailNotExistIncorrect() {
 
 		assertThrows(NoSessionException.class,() -> {sessionManager.getEmail("very incorrect token that does not work");});
 	}
 
 	/**
 	 * Attempts to retrieve an email via a null token, expects an exception to be thrown
-	 * @throws NoSessionException The expected exception
 	 */
 	@Test
-	void testGetEmailNotExistNull() throws NoSessionException{
+	void testGetEmailNotExistNull() {
 		assertThrows(NoSessionException.class,() -> {sessionManager.getEmail(null);});
 	}
 

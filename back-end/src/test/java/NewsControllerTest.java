@@ -57,8 +57,9 @@ class NewsControllerTest {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         newsManager = NewsManager.getNewsManager();
         try{
-        	UserManager.getUserManager().addUser("test@test.com" , "123","name");
-        	token = UserManager.getUserManager().verifyUser("test@test.com" , "123");
+            UserManager.getUserManager().addUser("NewsTest@test.com", "123", "name");
+            Thread.sleep(100); //A sleep to give the database a chance to update
+            token = UserManager.getUserManager().verifyUser("NewsTest@test.com", "123");
         }
         catch(Exception e){
         	fail();
@@ -71,7 +72,7 @@ class NewsControllerTest {
     @AfterAll
     static void closeDatabase() {
         try{
-        	UserManager.getUserManager().deleteUser("test@test.com" , "123");
+        	UserManager.getUserManager().deleteUser("NewsTest@test.com" , "123");
         }
         catch(Exception e){
         	fail();

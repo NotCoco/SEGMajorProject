@@ -12,7 +12,6 @@ import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
@@ -23,7 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 /**
  * Test class to extensively unit test interactions between the page entity manager and the Pages table in the database.
  */
-public class PageManagerTest {
+class PageManagerTest {
 
     private static ConnectionLeakUtil connectionLeakUtil = null;
     private static PageManagerInterface pageManager = null;

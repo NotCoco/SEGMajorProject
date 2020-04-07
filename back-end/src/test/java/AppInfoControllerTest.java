@@ -41,11 +41,13 @@ class AppInfoControllerTest {
         JSONLocation.setJsonFile("src/test/resources/AppInfoTest.json");
 
         try {
-            UserManager.getUserManager().addUser("test@test.com", "123", "name");
-            token = UserManager.getUserManager().verifyUser("test@test.com", "123");
+            UserManager.getUserManager().addUser("appInfoTest@test.com", "123", "name");
+            Thread.sleep(100); //A sleep to give the database a chance to update
+            token = UserManager.getUserManager().verifyUser("appInfoTest@test.com", "123");
         } catch (Exception e) {
             fail();
         }
+
     }
 
     /**
@@ -54,7 +56,7 @@ class AppInfoControllerTest {
     @AfterAll
     static void closeDatabase() {
         try {
-            UserManager.getUserManager().deleteUser("test@test.com", "123");
+            UserManager.getUserManager().deleteUser("appInfoTest@test.com", "123");
         } catch (Exception e) {
             fail();
         }

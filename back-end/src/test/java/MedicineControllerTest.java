@@ -55,8 +55,9 @@ class MedicineControllerTest{
         HibernateUtility.setResource("testhibernate.cfg.xml");
         medicineManager = MedicineManager.getMedicineManager();
         try{
-        	UserManager.getUserManager().addUser("test@test.com" , "123","name");
-        	token = UserManager.getUserManager().verifyUser("test@test.com" , "123");
+            UserManager.getUserManager().addUser("MedicineTest@test.com", "123", "name");
+            Thread.sleep(100); //A sleep to give the database a chance to update
+            token = UserManager.getUserManager().verifyUser("MedicineTest@test.com", "123");
         } catch(Exception e){
         	fail();
         }    
@@ -67,7 +68,7 @@ class MedicineControllerTest{
     @AfterAll
     static void closeDatabase() {
         try{
-        	UserManager.getUserManager().deleteUser("test@test.com" , "123");
+        	UserManager.getUserManager().deleteUser("MedicineTest@test.com" , "123");
         }
         catch(Exception e){
         	fail();

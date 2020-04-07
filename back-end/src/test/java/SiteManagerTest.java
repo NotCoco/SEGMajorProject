@@ -21,8 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 /**
  * Test class to extensively unit test interactions between software and the Sites table in the database.
  */
- class SiteManagerTest {
-
+class SiteManagerTest {
     private static ConnectionLeakUtil connectionLeakUtil = null;
     private static SiteManagerInterface siteManager = null;
     /**

@@ -62,11 +62,11 @@ public class PageControllerTest {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         siteManager = SiteManager.getSiteManager();
         pageManager = PageManager.getPageManager();
-        try{
-        	UserManager.getUserManager().addUser("test@test.com" , "123","name");
-        	token = UserManager.getUserManager().verifyUser("test@test.com" , "123");
-        }
-        catch(Exception e){
+        try {
+            UserManager.getUserManager().addUser("PageTest@test.com", "123", "name");
+            Thread.sleep(100); //A sleep to give the database a chance to update
+            token = UserManager.getUserManager().verifyUser("PageTest@test.com", "123");
+        } catch(Exception e){
         	fail();
         }    
     }
@@ -77,7 +77,7 @@ public class PageControllerTest {
     static void closeDatabase() {
 
         try{
-        	UserManager.getUserManager().deleteUser("test@test.com" , "123");
+        	UserManager.getUserManager().deleteUser("PageTest@test.com" , "123");
         }
         catch(Exception e){
         	fail();

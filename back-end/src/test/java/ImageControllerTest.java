@@ -57,9 +57,9 @@ class ImageControllerTest {
 		DirectoryHolder.getDirectoryHolder().setDir(System.getProperty("user.dir")+"/src/test/resources/TestImages/Generated/");
 		HibernateUtility.setResource("testhibernate.cfg.xml");
 		try{
-
-			UserManager.getUserManager().addUser("test@test.com" , "123","name");
-			token = UserManager.getUserManager().verifyUser("test@test.com" , "123");
+			UserManager.getUserManager().addUser("ImageTest@test.com", "123", "name");
+			Thread.sleep(100); //A sleep to give the database a chance to update
+			token = UserManager.getUserManager().verifyUser("ImageTest@test.com", "123");
 		}
 		catch(Exception e){
 			fail();
@@ -79,7 +79,7 @@ class ImageControllerTest {
 	static void deleteCreatedImages() {
 		imageManager.deleteAll();
 		try{
-			UserManager.getUserManager().deleteUser("test@test.com" , "123");
+			UserManager.getUserManager().deleteUser("ImageTest@test.com" , "123");
 			HibernateUtility.shutdown();
 		} catch(Exception e){
 			fail();
