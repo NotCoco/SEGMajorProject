@@ -9,16 +9,16 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 
-import main.java.com.projectBackEnd.Entities.Page.Hibernate.PageManager;
-import main.java.com.projectBackEnd.Entities.Page.Hibernate.PageManagerInterface;
+import main.java.com.projectBackEnd.Services.Page.Hibernate.PageManager;
+import main.java.com.projectBackEnd.Services.Page.Hibernate.PageManagerInterface;
 
 import javax.inject.Inject;
 
-import main.java.com.projectBackEnd.Entities.Site.Hibernate.Site;
-import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManager;
-import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManagerInterface;
-import main.java.com.projectBackEnd.Entities.Site.Micronaut.SiteAddCommand;
-import main.java.com.projectBackEnd.Entities.Site.Micronaut.SiteUpdateCommand;
+import main.java.com.projectBackEnd.Services.Site.Hibernate.Site;
+import main.java.com.projectBackEnd.Services.Site.Hibernate.SiteManager;
+import main.java.com.projectBackEnd.Services.Site.Hibernate.SiteManagerInterface;
+import main.java.com.projectBackEnd.Services.Site.Micronaut.SiteAddCommand;
+import main.java.com.projectBackEnd.Services.Site.Micronaut.SiteUpdateCommand;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
@@ -35,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManager;
+import main.java.com.projectBackEnd.Services.User.Hibernate.UserManager;
 import main.java.com.projectBackEnd.HibernateUtility;
 /**
  * The purpose of this class is to test the REST endpoints associated with the site entity through the site controller
@@ -45,7 +45,7 @@ class SiteControllerTest {
 
     @Inject
     @Client("/")
-    HttpClient client;
+    private HttpClient client;
 
     private static SiteManagerInterface siteManager;
     private static PageManagerInterface pageManager;
@@ -60,8 +60,9 @@ class SiteControllerTest {
         siteManager = SiteManager.getSiteManager();
         pageManager = PageManager.getPageManager();
         try{
-        	UserManager.getUserManager().addUser("test@test.com" , "123","name");
-        	token = UserManager.getUserManager().verifyUser("test@test.com" , "123");
+            UserManager.getUserManager().addUser("SiteTest@test.com", "123", "name");
+            Thread.sleep(100); //A sleep to give the database a chance to update
+            token = UserManager.getUserManager().verifyUser("SiteTest@test.com", "123");
         }
         catch(Exception e){
         	fail();
@@ -73,10 +74,9 @@ class SiteControllerTest {
      */
     @AfterAll
     static void closeDatabase() {
-        try{
-        	UserManager.getUserManager().deleteUser("test@test.com" , "123");
-        }
-        catch(Exception e){
+        try {
+        	UserManager.getUserManager().deleteUser("SiteTest@test.com" , "123");
+        } catch(Exception e){
         	fail();
         }    
         HibernateUtility.shutdown();
@@ -220,7 +220,6 @@ class SiteControllerTest {
     void testDeleteAndGetSite(){
         HttpResponse response = addSite("testSlug", "testSite");
         String url =  getEUrl(response);
-        int id = getSitePKBySlug(url);
         // Asserting that we've added a site
         assertEquals(HttpStatus.CREATED, response.getStatus());
 

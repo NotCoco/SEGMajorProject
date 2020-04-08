@@ -1,9 +1,9 @@
 
 package test.java;
 
-import main.java.com.projectBackEnd.Entities.Site.Hibernate.Site;
-import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManager;
-import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManagerInterface;
+import main.java.com.projectBackEnd.Services.Site.Hibernate.Site;
+import main.java.com.projectBackEnd.Services.Site.Hibernate.SiteManager;
+import main.java.com.projectBackEnd.Services.Site.Hibernate.SiteManagerInterface;
 import main.java.com.projectBackEnd.HibernateUtility;
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;
@@ -21,8 +21,7 @@ import org.junit.jupiter.api.BeforeEach;
 /**
  * Test class to extensively unit test interactions between software and the Sites table in the database.
  */
- class SiteManagerTest {
-
+class SiteManagerTest {
     private static ConnectionLeakUtil connectionLeakUtil = null;
     private static SiteManagerInterface siteManager = null;
     /**

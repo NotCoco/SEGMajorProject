@@ -1,18 +1,17 @@
 package test.java;
 
-import main.java.com.projectBackEnd.Entities.Page.Hibernate.Page;
-import main.java.com.projectBackEnd.Entities.Page.Hibernate.PageManager;
-import main.java.com.projectBackEnd.Entities.Page.Hibernate.PageManagerInterface;
-import main.java.com.projectBackEnd.Entities.Site.Hibernate.Site;
-import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManager;
-import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManagerInterface;
+import main.java.com.projectBackEnd.Services.Page.Hibernate.Page;
+import main.java.com.projectBackEnd.Services.Page.Hibernate.PageManager;
+import main.java.com.projectBackEnd.Services.Page.Hibernate.PageManagerInterface;
+import main.java.com.projectBackEnd.Services.Site.Hibernate.Site;
+import main.java.com.projectBackEnd.Services.Site.Hibernate.SiteManager;
+import main.java.com.projectBackEnd.Services.Site.Hibernate.SiteManagerInterface;
 import main.java.com.projectBackEnd.HibernateUtility;
 
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
@@ -23,7 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 /**
  * Test class to extensively unit test interactions between the page entity manager and the Pages table in the database.
  */
-public class PageManagerTest {
+class PageManagerTest {
 
     private static ConnectionLeakUtil connectionLeakUtil = null;
     private static PageManagerInterface pageManager = null;

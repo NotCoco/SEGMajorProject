@@ -1,7 +1,8 @@
 package test.java;
 
-import main.java.com.projectBackEnd.Entities.User.Hibernate.*;
+import main.java.com.projectBackEnd.Services.User.Hibernate.*;
 
+import main.java.com.projectBackEnd.Services.User.Hibernate.Exceptions.*;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -67,10 +68,9 @@ class UserManagerTest{
 	}
 	/**
 	 * Attempts to add a user with an email missing an '@' to the database, expects an exception to be thrown
-	 * @throws InvalidEmailException The exception
 	 */
 	@Test
-	void testAddUserInvalidEmail1() throws InvalidEmailException{
+	void testAddUserInvalidEmail1()  {
 
 
 		assertThrows(InvalidEmailException.class,() -> {userManager.addUser("email","password5","name");});
@@ -129,10 +129,10 @@ class UserManagerTest{
 
 	/**
 	 * Attempts to add a user with a null name to the database, expects an exception to be thrown
-	 * @throws IncorrectNameException The exception
+
 	 */
 	@Test
-	void testAddUserIncorrectNameNull() throws IncorrectNameException{
+	void testAddUserIncorrectNameNull() {
 
 
 		assertThrows(IncorrectNameException.class,() -> {userManager.addUser("email@email.com","password5",null);});
@@ -148,7 +148,7 @@ class UserManagerTest{
 		try{
 			userManager.addUser("user8@email.com","password8","name");
 		}
-		catch(EmailExistsException|InvalidEmailException|IncorrectNameException|InvalidPasswordException e){
+		catch(EmailExistsException |InvalidEmailException|IncorrectNameException| InvalidPasswordException e){
 			fail();
 		}
 		List<User> users = (List<User>)((EntityManager) userManager).getAll();
@@ -158,10 +158,9 @@ class UserManagerTest{
 
 	/**
 	 * Attempts to add a user with credentials of a pre existing user to the database, expects an exception to be thrown
-	 * @throws EmailExistsException The exception
 	 */
 	@Test
-	void testAddExistingUser()throws EmailExistsException{
+	void testAddExistingUser() {
 		fillDatabase(getTestUsers());
 		assertThrows(EmailExistsException.class,() -> {userManager.addUser("user5@email.com","password5","name");});
 		
@@ -181,7 +180,7 @@ class UserManagerTest{
 
 	/**
 	 * Tests that the manager is able to change the password of an existing user to a legal value, expects succest
-	 * @throws UserNotExistException
+	 * @throws UserNotExistException Thrown when a user doesn't exist
 	 */
 	@Test
 	void testChangePassword() throws UserNotExistException{
@@ -239,52 +238,39 @@ class UserManagerTest{
 
 	/**
 	 * Attempts to delete a user who does not exist in the database, expects to throw an exception
-	 * @throws UserNotExistException The exception expected
+
 	 */
 	@Test
-	void testDeleteNotExistingUser() throws UserNotExistException{
+	void testDeleteNotExistingUser() {
 		fillDatabase(getTestUsers());
-
 		assertThrows(UserNotExistException.class,() -> {userManager.deleteUser("user0@email.com","password0");});
-
 	}
 
 	/**
 	 * Attempts to delete a user with an incorrect password, expects to throw an exception
-	 * @throws UserNotExistException The exception expected
 	 */
 	@Test
-	void testDeleteWrongPasswordUser() throws UserNotExistException{
+	void testDeleteWrongPasswordUser()  {
 		fillDatabase(getTestUsers());
-
 		assertThrows(UserNotExistException.class,() -> {userManager.deleteUser("user1@email.com","password0");});
-
 	}
 
 	/**
 	 * Attempts to change the email of a non existing user, expects to throw exceptions
-	 * @throws UserNotExistException The exception expected
-	 * @throws EmailExistsException This exception throw is not expected but may be thrown
 	 */
 	@Test
-	void testChangeEmailBadEmail() throws UserNotExistException,EmailExistsException{
+	void testChangeEmailBadEmail() {
 		fillDatabase(getTestUsers());
-
 		assertThrows(UserNotExistException.class,() -> {userManager.changeEmail("user@email.com","user19@email.com");});
-
 	}
 
 	/**
 	 * Attempts to change the email of an existing user to the email of another existing user, expects to throw an exception
-	 * @throws EmailExistsException The exception expected
-	 * @throws UserNotExistException This exception is not expected but may be thrown
 	 */
 	@Test
-	void testChangeEmailExisitngEmail() throws EmailExistsException,UserNotExistException{
+	void testChangeEmailExisitngEmail() {
 		fillDatabase(getTestUsers());
-		
 		assertThrows(EmailExistsException.class,() -> {userManager.changeEmail("user1@email.com","user5@email.com");});
-
 	}
 
 	/**
@@ -330,22 +316,19 @@ class UserManagerTest{
 	}
 	/**
 	 * Attempts to change the name of a non existing user, expects an exception to be thrown
-	 * @throws IncorrectNameException This exception is not expected but may be thrown
-	 * @throws UserNotExistException The exception expected
 	 */
 	@Test
-	void testChangeGetNameIncorrectUser() throws IncorrectNameException, UserNotExistException{
+	void testChangeGetNameIncorrectUser() {
 
 		assertThrows(UserNotExistException.class,() -> {userManager.changeName("user1@email.com", "new name");});
 	}
 
 	/**
 	 * Attempts to change the name of an existing user to an empty value, expects to throw an exception
-	 * @throws IncorrectNameException The exception expected
 	 * @throws UserNotExistException This exception is not expected but may be thrown
 	 */
 	@Test
-	void testIncorrectNameEmpty() throws IncorrectNameException, UserNotExistException{
+	void testIncorrectNameEmpty() throws UserNotExistException{
 		fillDatabase(getTestUsers());
 		assertEquals("name",userManager.getName("user1@email.com"));
 		assertThrows(IncorrectNameException.class,() -> {userManager.changeName("user1@email.com", "");});
@@ -353,11 +336,10 @@ class UserManagerTest{
 
 	/**
 	 * Attempts to change the name of an existing user to a null value, expects to throw an exception
-	 * @throws IncorrectNameException The exception expected
 	 * @throws UserNotExistException This exception is not expected but may be thrown
 	 */
 	@Test
-	void testIncorrectNameNull() throws IncorrectNameException, UserNotExistException{
+	void testIncorrectNameNull() throws UserNotExistException{
 		fillDatabase(getTestUsers());
 		assertEquals("name",userManager.getName("user1@email.com"));
 		assertThrows(IncorrectNameException.class,() -> {userManager.changeName("user1@email.com", null);});
@@ -391,7 +373,7 @@ class UserManagerTest{
 	 * @return The list of users
 	 */
 	private ArrayList<User> getTestUsers(){
-		ArrayList<User> users = new ArrayList<User>();
+		ArrayList<User> users = new ArrayList<>();
 		users.add(new User("user1@email.com",hash("password1"),"name"));
 		users.add(new User("user2@email.com",hash("password2"),"name"));
 		users.add(new User("user3@email.com",hash("password3"),"name"));

@@ -12,11 +12,11 @@ import io.micronaut.http.client.exceptions.HttpClientResponseException;
 
 import javax.inject.Inject;
 
-import main.java.com.projectBackEnd.Entities.News.Hibernate.News;
-import main.java.com.projectBackEnd.Entities.News.Hibernate.NewsManager;
-import main.java.com.projectBackEnd.Entities.News.Hibernate.NewsManagerInterface;
-import main.java.com.projectBackEnd.Entities.News.Micronaut.NewsAddCommand;
-import main.java.com.projectBackEnd.Entities.News.Micronaut.NewsUpdateCommand;
+import main.java.com.projectBackEnd.Services.News.Hibernate.News;
+import main.java.com.projectBackEnd.Services.News.Hibernate.NewsManager;
+import main.java.com.projectBackEnd.Services.News.Hibernate.NewsManagerInterface;
+import main.java.com.projectBackEnd.Services.News.Micronaut.NewsAddCommand;
+import main.java.com.projectBackEnd.Services.News.Micronaut.NewsUpdateCommand;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
@@ -26,7 +26,7 @@ import java.util.Date;
 import java.util.List;
 
 
-import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManager;
+import main.java.com.projectBackEnd.Services.User.Hibernate.UserManager;
 import main.java.com.projectBackEnd.HibernateUtility;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -56,11 +56,11 @@ class NewsControllerTest {
     static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         newsManager = NewsManager.getNewsManager();
-        try{
-        	UserManager.getUserManager().addUser("test@test.com" , "123","name");
-        	token = UserManager.getUserManager().verifyUser("test@test.com" , "123");
-        }
-        catch(Exception e){
+        try {
+            UserManager.getUserManager().addUser("NewsTest@test.com", "123", "name");
+            Thread.sleep(100); //A sleep to give the database a chance to update
+            token = UserManager.getUserManager().verifyUser("NewsTest@test.com", "123");
+        } catch(Exception e){
         	fail();
         }  
     }
@@ -70,10 +70,9 @@ class NewsControllerTest {
      */
     @AfterAll
     static void closeDatabase() {
-        try{
-        	UserManager.getUserManager().deleteUser("test@test.com" , "123");
-        }
-        catch(Exception e){
+        try {
+        	UserManager.getUserManager().deleteUser("NewsTest@test.com" , "123");
+        } catch(Exception e){
         	fail();
         }    
         HibernateUtility.shutdown();
@@ -113,7 +112,7 @@ class NewsControllerTest {
                 true, "COVID-19 originated from Wuhan, China", "TestSlug"),token);
         assertEquals(HttpStatus.CREATED, response.getStatus());
         String slug = getEUrl(response);
-        News news = newsManager.getNewsBySlug(slug);
+        assertNotNull(newsManager.getNewsBySlug(slug));
 
         HttpRequest request = HttpRequest.DELETE("/news/"+"TestSlug").header("X-API-Key",token);
         client.toBlocking().exchange(request);
@@ -148,7 +147,7 @@ class NewsControllerTest {
                 true, "COVID-19 originated from Wuhan, China", "slug"), token);
         assertEquals(HttpStatus.CREATED, response.getStatus());
         String slug =  getEUrl(response);
-        int id = newsManager.getNewsBySlug(slug).getPrimaryKey();
+        assertNotNull(newsManager.getNewsBySlug(slug));
 		
 		 HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
             client.toBlocking().exchange(HttpRequest.DELETE("/news/"+slug).header("X-API-Key",""));

@@ -9,18 +9,18 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 
-import main.java.com.projectBackEnd.Entities.Page.Hibernate.Page;
-import main.java.com.projectBackEnd.Entities.Page.Hibernate.PageManager;
-import main.java.com.projectBackEnd.Entities.Page.Hibernate.PageManagerInterface;
-import main.java.com.projectBackEnd.Entities.Page.Micronaut.PageAddCommand;
-import main.java.com.projectBackEnd.Entities.Page.Micronaut.PagePatchCommand;
-import main.java.com.projectBackEnd.Entities.Page.Micronaut.PageUpdateCommand;
+import main.java.com.projectBackEnd.Services.Page.Hibernate.Page;
+import main.java.com.projectBackEnd.Services.Page.Hibernate.PageManager;
+import main.java.com.projectBackEnd.Services.Page.Hibernate.PageManagerInterface;
+import main.java.com.projectBackEnd.Services.Page.Micronaut.PageAddCommand;
+import main.java.com.projectBackEnd.Services.Page.Micronaut.PagePatchCommand;
+import main.java.com.projectBackEnd.Services.Page.Micronaut.PageUpdateCommand;
 
 import javax.inject.Inject;
 
-import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManager;
-import main.java.com.projectBackEnd.Entities.Site.Hibernate.SiteManagerInterface;
-import main.java.com.projectBackEnd.Entities.Site.Micronaut.SiteAddCommand;
+import main.java.com.projectBackEnd.Services.Site.Hibernate.SiteManager;
+import main.java.com.projectBackEnd.Services.Site.Hibernate.SiteManagerInterface;
+import main.java.com.projectBackEnd.Services.Site.Micronaut.SiteAddCommand;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
@@ -38,14 +38,14 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManager;
+import main.java.com.projectBackEnd.Services.User.Hibernate.UserManager;
 
 import main.java.com.projectBackEnd.HibernateUtility;
 /**
  * The purpose of this class is to test the REST endpoints associated with the page entity through the page controller
  */
 @MicronautTest
-public class PageControllerTest {
+class PageControllerTest {
 
     @Inject
     @Client("/")
@@ -62,11 +62,11 @@ public class PageControllerTest {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         siteManager = SiteManager.getSiteManager();
         pageManager = PageManager.getPageManager();
-        try{
-        	UserManager.getUserManager().addUser("test@test.com" , "123","name");
-        	token = UserManager.getUserManager().verifyUser("test@test.com" , "123");
-        }
-        catch(Exception e){
+        try {
+            UserManager.getUserManager().addUser("PageTest@test.com", "123", "name");
+            Thread.sleep(100); //A sleep to give the database a chance to update
+            token = UserManager.getUserManager().verifyUser("PageTest@test.com", "123");
+        } catch(Exception e){
         	fail();
         }    
     }
@@ -76,10 +76,9 @@ public class PageControllerTest {
     @AfterAll
     static void closeDatabase() {
 
-        try{
-        	UserManager.getUserManager().deleteUser("test@test.com" , "123");
-        }
-        catch(Exception e){
+        try {
+        	UserManager.getUserManager().deleteUser("PageTest@test.com" , "123");
+        } catch(Exception e){
         	fail();
         }   
         HibernateUtility.shutdown(); 
@@ -168,6 +167,7 @@ public class PageControllerTest {
     void testAddingRegularPage() {
         addSite("testSiteA", "name1",token);
         HttpResponse response = addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
+        assertEquals(HttpStatus.CREATED, response.getStatus());
         assertNotNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
 
         Page testPage = getPage("testSiteA","nutrition/slu!#g");
@@ -352,7 +352,7 @@ public class PageControllerTest {
 
         Page testPage = getPage("testSiteA", "nutrition/sl123u!#g");
         assertEquals("newTitle", testPage.getTitle());
-        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+        assertThrows(HttpClientResponseException.class, () -> {
             getPage("testSiteA", "nutrition/slu!#g");
         });
         assertNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
@@ -432,8 +432,7 @@ public class PageControllerTest {
     private HttpResponse addPage(PageAddCommand pageToAdd,String token) {
         URI sLoc = location(pageToAdd.getSite());
         HttpRequest request = HttpRequest.POST((sLoc +"/pages"), pageToAdd).header("X-API-Key",token);
-        HttpResponse response = client.toBlocking().exchange(request);
-        return response;
+        return client.toBlocking().exchange(request);
     }
 
     /**
