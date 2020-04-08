@@ -1,5 +1,7 @@
 package test.java;
 
+import main.java.com.projectBackEnd.DuplicateKeysException;
+import main.java.com.projectBackEnd.InvalidFieldsException;
 import main.java.com.projectBackEnd.Services.Page.Hibernate.Page;
 import main.java.com.projectBackEnd.Services.Page.Hibernate.PageManager;
 import main.java.com.projectBackEnd.Services.Page.Hibernate.PageManagerInterface;
@@ -35,7 +37,7 @@ class PageManagerTest {
      * Also two sites are added to the database which the pages will use during the tests
      */
     @BeforeAll
-    static void setUpDatabase() {
+    static void setUpDatabase() throws DuplicateKeysException, InvalidFieldsException {
         HibernateUtility.setResource("testhibernate.cfg.xml");
         pageManager = PageManager.getPageManager();
         assignSites();
@@ -45,7 +47,7 @@ class PageManagerTest {
     /**
      * Pages require an existing site foreign key to be created so we'll create some sites for use.
      */
-    private static void assignSites() {
+    private static void assignSites() throws DuplicateKeysException, InvalidFieldsException {
         siteManager = SiteManager.getSiteManager();
         siteManager.addSite(new Site("Disease1", "name"));
         siteManager.addSite(new Site("Disease2", "name2"));
@@ -141,7 +143,7 @@ class PageManagerTest {
      * Tests that deleting the site of an existing page will also cause the page to be deleted, expects success
      */
     @Test
-    void testEffectOfSiteDelete() {
+    void testEffectOfSiteDelete() throws DuplicateKeysException, InvalidFieldsException{
         siteManager.addSite(new Site("toDeleteSite", "siteName"));
         pageManager.addPage(new Page("toDeleteSite", "Slug", 3, "Title", "content"));
         siteManager.delete(siteManager.getSiteBySlug("toDeleteSite").getPrimaryKey());
@@ -153,7 +155,7 @@ class PageManagerTest {
      * expects success
      */
     @Test
-    void testSiteUpdateEffectOnPage() {
+    void testSiteUpdateEffectOnPage() throws DuplicateKeysException, InvalidFieldsException{
         siteManager.addSite(new Site("toUpdateSite", "siteName"));
         pageManager.addPage(new Page("toUpdateSite", "Slug", 3, "title", "content"));
         Site updatedSite = siteManager.getSiteBySlug("toUpdateSite");
@@ -168,7 +170,7 @@ class PageManagerTest {
      * Test the fill database method below, and the getAllPages method to show that all are successfully added.
      */
     @Test
-    void testFillingAndGetting() {
+    void testFillingAndGetting() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfPages());
         assertEquals(getListOfPages().size(), pageManager.getAllPages().size());
     }
@@ -177,7 +179,7 @@ class PageManagerTest {
      * Test the fill database method such that all the pages stored have matching values to the ones added.
      */
     @Test
-    void testFillingAndGettingValues() {
+    void testFillingAndGettingValues() throws DuplicateKeysException, InvalidFieldsException {
         ArrayList<Page> addedPages = getListOfPages();
         fillDatabase(addedPages);
         List<Page> foundPages = pageManager.getAllPages();
@@ -203,7 +205,7 @@ class PageManagerTest {
      * Tests that the manager is able to retrieve existing sites in the correct (increasing) order, expects success
      */
     @Test
-    void testGetAllBySiteOrder() {
+    void testGetAllBySiteOrder() throws DuplicateKeysException, InvalidFieldsException{
         pageManager.addPage(new Page(testSiteB.getSlug(), "I'm from a different site!", 3, "TitleA","ContentA"));
         pageManager.addPage(new Page(testSiteA.getSlug(), "Slug3", 3, "TitleA","ContentA"));
         pageManager.addPage(new Page(testSiteA.getSlug(), "Slug0", 0, "TitleB","ContentB"));
@@ -230,7 +232,7 @@ class PageManagerTest {
      * Test what is returned from a site that has no pages
      */
     @Test
-    void testGetAllBySiteWithNoPages() {
+    void testGetAllBySiteWithNoPages() throws DuplicateKeysException, InvalidFieldsException{
         siteManager.addSite(new Site("this site has no pages", "name"));
         assertEquals(0, pageManager.getAllPagesOfSite("this site has no pages").size());
     }
@@ -260,7 +262,7 @@ class PageManagerTest {
      * Testing a database will be flushed by the deleteAll method used between tests
      */
     @Test
-    void testDeleteAllFilledDatabase() {
+    void testDeleteAllFilledDatabase() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfPages());
         assertEquals(getListOfPages().size(), pageManager.getAllPages().size());
         pageManager.deleteAll();
@@ -273,7 +275,7 @@ class PageManagerTest {
      * Tests that the manager is able to add valid pages to the database, expects success
      */
     @Test
-    void testAddRegularPagesKey() {
+    void testAddRegularPagesKey() throws DuplicateKeysException, InvalidFieldsException {
         Page page1 = new Page(testSiteA.getSlug(), "sameSlug", 1, "TitleA", "ContentA");
         Page page2 = new Page(testSiteB.getSlug(), "sameSlug", 1, "TitleB", "ContentB");
         pageManager.addPage(page1);
@@ -287,7 +289,7 @@ class PageManagerTest {
      * expects only one page to be added to the database
      */
     @Test
-    void testViolateDuplicateCompositeKey() {
+    void testViolateDuplicateCompositeKey() throws DuplicateKeysException, InvalidFieldsException {
         Page page1 = new Page(testSiteA.getSlug(), "sameSlug", 1, "TitleA", "ContentA");
         Page page2 = new Page(testSiteA.getSlug(), "sameSlug", 1, "TitleB", "ContentB");
         pageManager.addPage(page1);
@@ -304,7 +306,7 @@ class PageManagerTest {
      * Test that a page with null values will not be added
      */
     @Test
-    void testAddPageWithNullValues() {
+    void testAddPageWithNullValues() throws DuplicateKeysException, InvalidFieldsException {
         pageManager.addPage(new Page(testSiteA.getSlug(), null, null, null, null));
         assertEquals(0, pageManager.getAllPages().size());
     }
@@ -313,7 +315,7 @@ class PageManagerTest {
      * Attempts to add a page with invalid site slug to the database, expects the page to not be added to the database
      */
     @Test
-    void testAddPageWithInvalidSite() {
+    void testAddPageWithInvalidSite() throws DuplicateKeysException, InvalidFieldsException {
         try {
             pageManager.addPage(new Page("", "",2, "", ""));
             fail();
@@ -327,7 +329,7 @@ class PageManagerTest {
      * Test that pages with forbidden/strange characters will still be added safely
      */
     @Test
-    void testAddPageWithUnsafeValues() {
+    void testAddPageWithUnsafeValues() throws DuplicateKeysException, InvalidFieldsException {
         pageManager.addPage(new Page(testSiteA.getSlug(),";DROP TABLE Pages", 2, "';'''", "sdafds"));
         assertEquals(pageManager.getAllPages().size(), 1);
     }
@@ -336,7 +338,7 @@ class PageManagerTest {
      * Tests that the manager is able to add a page with empty content to the database, expects success
      */
     @Test
-    void testEmptyContent() {
+    void testEmptyContent() throws DuplicateKeysException, InvalidFieldsException {
         pageManager.addPage(new Page(testSiteB.getSlug(),"", 0, "", ""));
         assertEquals(pageManager.getAllPages().size(), 1);
     }
@@ -345,7 +347,7 @@ class PageManagerTest {
      * Test Add pages with null titles or content as this should be allowed
      */
     @Test
-    void testNullTitleContent() {
+    void testNullTitleContent() throws DuplicateKeysException, InvalidFieldsException {
         pageManager.addPage(new Page(testSiteB.getSlug(),"", 0, null, null));
         assertEquals(pageManager.getAllPages().size(), 1);
     }
@@ -355,7 +357,7 @@ class PageManagerTest {
      * Testing that page objects can be found and made from their primary key.
      */
     @Test
-    void testGetByPrimaryKey() {
+    void testGetByPrimaryKey() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfPages());
         Page foundPage = pageManager.getAllPages().get(0);
         int pagePK = foundPage.getPrimaryKey();
@@ -377,7 +379,7 @@ class PageManagerTest {
      * Testing an error is thrown if a primary key searched for is null
      */
     @Test
-    void testGetNullPrimaryKey() {
+    void testGetNullPrimaryKey() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfPages());
         int previousSize = pageManager.getAllPages().size();
         try {
@@ -395,7 +397,7 @@ class PageManagerTest {
      * Tests that the manager is able to retrieve a page by it's site and slug value alone, expects success
      */
     @Test
-    void testGetPageBySiteAndSlug() {
+    void testGetPageBySiteAndSlug() throws DuplicateKeysException, InvalidFieldsException {
         Page newPage = new Page(testSiteB.getSlug(),"Slug3", 10, "Title3", "New content!");
         pageManager.addPage(newPage);
         assertNotNull(pageManager.getPageBySiteAndSlug(testSiteB.getSlug(), "Slug3"));
@@ -405,7 +407,7 @@ class PageManagerTest {
      * Test how the getBySiteAndSlug reacts to a site that cannot be found
      */
     @Test
-    void testGetBySiteSlugUnfoundSite() {
+    void testGetBySiteSlugUnfoundSite() throws DuplicateKeysException, InvalidFieldsException{
         Page newPage = new Page(testSiteB.getSlug(),"Slug3", 10, "Title3", "New content!");
         pageManager.addPage(newPage);
         assertNull(pageManager.getPageBySiteAndSlug("Not found site sorry", "Slug3"));
@@ -421,7 +423,7 @@ class PageManagerTest {
      * Test how the getBySiteAndSlug reacts to a null site input
      */
     @Test
-    void testGetBySiteSlugNullSite() {
+    void testGetBySiteSlugNullSite() throws DuplicateKeysException, InvalidFieldsException {
         Page newPage = new Page(testSiteB.getSlug(),"Slug3", 10, "Title3", "New content!");
         pageManager.addPage(newPage);
         assertNull(pageManager.getPageBySiteAndSlug(null, "Slug3"));
@@ -448,7 +450,7 @@ class PageManagerTest {
      * Tests that the manager is able to delete a valid existing page, expects success
      */
     @Test
-    void testDelete() {
+    void testDelete() throws DuplicateKeysException, InvalidFieldsException {
         pageManager.addPage(new Page(testSiteB.getSlug(),"Slug3", 10, "Title3", "New content!"));
         pageManager.delete(pageManager.getAllPages().get(0).getPrimaryKey());
         assertEquals(pageManager.getAllPages().size(), 0);
@@ -473,7 +475,7 @@ class PageManagerTest {
      * Test the correct page was infact deleted when using delete
      */
     @Test
-    void testCorrectPageDeletedUsingPrimaryKey() {
+    void testCorrectPageDeletedUsingPrimaryKey() throws DuplicateKeysException, InvalidFieldsException {
         Page toBeDeleted = pageManager.addPage(new Page(testSiteB.getSlug(),"Slug3", 10, "Title3", "New content!"));
         Page alsoAdded = pageManager.addPage(new Page(testSiteA.getSlug(),"Slug2", 1, "Title", "New!"));
         assertEquals(2, pageManager.getAllPages().size());
@@ -506,7 +508,7 @@ class PageManagerTest {
      * Tests that the manager is able to update an existing page with valid information, expects success
      */
     @Test
-    void testUpdatePage() {
+    void testUpdatePage() throws DuplicateKeysException, InvalidFieldsException {
         assertNotNull(siteManager.getSiteBySlug("Disease1"));
         fillDatabase(getListOfPages());
         int assignedID = pageManager.getAllPages().get(0).getPrimaryKey();
@@ -523,7 +525,7 @@ class PageManagerTest {
      * Test that updating a page works without changing the unique slug
      */
     @Test
-    void testUpdatePageNotSlug() {
+    void testUpdatePageNotSlug() throws DuplicateKeysException, InvalidFieldsException {
         assertNotNull(siteManager.getSiteBySlug("Disease1"));
         fillDatabase(getListOfPages());
         Page existingPage = pageManager.getAllPages().get(0);
@@ -540,7 +542,7 @@ class PageManagerTest {
      * Test what happens if a null page is updated
      */
     @Test
-    void testUpdateNullPage() {
+    void testUpdateNullPage() throws DuplicateKeysException, InvalidFieldsException {
         try {
             pageManager.update(new Page());
             fail();
@@ -553,7 +555,7 @@ class PageManagerTest {
      * Test updating a page that doesn't exist
      */
     @Test
-    void testUpdateUnfoundPage() {
+    void testUpdateUnfoundPage() throws DuplicateKeysException, InvalidFieldsException {
         int previousSize = pageManager.getAllPages().size();
         assertNull(pageManager.getByPrimaryKey(-100));
         Page newPage = new Page(-100, "Disease1","Slug3", 10, "Title3", "New content!");
@@ -566,7 +568,7 @@ class PageManagerTest {
      * exception to be thrown
      */
     @Test
-    void testUpdateWithNullData() {
+    void testUpdateWithNullData() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfPages());
         int previousSize = pageManager.getAllPages().size();
         int pkOfObjectToUpdate =pageManager.getAllPages().get(0).getPrimaryKey();
@@ -585,7 +587,7 @@ class PageManagerTest {
      * Test updating a page to be the same as another page is not allowed
      */
     @Test
-    void testUpdateToViolateDuplicateSlugs() {
+    void testUpdateToViolateDuplicateSlugs() throws DuplicateKeysException, InvalidFieldsException {
         pageManager.addPage(new Page(testSiteA.getSlug(), "sameSlug", 1, "TitleA", "ContentA"));
         Page page2 = pageManager.addPage(new Page(testSiteB.getSlug(), "sameSlug", 1, "TitleB", "ContentB"));
         Page replacement = new Page(page2.getPrimaryKey(), testSiteA.getSlug(), "sameSlug", 1, "TitleB", "ContentB");
@@ -628,7 +630,7 @@ class PageManagerTest {
     /**
      * Quality of life method to fill database with the pages created from the 'getListOfPages()' method
      */
-    private void fillDatabase(ArrayList<Page> pagesToAdd) {
+    private void fillDatabase(ArrayList<Page> pagesToAdd)throws DuplicateKeysException, InvalidFieldsException {
         for (int i = 0; i<pagesToAdd.size(); ++i) pageManager.addPage(pagesToAdd.get(i));
     }
 
