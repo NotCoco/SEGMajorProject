@@ -373,7 +373,7 @@ class SiteManagerTest {
         try {
             siteManager.update(replacementSite);
             fail();
-        } catch (DuplicateKeysException e) {
+        } catch (InvalidFieldsException e) {
             e.printStackTrace();
             assertEquals(siteManager.getAllSites().size(), previousSize);
         }
@@ -400,7 +400,7 @@ class SiteManagerTest {
      void testUpdateNullSite() throws DuplicateKeysException, InvalidFieldsException {
         try {
             siteManager.update(new Site());
-        } catch (DuplicateKeysException e) {
+        } catch (InvalidFieldsException e) {
             e.printStackTrace();
         }
     }

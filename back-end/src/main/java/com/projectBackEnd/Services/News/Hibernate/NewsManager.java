@@ -53,8 +53,8 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
      * @throws InvalidFieldsException If the object contains fields which cannot be added to the database e.g. nulls
      */
     public News addNews(News news) throws DuplicateKeysException, InvalidFieldsException {
-        if (getNewsBySlug(news.getSlug()) != null) throw new DuplicateKeysException("Slug already exists: " + news.getSlug());
-        else if (!News.checkValidity(news)) throw new InvalidFieldsException("Fields invalid");
+        if (!News.checkValidity(news)) throw new InvalidFieldsException("Fields invalid");
+        else if (getNewsBySlug(news.getSlug()) != null) throw new DuplicateKeysException("Slug already exists: " + news.getSlug());
         else return (News) insertTuple(news);
     }
 
@@ -68,9 +68,10 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
      */
     public News update(News updatedVersion) throws DuplicateKeysException, InvalidFieldsException {
         News newsMatch = getNewsBySlug(updatedVersion.getSlug());
-        if (newsMatch != null && !newsMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey()))
+        if (!News.checkValidity(updatedVersion)) throw new InvalidFieldsException("Fields invalid");
+        else if (newsMatch != null && !newsMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey()))
             throw new DuplicateKeysException("Slug already exists: " + updatedVersion.getSlug());
-        else if (!News.checkValidity(updatedVersion)) throw new InvalidFieldsException("Fields invalid");
+
         else return (News) super.update(updatedVersion);
     }
 

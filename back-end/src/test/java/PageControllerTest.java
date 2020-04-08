@@ -130,6 +130,18 @@ class PageControllerTest {
 
     }
 
+    /**
+     * Test what happens when a page is patched but it doesn't exist
+     */
+    @Test
+    void testPatchingUnfoundPages() {
+        List<PagePatchCommand> input = new ArrayList<>();
+        input.add(new PagePatchCommand(-1, "unfound_slug", 2));
+        HttpRequest request = HttpRequest.PATCH("/sites/"+ "testSiteA" +"/page-indices", input).header("X-API-Key",token);
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(request);
+        });
+    }
 
 	/**
 	* Test if patching with invalid token returns unauthorized HTTP response
@@ -302,6 +314,54 @@ class PageControllerTest {
             e.printStackTrace();
         }
         assertNotNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
+    }
+
+    /**
+     * Attemps to update a page to null index value
+     */
+    @Test
+    void updateToNullIndexValues() {
+        addSite("testSiteA", "name1",token);
+        addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
+        addPage(new PageAddCommand("testSiteA", "sameKey", 1, "Title", "nutri!tion/information"),token);
+        int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
+        try {
+            putPage(new PageUpdateCommand(idOfMadePage, "notvalid", "sameKey", null, "test222", "nutri!tion/information"),token);
+            fail();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        assertNotNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
+    }
+    /**
+     * Attemps to update a page to null other non-index values - keeping a valid site and index to
+     * not produce null pointer exceptions
+     */
+    @Test
+    void updateToNullValues() {
+        addSite("testSiteA", "name1",token);
+        addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
+        addPage(new PageAddCommand("testSiteA", "sameKey", 1, "Title", "nutri!tion/information"),token);
+        int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
+        HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
+            putPage(new PageUpdateCommand(idOfMadePage, "testSiteA", null, 1, null, null), token);
+        });
+
+        assertNotNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
+    }
+
+    /**
+     * Attemps to update a page with a null primary key
+     */
+    @Test
+    void updateWithNullPrimaryKey() {
+        addSite("testSiteA", "name1",token);
+        try {
+            putPage(new PageUpdateCommand(null, "testSiteA", "set", 1, "set", "notnull"),token);
+            fail();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
