@@ -97,9 +97,15 @@ class PageManagerTest {
      * Test that pages with a bad site name are given a null Site field
      */
     @Test
-    void testCreatePageWithBadSite() {
+    void testSavePageWithNullSite() {
         Page page = new Page("this is not a slug of a given site", "cool slug", 1, "Interesting", "Content");
         assertNull(page.getSite());
+        try {
+            pageManager.addPage(page);
+            fail();
+        } catch (InvalidFieldsException|DuplicateKeysException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -274,7 +280,14 @@ class PageManagerTest {
     }
 
     //Testing PageManagerInterface: addPage
-
+    /**
+     * Test that pages with a bad site name are given a null Site field
+     */
+    @Test
+    void testCreatePageWithBadSite() {
+        Page page = new Page("this is not a slug of a given site", "cool slug", 1, "Interesting", "Content");
+        assertNull(page.getSite());
+    }
     /**
      * Tests that the manager is able to add valid pages to the database, expects success
      */

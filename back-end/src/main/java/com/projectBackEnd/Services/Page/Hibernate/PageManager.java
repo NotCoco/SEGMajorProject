@@ -69,9 +69,9 @@ public class PageManager extends EntityManager implements PageManagerInterface {
     public Page update(Page updatedVersion) throws DuplicateKeysException, InvalidFieldsException {
 
         Page pageMatch = getPageBySiteAndSlug(updatedVersion.getSite().getSlug(), updatedVersion.getSlug());
-        if (pageMatch != null && !pageMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey()))
+        if (!Page.checkValidity(updatedVersion)) throw new InvalidFieldsException("Invalid fields");
+        else if (pageMatch != null && !pageMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey()))
             throw new DuplicateKeysException("Page with slug: " + updatedVersion.getSlug() + " already exists in site." );
-        else if (!Page.checkValidity(updatedVersion)) throw new InvalidFieldsException("Invalid fields");
         else return (Page) super.update(updatedVersion);
     }
 

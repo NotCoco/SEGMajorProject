@@ -46,8 +46,8 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
      * @throws InvalidFieldsException If the object contains fields which cannot be added to the database e.g. nulls
      */
     public Site addSite(Site newSite) throws DuplicateKeysException, InvalidFieldsException {
-        if (getSiteBySlug(newSite.getSlug()) != null) throw new DuplicateKeysException("Site with slug: " + newSite.getSlug() + " already exists.");
-        else if (!Site.checkValidity(newSite)) throw new InvalidFieldsException("Invalid fields");
+        if (!Site.checkValidity(newSite)) throw new InvalidFieldsException("Invalid fields");
+        else if (getSiteBySlug(newSite.getSlug()) != null) throw new DuplicateKeysException("Site with slug: " + newSite.getSlug() + " already exists.");
         else return (Site) super.insertTuple(newSite);
     }
 
@@ -61,9 +61,9 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
     public Site update(Site updatedVersion) throws DuplicateKeysException, InvalidFieldsException {
 
         Site foundSiteMatch = getSiteBySlug(updatedVersion.getSlug());
-        if ((foundSiteMatch != null && !foundSiteMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey())) || !Site.checkValidity(updatedVersion))
+        if (!Site.checkValidity(updatedVersion)) throw new InvalidFieldsException("Invalid fields");
+        else if ((foundSiteMatch != null && !foundSiteMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey())) || !Site.checkValidity(updatedVersion))
             throw new DuplicateKeysException("Site with slug: " + updatedVersion.getSlug() + " already exists.");
-        else if (!Site.checkValidity(updatedVersion)) throw new InvalidFieldsException("Invalid fields");
         else return (Site) super.update(updatedVersion);
     }
 
