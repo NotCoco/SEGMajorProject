@@ -1,7 +1,10 @@
 package main.java.com.projectBackEnd.Services.Site.Hibernate;
 
+import main.java.com.projectBackEnd.DuplicateKeysException;
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
+import main.java.com.projectBackEnd.InvalidFieldsException;
+
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.PersistenceException;
@@ -39,28 +42,29 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
      * Insert a Site object into the database
      * @param newSite Site to add to the database
      * @return added object
+     * @throws DuplicateKeysException If addition of this object article will cause a duplicate slug present
+     * @throws InvalidFieldsException If the object contains fields which cannot be added to the database e.g. nulls
      */
-    public Site addSite(Site newSite) {
-        if (getSiteBySlug(newSite.getSlug()) != null || !Site.checkValidity(newSite)) throw new PersistenceException();
-        super.insertTuple(newSite);
-
-        return newSite;
+    public Site addSite(Site newSite) throws DuplicateKeysException, InvalidFieldsException {
+        if (getSiteBySlug(newSite.getSlug()) != null) throw new DuplicateKeysException("Site with slug: " + newSite.getSlug() + " already exists.");
+        else if (!Site.checkValidity(newSite)) throw new InvalidFieldsException("Invalid fields");
+        else return (Site) super.insertTuple(newSite);
     }
 
     /**
      * Update the Site's attributes
      * @param updatedVersion Site with updated attributed
      * @return updated Site
+     * @throws DuplicateKeysException If addition of this object article will cause a duplicate slug present
+     * @throws InvalidFieldsException If the object contains fields which cannot be added to the database e.g. nulls
      */
-    public Site update(Site updatedVersion) {
+    public Site update(Site updatedVersion) throws DuplicateKeysException, InvalidFieldsException {
 
         Site foundSiteMatch = getSiteBySlug(updatedVersion.getSlug());
         if ((foundSiteMatch != null && !foundSiteMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey())) || !Site.checkValidity(updatedVersion))
-            throw new PersistenceException();
-
-        super.update(updatedVersion);
-        return updatedVersion;
-
+            throw new DuplicateKeysException("Site with slug: " + updatedVersion.getSlug() + " already exists.");
+        else if (!Site.checkValidity(updatedVersion)) throw new InvalidFieldsException("Invalid fields");
+        else return (Site) super.update(updatedVersion);
     }
 
 

@@ -1,5 +1,8 @@
 package main.java.com.projectBackEnd.Services.Site.Hibernate;
 
+import main.java.com.projectBackEnd.DuplicateKeysException;
+import main.java.com.projectBackEnd.InvalidFieldsException;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -8,9 +11,9 @@ import java.util.List;
  */
 public interface SiteManagerInterface {
 
-    Site addSite(Site newSite);
+    Site addSite(Site newSite) throws DuplicateKeysException, InvalidFieldsException;
 
-    Site update(Site updatedVersion);
+    Site update(Site updatedVersion) throws DuplicateKeysException, InvalidFieldsException;
 
     Site getByPrimaryKey(Integer pk);
 
