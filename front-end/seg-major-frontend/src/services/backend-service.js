@@ -55,11 +55,11 @@ export default {
   },
 
   getResetRequest(email) {
-	  return api.post( '/user/password_reset_request' , {'string':email} ) 
+    return api.post( '/user/password_reset_request' , {'string':email} ) 
   },
   
   resetPassword(token,password) {
-	  return api.put( '/user/password_reset_change' , {token,password} ) 
+    return api.put( '/user/password_reset_change' , {token,password} ) 
   },
   
   getUserName() {
