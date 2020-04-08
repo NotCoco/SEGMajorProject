@@ -209,7 +209,7 @@ class NewsManagerTest {
         try {
             newsManager.addNews(new News(null, true, null, null, false, null, null));
             fail();
-        } catch (PersistenceException e) {
+        } catch (InvalidFieldsException e) {
             e.printStackTrace();
         }
         assertEquals(sizeBefore, newsManager.getAllNews().size());
@@ -237,7 +237,7 @@ class NewsManagerTest {
             newsManager.addNews(new News(new Date(12343212L), false,
                     "desc213ription1", "ti321tle1", false, "con321tent1", "slug1"));
             fail();
-        } catch (PersistenceException e) {
+        } catch (DuplicateKeysException e) {
             e.printStackTrace();
         }
         assertEquals(sizeBefore+1, newsManager.getAllNews().size());
@@ -393,7 +393,7 @@ class NewsManagerTest {
         try {
             newsManager.update(replacementNews);
             fail();
-        } catch (PersistenceException e) {
+        } catch (DuplicateKeysException e) {
             e.printStackTrace();
         }
         int count = 0;
@@ -417,7 +417,7 @@ class NewsManagerTest {
         try {
             newsManager.update(replacementNews);
             fail();
-        } catch (PersistenceException e) {
+        } catch (InvalidFieldsException e) {
             e.printStackTrace();
             assertEquals(newsManager.getAllNews().size(), previousSize);
         }
@@ -446,7 +446,7 @@ class NewsManagerTest {
     void testUpdateNullNews() throws DuplicateKeysException, InvalidFieldsException {
         try {
             newsManager.update(new News());
-        } catch (PersistenceException e) {
+        } catch (InvalidFieldsException e) {
             e.printStackTrace();
         }
     }

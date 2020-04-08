@@ -188,8 +188,11 @@ class SiteManagerTest {
     @Test
      void testAddSiteWithNullValues() throws DuplicateKeysException, InvalidFieldsException {
         int sizeBefore = siteManager.getAllSites().size();
-        siteManager.addSite(new Site(null, null));
-        assertEquals(sizeBefore, siteManager.getAllSites().size());
+        try {
+            siteManager.addSite(new Site(null, null));
+        } catch (InvalidFieldsException e) {
+            assertEquals(sizeBefore, siteManager.getAllSites().size());
+        }
     }
 
     /**
@@ -213,7 +216,7 @@ class SiteManagerTest {
         try {
             siteManager.addSite(new Site(slug, "sameName"));
             fail();
-        } catch (PersistenceException e) {
+        } catch (DuplicateKeysException e) {
             e.printStackTrace();
         }
         assertEquals(sizeBefore+1, siteManager.getAllSites().size());
@@ -348,7 +351,7 @@ class SiteManagerTest {
         try {
             siteManager.update(replacementSite);
             fail();
-        } catch (PersistenceException e) {
+        } catch (DuplicateKeysException e) {
             e.printStackTrace();
             assertEquals(siteManager.getAllSites().size(), previousSize);
         }
@@ -366,7 +369,7 @@ class SiteManagerTest {
         try {
             siteManager.update(replacementSite);
             fail();
-        } catch (PersistenceException e) {
+        } catch (DuplicateKeysException e) {
             e.printStackTrace();
             assertEquals(siteManager.getAllSites().size(), previousSize);
         }
@@ -393,7 +396,7 @@ class SiteManagerTest {
      void testUpdateNullSite() throws DuplicateKeysException, InvalidFieldsException {
         try {
             siteManager.update(new Site());
-        } catch (IllegalArgumentException e) {
+        } catch (DuplicateKeysException e) {
             e.printStackTrace();
         }
     }

@@ -295,7 +295,7 @@ class PageManagerTest {
         pageManager.addPage(page1);
         try {
             pageManager.addPage(page2);
-        } catch (PersistenceException e) {
+        } catch (DuplicateKeysException e) {
             e.printStackTrace();
         }
 
@@ -307,8 +307,12 @@ class PageManagerTest {
      */
     @Test
     void testAddPageWithNullValues() throws DuplicateKeysException, InvalidFieldsException {
-        pageManager.addPage(new Page(testSiteA.getSlug(), null, null, null, null));
-        assertEquals(0, pageManager.getAllPages().size());
+        try {
+            pageManager.addPage(new Page(testSiteA.getSlug(), null, null, null, null));
+            fail();
+        } catch (InvalidFieldsException e) {
+            assertEquals(0, pageManager.getAllPages().size());
+        }
     }
 
     /**
@@ -319,7 +323,7 @@ class PageManagerTest {
         try {
             pageManager.addPage(new Page("", "",2, "", ""));
             fail();
-        } catch (NullPointerException n) {
+        } catch (InvalidFieldsException n) {
             n.printStackTrace();
         }
         assertEquals(0, pageManager.getAllPages().size());
@@ -576,7 +580,7 @@ class PageManagerTest {
         try {
             pageManager.update(badPage);
             fail();
-        } catch( PersistenceException e) {
+        } catch(InvalidFieldsException e) {
             e.printStackTrace();
             assertEquals(pageManager.getAllPages().size(), previousSize);
         }
@@ -595,7 +599,7 @@ class PageManagerTest {
             System.out.println();
             pageManager.update(replacement);
             fail();
-        } catch (PersistenceException e) {
+        } catch (DuplicateKeysException e) {
             e.printStackTrace();
         }
         int count = 0;
