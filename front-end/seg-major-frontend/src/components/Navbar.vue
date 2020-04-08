@@ -109,11 +109,6 @@ export default {
       if (firstItem.urgent) this.urgentNews = firstItem;
     }
   },
-  watch: {
-    pages: function() {
-      console.log(this.pages)
-    },
-  }
 };
 </script>
 

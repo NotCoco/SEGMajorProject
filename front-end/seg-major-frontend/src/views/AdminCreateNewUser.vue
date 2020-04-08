@@ -113,7 +113,7 @@ export default {
     async createAccount() {
       this.$v.$touch();
       if (this.$v.$invalid) {
-        return console.log("Form invalid. Not attempting to create account.");
+        return;
       }
 
       try {
@@ -124,8 +124,7 @@ export default {
         });
         alert("Account created");
         this.$router.push("/admin/settings");
-      } catch (e) {
-        console.log(e);
+      } catch {
         this.error = true;
       }
     }

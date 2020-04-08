@@ -112,30 +112,30 @@ export default {
     async save() {
       this.$v.$touch();
       if (this.$v.$invalid) {
-        console.log("Form invalid. Not attempting to save site settings.");
-      } else {
-        // Check if page slug conflicts with an existing page
-        const existingSiteSlugs = this.sites
-          .filter(s => s.primaryKey !== this.site.primaryKey)
-          .map(s => s.slug);
-        if (existingSiteSlugs.includes(this.site.slug)) {
-          this.slugAlreadyExists = true;
-          return;
-        }
-
-        this.loading = true;
-
-        await SitesService.updateSite(this.site);
-
-        const currentSlug = this.$route.params.siteSlug;
-        if (currentSlug != this.site.slug) {
-          this.$router.push(`/admin/sites/${this.site.slug}/settings`);
-        }
-
-        this.$emit("siteUpdate", this.site);
-
-        this.loading = false;
+        return;
       }
+      
+      // Check if page slug conflicts with an existing page
+      const existingSiteSlugs = this.sites
+        .filter(s => s.primaryKey !== this.site.primaryKey)
+        .map(s => s.slug);
+      if (existingSiteSlugs.includes(this.site.slug)) {
+        this.slugAlreadyExists = true;
+        return;
+      }
+
+      this.loading = true;
+
+      await SitesService.updateSite(this.site);
+
+      const currentSlug = this.$route.params.siteSlug;
+      if (currentSlug != this.site.slug) {
+        this.$router.push(`/admin/sites/${this.site.slug}/settings`);
+      }
+
+      this.$emit("siteUpdate", this.site);
+
+      this.loading = false;
     },
     async deleteSite() {
       this.loading = true;

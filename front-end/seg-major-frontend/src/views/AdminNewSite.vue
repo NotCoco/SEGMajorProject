@@ -103,17 +103,17 @@ export default {
     async createSite() {
       this.$v.$touch();
       if (this.$v.$invalid) {
-        console.error("Form invalid. Not attempting to create site.");
-      } else {
-        // Check if page slug conflicts with an existing page
-        const existingSiteSlugs = this.sites.map(s => s.slug);
-        if (existingSiteSlugs.includes(this.site.slug)) {
-          this.slugAlreadyExists = true;
-          return;
-        }
-        await SitesService.createSite(this.site);
-        this.$router.push(`/admin/sites/${this.site.slug}`);
+        return;
       }
+      
+      // Check if page slug conflicts with an existing page
+      const existingSiteSlugs = this.sites.map(s => s.slug);
+      if (existingSiteSlugs.includes(this.site.slug)) {
+        this.slugAlreadyExists = true;
+        return;
+      }
+      await SitesService.createSite(this.site);
+      this.$router.push(`/admin/sites/${this.site.slug}`);
     },
     onSlugChanged() {
       this.$v.site.slug.$touch();

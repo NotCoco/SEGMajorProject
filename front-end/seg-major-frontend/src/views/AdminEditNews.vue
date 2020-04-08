@@ -260,39 +260,39 @@ export default {
     async save() {
       this.$v.$touch();
       if (this.$v.$invalid) {
-        console.error("Form invalid. Not attempting to save article.");
-      } else {
-        // Check if article slug conflicts with an existing article
-        const existingArticleSlugs = this.news
-          .filter(a => a.primaryKey !== this.article.primaryKey)
-          .map(a => a.slug);
-        if (existingArticleSlugs.includes(this.article.slug)) {
-          this.slugAlreadyExists = true;
+        return;
+      }
+      
+      // Check if article slug conflicts with an existing article
+      const existingArticleSlugs = this.news
+        .filter(a => a.primaryKey !== this.article.primaryKey)
+        .map(a => a.slug);
+      if (existingArticleSlugs.includes(this.article.slug)) {
+        this.slugAlreadyExists = true;
+        return;
+      }
+
+      if (this.article.urgent) {
+        // Check if another article is already urgent
+        const existingUrgentArticle = this.news.find(
+          a => a.primaryKey !== this.article.primaryKey && a.urgent
+        );
+        if (existingUrgentArticle) {
+          this.urgentAlreadyExists = true;
           return;
         }
-
-        if (this.article.urgent) {
-          // Check if another article is already urgent
-          const existingUrgentArticle = this.news.find(
-            a => a.primaryKey !== this.article.primaryKey && a.urgent
-          );
-          if (existingUrgentArticle) {
-            this.urgentAlreadyExists = true;
-            return;
-          }
-        }
-        this.saving = true;
-        this.saved = false;
-
-        if (this.newArticle === true) {
-          await this.createNewArticle();
-        } else {
-          await this.updateArticle();
-        }
-
-        this.saving = false;
-        this.saved = true;
       }
+      this.saving = true;
+      this.saved = false;
+
+      if (this.newArticle === true) {
+        await this.createNewArticle();
+      } else {
+        await this.updateArticle();
+      }
+
+      this.saving = false;
+      this.saved = true;
     },
     onSlugChanged() {
       this.$v.article.slug.$touch();

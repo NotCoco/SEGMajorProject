@@ -196,29 +196,29 @@ export default {
     async save() {
       this.$v.$touch();
       if (this.$v.$invalid) {
-        console.error("Form invalid. Not attempting to save page.");
-      } else {
-        // Check if page slug conflicts with an existing page
-        const existingPageSlugs = this.pagesInSite
-          .filter(p => p.primaryKey !== this.page.primaryKey)
-          .map(p => p.slug);
-        if (existingPageSlugs.includes(this.page.slug)) {
-          this.slugAlreadyExists = true;
-          return;
-        }
-
-        this.saving = true;
-        this.saved = false;
-
-        if (this.newPage === true) {
-          await this.createNewPage();
-        } else {
-          await this.updatePage();
-        }
-
-        this.saving = false;
-        this.saved = true;
+        return;
       }
+      
+      // Check if page slug conflicts with an existing page
+      const existingPageSlugs = this.pagesInSite
+        .filter(p => p.primaryKey !== this.page.primaryKey)
+        .map(p => p.slug);
+      if (existingPageSlugs.includes(this.page.slug)) {
+        this.slugAlreadyExists = true;
+        return;
+      }
+
+      this.saving = true;
+      this.saved = false;
+
+      if (this.newPage === true) {
+        await this.createNewPage();
+      } else {
+        await this.updatePage();
+      }
+
+      this.saving = false;
+      this.saved = true;
     },
     onSlugChanged() {
       this.$v.page.slug.$touch();

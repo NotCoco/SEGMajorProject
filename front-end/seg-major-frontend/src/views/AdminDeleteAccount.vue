@@ -92,7 +92,7 @@ export default {
     async deleteAccount() {
       this.$v.$touch();
       if (this.$v.$invalid) {
-        return console.log("Form invalid. Not attempting to delete account.");
+        return;
       }
 
       try {

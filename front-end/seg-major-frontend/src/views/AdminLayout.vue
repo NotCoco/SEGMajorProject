@@ -83,7 +83,6 @@ export default {
   methods: {
     async logout() {
       await UserService.logout();
-      console.log("Logged out... redirecting to home page");
       this.$router.push("/");
     },
     onNameChanged(newName) {

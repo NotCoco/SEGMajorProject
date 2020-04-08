@@ -104,16 +104,14 @@ export default {
     async login() {
       this.$v.$touch();
       if (this.$v.$invalid) {
-        console.log("Form invalid. Not attempting to login.");
-      } else {
-        try {
-          await UserService.login(this.email, this.password);
-          this.$router.push("/admin");
-        } catch (e) {
-          console.log("Couldn't log in");
-          console.log(e);
-          this.loginError = true;
-        }
+        return;
+      }
+      
+      try {
+        await UserService.login(this.email, this.password);
+        this.$router.push("/admin");
+      } catch {
+        this.loginError = true;
       }
     }
   }

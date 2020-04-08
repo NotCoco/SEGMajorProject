@@ -143,7 +143,7 @@ export default {
     async changeUserName() {
       this.$v.newName.$touch();
       if (this.$v.newName.$invalid) {
-        return console.log("Form invalid. Not attempting to change name.");
+        return;
       }
 
       await UserService.changeName(this.newName);
@@ -153,7 +153,7 @@ export default {
     async changeEmail() {
       this.$v.newEmail.$touch();
       if (this.$v.newEmail.$invalid) {
-        return console.log("Form invalid. Not attempting to change email.");
+        return;
       }
 
       await UserService.changeEmail(this.newEmail);
@@ -163,7 +163,7 @@ export default {
     async changePassword() {
       this.$v.newPassword.$touch();
       if (this.$v.newPassword.$invalid) {
-        return console.log("Form invalid. Not attempting to change password.");
+        return;
       }
 
       await UserService.changePassword(this.newPassword);
