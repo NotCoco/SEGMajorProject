@@ -9,7 +9,7 @@ import io.micronaut.core.annotation.Introspected;
 public class PasswordResetBody {
 
 	private String password;
-	private String token;// token used for user validation
+	private String token; //Token used for user validation
 
 
 	/**

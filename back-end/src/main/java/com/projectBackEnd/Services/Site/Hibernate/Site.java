@@ -13,7 +13,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = Site.TABLENAME)
-public class Site implements TableEntity {
+public class Site implements TableEntity<Site> {
 
     // Table columns
     static final String TABLENAME = "Sites";
@@ -62,6 +62,15 @@ public class Site implements TableEntity {
         setSlug(siteSlug);
     }
 
+    /**
+     * Checks if a given site has non null valid field attributes
+     * @param site The site to be checked
+     * @return Whether it is valid for addition or not.
+     */
+    static boolean checkValidity(Site site) {
+        return (site.getSlug() != null &&
+                site.getName() != null);
+    }
 
     /**
      * Get the primary key ID of the Site
@@ -103,16 +112,15 @@ public class Site implements TableEntity {
 	
      /**
      * Copy the values of the input site object
-     * @param toCopy The site object to be copied
+     * @param siteToCopy The site object to be copied
      * @return updated site object
      */
     @Override
-    public TableEntity copy(TableEntity toCopy) {
+    public Site copy(Site siteToCopy) {
 
-        Site siteToCopy = (Site) toCopy;
         setName(siteToCopy.getName());
         setSlug(siteToCopy.getSlug());
-        return siteToCopy;
+        return this;
     }
 
 

@@ -16,7 +16,7 @@ import java.util.Random;
  */
 @Entity
 @Table(name = Link.TABLENAME)
-public class Link implements TableEntity{
+public class Link implements TableEntity<Link> {
 	
 	// 'Links' database table name and attributes
 	final static String TABLENAME = "Links";
@@ -26,8 +26,7 @@ public class Link implements TableEntity{
 	// The primary key token, used for authentication
 	@Id @Column(name = Link.TOKEN)
 	private String token;
-	
-	// The user email
+
 	@Column(name = Link.EMAIL)
 	private String email;
 	
@@ -72,15 +71,14 @@ public class Link implements TableEntity{
 
 	/**
 	 * Create a copy of TableEntity
-	 * @param newCopy The TableEntity needs to copy
+	 * @param linkToCopy The TableEntity needs to copy
 	 * @return the copied TableEntity (this Link)
 	 *
 	 */
-    public TableEntity copy(TableEntity newCopy){
-		Link newLink = (Link) newCopy;
-		token = newLink.getToken();
-		email = newLink.getEmail();
-		return newLink;
+    public Link copy(Link linkToCopy){
+		token = linkToCopy.getToken();
+		email = linkToCopy.getEmail();
+		return this;
 	}
 
 

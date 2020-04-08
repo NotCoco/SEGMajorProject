@@ -1,7 +1,9 @@
 package main.java.com.projectBackEnd.Services.News.Hibernate;
 
+import main.java.com.projectBackEnd.DuplicateKeysException;
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
+import main.java.com.projectBackEnd.InvalidFieldsException;
 
 import javax.persistence.PersistenceException;
 import java.util.Comparator;
@@ -47,11 +49,13 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
      * Insert a News object into the database
      * @param news  News object to add to the database
      * @return added News object
+     * @throws DuplicateKeysException If addition of this object article will cause a duplicate slug present
+     * @throws InvalidFieldsException If the object contains fields which cannot be added to the database e.g. nulls
      */
-    public News addNews(News news) {
-        if (getNewsBySlug(news.getSlug()) != null) throw new PersistenceException();
-        insertTuple(news);
-        return news;
+    public News addNews(News news) throws DuplicateKeysException, InvalidFieldsException {
+        if (getNewsBySlug(news.getSlug()) != null) throw new DuplicateKeysException("Slug already exists: " + news.getSlug());
+        else if (!News.checkValidity(news)) throw new InvalidFieldsException("Fields invalid");
+        else return (News) insertTuple(news);
     }
 
 
@@ -59,13 +63,15 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
      * Update a News object in the database
      * @param updatedVersion  News with updated attributes
      * @return updated object
+     * @throws DuplicateKeysException If addition of this object article will cause a duplicate slug present
+     * @throws InvalidFieldsException If the object contains fields which cannot be added to the database e.g. nulls
      */
-    public News update(News updatedVersion) {
+    public News update(News updatedVersion) throws DuplicateKeysException, InvalidFieldsException {
         News newsMatch = getNewsBySlug(updatedVersion.getSlug());
-        if (newsMatch != null && !newsMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey())) {
-            throw new PersistenceException();
-        }
-        return (News) super.update(updatedVersion);
+        if (newsMatch != null && !newsMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey()))
+            throw new DuplicateKeysException("Slug already exists: " + updatedVersion.getSlug());
+        else if (!News.checkValidity(updatedVersion)) throw new InvalidFieldsException("Fields invalid");
+        else return (News) super.update(updatedVersion);
     }
 
 
@@ -137,7 +143,7 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
         Stream<News> regular = all.stream().filter(n -> !n.isPinned() && !n.isUrgent())
                 .sorted(Comparator.comparing(News::getDate, Comparator.nullsLast(Comparator.reverseOrder())));
 
-        // Concat all lists together to make sorted list
+        // Concatenate all lists together to make sorted list
         List<News> sorted = Stream.concat(Stream.concat(Stream.concat(pinnedAndUrgent, urgentDates), pinnedDates), regular)
                 .collect(Collectors.toList());
 

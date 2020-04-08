@@ -8,9 +8,9 @@ import java.io.File;
  */
 public class DirectoryHolder {
 
-	// The main directory which will be used
+
 	private static String dir = System.getProperty("user.dir")+"/src/main/resources/images/";
-	// Reference to self
+
 	private static DirectoryHolder holder;
 
 	/**

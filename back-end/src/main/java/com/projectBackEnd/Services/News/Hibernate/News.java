@@ -16,7 +16,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = News.TABLENAME, uniqueConstraints = {@UniqueConstraint(columnNames = {News.SLUG})})
-public class News implements TableEntity {
+public class News implements TableEntity<News> {
 
     // 'News' database table name and attributes
     static final String TABLENAME = "News";
@@ -96,6 +96,18 @@ public class News implements TableEntity {
         this.slug = slug;
     }
 
+    /**
+     * Check a news object to ensure all of the required fields are not null
+     * @param news The news object that will be checked
+     * @return Whether the object is valid or not.
+     */
+    static boolean checkValidity(News news) {
+        return (news.getDate() != null &&
+                news.getDescription() != null &&
+                news.getTitle() != null &&
+                news.getContent() != null &&
+                news.getSlug() != null);
+    }
 
     /**
      * Constructor taking primary key
@@ -118,6 +130,7 @@ public class News implements TableEntity {
         this.primaryKey = primaryKey;
         this.slug = slug;
     }
+
 
 
     /**
@@ -258,13 +271,11 @@ public class News implements TableEntity {
 
     /**
      * Copy the values of the input TableEntity object
-     * @param toCopy    News object to copy
+     * @param newsToCopy    News object to copy
      * @return this, updated news object
      */
     @Override
-    public TableEntity copy(TableEntity toCopy) {
-
-        News newsToCopy = (News) toCopy;
+    public News copy(News newsToCopy) {
         setDate(newsToCopy.getDate());
         setDescription(newsToCopy.getDescription());
         setContent(newsToCopy.getContent());
@@ -273,7 +284,6 @@ public class News implements TableEntity {
         setUrgent(newsToCopy.isUrgent());
         setSlug(newsToCopy.getSlug());
         return this;
-
     }
 
 }

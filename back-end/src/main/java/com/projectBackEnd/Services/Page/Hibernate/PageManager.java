@@ -1,5 +1,7 @@
 package main.java.com.projectBackEnd.Services.Page.Hibernate;
 
+import main.java.com.projectBackEnd.DuplicateKeysException;
+import main.java.com.projectBackEnd.InvalidFieldsException;
 import main.java.com.projectBackEnd.Services.Site.Hibernate.Site;
 import main.java.com.projectBackEnd.EntityManager;
 import main.java.com.projectBackEnd.HibernateUtility;
@@ -13,7 +15,7 @@ import java.util.stream.Collectors;
 /**
  * PageManager defines methods to interact with the Page table in the database.
  * This class extends the EntityManager.
- * https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
+ * Inspiration : https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
 public class PageManager extends EntityManager implements PageManagerInterface {
 
@@ -47,23 +49,30 @@ public class PageManager extends EntityManager implements PageManagerInterface {
      * Insert a Page object into the database
      * @param newPage   Page to add to the database
      * @return added object
+     * @throws DuplicateKeysException If addition of this object article will cause a duplicate slug present
+     * @throws InvalidFieldsException If the object contains fields which cannot be added to the database e.g. nulls
      */
-    public Page addPage(Page newPage) {
-        if (getPageBySiteAndSlug(newPage.getSite().getSlug(), newPage.getSlug()) != null) throw new PersistenceException();
-        return (Page) super.insertTuple(newPage);
+    public Page addPage(Page newPage) throws DuplicateKeysException, InvalidFieldsException {
+        if (!Page.checkValidity(newPage)) throw new InvalidFieldsException("Invalid fields");
+        else if (getPageBySiteAndSlug(newPage.getSite().getSlug(), newPage.getSlug()) != null)
+            throw new DuplicateKeysException("Page with slug: " + newPage.getSlug() + " already exists in site." );
+        else return (Page) super.insertTuple(newPage);
     }
 
 
     /**
      * Update attributes of the given Page object
      * @return Page object with updated attributes
+     * @throws DuplicateKeysException If addition of this object article will cause a duplicate slug present
+     * @throws InvalidFieldsException If the object contains fields which cannot be added to the database e.g. nulls
      */
-    public Page update(Page updatedVersion) {
+    public Page update(Page updatedVersion) throws DuplicateKeysException, InvalidFieldsException {
 
         Page pageMatch = getPageBySiteAndSlug(updatedVersion.getSite().getSlug(), updatedVersion.getSlug());
         if (pageMatch != null && !pageMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey()))
-            throw new PersistenceException();
-        super.update(updatedVersion); return updatedVersion;
+            throw new DuplicateKeysException("Page with slug: " + updatedVersion.getSlug() + " already exists in site." );
+        else if (!Page.checkValidity(updatedVersion)) throw new InvalidFieldsException("Invalid fields");
+        else return (Page) super.update(updatedVersion);
     }
 
 

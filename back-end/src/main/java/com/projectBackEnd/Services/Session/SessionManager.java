@@ -104,13 +104,13 @@ public class SessionManager extends EntityManager implements SessionManagerInter
 		List<Session> sessions = getAll();
 		try {
 			String email = getEmail(token);
-			deleteAllPast(email); // delete the unused session for sake of performance
+			deleteAllPast(email); // Delete the unused session for sake of performance
 		}
 		catch(NoSessionException e){
 			e.printStackTrace();
-		} // when there is no session to delete
+		} // When there is no session to delete
 
-		//delete current session
+		// Delete current session
 		for (Session s: sessions) if(s.getToken().equals(token)) delete(s);
 
 	}
