@@ -10,7 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import javax.validation.constraints.NotNull;
-
+/**
+ * Medicine objects are database entities for the table 'Medicines' defined in this class.
+ * The have an auto-increment 'ID' from the database.
+ * https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
+ */
 @Entity
 @Table(name = Medicine.TABLENAME)
 public class Medicine implements TableEntity {
