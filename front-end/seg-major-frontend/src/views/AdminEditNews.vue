@@ -78,7 +78,7 @@
             >Slug can only contain lowercase letters, numbers, and hyphens</p>
             <p
               class="help is-danger"
-              v-else-if="!$v.article.slug.siteSlug"
+              v-else-if="!$v.article.slug.articleSlug"
             >This slug is not allowed because it is reserved</p>
             <p
               class="help is-danger"
