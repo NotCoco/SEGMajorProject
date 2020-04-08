@@ -53,7 +53,7 @@ public class SiteController {
 
 		if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
         Site s = siteManager.addSite(new Site(command.getSlug(), command.getName()));
-        if(siteManager.getByPrimaryKey(s.getPrimaryKey()) == null) return HttpResponse.serverError();
+        //if(siteManager.getByPrimaryKey(s.getPrimaryKey()) == null) return HttpResponse.serverError();
 
         return HttpResponse
                 .created(s)

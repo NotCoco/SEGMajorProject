@@ -140,15 +140,12 @@ public class Session implements TableEntity {
 	 * @return updated object
 	 */
 	public TableEntity copy(TableEntity toCopy) {
-
-		if (toCopy instanceof Session){
-			token = ((Session)toCopy).getToken();
-			date = ((Session)toCopy).getDate();
-			timeout = ((Session)toCopy).getTimeout();
-			email = ((Session)toCopy).getEmail();
-			return this;
-		}
-		else return null;
+		Session sessionToCopy = (Session) toCopy;
+		token = sessionToCopy.getToken();
+		date = sessionToCopy.getDate();
+		timeout = sessionToCopy.getTimeout();
+		email = sessionToCopy.getEmail();
+		return sessionToCopy;
 	}
 
 

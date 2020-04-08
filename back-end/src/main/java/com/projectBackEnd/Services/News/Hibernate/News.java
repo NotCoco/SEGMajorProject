@@ -101,7 +101,7 @@ public class News implements TableEntity {
      * @param news The news object that will be checked
      * @return Whether the object is valid or not.
      */
-    public static boolean checkValidity(News news) {
+    static boolean checkValidity(News news) {
         return (news.getDate() != null &&
                 news.getDescription() != null &&
                 news.getTitle() != null &&

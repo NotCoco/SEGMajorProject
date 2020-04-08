@@ -41,7 +41,7 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
      * @return added object
      */
     public Site addSite(Site newSite) {
-        if (getSiteBySlug(newSite.getSlug()) != null) throw new PersistenceException();
+        if (getSiteBySlug(newSite.getSlug()) != null || !Site.checkValidity(newSite)) throw new PersistenceException();
         super.insertTuple(newSite);
 
         return newSite;
@@ -55,7 +55,7 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
     public Site update(Site updatedVersion) {
 
         Site foundSiteMatch = getSiteBySlug(updatedVersion.getSlug());
-        if (foundSiteMatch != null && !foundSiteMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey()))
+        if ((foundSiteMatch != null && !foundSiteMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey())) || !Site.checkValidity(updatedVersion))
             throw new PersistenceException();
 
         super.update(updatedVersion);
