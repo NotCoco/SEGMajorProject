@@ -21,7 +21,6 @@
             </div>
             <router-link
               v-bind:to="page.slug"
-              append
               v-for="page of pages"
               v-bind:key="page.primaryKey"
             >
