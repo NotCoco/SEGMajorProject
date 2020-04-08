@@ -62,7 +62,7 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
 
         Site foundSiteMatch = getSiteBySlug(updatedVersion.getSlug());
         if (!Site.checkValidity(updatedVersion)) throw new InvalidFieldsException("Invalid fields");
-        else if ((foundSiteMatch != null && !foundSiteMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey())) || !Site.checkValidity(updatedVersion))
+        else if (foundSiteMatch != null && !foundSiteMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey()))
             throw new DuplicateKeysException("Site with slug: " + updatedVersion.getSlug() + " already exists.");
         else return (Site) super.update(updatedVersion);
     }
