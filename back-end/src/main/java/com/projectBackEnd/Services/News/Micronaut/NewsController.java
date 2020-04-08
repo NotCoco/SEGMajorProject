@@ -50,7 +50,7 @@ public class NewsController {
         News news = newsManager.addNews(new News(command.getDate(), command.isPinned(), command.getDescription(),
                 command.getTitle(), command.isUrgent(), command.getContent(), command.getSlug()));
 
-        if(newsManager.getByPrimaryKey(news.getPrimaryKey()) == null) return HttpResponse.serverError();
+        //if(newsManager.getByPrimaryKey(news.getPrimaryKey()) == null) return HttpResponse.serverError();
 
         return HttpResponse
                 .created(news)

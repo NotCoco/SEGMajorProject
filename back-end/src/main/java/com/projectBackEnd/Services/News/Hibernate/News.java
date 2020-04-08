@@ -96,6 +96,18 @@ public class News implements TableEntity {
         this.slug = slug;
     }
 
+    /**
+     * Check a news object to ensure all of the required fields are not null
+     * @param news The news object that will be checked
+     * @return Whether the object is valid or not.
+     */
+    public static boolean checkValidity(News news) {
+        return (news.getDate() != null &&
+                news.getDescription() != null &&
+                news.getTitle() != null &&
+                news.getContent() != null &&
+                news.getSlug() != null);
+    }
 
     /**
      * Constructor taking primary key
@@ -118,6 +130,7 @@ public class News implements TableEntity {
         this.primaryKey = primaryKey;
         this.slug = slug;
     }
+
 
 
     /**

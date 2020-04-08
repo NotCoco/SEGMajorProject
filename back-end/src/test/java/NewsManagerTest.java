@@ -204,7 +204,12 @@ class NewsManagerTest {
     @Test
     void testAddNewsWithNullValues() {
         int sizeBefore = newsManager.getAllNews().size();
-        newsManager.addNews(new News(null,true, null, null, false, null, null));
+        try {
+            newsManager.addNews(new News(null, true, null, null, false, null, null));
+            fail();
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+        }
         assertEquals(sizeBefore, newsManager.getAllNews().size());
     }
 
@@ -439,7 +444,7 @@ class NewsManagerTest {
     void testUpdateNullNews() {
         try {
             newsManager.update(new News());
-        } catch (IllegalArgumentException e) {
+        } catch (PersistenceException e) {
             e.printStackTrace();
         }
     }

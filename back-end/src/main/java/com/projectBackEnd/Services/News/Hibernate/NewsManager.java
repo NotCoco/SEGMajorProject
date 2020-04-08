@@ -49,7 +49,7 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
      * @return added News object
      */
     public News addNews(News news) {
-        if (getNewsBySlug(news.getSlug()) != null) throw new PersistenceException();
+        if (getNewsBySlug(news.getSlug()) != null || !News.checkValidity(news)) throw new PersistenceException();
         insertTuple(news);
         return news;
     }
@@ -62,7 +62,7 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
      */
     public News update(News updatedVersion) {
         News newsMatch = getNewsBySlug(updatedVersion.getSlug());
-        if (newsMatch != null && !newsMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey())) {
+        if ((newsMatch != null && !newsMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey())) || !News.checkValidity(updatedVersion)) {
             throw new PersistenceException();
         }
         return (News) super.update(updatedVersion);
