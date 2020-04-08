@@ -1,10 +1,10 @@
 package test.java;
 
 import main.java.com.projectBackEnd.*;
-import main.java.com.projectBackEnd.Entities.Medicine.Hibernate.Medicine;
-import main.java.com.projectBackEnd.Entities.Medicine.Hibernate.MedicineManager;
+import main.java.com.projectBackEnd.Services.Medicine.Hibernate.Medicine;
+import main.java.com.projectBackEnd.Services.Medicine.Hibernate.MedicineManager;
 
-import main.java.com.projectBackEnd.Entities.Medicine.Hibernate.MedicineManagerInterface;
+import main.java.com.projectBackEnd.Services.Medicine.Hibernate.MedicineManagerInterface;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -246,7 +246,7 @@ class MedicineManagerTest {
     }
 
     /**
-     * Test adding medicines with whitespaced names to the database
+     * Test adding medicines with whitespace names to the database
      * Expected: The medicines are added as expected with preserved names.
      */
     @Test

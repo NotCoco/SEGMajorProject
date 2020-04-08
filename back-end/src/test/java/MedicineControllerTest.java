@@ -12,11 +12,11 @@ import io.micronaut.http.client.exceptions.HttpClientResponseException;
 
 import javax.inject.Inject;
 
-import main.java.com.projectBackEnd.Entities.Medicine.Hibernate.Medicine;
-import main.java.com.projectBackEnd.Entities.Medicine.Hibernate.MedicineManager;
-import main.java.com.projectBackEnd.Entities.Medicine.Hibernate.MedicineManagerInterface;
-import main.java.com.projectBackEnd.Entities.Medicine.Micronaut.MedicineAddCommand;
-import main.java.com.projectBackEnd.Entities.Medicine.Micronaut.MedicineUpdateCommand;
+import main.java.com.projectBackEnd.Services.Medicine.Hibernate.Medicine;
+import main.java.com.projectBackEnd.Services.Medicine.Hibernate.MedicineManager;
+import main.java.com.projectBackEnd.Services.Medicine.Hibernate.MedicineManagerInterface;
+import main.java.com.projectBackEnd.Services.Medicine.Micronaut.MedicineAddCommand;
+import main.java.com.projectBackEnd.Services.Medicine.Micronaut.MedicineUpdateCommand;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManager;
+import main.java.com.projectBackEnd.Services.User.Hibernate.UserManager;
 import main.java.com.projectBackEnd.HibernateUtility;
 
 /**
@@ -55,8 +55,9 @@ class MedicineControllerTest{
         HibernateUtility.setResource("testhibernate.cfg.xml");
         medicineManager = MedicineManager.getMedicineManager();
         try{
-        	UserManager.getUserManager().addUser("test@test.com" , "123","name");
-        	token = UserManager.getUserManager().verifyUser("test@test.com" , "123");
+            UserManager.getUserManager().addUser("MedicineTest@test.com", "123", "name");
+            Thread.sleep(100); //A sleep to give the database a chance to update
+            token = UserManager.getUserManager().verifyUser("MedicineTest@test.com", "123");
         } catch(Exception e){
         	fail();
         }    
@@ -67,9 +68,8 @@ class MedicineControllerTest{
     @AfterAll
     static void closeDatabase() {
         try{
-        	UserManager.getUserManager().deleteUser("test@test.com" , "123");
-        }
-        catch(Exception e){
+        	UserManager.getUserManager().deleteUser("MedicineTest@test.com" , "123");
+        } catch(Exception e){
         	fail();
         }    
         HibernateUtility.shutdown();
@@ -164,7 +164,7 @@ class MedicineControllerTest{
 	*	Check if adding medicine without a valid session token returns HTTP unauthorized exception
 	*/
 	@Test
-	void testAddMedicineUnauthorised(){
+	void testAddMedicineUnauthorized(){
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
 			client.toBlocking().exchange(HttpRequest.POST("/medicines", new MedicineAddCommand("name", "type")).header("X-API-Key",""));
         });
@@ -214,11 +214,11 @@ class MedicineControllerTest{
         });
     }
 	/**
-	*	Test if delting medicine without correct session token return HTTP unauthorized exception
+	*	Test if deleting medicine without correct session token return HTTP unauthorized exception
 	*/
 	@Test
-	void testDeleteMedicinieUnauthorised(){
-        int id =  getEId(addMedicine(new MedicineAddCommand("name", "type"))).intValue();
+	void testDeleteMedicineUnauthorized(){
+        addMedicine(new MedicineAddCommand("name", "type"));
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
 			client.toBlocking().exchange(HttpRequest.DELETE("/medicines/0").header("X-API-Key",""));
         });
@@ -276,8 +276,8 @@ class MedicineControllerTest{
         assertEquals("Unnamed", found.getName());
     }
 	/**
-	*	Tests if updating medicine to empty values sets the to defaulte ones
-	*/
+	 * Tests if updating medicine to empty values sets the values to default ones
+	 */
 	@Test
 	void testUpdateMedicineNull(){
         HttpResponse response = addMedicine(new MedicineAddCommand("Med1", "Liquid"));
@@ -301,7 +301,7 @@ class MedicineControllerTest{
 	*	Test if updating medicine without correct session token returns a HTTP unauthorized exception
 	*/
 	@Test
-	void testUpdateMedicinieUnauthorised(){
+	void testUpdateMedicineUnauthorized(){
         addMedicine(new MedicineAddCommand("name", "type"));
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
 			client.toBlocking().exchange(HttpRequest.PUT("/medicines", new MedicineUpdateCommand(0, "name", "type")).header("X-API-Key",""));
@@ -343,8 +343,7 @@ class MedicineControllerTest{
      */
     private HttpResponse addMedicine(MedicineAddCommand medicineToAdd){
         HttpRequest request = HttpRequest.POST("/medicines", medicineToAdd).header("X-API-Key",token);
-        HttpResponse response = client.toBlocking().exchange(request);
-        return response;
+        return client.toBlocking().exchange(request);
     }
     /**
      * Quality of life method for retrieving a medicine via the REST API

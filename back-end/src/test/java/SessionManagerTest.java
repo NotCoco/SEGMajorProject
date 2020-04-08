@@ -1,10 +1,10 @@
 package test.java;
 
 import main.java.com.projectBackEnd.*;
-import main.java.com.projectBackEnd.Entities.Session.Session;
-import main.java.com.projectBackEnd.Entities.Session.SessionManager;
-import main.java.com.projectBackEnd.Entities.Session.SessionManagerInterface;
-import main.java.com.projectBackEnd.Entities.Session.NoSessionException;
+import main.java.com.projectBackEnd.Services.Session.Session;
+import main.java.com.projectBackEnd.Services.Session.SessionManager;
+import main.java.com.projectBackEnd.Services.Session.SessionManagerInterface;
+import main.java.com.projectBackEnd.Services.Session.NoSessionException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,6 @@ import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * Test class to extensively unit test interactions between the session entity manager and the Sessions table in the database.
  */
@@ -124,29 +123,26 @@ class SessionManagerTest {
 
 	/**
 	 * Attempts to retrieve an email via an empty token, expects an exception to be thrown
-	 * @throws NoSessionException The expected exception
 	 */
 	@Test
-	void testGetEmailNotExistEmpty() throws NoSessionException{
+	void testGetEmailNotExistEmpty()  {
 		assertThrows(NoSessionException.class,() -> {sessionManager.getEmail("");});
 	}
 
 	/**
 	 * Attempts to retrieve an email via an incorrect token, expects an exception to be thrown
-	 * @throws NoSessionException The expected exception
 	 */
 	@Test
-	void testGetEmailNotExistIncorrect() throws NoSessionException{
+	void testGetEmailNotExistIncorrect() {
 
 		assertThrows(NoSessionException.class,() -> {sessionManager.getEmail("very incorrect token that does not work");});
 	}
 
 	/**
 	 * Attempts to retrieve an email via a null token, expects an exception to be thrown
-	 * @throws NoSessionException The expected exception
 	 */
 	@Test
-	void testGetEmailNotExistNull() throws NoSessionException{
+	void testGetEmailNotExistNull() {
 		assertThrows(NoSessionException.class,() -> {sessionManager.getEmail(null);});
 	}
 
@@ -156,7 +152,7 @@ class SessionManagerTest {
 	 * @return The list of sessions
 	 */
 	private ArrayList<Session> getTestSessions() {
-		ArrayList<Session> sessions = new ArrayList<Session>();
+		ArrayList<Session> sessions = new ArrayList<>();
 		sessions.add(new Session("1",100));
 		sessions.add(new Session("2",100));
 		sessions.add(new Session("3",100));

@@ -8,7 +8,7 @@ import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
 import io.micronaut.http.client.exceptions.HttpClientResponseException;
 
-import main.java.com.projectBackEnd.Image.*;
+import main.java.com.projectBackEnd.Services.Image.*;
 
 import javax.inject.Inject;
 
@@ -21,7 +21,7 @@ import static io.micronaut.http.MediaType.MULTIPART_FORM_DATA_TYPE;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManager;
+import main.java.com.projectBackEnd.Services.User.Hibernate.UserManager;
 
 import main.java.com.projectBackEnd.HibernateUtility;
 
@@ -34,8 +34,8 @@ class ImageControllerTest {
 	private static ImageManagerInterface imageManager;
     private static String token;
 
-	private File file;
-	private File largeFile;
+	private final File file;
+	private final File largeFile;
 
 	/**
 	*	Constructor gets a new image manager Singleton
@@ -57,9 +57,9 @@ class ImageControllerTest {
 		DirectoryHolder.getDirectoryHolder().setDir(System.getProperty("user.dir")+"/src/test/resources/TestImages/Generated/");
 		HibernateUtility.setResource("testhibernate.cfg.xml");
 		try{
-
-			UserManager.getUserManager().addUser("test@test.com" , "123","name");
-			token = UserManager.getUserManager().verifyUser("test@test.com" , "123");
+			UserManager.getUserManager().addUser("ImageTest@test.com", "123", "name");
+			Thread.sleep(100); //A sleep to give the database a chance to update
+			token = UserManager.getUserManager().verifyUser("ImageTest@test.com", "123");
 		}
 		catch(Exception e){
 			fail();
@@ -79,11 +79,11 @@ class ImageControllerTest {
 	static void deleteCreatedImages() {
 		imageManager.deleteAll();
 		try{
-			UserManager.getUserManager().deleteUser("test@test.com" , "123");
-			HibernateUtility.shutdown();
+			UserManager.getUserManager().deleteUser("ImageTest@test.com" , "123");
 		} catch(Exception e){
 			fail();
 		}
+		HibernateUtility.shutdown();
 		DirectoryHolder.getDirectoryHolder().setDefaultDir();
 	}
 
@@ -104,13 +104,13 @@ class ImageControllerTest {
 	 */
 	@Test
 	void testAddUnauthorized(){
-        	HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
 			addImage(file,"");
         	});
 		assertEquals(HttpStatus.UNAUTHORIZED, thrown.getStatus());
 
 
-        	HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
+		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
 			addImage(file,"Ve2R7y5Co3215r8re7CtTok5En13");
         	});
 		assertEquals(HttpStatus.UNAUTHORIZED, thrown1.getStatus());
@@ -160,7 +160,7 @@ class ImageControllerTest {
 	}
 
 	/**
-	 * Test that deleting while unauthorised throws an exception
+	 * Test that deleting while unauthorized throws an exception
 	 */
 	@Test
 	void testDeleteUnauthorized(){
@@ -208,6 +208,16 @@ class ImageControllerTest {
 	}
 
 	/**
+	 * Test adding invalid extension image
+	 */
+	@Test
+	void testAddInvalidExtension() {
+		HttpResponse response = addImage(new File(System.getProperty("user.dir")+"/src/test/resources/TestImages/UploadedImage/"+"noextension"
+		), token);
+		assertEquals(HttpStatus.CREATED, response.getStatus());
+	}
+
+	/**
 	 * Get the URL location of an image
 	 * @param response The HTTP response which contains the image URL
 	 * @return The image string URL
@@ -237,8 +247,7 @@ class ImageControllerTest {
 
 			HttpRequest request = HttpRequest.POST("/images", body).header("X-API-Key", token)
 					.contentType(MediaType.MULTIPART_FORM_DATA_TYPE);
-			HttpResponse response = client.toBlocking().exchange(request);
-			return response;
+			return client.toBlocking().exchange(request);
 	}
 }
 
