@@ -4,6 +4,8 @@ import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 
+import main.java.com.projectBackEnd.DuplicateKeysException;
+import main.java.com.projectBackEnd.InvalidFieldsException;
 import main.java.com.projectBackEnd.Services.Page.Hibernate.Page;
 import main.java.com.projectBackEnd.Services.Page.Hibernate.PageManager;
 import main.java.com.projectBackEnd.Services.Page.Hibernate.PageManagerInterface;
@@ -39,16 +41,21 @@ public class PageController {
      * @return HTTP response with relevant information resulting from the insertion of the page
      */
     @Post("/{name}/pages")
-    public HttpResponse<Page> addPage(@Header("X-API-Key") String session, String name, @Body PageAddCommand pageToAdd) {
+    public HttpResponse addPage(@Header("X-API-Key") String session, String name, @Body PageAddCommand pageToAdd) {
 
         if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
-        Page p = pageManager.addPage(new Page(pageToAdd.getSite(), pageToAdd.getSlug(),
+        Page page;
+        try {
+        page = pageManager.addPage(new Page(pageToAdd.getSite(), pageToAdd.getSlug(),
                 pageToAdd.getIndex(), pageToAdd.getTitle(), pageToAdd.getContent()));
-        if (pageManager.getByPrimaryKey(p.getPrimaryKey()) == null) return HttpResponse.serverError();
+        } catch (DuplicateKeysException | InvalidFieldsException e) {
+            return HttpResponse.badRequest(e.getMessage());
+        }
+        //if (pageManager.getByPrimaryKey(p.getPrimaryKey()) == null) return HttpResponse.serverError();
 
         return HttpResponse
-                .created(p)
-                .headers(headers -> headers.location(pageLocation(name, p.getSlug())));
+                .created(page)
+                .headers(headers -> headers.location(pageLocation(name, page.getSlug())));
     }
 
     /**
@@ -64,7 +71,11 @@ public class PageController {
         if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
         Page updatedPage = new Page(updatedPageCommand.getPrimaryKey(), updatedPageCommand.getSite(), updatedPageCommand.getSlug(),
                 updatedPageCommand.getIndex(), updatedPageCommand.getTitle(), updatedPageCommand.getContent());
+        try {
         pageManager.update(updatedPage);
+        } catch (DuplicateKeysException|InvalidFieldsException e) {
+            return HttpResponse.badRequest(e.getMessage());
+        }
 
         return HttpResponse
                 .noContent()
@@ -103,7 +114,7 @@ public class PageController {
      * @return HTTP response with no content
      */
     @Patch("/{name}/page-indices")
-    public HttpResponse<Page> patchPage(@Header("X-API-Key") String session, String name, @Body List<PagePatchCommand> patchCommandList) {
+    public HttpResponse patchPage(@Header("X-API-Key") String session, String name, @Body List<PagePatchCommand> patchCommandList) {
 
         if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
 
@@ -111,7 +122,11 @@ public class PageController {
             String slug = p.getSlug();
             Page page = pageManager.getPageBySiteAndSlug(name, slug);
             page.setIndex(p.getIndex());
-            pageManager.update(page);
+            try {
+                pageManager.update(page);
+            } catch (DuplicateKeysException|InvalidFieldsException e) {
+                return HttpResponse.badRequest(e.getMessage());
+            }
         }
 
         return HttpResponse.noContent();

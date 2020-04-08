@@ -1,5 +1,8 @@
 package main.java.com.projectBackEnd.Services.Page.Hibernate;
 
+import main.java.com.projectBackEnd.DuplicateKeysException;
+import main.java.com.projectBackEnd.InvalidFieldsException;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -9,9 +12,9 @@ import java.util.List;
 
 public interface PageManagerInterface {
 
-    Page addPage(Page newPage);
+    Page addPage(Page newPage) throws DuplicateKeysException, InvalidFieldsException;
 
-    Page update(Page updatedVersion);
+    Page update(Page updatedVersion) throws DuplicateKeysException, InvalidFieldsException ;
 
     Page getByPrimaryKey(Integer pk);
 
