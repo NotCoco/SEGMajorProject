@@ -341,6 +341,15 @@ class PageManagerTest {
         assertEquals(pageManager.getAllPages().size(), 1);
     }
 
+    /**
+     * Test Add pages with null titles or content as this should be allowed
+     */
+    @Test
+    void testNullTitleContent() {
+        pageManager.addPage(new Page(testSiteB.getSlug(),"", 0, null, null));
+        assertEquals(pageManager.getAllPages().size(), 1);
+    }
+
     //Test PageManagerInterface: getByPrimaryKey
     /**
      * Testing that page objects can be found and made from their primary key.

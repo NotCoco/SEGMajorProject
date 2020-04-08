@@ -49,7 +49,7 @@ public class PageManager extends EntityManager implements PageManagerInterface {
      * @return added object
      */
     public Page addPage(Page newPage) {
-        if (getPageBySiteAndSlug(newPage.getSite().getSlug(), newPage.getSlug()) != null) throw new PersistenceException();
+        if (!Page.checkValidity(newPage) || (getPageBySiteAndSlug(newPage.getSite().getSlug(), newPage.getSlug()) != null)) throw new PersistenceException();
         return (Page) super.insertTuple(newPage);
     }
 

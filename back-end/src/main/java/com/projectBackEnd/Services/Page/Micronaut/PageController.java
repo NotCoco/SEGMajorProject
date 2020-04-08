@@ -44,7 +44,7 @@ public class PageController {
         if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
         Page p = pageManager.addPage(new Page(pageToAdd.getSite(), pageToAdd.getSlug(),
                 pageToAdd.getIndex(), pageToAdd.getTitle(), pageToAdd.getContent()));
-        if (pageManager.getByPrimaryKey(p.getPrimaryKey()) == null) return HttpResponse.serverError();
+        //if (pageManager.getByPrimaryKey(p.getPrimaryKey()) == null) return HttpResponse.serverError();
 
         return HttpResponse
                 .created(p)
