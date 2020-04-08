@@ -3,8 +3,9 @@
     <section class="hero is-primary">
       <div class="hero-body">
         <div class="container">
+          <NHS-logo class="nhs-logo" />
           <h1 class="title">Paediatric Liver Service</h1>
-          <h2 class="subtitle">King's College Hospital</h2>
+          <h2 class="subtitle is-4">King's College Hospital</h2>
         </div>
       </div>
     </section>
@@ -48,12 +49,14 @@
 import BulletinBoard from "@/components/BulletinBoard.vue";
 import SitesService from "@/services/sites-service";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import NHSLogo from "@/components/NHSLogo";
 
 export default {
   name: "Home",
   components: {
     BulletinBoard: BulletinBoard,
-    LoadingSpinner
+    LoadingSpinner,
+    NHSLogo,
   },
   data() {
     return {
@@ -68,6 +71,11 @@ export default {
 
 
 <style lang="scss" scoped>
+.nhs-logo {
+  height: 40px;
+  margin-bottom: 1rem;
+}
+
 .site-card {
   transition: background-color 0.2s;
   &:hover {
