@@ -55,10 +55,7 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
     public News addNews(News news) throws DuplicateKeysException, InvalidFieldsException {
         if (getNewsBySlug(news.getSlug()) != null) throw new DuplicateKeysException("Slug already exists: " + news.getSlug());
         else if (!News.checkValidity(news)) throw new InvalidFieldsException("Fields invalid");
-        else {
-            insertTuple(news);
-            return news;
-        }
+        else return (News) insertTuple(news);
     }
 
 

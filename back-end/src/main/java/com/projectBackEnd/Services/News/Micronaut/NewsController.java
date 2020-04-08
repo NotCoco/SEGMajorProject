@@ -46,7 +46,7 @@ public class NewsController {
      * @return HTTP response with relevant information resulting from the insertion of a news into the database
      */
     @Post("/")
-    public HttpResponse<News> add(@Header("X-API-Key") String session,@Body NewsAddCommand command) {
+    public HttpResponse add(@Header("X-API-Key") String session,@Body NewsAddCommand command) {
 
         if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
         News news;
@@ -54,7 +54,7 @@ public class NewsController {
             news = newsManager.addNews(new News(command.getDate(), command.isPinned(), command.getDescription(),
                     command.getTitle(), command.isUrgent(), command.getContent(), command.getSlug()));
         } catch (DuplicateKeysException|InvalidFieldsException e) {
-            return HttpResponse.badRequest();
+            return HttpResponse.badRequest(e.getMessage());
         }
         //if(newsManager.getByPrimaryKey(news.getPrimaryKey()) == null) return HttpResponse.serverError();
 
@@ -79,7 +79,7 @@ public class NewsController {
         try {
         newsManager.update(news);
         } catch (DuplicateKeysException|InvalidFieldsException e) {
-            return HttpResponse.badRequest();
+            return HttpResponse.badRequest(e.getMessage());
         }
 
         return HttpResponse
