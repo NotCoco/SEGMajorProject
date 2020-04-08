@@ -54,7 +54,11 @@ class SiteManagerTest {
     }
 //======================================================================================================================
     //Testing the Site Creation Constructors
-
+    /* If a method throws these exceptions, it should fail as they should not be thrown.
+     * This would be repeated over all the tests and so has not been added.
+     * @throws DuplicateKeysException If addition of this object article will cause a duplicate slug present
+     * @throws InvalidFieldsException If the object contains fields which cannot be added to the database e.g. nulls
+     */
     /**
      * Testing that creating a site object correctly assigns all the fields with expected values
      */
