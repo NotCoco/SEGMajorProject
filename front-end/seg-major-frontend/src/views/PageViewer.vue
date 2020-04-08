@@ -6,14 +6,14 @@
 
     <section class="section" style="height: 100%;">
       <transition name="fade" mode="out-in">
-        <loading-spinner v-if="!pages" style="padding-top: 68px"></loading-spinner>
-        <http-status :httpStatusCode="404" v-else-if="!page"></http-status>
+        <loading-spinner v-if="!pages" style="padding-top: 68px" />
+        <http-status :httpStatusCode="404" v-else-if="!page" />
 
         <div class="custom-content-container" v-else>
           <h1 class="title">{{ page.title }}</h1>
 
           <div class="page-content-container">
-            <rich-text-editor v-bind:editable="false" v-model="page.content"></rich-text-editor>
+            <rich-text-editor v-bind:editable="false" v-model="page.content" />
           </div>
 
           <div class="bottom-nav-buttons">

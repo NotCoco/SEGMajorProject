@@ -10,7 +10,7 @@
 
     <section class="section">
       <transition name="fade" mode="out-in">
-        <loading-spinner v-if="!email"></loading-spinner>
+        <loading-spinner v-if="!email" />
         <div class="custom-content-container" v-else>
           <div class="notification">
             <p class="has-text-weight-bold has-text-dark">To confirm, please enter your password.</p>

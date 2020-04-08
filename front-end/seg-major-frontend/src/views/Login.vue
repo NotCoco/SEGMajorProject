@@ -1,7 +1,7 @@
 <template>
   <div id="login">
     <div id="bg"></div>
-    <Navbar></Navbar>
+    <Navbar />
     <div class="custom-content-container">
       <div class="card login-box">
         <div class="notification" v-if="sessionExpired">

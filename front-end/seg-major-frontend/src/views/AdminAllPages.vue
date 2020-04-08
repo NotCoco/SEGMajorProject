@@ -5,7 +5,7 @@
         <h1 class="title">All Pages</h1>
 
         <transition name="fade" mode="out-in">
-          <loading-spinner v-if="!pages" style="margin-top: 50px;"></loading-spinner>
+          <loading-spinner v-if="!pages" style="margin-top: 50px;" />
           <div v-else class="pages-list">
             <div v-if="pages.length == 0" class="notification has-text-centered">
               <h3 class="title is-5">There are no pages to show here.</h3>

@@ -5,7 +5,7 @@
         <div class="custom-content-container">
           <h1 class="title">All Sites</h1>
           <transition name="fade" mode="out-in">
-            <loading-spinner v-if="!sites" style="margin-top: 50px;"></loading-spinner>
+            <loading-spinner v-if="!sites" style="margin-top: 50px;" />
             <div v-else>
               <router-link
                 v-for="site of sites"

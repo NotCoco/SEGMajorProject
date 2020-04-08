@@ -5,11 +5,11 @@
       <p class="subtitle">Read our latest news and guidance</p>
     </div>
 
-    <loading-spinner class="loading-spinner" v-if="loading"></loading-spinner>
+    <loading-spinner class="loading-spinner" v-if="loading" />
     <div class="no-news-message has-text-centered" v-else-if="items.length === 0">No news items</div>
 
     <router-link v-for="item in displayItems" :key="item.slug" :to="`/news/${item.slug}`">
-      <news-card :newsItem="item"></news-card>
+      <news-card :newsItem="item" />
     </router-link>
 
     <router-link to="/news">

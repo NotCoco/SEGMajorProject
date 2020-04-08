@@ -1,6 +1,6 @@
 <template>
   <div id="news-root">
-    <Navbar :showUrgentNews="false"></Navbar>
+    <Navbar :showUrgentNews="false" />
     <section class="hero is-primary">
       <div class="hero-body">
         <div class="container">
@@ -13,7 +13,7 @@
     <div class="section">
       <div class="container">
         <transition name="fade" mode="out-in">
-          <loading-spinner v-if="loading" class="loading-spinner"></loading-spinner>
+          <loading-spinner v-if="loading" class="loading-spinner" />
           <div v-else-if="paginatedItems.length === 0" class="has-text-dark has-text-centered">
             <div style="margin-bottom: 1rem;"><font-awesome-icon :icon="['far', 'frown']" size="3x" /></div>
             There are no news items at this time
@@ -22,7 +22,7 @@
             <transition name="fade" mode="out-in">
               <div v-bind:key="currentPageNumber">
                 <router-link v-for="item in paginatedItems" :key="item.slug" :to="item.slug" append>
-                  <news-card :newsItem="item" class="news-card"></news-card>
+                  <news-card :newsItem="item" class="news-card" />
                 </router-link>
               </div>
             </transition>

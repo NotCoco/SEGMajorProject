@@ -1,6 +1,6 @@
 <template>
   <div id="site-content-viewer-layout">
-    <Navbar v-bind:pages="pages" v-bind:showSearchBar="true"></Navbar>
+    <Navbar v-bind:pages="pages" v-bind:showSearchBar="true" />
 
     <div class="flex-wrapper">
       <div class="sidebar is-hidden-mobile">
@@ -10,7 +10,7 @@
             <nav class="sidebar-navigation">
               <transition name="fade" mode="out-in">
                 <span v-if="loading">
-                  <loading-spinner style="margin-top: 50px; opacity: 0.4"></loading-spinner>
+                  <loading-spinner style="margin-top: 50px; opacity: 0.4" />
                 </span>
                 <div class="navigation-items" v-else>
                   <router-link
@@ -31,7 +31,7 @@
           <search-bar :pages="pages" />
         </div>
         <transition name="fade" mode="out-in">
-          <router-view v-bind:pages="pages" v-bind:key="$route.path"></router-view>
+          <router-view v-bind:pages="pages" v-bind:key="$route.path" />
         </transition>
       </div>
     </div>

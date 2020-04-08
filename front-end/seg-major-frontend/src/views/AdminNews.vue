@@ -5,7 +5,7 @@
         <div class="custom-content-container">
           <h1 class="title">All News Articles</h1>
           <transition name="fade" mode="out-in">
-            <loading-spinner v-if="loading" style="margin-top: 50px;"></loading-spinner>
+            <loading-spinner v-if="loading" style="margin-top: 50px;" />
             <div v-else>
               <router-link
                 v-for="article of news"
@@ -15,7 +15,7 @@
                 v-bind:to="article.slug"
                 append
               >
-                <news-card :newsItem="article" class="news-card"></news-card>
+                <news-card :newsItem="article" class="news-card" />
               </router-link>
             </div>
           </transition>

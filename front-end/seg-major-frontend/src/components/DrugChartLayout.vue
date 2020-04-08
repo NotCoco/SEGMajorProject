@@ -11,7 +11,7 @@
                   <input class="input" type="time" id="time" name="appt" min="00:00" max="24:00" required>
                 </div>
               </div>
-              <drug-chart-search-box ref="drug"></drug-chart-search-box>
+              <drug-chart-search-box ref="drug" />
               <div class="field">
                 <label class="label">Dose</label>
                 <div class="control">
@@ -63,7 +63,7 @@
             <td class="vertical-separator"></td>
             <td>
               <!-- The printing unit -->
-              <drug-chart-print-box ref="print"></drug-chart-print-box>
+              <drug-chart-print-box ref="print" />
             </td>
           </tr>
         </table>

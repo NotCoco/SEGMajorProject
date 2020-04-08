@@ -2,7 +2,7 @@
   <div id="all-pages">
     <section class="section">
       <transition name="fade" mode="out-in">
-        <loading-spinner v-if="!pages" style="margin-top: 50px;"></loading-spinner>
+        <loading-spinner v-if="!pages" style="margin-top: 50px;" />
         <div v-else-if="pages.length == 0" class="has-text-dark has-text-centered">
           <div style="margin-bottom: 1rem;">
             <font-awesome-icon :icon="['far', 'frown']" size="3x" />

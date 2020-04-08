@@ -2,8 +2,8 @@
   <div id="admin-edit-page">
     <section class="section">
       <transition name="fade" mode="out-in">
-        <loading-spinner v-if="loading" style="padding-top: 68px;"></loading-spinner>
         <div class="custom-content-container" v-if="!loading">
+        <loading-spinner v-if="loading" style="padding-top: 68px;" />
           <nav class="breadcrumb is-right" aria-label="breadcrumbs">
             <ul>
               <li>
@@ -76,7 +76,7 @@
             >This slug is already in use by another page</p>
           </div>
           <div style="flex-grow: 1; margin-top: 25px;">
-            <rich-text-editor v-model="page.content" :disabled="saving"></rich-text-editor>
+            <rich-text-editor v-model="page.content" :disabled="saving" />
           </div>
 
           <div class="buttons" style="justify-content: flex-end; margin-bottom: 7px;">

@@ -2,7 +2,7 @@
   <div id="admin-edit-news">
     <section class="section">
       <transition name="fade" mode="out-in">
-        <loading-spinner v-if="loading" style="padding-top: 68px;"></loading-spinner>
+        <loading-spinner v-if="loading" style="padding-top: 68px;" />
         <div class="custom-content-container" v-if="!loading">
           <nav class="breadcrumb is-right" aria-label="breadcrumbs">
             <ul>
@@ -122,7 +122,7 @@
           >Article will appear at the top of the bulletin board and news page.</p>
 
           <div style="flex-grow: 1; margin-top: 25px;">
-            <rich-text-editor v-model="article.content" :disabled="saving"></rich-text-editor>
+            <rich-text-editor v-model="article.content" :disabled="saving" />
           </div>
 
           <div v-if="$v.article.content.$dirty">

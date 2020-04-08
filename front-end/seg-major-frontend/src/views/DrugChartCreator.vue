@@ -1,6 +1,6 @@
 <template>
   <div id="drug-chart-creator">
-    <Navbar></Navbar>
+    <Navbar />
     <section class="hero is-primary">
       <div class="hero-body">
         <div class="container">
@@ -13,7 +13,7 @@
     <section class="section">
       <div class="container">
         <transition name="fade-transform" mode="out-in">
-          <DrugChartLayout></DrugChartLayout>
+          <DrugChartLayout />
         </transition>
       </div>
     </section>

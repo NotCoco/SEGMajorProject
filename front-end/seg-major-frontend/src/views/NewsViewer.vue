@@ -1,16 +1,16 @@
 <template>
   <div id="news-viewer">
-    <Navbar :showUrgentNews="false"></Navbar>
+    <Navbar :showUrgentNews="false" />
     <section class="section">
       <div class="custom-content-container">
-        <loading-spinner class="loading-spinner" v-if="loading"></loading-spinner>
-        <http-status :httpStatusCode="404" v-else-if="news === null"></http-status>
+        <loading-spinner class="loading-spinner" v-if="loading" />
+        <http-status :httpStatusCode="404" v-else-if="news === null" />
         <article v-else>
           <h3 class="subtitle has-text-weight-bold is-uppercase" style="margin-bottom: 2rem;">News</h3>
           <h1 class="title">{{ news.title }}</h1>
           <h2 class="subtitle">{{ news.description }}</h2>
           <time class="subtitle" :datetime="news.date.toISOString().substring(0, 10)" pubdate>{{ news.date.toLocaleDateString("en-GB") }}</time>
-          <rich-text-editor v-model="news.content" :editable="false" class="content"></rich-text-editor>
+          <rich-text-editor v-model="news.content" :editable="false" class="content" />
         </article>
       </div>
     </section>

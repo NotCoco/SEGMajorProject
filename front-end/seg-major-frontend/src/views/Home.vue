@@ -16,7 +16,7 @@
           <div class="column">
             <p class="title is-3">Sites</p>
             <transition name="fade" mode="out-in">
-              <loading-spinner v-if="!sites" style="margin-top: 50px;"></loading-spinner>
+              <loading-spinner v-if="!sites" style="margin-top: 50px;" />
               <div v-else>
                 <router-link
                   v-for="site of sites"
@@ -37,7 +37,7 @@
           </div>
 
           <div class="column is-narrow">
-            <bulletin-board></bulletin-board>
+            <bulletin-board />
           </div>
         </div>
       </div>
