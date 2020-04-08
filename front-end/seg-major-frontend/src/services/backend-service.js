@@ -38,6 +38,14 @@ api.interceptors.response.use(function (response) {
 
 
 export default {
+  getAppInfo() {
+    return api.get('/appinfo')
+  },
+
+  updateAppInfo(info) {
+    return api.put('/appinfo', info)
+  },
+
   login(email, password) {
     return api.post('/user/login', { email, password })
   },
@@ -47,11 +55,11 @@ export default {
   },
 
   getResetRequest(email) {
-	return api.post( '/user/password_reset_request' , {'string':email} ) 
+	  return api.post( '/user/password_reset_request' , {'string':email} ) 
   },
   
   resetPassword(token,password) {
-	return api.put( '/user/password_reset_change' , {token,password} ) 
+	  return api.put( '/user/password_reset_change' , {token,password} ) 
   },
   
   getUserName() {
