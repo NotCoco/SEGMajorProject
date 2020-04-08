@@ -6,6 +6,8 @@ import io.micronaut.http.annotation.*;
 
 import java.util.List;
 
+import main.java.com.projectBackEnd.DuplicateKeysException;
+import main.java.com.projectBackEnd.InvalidFieldsException;
 import main.java.com.projectBackEnd.Services.News.Hibernate.News;
 import main.java.com.projectBackEnd.Services.News.Hibernate.NewsManager;
 import main.java.com.projectBackEnd.Services.News.Hibernate.NewsManagerInterface;
@@ -47,9 +49,13 @@ public class NewsController {
     public HttpResponse<News> add(@Header("X-API-Key") String session,@Body NewsAddCommand command) {
 
         if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
-        News news = newsManager.addNews(new News(command.getDate(), command.isPinned(), command.getDescription(),
-                command.getTitle(), command.isUrgent(), command.getContent(), command.getSlug()));
-
+        News news;
+        try {
+            news = newsManager.addNews(new News(command.getDate(), command.isPinned(), command.getDescription(),
+                    command.getTitle(), command.isUrgent(), command.getContent(), command.getSlug()));
+        } catch (DuplicateKeysException|InvalidFieldsException e) {
+            return HttpResponse.badRequest();
+        }
         //if(newsManager.getByPrimaryKey(news.getPrimaryKey()) == null) return HttpResponse.serverError();
 
         return HttpResponse
@@ -70,7 +76,11 @@ public class NewsController {
         if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
         News news= new News(command.getPrimaryKey(), command.getDate(), command.isPinned(), command.getDescription(),
                 command.getTitle(), command.isUrgent(), command.getContent(), command.getSlug());
+        try {
         newsManager.update(news);
+        } catch (DuplicateKeysException|InvalidFieldsException e) {
+            return HttpResponse.badRequest();
+        }
 
         return HttpResponse
                 .noContent()
