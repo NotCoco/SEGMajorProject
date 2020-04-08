@@ -13,7 +13,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = Site.TABLENAME)
-public class Site implements TableEntity {
+public class Site implements TableEntity<Site> {
 
     // Table columns
     static final String TABLENAME = "Sites";
@@ -112,16 +112,15 @@ public class Site implements TableEntity {
 	
      /**
      * Copy the values of the input site object
-     * @param toCopy The site object to be copied
+     * @param siteToCopy The site object to be copied
      * @return updated site object
      */
     @Override
-    public TableEntity copy(TableEntity toCopy) {
+    public Site copy(Site siteToCopy) {
 
-        Site siteToCopy = (Site) toCopy;
         setName(siteToCopy.getName());
         setSlug(siteToCopy.getSlug());
-        return siteToCopy;
+        return this;
     }
 
 

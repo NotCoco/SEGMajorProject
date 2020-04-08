@@ -19,7 +19,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = Page.TABLENAME, uniqueConstraints = {@UniqueConstraint(columnNames = {Page.SLUG, Page.SITE})})
-public class Page implements TableEntity {
+public class Page implements TableEntity<Page> {
 
     // 'Page' database table name and attributes
     static final String TABLENAME = "Pages";
@@ -216,19 +216,18 @@ public class Page implements TableEntity {
 
     /**
      * Copy the values of the input TableEntity object
-     * @param toCopy   Page to copy
+     * @param pageToCopy   Page to copy
      * @return updated Page object
      */
     @Override
-    public TableEntity copy(TableEntity toCopy) {
+    public Page copy(Page pageToCopy) {
 
-        Page newPageVersion = (Page) toCopy;
-        setIndex(newPageVersion.getIndex());
-        setTitle(newPageVersion.getTitle());
-        setContent(newPageVersion.getContent());
-        setSite(newPageVersion.getSite());
-        setSlug(newPageVersion.getSlug());
-        return newPageVersion;
+        setIndex(pageToCopy.getIndex());
+        setTitle(pageToCopy.getTitle());
+        setContent(pageToCopy.getContent());
+        setSite(pageToCopy.getSite());
+        setSlug(pageToCopy.getSlug());
+        return this;
 
     }
 

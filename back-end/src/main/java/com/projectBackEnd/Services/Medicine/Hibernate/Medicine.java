@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = Medicine.TABLENAME)
-public class Medicine implements TableEntity {
+public class Medicine implements TableEntity<Medicine> {
 
     // 'Medicine' database table name and attributes
     static final String TABLENAME = "Medicines";
@@ -119,15 +119,14 @@ public class Medicine implements TableEntity {
 
     /**
      * Copy the values of the input TableEntity object
-     * @param toCopy    Medicine object to copy
+     * @param medicineToCopy    Medicine object to copy
      * @return this, updated medicine object
      */
     @Override
-    public TableEntity copy(TableEntity toCopy) {
+    public Medicine copy(Medicine medicineToCopy) {
 
-        Medicine medToCopy = (Medicine) toCopy;
-        setName(medToCopy.getName());
-        setType(medToCopy.getType());
+        setName(medicineToCopy.getName());
+        setType(medicineToCopy.getType());
 
         return this;
 

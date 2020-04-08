@@ -21,7 +21,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = Session.TABLENAME)
-public class Session implements TableEntity {
+public class Session implements TableEntity<Session> {
 
 	// 'Session' database table name and columns
 	final static String TABLENAME = "Sessions";
@@ -133,16 +133,16 @@ public class Session implements TableEntity {
 
 	/**
 	 * Copy the values of input object
-	 * @param toCopy	Session to copy
+	 * @param sessionToCopy	Session to copy
 	 * @return updated object
 	 */
-	public TableEntity copy(TableEntity toCopy) {
-		Session sessionToCopy = (Session) toCopy;
+	public Session copy(Session sessionToCopy) {
+
 		token = sessionToCopy.getToken();
 		date = sessionToCopy.getDate();
 		timeout = sessionToCopy.getTimeout();
 		email = sessionToCopy.getEmail();
-		return sessionToCopy;
+		return this;
 	}
 
 
