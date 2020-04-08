@@ -72,7 +72,7 @@ public class PageController {
         Page updatedPage = new Page(updatedPageCommand.getPrimaryKey(), updatedPageCommand.getSite(), updatedPageCommand.getSlug(),
                 updatedPageCommand.getIndex(), updatedPageCommand.getTitle(), updatedPageCommand.getContent());
         try {
-        pageManager.update(updatedPage);
+            pageManager.update(updatedPage);
         } catch (DuplicateKeysException|InvalidFieldsException e) {
             return HttpResponse.badRequest(e.getMessage());
         }
