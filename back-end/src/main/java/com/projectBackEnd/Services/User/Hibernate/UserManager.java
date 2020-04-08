@@ -20,7 +20,7 @@ import java.math.BigInteger;
 public class UserManager extends EntityManager implements UserManagerInterface {
 
 	private static UserManagerInterface userManager;
-	private static final int TIMEOUT = 3600; //amount of time for which session will be valid
+	private static final int TIMEOUT = 18000; //amount of time for which session will be valid (seconds)
 
 	/**
 	 * Private constructor implementing the Singleton design pattern
