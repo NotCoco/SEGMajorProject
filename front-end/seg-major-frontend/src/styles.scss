@@ -2,16 +2,7 @@
 @import url('https://fonts.googleapis.com/css?family=Signika&display=swap');
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
-$family-sans-serif: 'Open Sans';
-
-$primary: #35c58a;
-$primary-light: #53b8a5;
-$primary-dark: #15805a;
-$primary-darker: #137553;
-
-$grey-primary: #9ec5bd;
-
-
+@import "variables";
 @import 'bulma';
 
 @import 'global-styles';

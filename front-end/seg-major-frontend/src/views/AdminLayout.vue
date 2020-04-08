@@ -96,7 +96,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/styles";
+@import "@/variables";
 
 .text-brand {
   font-size: 20px;

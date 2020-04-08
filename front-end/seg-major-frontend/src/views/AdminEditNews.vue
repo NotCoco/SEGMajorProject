@@ -157,7 +157,7 @@
 </template>
 
 <style lang="scss" scoped>
-@import "@/styles";
+@import "@/variables";
 
 #admin-edit-news {
   height: 100%;

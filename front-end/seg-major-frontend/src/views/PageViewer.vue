@@ -52,7 +52,8 @@
 </template>
 
 <style lang="scss" scoped>
-@import "@/styles.scss";
+@import "@/variables";
+
 #page-viewer {
   height: 100%;
 }

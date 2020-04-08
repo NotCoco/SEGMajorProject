@@ -107,7 +107,7 @@
 </template>
 
 <style lang="scss" scoped>
-@import "@/styles";
+@import "@/variables";
 
 #admin-edit-page {
   height: 100%;
