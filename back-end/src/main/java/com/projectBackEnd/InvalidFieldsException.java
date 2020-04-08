@@ -10,6 +10,6 @@ public class InvalidFieldsException extends Exception {
      * @param message The message to be sent back to the client
      */
     public InvalidFieldsException(String message) {
-        super(message); // call to Exception constructor
+        super(message);
     }
 }

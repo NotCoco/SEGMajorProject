@@ -10,6 +10,6 @@ public class InvalidEmailException extends Exception {
      * @param message The message to be sent back to the client
      */
     public InvalidEmailException(String message) {
-        super(message); // call to Exception constructor
+        super(message);
     }
 }

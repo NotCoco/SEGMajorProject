@@ -51,7 +51,7 @@ public class PageController {
         } catch (DuplicateKeysException | InvalidFieldsException e) {
             return HttpResponse.badRequest(e.getMessage());
         }
-        //if (pageManager.getByPrimaryKey(p.getPrimaryKey()) == null) return HttpResponse.serverError();
+
 
         return HttpResponse
                 .created(page)

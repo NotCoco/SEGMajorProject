@@ -39,9 +39,6 @@ public class MedicineController {
         if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
         Medicine med = medicineManager.addMedicine(new Medicine(command.getName(), command.getType()));
 
-        //if(medicineManager.getByPrimaryKey(med.getPrimaryKey()) == null) return HttpResponse.serverError();
-        //Will never happen as it is not possible for medicines to not be added.
-
         return HttpResponse
                 .created(med)
                 .headers(headers -> headers.location(location(med.getPrimaryKey())));

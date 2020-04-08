@@ -56,7 +56,6 @@ public class NewsController {
         } catch (DuplicateKeysException|InvalidFieldsException e) {
             return HttpResponse.badRequest(e.getMessage());
         }
-        //if(newsManager.getByPrimaryKey(news.getPrimaryKey()) == null) return HttpResponse.serverError();
 
         return HttpResponse
                 .created(news)

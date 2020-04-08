@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 /**
  * PageManager defines methods to interact with the Page table in the database.
  * This class extends the EntityManager.
- * https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
+ * Inspiration : https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
 public class PageManager extends EntityManager implements PageManagerInterface {
 

@@ -17,7 +17,7 @@ import java.io.Serializable;
  * They have a Token, a date of the session been created, a Timeout, and an Email
  * within the site, a title, and some content.
  *
- * https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
+ * Inspiration : https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
 @Entity
 @Table(name = Session.TABLENAME)
@@ -36,15 +36,12 @@ public class Session implements TableEntity {
 	@Column(name = TOKEN)
 	private String token;
 
-	// The date, used in email generation
 	@Column(name = DATE)
 	private Timestamp date;
 
-	// A timeout upper bound (seconds)
 	@Column(name = TIMEOUT)
 	private Timestamp timeout;
 
-	// The email of the user associated with the session
 	@Column(name = EMAIL)
 	private String email;
 

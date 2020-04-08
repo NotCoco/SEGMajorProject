@@ -220,7 +220,7 @@ class SiteControllerTest {
     void testDeleteAndGetSite(){
         HttpResponse response = addSite("testSlug", "testSite");
         String url =  getEUrl(response);
-        // Asserting that we've added a site
+
         assertEquals(HttpStatus.CREATED, response.getStatus());
 
         HttpRequest request = HttpRequest.DELETE("/sites/"+url).header("X-API-Key",token);

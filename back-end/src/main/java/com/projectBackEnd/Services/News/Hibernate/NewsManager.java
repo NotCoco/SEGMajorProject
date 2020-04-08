@@ -143,7 +143,7 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
         Stream<News> regular = all.stream().filter(n -> !n.isPinned() && !n.isUrgent())
                 .sorted(Comparator.comparing(News::getDate, Comparator.nullsLast(Comparator.reverseOrder())));
 
-        // Concat all lists together to make sorted list
+        // Concatenate all lists together to make sorted list
         List<News> sorted = Stream.concat(Stream.concat(Stream.concat(pinnedAndUrgent, urgentDates), pinnedDates), regular)
                 .collect(Collectors.toList());
 

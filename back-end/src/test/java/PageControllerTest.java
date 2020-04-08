@@ -115,7 +115,7 @@ class PageControllerTest {
         addPage(new PageAddCommand("testSiteA", "anotherPage", 12, "Title", "nutri!tion/information"),token);
         addPage(new PageAddCommand("testSiteA", "coolPage", 20, "Title", "nutri!tion/information"),token);
         addPage(new PageAddCommand("testSiteA", "Paaage", 13, "Title", "nutri!tion/information"),token);
-        //public PagePatchCommand(int id, String slug, int index) {
+
         List<Page> allPagesWithID = pageManager.getAllPages();
         List<PagePatchCommand> input = new ArrayList<>();
 
@@ -141,7 +141,7 @@ class PageControllerTest {
         addPage(new PageAddCommand("testSiteA", "anotherPage", 12, "Title", "nutri!tion/information"),token);
         addPage(new PageAddCommand("testSiteA", "coolPage", 20, "Title", "nutri!tion/information"),token);
         addPage(new PageAddCommand("testSiteA", "Paaage", 13, "Title", "nutri!tion/information"),token);
-        //public PagePatchCommand(int id, String slug, int index) {
+
         List<Page> allPagesWithID = pageManager.getAllPages();
         List<PagePatchCommand> input = new ArrayList<>();
 
@@ -313,7 +313,7 @@ class PageControllerTest {
         addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
         assertNotNull(pageManager.getAllPages().get(0));
         int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
-        //protected HttpResponse putPage(new PageUpdateCommand(int id, String siteName, String slug, int index, String title, String content) {
+
         putPage(new PageUpdateCommand(idOfMadePage, "testSiteA", "nutrition/slu!#g", 1, "newTitle", "nutri!tion/information"),token);
         assertEquals("newTitle",pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getTitle());
         Page testPage = getPage("testSiteA", "nutrition/slu!#g");
@@ -328,7 +328,7 @@ class PageControllerTest {
         addSite("testSiteA", "name!",token);
         addSite("testSiteB", "name!",token);
         addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
-        //gets id of above page
+
         int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
 
         putPage(new PageUpdateCommand(idOfMadePage, "testSiteA", "nutrition/slu!#g", 1, "newTitle", "nutri!tion/information"),token);
@@ -345,7 +345,7 @@ class PageControllerTest {
         addSite("testSiteA", "name1",token);
         addSite("testSiteB", "name1",token);
         addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
-        //gets id of above page
+
         int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
 
         putPage(new PageUpdateCommand(idOfMadePage, "testSiteA", "nutrition/sl123u!#g", 1, "newTitle", "nutri!tion/information"),token);

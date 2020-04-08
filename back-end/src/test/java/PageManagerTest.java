@@ -76,7 +76,7 @@ class PageManagerTest {
 
 //======================================================================================================================
     //Testing Page Creation constructors
-    //public Page(String siteSlug, String slug, Integer index, String title, String content) {
+
     /* If a method throws these exceptions, it should fail as they should not be thrown.
      * This would be repeated over all the tests and so has not been added.
      * @throws DuplicateKeysException If addition of this object article will cause a duplicate slug present

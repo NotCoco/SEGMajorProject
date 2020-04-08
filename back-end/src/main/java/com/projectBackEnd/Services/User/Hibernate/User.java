@@ -21,7 +21,7 @@ import java.io.Serializable;
 @Table(name = User.TABLENAME)
 public class User implements TableEntity {
 
-	// table columns (attributes)
+	// Table columns (attributes)
 	final static String TABLENAME = "Users";
 	private final static String KEY = "id";
 	private final static String EMAIL = "email";

@@ -10,6 +10,6 @@ public class DuplicateKeysException extends Exception {
      * @param message The message to be sent back to the client
      */
     public DuplicateKeysException(String message) {
-        super(message); // call to Exception constructor
+        super(message);
     }
 }

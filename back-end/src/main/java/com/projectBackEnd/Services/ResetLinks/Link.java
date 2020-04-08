@@ -26,8 +26,7 @@ public class Link implements TableEntity{
 	// The primary key token, used for authentication
 	@Id @Column(name = Link.TOKEN)
 	private String token;
-	
-	// The user email
+
 	@Column(name = Link.EMAIL)
 	private String email;
 	
