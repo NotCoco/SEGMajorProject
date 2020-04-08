@@ -9,7 +9,9 @@ datasources:
 jpa:
   default:
     packages-to-scan:
-      - 'com.projectBackEnd.Entities.Medicine'
+
+      - 'com.projectBackEnd.Services'
+
     properties:
       hibernate:
         hbm2ddl:
@@ -27,7 +29,7 @@ micronaut:
     maxRequestSize: 100MB
     multipart:
       maxFileSize: 100MB
-    host: localhost
+    host: 178.62.55.191
     netty:
       maxHeaderSize: 500KB
       worker:

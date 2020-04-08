@@ -1,9 +1,9 @@
 package test.java;
 
 
-import main.java.com.projectBackEnd.Image.DirectoryHolder;
-import main.java.com.projectBackEnd.Image.ImageManager;
-import main.java.com.projectBackEnd.Image.ImageManagerInterface;
+import main.java.com.projectBackEnd.Services.Image.DirectoryHolder;
+import main.java.com.projectBackEnd.Services.Image.ImageManager;
+import main.java.com.projectBackEnd.Services.Image.ImageManagerInterface;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -62,6 +62,14 @@ class ImageManagerTest {
         List<String> urls = imageManager.getImageUrls();
         boolean check = urls.contains(imageManager.getDir()+randomName);
         assertTrue(check);
+    }
+
+    /**
+     * Test Saving an image with a null extension
+     */
+    @Test
+    void testSaveNullExtensionImage() {
+        assertNull(imageManager.saveImage("", null));
     }
 
     /**

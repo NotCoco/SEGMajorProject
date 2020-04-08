@@ -5,10 +5,10 @@ import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.client.HttpClient;
 import io.micronaut.http.client.annotation.Client;
-
+import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import javax.inject.Inject;
-
-import main.java.com.projectBackEnd.Entities.AppInfo.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import main.java.com.projectBackEnd.Services.AppInfo.*;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,7 +17,7 @@ import org.junit.jupiter.api.AfterAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import main.java.com.projectBackEnd.Entities.User.Hibernate.UserManager;
+import main.java.com.projectBackEnd.Services.User.Hibernate.UserManager;
 import main.java.com.projectBackEnd.HibernateUtility;
 
 /**
@@ -41,20 +41,22 @@ class AppInfoControllerTest {
         JSONLocation.setJsonFile("src/test/resources/AppInfoTest.json");
 
         try {
-            UserManager.getUserManager().addUser("test@test.com", "123", "name");
-            token = UserManager.getUserManager().verifyUser("test@test.com", "123");
+            UserManager.getUserManager().addUser("appInfoTest@test.com", "123", "name");
+            Thread.sleep(100); //A sleep to give the database a chance to update
+            token = UserManager.getUserManager().verifyUser("appInfoTest@test.com", "123");
         } catch (Exception e) {
             fail();
         }
+
     }
 
     /**
-     * Deletes the test user and shutsdown the database.
+     * Deletes the test user and shuts down the database.
      */
     @AfterAll
     static void closeDatabase() {
         try {
-            UserManager.getUserManager().deleteUser("test@test.com", "123");
+            UserManager.getUserManager().deleteUser("appInfoTest@test.com", "123");
         } catch (Exception e) {
             fail();
         }
@@ -88,6 +90,17 @@ class AppInfoControllerTest {
         assertEquals(getInfo().getHospitalName(), "Fancy update");
     }
 
+    /**
+     * Test unauthorized addition of an image
+     */
+    @Test
+    void testUnauthorizedUpdate() {
+        assertThrows(HttpClientResponseException.class, () -> {
+            AppInfo updatedInfo = new AppInfo("Wowwee", "Cool");
+            HttpRequest request = HttpRequest.PUT("/appinfo", updatedInfo).header("X-API-Key","lol");
+            client.toBlocking().exchange(request);
+        });
+    }
 
     /**
      * Creates a PUT request with the updated information supplying API Key and new information

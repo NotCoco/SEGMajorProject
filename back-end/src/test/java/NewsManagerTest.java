@@ -1,8 +1,10 @@
 package test.java;
 
-import main.java.com.projectBackEnd.Entities.News.Hibernate.News;
-import main.java.com.projectBackEnd.Entities.News.Hibernate.NewsManager;
-import main.java.com.projectBackEnd.Entities.News.Hibernate.NewsManagerInterface;
+import main.java.com.projectBackEnd.DuplicateKeysException;
+import main.java.com.projectBackEnd.InvalidFieldsException;
+import main.java.com.projectBackEnd.Services.News.Hibernate.News;
+import main.java.com.projectBackEnd.Services.News.Hibernate.NewsManager;
+import main.java.com.projectBackEnd.Services.News.Hibernate.NewsManagerInterface;
 import main.java.com.projectBackEnd.HibernateUtility;
 
 import javax.persistence.PersistenceException;
@@ -42,6 +44,7 @@ class NewsManagerTest {
      */
     @AfterAll
     static void assertNoLeaks() {
+        newsManager.deleteAll();
         HibernateUtility.shutdown();
         connectionLeakUtil.assertNoLeaks();
     }
@@ -56,8 +59,13 @@ class NewsManagerTest {
 
 //======================================================================================================================
     //Testing the News Creation Constructors
-    //News(Date date, boolean pinned, String description, String title, boolean urgent, String content, String slug)
 
+
+    /* If a method throws these exceptions, it should fail as they should not be thrown.
+     * This would be repeated over all the tests and so has not been added.
+     * @throws DuplicateKeysException If addition of this object article will cause a duplicate slug present
+     * @throws InvalidFieldsException If the object contains fields which cannot be added to the database e.g. nulls
+    */
     /**
      * Testing that creating a news object correctly assigns all the fields with expected values
      */
@@ -129,7 +137,7 @@ class NewsManagerTest {
      * Expected: All the medicines from the list are added successfully.
      */
     @Test
-    void testFillingAndGetting() {
+    void testFillingAndGetting() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfNews());
         assertEquals(getListOfNews().size(), newsManager.getAllNews().size());
     }
@@ -138,7 +146,7 @@ class NewsManagerTest {
      * Testing the order returned by the getAllNews
      */
     @Test
-    void testOrderOfNews() {
+    void testOrderOfNews() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfNews());
         List<News> allNews = newsManager.getAllNews();
         assertEquals("title6", allNews.get(0).getTitle());
@@ -172,7 +180,7 @@ class NewsManagerTest {
      * Expected: The entries will disappear from the database.
      */
     @Test
-    void testDeleteAllFilledDatabase() {
+    void testDeleteAllFilledDatabase() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfNews());
         assertEquals(getListOfNews().size(), newsManager.getAllNews().size());
         newsManager.deleteAll();
@@ -186,7 +194,7 @@ class NewsManagerTest {
      * Expected: A new news article is added to the database, regardless of constructor used.
      */
     @Test
-    void testAddNews() {
+    void testAddNews() throws DuplicateKeysException, InvalidFieldsException {
         newsManager.addNews(new News(new Date(12343212L), false,
                 "''##DROP TABLE';;'", "sameTitle", false, "con321tent1", "slug1"));
         newsManager.addNews(new News(231, new Date(123432124L), false,
@@ -201,9 +209,14 @@ class NewsManagerTest {
      * Expected: The size remains unchanged.
      */
     @Test
-    void testAddNewsWithNullValues() {
+    void testAddNewsWithNullValues() throws DuplicateKeysException, InvalidFieldsException {
         int sizeBefore = newsManager.getAllNews().size();
-        newsManager.addNews(new News(null,true, null, null, false, null, null));
+        try {
+            newsManager.addNews(new News(null, true, null, null, false, null, null));
+            fail();
+        } catch (InvalidFieldsException e) {
+            e.printStackTrace();
+        }
         assertEquals(sizeBefore, newsManager.getAllNews().size());
     }
 
@@ -212,7 +225,7 @@ class NewsManagerTest {
      * Expected: The article is added.
      */
     @Test
-    void testAddNewsWithEmptyStringValues() {
+    void testAddNewsWithEmptyStringValues() throws DuplicateKeysException, InvalidFieldsException {
         int sizeBefore = newsManager.getAllNews().size();
         newsManager.addNews(new News(new Date(),true, "   ", "", false, "", ""));
         assertEquals(sizeBefore+1, newsManager.getAllNews().size());
@@ -221,7 +234,7 @@ class NewsManagerTest {
      * Testing adding news articles which share the same slug. This should not be possible.
      */
     @Test
-    void testDuplicateSlugAddition() {
+    void testDuplicateSlugAddition() throws DuplicateKeysException, InvalidFieldsException {
         int sizeBefore = newsManager.getAllNews().size();
         newsManager.addNews(new News(new Date(12343212L), false,
                 "desc213ription1", "ti321t      le1", false, "con321tent1", "slug1"));
@@ -229,7 +242,7 @@ class NewsManagerTest {
             newsManager.addNews(new News(new Date(12343212L), false,
                     "desc213ription1", "ti321tle1", false, "con321tent1", "slug1"));
             fail();
-        } catch (PersistenceException e) {
+        } catch (DuplicateKeysException e) {
             e.printStackTrace();
         }
         assertEquals(sizeBefore+1, newsManager.getAllNews().size());
@@ -242,7 +255,7 @@ class NewsManagerTest {
      * Expected: The news found shares the same values as the news in the database.
      */
     @Test
-    void testGetByPrimaryKey() {
+    void testGetByPrimaryKey() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfNews());
         News foundNews = newsManager.getAllNews().get(0);
         int newsPK = foundNews.getPrimaryKey();
@@ -263,7 +276,7 @@ class NewsManagerTest {
      * Testing an error is thrown if a primary key searched for is null
      */
     @Test
-    void testGetNullPrimaryKey() {
+    void testGetNullPrimaryKey() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfNews());
         int previousSize = newsManager.getAllNews().size();
         try {
@@ -282,7 +295,7 @@ class NewsManagerTest {
      * in the database.
      */
     @Test
-    void testDelete() {
+    void testDelete() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfNews());
         newsManager.delete(newsManager.getAllNews().get(1).getPrimaryKey());
         assertEquals( getListOfNews().size()-1, newsManager.getAllNews().size());
@@ -322,10 +335,10 @@ class NewsManagerTest {
         }
     }
     /**
-     * Test the correct article was infact deleted when using delete
+     * Test the correct article was deleted when using delete
      */
     @Test
-    void testCorrectNewsDeletedUsingPrimaryKey() {
+    void testCorrectNewsDeletedUsingPrimaryKey() throws DuplicateKeysException, InvalidFieldsException  {
         News toBeDeleted = newsManager.addNews(new News(new Date(12343212L), false,
                 "getting deleted", "soon won't exist", false, "f", "slug1"));
         News alsoAdded = newsManager.addNews(new News(new Date(12343212L), false,
@@ -344,7 +357,7 @@ class NewsManagerTest {
      * Testing updating one of the existing news articles into another one
      */
     @Test
-    void testUpdateNews() {
+    void testUpdateNews() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfNews());
         int id = newsManager.getAllNews().get(0).getPrimaryKey();
         News replacementNews = new News(id, new Date(12343212L), true,
@@ -360,7 +373,7 @@ class NewsManagerTest {
      * Update a news article but not its unique key information
      */
     @Test
-    void testUpdateNewsNotSlug() {
+    void testUpdateNewsNotSlug() throws DuplicateKeysException, InvalidFieldsException {
         News first = newsManager.addNews(new News(new Date(12343212L), false,
                 "changedDescription", "newTitle", false, "content2", "slug9"));
         int id = first.getPrimaryKey();
@@ -377,15 +390,15 @@ class NewsManagerTest {
      * Testing updating a news article so it violates the unique - it should throw an error!
      */
     @Test
-    void testUpdateNewsWithDupeSlug() {
+    void testUpdateNewsWithDupeSlug() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfNews());
         int id = newsManager.getAllNews().get(0).getPrimaryKey();
         News replacementNews = new News(id ,new Date(12343212L), true, "changedDescrption",
                 "newTitle", false, "content1", "slug1");
         try {
-            News n = newsManager.update(replacementNews);
+            newsManager.update(replacementNews);
             fail();
-        } catch (PersistenceException e) {
+        } catch (DuplicateKeysException e) {
             e.printStackTrace();
         }
         int count = 0;
@@ -400,7 +413,7 @@ class NewsManagerTest {
      * Test update a news article with nulls
      */
     @Test
-    void testUpdateNewsWithNullValues() {
+    void testUpdateNewsWithNullValues() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfNews());
         int previousSize = newsManager.getAllNews().size();
         int id = newsManager.getAllNews().get(0).getPrimaryKey();
@@ -409,7 +422,7 @@ class NewsManagerTest {
         try {
             newsManager.update(replacementNews);
             fail();
-        } catch (PersistenceException e) {
+        } catch (InvalidFieldsException e) {
             e.printStackTrace();
             assertEquals(newsManager.getAllNews().size(), previousSize);
         }
@@ -419,7 +432,7 @@ class NewsManagerTest {
      * Test update a news article with empty string values
      */
     @Test
-    void testUpdateNewsWithEmptyStringValues() {
+    void testUpdateNewsWithEmptyStringValues() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfNews());
         int id = newsManager.getAllNews().get(0).getPrimaryKey();
         News replacementNews = new News(id, new Date(12343212L), true,
@@ -435,10 +448,10 @@ class NewsManagerTest {
      * Test what happens if a null article is updated
      */
     @Test
-    void testUpdateNullNews() {
+    void testUpdateNullNews() throws DuplicateKeysException, InvalidFieldsException {
         try {
             newsManager.update(new News());
-        } catch (IllegalArgumentException e) {
+        } catch (InvalidFieldsException e) {
             e.printStackTrace();
         }
     }
@@ -447,7 +460,7 @@ class NewsManagerTest {
      * Test updating an article that doesn't exist
      */
     @Test
-    void testUpdateUnfoundNews() {
+    void testUpdateUnfoundNews() throws DuplicateKeysException, InvalidFieldsException {
         int previousSize = newsManager.getAllNews().size();
         assertNull(newsManager.getByPrimaryKey(-100));
         News fakeNews = new News(-100, new Date(12343212L), true,
@@ -462,7 +475,7 @@ class NewsManagerTest {
      * Test that unique slugs can be used to obtain the News article from the database.
      */
     @Test
-    void testGetNewsBySlug() {
+    void testGetNewsBySlug() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfNews());
         newsManager.addNews(new News(new Date(12343212L), false,
                 "getting deleted", "soon won't exist", false, "f", "unique-slug"));
@@ -475,7 +488,7 @@ class NewsManagerTest {
      * Test searching for a slug that doesn't exist in the table.
      */
     @Test
-    void testGetNewsByUnfoundSlug() {
+    void testGetNewsByUnfoundSlug() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfNews());
         News found = newsManager.getNewsBySlug("not a slug in the database sorry");
         assertNull(found);
@@ -485,7 +498,7 @@ class NewsManagerTest {
      * Testing an error is thrown if a slug searched for is null
      */
     @Test
-    void testGetNewsByNullSlug() {
+    void testGetNewsByNullSlug() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfNews());
         assertNull(newsManager.getNewsBySlug(null));
     }
@@ -516,10 +529,10 @@ class NewsManagerTest {
     }
 
     /**
-     * Fill the databaes with a list of news articles
+     * Fill the database with a list of news articles
      * @param listOfNews The list of news articles to fill the database with.
      */
-    private void fillDatabase(ArrayList<News> listOfNews) {
+    private void fillDatabase(ArrayList<News> listOfNews) throws DuplicateKeysException, InvalidFieldsException {
         for (int i = 0; i<listOfNews.size(); ++i) newsManager.addNews(listOfNews.get(i));
     }
 }
