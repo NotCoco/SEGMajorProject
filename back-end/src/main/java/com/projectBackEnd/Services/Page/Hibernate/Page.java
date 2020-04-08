@@ -12,11 +12,9 @@ import javax.persistence.*;
 
 
 /**
- * Page objects are database entities for the table 'Page' defined in this class.
- * The have an auto-increment 'ID', a site to which they belong, a slug, an index for their position.
- * Each page has an ID, a Site to which it belongs, a Slug, an Index and a Content.
- *
- * https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
+ * Page objects are database entities for the table 'Pages' defined in this class.
+ * The have an auto-increment 'ID' - Column annotated attributes correspond to database fields.
+ * Inspiration : https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
 
 @Entity
