@@ -9,7 +9,7 @@ import java.io.File;
 public class DirectoryHolder {
 
 
-	private static String dir = /*System.getProperty("user.dir")+"/src/main/resources*/"/images/";
+	private static String dir = "/images/";
 
 	private static DirectoryHolder holder;
 
