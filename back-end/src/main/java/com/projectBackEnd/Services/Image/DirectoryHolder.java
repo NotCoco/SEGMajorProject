@@ -9,7 +9,7 @@ import java.io.File;
 public class DirectoryHolder {
 
 
-	private static String dir = /*System.getProperty("user.dir")+*/"/src/main/resources/images/";
+	private static String dir = /*System.getProperty("user.dir")+"/src/main/resources*/"/images/";
 
 	private static DirectoryHolder holder;
 
@@ -17,6 +17,7 @@ public class DirectoryHolder {
 	 * Private constructor implementing singleton design pattern
 	 */
 	private DirectoryHolder(){
+		setDir("/images/");
 		holder = this;
 	}
 
@@ -41,7 +42,7 @@ public class DirectoryHolder {
 			if (locationOfImageStorage.mkdir()) System.out.println("Directory is created!");
 			else System.out.println("Failed to create directory!");
 		}
-		this.dir = newDir;
+		dir = newDir;
 
 	}
 
