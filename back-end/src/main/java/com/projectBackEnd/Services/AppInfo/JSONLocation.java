@@ -24,6 +24,24 @@ public class JSONLocation {
      * @return The JSON file itself.
      */
     static File getJsonFile() {
+        if (!jsonFile.exists()) {
+            createFile();
+        }
         return jsonFile;
+    }
+
+    /**
+     * Create the file if one isn't found at the given location.
+     */
+    private static void createFile() {
+        Writer writer = null;
+        try {
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(jsonFile.getName()), "utf-8"));
+            writer.write("");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {writer.close();} catch (Exception ex) {/*ignore*/}
+        }
     }
 }
