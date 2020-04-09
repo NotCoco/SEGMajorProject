@@ -12,7 +12,7 @@ import static main.java.com.projectBackEnd.URLLocation.location;
 /**
  * AppInfoController creating REST API endpoints for the frontend to connect to.
  */
-@Controller("/hospitalinfo")
+@Controller("/appinfo")
 public class AppInfoController {
 
     private final AppInfoManagerInterface infoManager = AppInfoManager.getInfoManager();
