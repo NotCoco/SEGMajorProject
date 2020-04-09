@@ -72,7 +72,7 @@ public class ImageManager implements ImageManagerInterface {
 			e.printStackTrace();
 			return null;
 		}
-		return (randomName + "." + extension);
+		return (randomName + "." + extension.toLowerCase());
 	}
 
 	/**
