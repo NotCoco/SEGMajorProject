@@ -47,7 +47,9 @@ export default {
   },
   metaInfo() {
     return {
-      title: `${this.news.title} - News`
+      title: this.news === null
+        ? 'Page Not Found - News'
+        : `${this.news.title} - News`
     }
   },
   async created() {
