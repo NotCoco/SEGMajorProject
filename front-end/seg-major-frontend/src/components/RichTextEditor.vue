@@ -184,11 +184,11 @@ import {
   Blockquote,
   HorizontalRule,
   History,
-  TrailingNode,
-  Image
+  TrailingNode
 } from "tiptap-extensions";
 
 import Notification from "../components/Notification.js";
+import Image from "@/components/Image.js";
 import ImagesService from "@/services/images-service";
 import { url } from "vuelidate/lib/validators";
 
