@@ -150,11 +150,6 @@ export default{
 .table-layout{
   border-collapse: separate; 
   border-spacing: 15px 10px;
-
-  .subtable-layout {
-    border-collapse: separate;
-    border-spacing: 15px 25px;
-  }
 }
 
 .vertical-separator {
