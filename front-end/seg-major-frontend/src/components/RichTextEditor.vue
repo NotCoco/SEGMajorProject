@@ -189,10 +189,8 @@ import {
 } from "tiptap-extensions";
 
 import Notification from "../components/Notification.js";
-
 import ImagesService from "@/services/images-service";
 import { url } from "vuelidate/lib/validators";
-
 
 export default {
   components: {

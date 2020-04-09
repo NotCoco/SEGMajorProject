@@ -30,7 +30,6 @@ import AdminEditNews from '../views/AdminEditNews.vue'
 
 import UserService from "@/services/user-service";
 
-
 Vue.use(VueRouter)
 Vue.use(VueMeta)
 
@@ -66,7 +65,7 @@ const routes = [
       {
         path: '',
         component: AdminHome
-      },   
+      },
       {
         path: 'drug-chart',
         component: AdminDrugChart,

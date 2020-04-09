@@ -36,7 +36,6 @@ api.interceptors.response.use(function (response) {
   return Promise.reject(error);
 });
 
-
 export default {
   getAppInfo() {
     return api.get('/appinfo')

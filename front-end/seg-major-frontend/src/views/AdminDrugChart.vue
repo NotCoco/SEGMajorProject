@@ -9,7 +9,7 @@
   </div>
 </template>
 
-<script  type="text/javascript">
+<script type="text/javascript">
 import AdminDrugList from "@/components/AdminDrugList.vue"
 
 export default {

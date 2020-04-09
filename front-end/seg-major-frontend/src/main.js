@@ -10,7 +10,6 @@ import Vuelidate from 'vuelidate'
 
 Vue.config.productionTip = false
 
-
 library.add(faCircleNotch, faFrown, faStream, faBars, faCheckCircle, faTimes, faEye, faEyeSlash, faPrint)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)

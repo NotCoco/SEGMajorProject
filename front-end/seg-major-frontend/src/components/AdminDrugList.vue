@@ -1,4 +1,4 @@
-<template>	
+<template>
   <div id="drug-list">
     <div class="columns">
       <div class="column">
@@ -55,158 +55,158 @@
 </template>
 
 <script type="text/javascript">
-	import Multiselect from 'vue-multiselect'
-  import MedicineService from '../services/medicine-service.js'
-  
-	export default{
-    name: "AdminDrugList",
-    components: { 
-      Multiselect,
-    },
-    data: function() { 
-      return {
-        selectedMedicine: { id: '', name: '', type: '' },
-        search: "",
-        drugBox: false,
-        changingDrug: false,
-        addingDrug: false,
-        showTable: false,
-        showDeleteButton: false,
-        showSaveButton: false,
-        isSaving: false,
-        isDeleting: false,
-        sortType: 'sort',
-        selected: { title: '', desc: '', img: '' },
-        //list of all types
-        options: [
-          { title: 'Liquid', img: require("../assets/drug-types/liquid.png") },
-          { title: 'Tablets', img: require("../assets/drug-types/tablets.png") },
-          { title: 'Capsules', img:require("../assets/drug-types/capsules.png")},
-          { title: 'Topical', img: require("../assets/drug-types/topical.png")},
-          { title: 'Suppositories', img: require("../assets/drug-types/suppositories.png")},
-          { title: 'Drops', img: require("../assets/drug-types/drops.png") },
-          { title: 'Inhalers', img: require("../assets/drug-types/inhalers.png") },
-          { title: 'Injections', img: require("../assets/drug-types/injection.png") },
-          { title: "Implants/Patches", img: require("../assets/drug-types/implants.png") },
-        ],
-        medicines: [
-          //list of all medicines
-        ]
-      }
-    },
-    async mounted() {
-      /**
-      * fetch the drug list
-      */
-      this.medicines = await MedicineService.getAllMedicines();
-    },
-    computed: {
-      /**
-      * search function
-      */
-      searchResults: function() {
-        const query = this.search.toLowerCase();
-        return this.medicines.filter(medicine => medicine.name.toLowerCase().includes(query));
-      }
-    },
-    methods: {
-      /**
-      * @param {Object} matching string
-      * match if theres invalid word
-      */
-      regTest: function(string) {
-        let reg = /[@#%&+;":{}'*^!.,~_=><]+/g
-        return reg.test(string)
-      },
-      //add drug to db
-      addDrug: async function() {
-        this.isSaving = true
-        const name = document.getElementById('add_name').value
-        const type = this.selected.title
-        
-        if (name !== "" && type !== "") {
-          if (name.length > 40) {
-            window.alert("Medicine name cannot be longer than 40 characters.")
-          } else {
-            if (this.regTest(name)) {
-              window.alert("Medicine name contains invalid characters.")
-            } else {
-              var data = {"name": name, "type": type}
-              await MedicineService.createMedicine(data);
-              location.reload();
-              return;
-            }  
-          }
-        } else {
-          window.alert("Please enter both the name and type of the medicine.")
-        }
-        this.isSaving = false;
-      },
-      //delete drug from db
-      deleteDrug: async function() {
-        this.isDeleting = true
-        const primaryKey = this.selectedMedicine.primaryKey
-        const name = this.selectedMedicine.name
-        const type = this.selected.title
+import Multiselect from 'vue-multiselect'
+import MedicineService from '../services/medicine-service.js'
 
-        if (primaryKey !== "" && name !== "" && type !== "") {
-          var data = {"primaryKey": primaryKey, "name": name, "type": type}
-          await MedicineService.deleteMedicine(data);
-          location.reload();
-          return;
-        }
-        this.isDeleting = false;
-      },
-      //update drug
-      updateDrug: async function() {
-        this.isSaving = true
-        const primaryKey = this.selectedMedicine.primaryKey
-        const name = this.selectedMedicine.name
-        const type = this.selected.title
-        
-        if (primaryKey !== "" && name !== "" && type !== "") {
-          if (name.length > 40) {
-            window.alert("Medicine name cannot be longer than 40 characters.")
+export default {
+  name: "AdminDrugList",
+  components: { 
+    Multiselect,
+  },
+  data() { 
+    return {
+      selectedMedicine: { id: '', name: '', type: '' },
+      search: "",
+      drugBox: false,
+      changingDrug: false,
+      addingDrug: false,
+      showTable: false,
+      showDeleteButton: false,
+      showSaveButton: false,
+      isSaving: false,
+      isDeleting: false,
+      sortType: 'sort',
+      selected: { title: '', desc: '', img: '' },
+      //list of all types
+      options: [
+        { title: 'Liquid', img: require("../assets/drug-types/liquid.png") },
+        { title: 'Tablets', img: require("../assets/drug-types/tablets.png") },
+        { title: 'Capsules', img:require("../assets/drug-types/capsules.png")},
+        { title: 'Topical', img: require("../assets/drug-types/topical.png")},
+        { title: 'Suppositories', img: require("../assets/drug-types/suppositories.png")},
+        { title: 'Drops', img: require("../assets/drug-types/drops.png") },
+        { title: 'Inhalers', img: require("../assets/drug-types/inhalers.png") },
+        { title: 'Injections', img: require("../assets/drug-types/injection.png") },
+        { title: "Implants/Patches", img: require("../assets/drug-types/implants.png") },
+      ],
+      medicines: [
+        //list of all medicines
+      ]
+    }
+  },
+  async mounted() {
+    /**
+    * fetch the drug list
+    */
+    this.medicines = await MedicineService.getAllMedicines();
+  },
+  computed: {
+    /**
+    * search function
+    */
+    searchResults: function() {
+      const query = this.search.toLowerCase();
+      return this.medicines.filter(medicine => medicine.name.toLowerCase().includes(query));
+    }
+  },
+  methods: {
+    /**
+    * @param {Object} matching string
+    * match if theres invalid word
+    */
+    regTest: function(string) {
+      let reg = /[@#%&+;":{}'*^!.,~_=><]+/g
+      return reg.test(string)
+    },
+    //add drug to db
+    addDrug: async function() {
+      this.isSaving = true
+      const name = document.getElementById('add_name').value
+      const type = this.selected.title
+      
+      if (name !== "" && type !== "") {
+        if (name.length > 40) {
+          window.alert("Medicine name cannot be longer than 40 characters.")
+        } else {
+          if (this.regTest(name)) {
+            window.alert("Medicine name contains invalid characters.")
           } else {
-            if (this.regTest(name)) {
-              window.alert("Medicine name contains invalid characters.")
-            } else {
-              var data = {"primaryKey": primaryKey, "name": name, "type": type}
-              await MedicineService.updateMedicine(data);
-              location.reload();
-              return;
-            }
+            var data = {"name": name, "type": type}
+            await MedicineService.createMedicine(data);
+            location.reload();
+            return;
           }
-        } else{
-          window.alert("Please enter both the name and type of the medicine.")
         }
-        this.isSaving = false;
-      },
-      // This method will display the drug info
-      // which user selected.
-      changeInfo: function(medicine) {
-        this.drugBox = true;
-        this.changingDrug = true;
-        this.addingDrug = false;
-        if (medicine !== null) {
-          this.showTable = true;
-          this.showSaveButton = true;
-          this.showDeleteButton = true;
-          this.selectedMedicine = medicine;
-          this.selected.title = medicine.type
-        }
-      },
-      // This method will display the adding frame
-      // which user can input info.
-      addInfo: function() {
-        this.drugBox = true;
-        this.changingDrug = false;
-        this.addingDrug = true;
-        this.selected.title = "";
-        this.showTable = true;
+      } else {
+        window.alert("Please enter both the name and type of the medicine.")
       }
+      this.isSaving = false;
+    },
+    //delete drug from db
+    deleteDrug: async function() {
+      this.isDeleting = true
+      const primaryKey = this.selectedMedicine.primaryKey
+      const name = this.selectedMedicine.name
+      const type = this.selected.title
+
+      if (primaryKey !== "" && name !== "" && type !== "") {
+        var data = {"primaryKey": primaryKey, "name": name, "type": type}
+        await MedicineService.deleteMedicine(data);
+        location.reload();
+        return;
+      }
+      this.isDeleting = false;
+    },
+    //update drug
+    updateDrug: async function() {
+      this.isSaving = true
+      const primaryKey = this.selectedMedicine.primaryKey
+      const name = this.selectedMedicine.name
+      const type = this.selected.title
+      
+      if (primaryKey !== "" && name !== "" && type !== "") {
+        if (name.length > 40) {
+          window.alert("Medicine name cannot be longer than 40 characters.")
+        } else {
+          if (this.regTest(name)) {
+            window.alert("Medicine name contains invalid characters.")
+          } else {
+            var data = {"primaryKey": primaryKey, "name": name, "type": type}
+            await MedicineService.updateMedicine(data);
+            location.reload();
+            return;
+          }
+        }
+      } else{
+        window.alert("Please enter both the name and type of the medicine.")
+      }
+      this.isSaving = false;
+    },
+    // This method will display the drug info
+    // which user selected.
+    changeInfo: function(medicine) {
+      this.drugBox = true;
+      this.changingDrug = true;
+      this.addingDrug = false;
+      if (medicine !== null) {
+        this.showTable = true;
+        this.showSaveButton = true;
+        this.showDeleteButton = true;
+        this.selectedMedicine = medicine;
+        this.selected.title = medicine.type
+      }
+    },
+    // This method will display the adding frame
+    // which user can input info.
+    addInfo: function() {
+      this.drugBox = true;
+      this.changingDrug = false;
+      this.addingDrug = true;
+      this.selected.title = "";
+      this.showTable = true;
     }
   }
+}
 </script>
 
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

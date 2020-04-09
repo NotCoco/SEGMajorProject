@@ -69,7 +69,6 @@ export default {
 };
 </script>
 
-
 <style lang="scss" scoped>
 .nhs-logo {
   height: 40px;

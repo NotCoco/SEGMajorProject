@@ -91,92 +91,92 @@
 </template>
 
 <script>
-  import userService from '../services/user-service.js'
-  import { required, minLength, email, sameAs } from "vuelidate/lib/validators";
+import userService from '../services/user-service.js';
+import { required, minLength, email, sameAs } from "vuelidate/lib/validators";
 
-	export default{
-		data: function() {
-			return{
-        requestSent: false,
-        showStepTwo: false,
-        email: '',
-        requestingToken: false,
-        showRequestAgainPrompt: false,
-        requestAgainPromptTimeout: -1,
-        token: '',
-				showNewPassword: false,
-        newPassword: '',
-        newPasswordAgain: '',
-        resettingPassword: false,
-        resetFailed: false,
-        success: false,
-			}
-		},
-		methods: {
-      async requestToken() {
-        this.$v.email.$touch();
-        if (this.$v.email.$invalid) return;
-
-        this.requestingToken = true;
-        const email = this.email;
-
-        await userService.getResetRequest(email);
-
-        this.requestSent = true;
-        this.showStepTwo = true;
-        this.requestingToken = false;
-        this.requestAgainPromptTimeout = setTimeout(() => this.showRequestAgainPrompt = true, 15000);
-      },
-      alreadyHasToken() {
-        this.requestingToken = false;
-        this.requestSent = false;
-        this.showStepTwo = true;
-      },
-      doesNotHaveToken() {
-        if (this.requestAgainPromptTimeout !== -1) {
-          clearTimeout(this.requestAgainPromptTimeout);
-          this.requestAgainPromptTimeout = -1;
-        }
-        this.showStepTwo = false;
-        this.requestSent = false;
-      },
-      async resetPassword() {
-        this.$v.$touch();
-        if (this.$v.token.$invalid || this.$v.newPassword.$invalid || this.$v.newPasswordAgain.$invalid) return;
-
-        this.resettingPassword = true;
-        const token = this.token;
-        const newPassword = this.newPassword;
-
-        try {
-          await userService.resetPassword(token, newPassword);
-          this.resetFailed = false;
-          this.success = true;
-        } catch {
-          this.resetFailed = true;
-        }
-
-        this.resettingPassword = false;
-      },
-    },
-    validations: {
-      email: {
-        required,
-        email
-      },
-      token: {
-        required
-      },
-      newPassword: {
-        required,
-        minLength: minLength(5)
-      },
-      newPasswordAgain: {
-        required,
-        sameAsNewPassword: sameAs('newPassword')
-      }
+export default {
+  data() {
+    return {
+      requestSent: false,
+      showStepTwo: false,
+      email: '',
+      requestingToken: false,
+      showRequestAgainPrompt: false,
+      requestAgainPromptTimeout: -1,
+      token: '',
+      showNewPassword: false,
+      newPassword: '',
+      newPasswordAgain: '',
+      resettingPassword: false,
+      resetFailed: false,
+      success: false,
     }
-	}
+  },
+  methods: {
+    async requestToken() {
+      this.$v.email.$touch();
+      if (this.$v.email.$invalid) return;
+
+      this.requestingToken = true;
+      const email = this.email;
+
+      await userService.getResetRequest(email);
+
+      this.requestSent = true;
+      this.showStepTwo = true;
+      this.requestingToken = false;
+      this.requestAgainPromptTimeout = setTimeout(() => this.showRequestAgainPrompt = true, 15000);
+    },
+    alreadyHasToken() {
+      this.requestingToken = false;
+      this.requestSent = false;
+      this.showStepTwo = true;
+    },
+    doesNotHaveToken() {
+      if (this.requestAgainPromptTimeout !== -1) {
+        clearTimeout(this.requestAgainPromptTimeout);
+        this.requestAgainPromptTimeout = -1;
+      }
+      this.showStepTwo = false;
+      this.requestSent = false;
+    },
+    async resetPassword() {
+      this.$v.$touch();
+      if (this.$v.token.$invalid || this.$v.newPassword.$invalid || this.$v.newPasswordAgain.$invalid) return;
+
+      this.resettingPassword = true;
+      const token = this.token;
+      const newPassword = this.newPassword;
+
+      try {
+        await userService.resetPassword(token, newPassword);
+        this.resetFailed = false;
+        this.success = true;
+      } catch {
+        this.resetFailed = true;
+      }
+
+      this.resettingPassword = false;
+    },
+  },
+  validations: {
+    email: {
+      required,
+      email
+    },
+    token: {
+      required
+    },
+    newPassword: {
+      required,
+      minLength: minLength(5)
+    },
+    newPasswordAgain: {
+      required,
+      sameAsNewPassword: sameAs('newPassword')
+    }
+  }
+}
 </script>
 
 <style lang="scss" scoped>
