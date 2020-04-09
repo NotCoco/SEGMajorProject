@@ -118,6 +118,7 @@
               <input
                 class="file-input"
                 type="file"
+                accept="image/*"
                 ref="file"
                 @change="handleFileUpload(commands.image)"
               />
@@ -244,7 +245,7 @@ export default {
         },
         onFocus: () => {
           if (this.disabled) {
-            this.editor.blur()
+            this.editor.blur();
           }
         },
         content: this.value ? JSON.parse(this.value) : null
@@ -254,18 +255,23 @@ export default {
   methods: {
     async handleFileUpload(command) {
       this.file = this.$refs.file.files[0];
+      if (this.file.type.split("/")[0] !== "image") {
+        alert("Only image files can be uploaded");
+        return;
+      }
+
       const res = await ImagesService.uploadImage(this.file);
-      const src = res.config.baseURL + '/images/' + res.data;
-      command({src})
+      const src = res.config.baseURL + "/images/" + res.data;
+      command({ src });
     },
     showImagePrompt(command) {
       const src = prompt("Enter URL of the image you would like to insert");
       if (src !== null) {
-        const isValidURL = url(src)
-        if (src != '' && isValidURL) {
+        const isValidURL = url(src);
+        if (src != "" && isValidURL) {
           command({ src });
         } else {
-          alert("Image URL was invalid, please try again.")
+          alert("Image URL was invalid, please try again.");
         }
       }
     }
