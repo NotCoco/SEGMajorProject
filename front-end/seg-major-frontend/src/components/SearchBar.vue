@@ -7,7 +7,14 @@
       <span class="icon is-small is-left" style="height: 100%;">
         <i class="search-icon material-icons">search</i>
       </span>
-      <input class="searchbox input" type="text" v-model="searchQuery" @keyup.enter="searchBoxSubmit" placeholder="Search" />
+      <input
+        class="searchbox input"
+        type="text"
+        :disabled="pages === null"
+        v-model="searchQuery"
+        @keyup.enter="searchBoxSubmit"
+        placeholder="Search"
+      />
 
       <transition name="fade" mode="out-in">
         <div v-if="displaySearchResults" class="card search-suggestions">
@@ -33,7 +40,9 @@ import ArraySlice from '@/array-slice.js';
 export default {
   props: {
     pages: {
-      type: Array,
+      validator: function (value) {
+        return value === null || typeof value[Symbol.iterator] === 'function';
+      },
       required: true,
     }
   },
