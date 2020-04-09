@@ -79,7 +79,8 @@ export default {
   },
   props: {
     sessionExpired: {
-      type: Boolean
+      type: Boolean,
+      default: false
     }
   },
   data() {

@@ -15,7 +15,8 @@
 export default {
   props: {
     username: {
-      type: String
+      type: String,
+      required: true
     }
   }
 };

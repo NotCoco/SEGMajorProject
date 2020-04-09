@@ -16,7 +16,10 @@
 export default {
   name: "NewsCard",
   props: {
-    newsItem: Object
+    newsItem: {
+      type: Object,
+      required: true
+    }
   }
 };
 </script>

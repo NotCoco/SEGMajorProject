@@ -33,7 +33,8 @@ import ArraySlice from '@/array-slice.js';
 export default {
   props: {
     pages: {
-      type: Array
+      type: Array,
+      required: true,
     }
   },
   data() {
