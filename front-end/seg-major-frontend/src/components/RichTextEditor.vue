@@ -260,6 +260,12 @@ export default {
         return;
       }
 
+      // if file size is greater than 10MB
+      if (file.size > 10000000) {
+        alert("This file exceeds the maximum file size of 10MB. Please choose a smaller image.");
+        return;
+      }
+
       const res = await ImagesService.uploadImage(this.file);
       const src = res.config.baseURL + "/images/" + res.data;
       command({ src });
