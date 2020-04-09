@@ -12,23 +12,19 @@ import static main.java.com.projectBackEnd.URLLocation.location;
 /**
  * AppInfoController creating REST API endpoints for the frontend to connect to.
  */
-@Controller("/appinfo")
+@Controller("/hospitalinfo")
 public class AppInfoController {
 
     protected final AppInfoManagerInterface infoManager = AppInfoManager.getInfoManager();
     protected final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
 
-    /**
-     * Default constructor
-     */
-    public AppInfoController() {}
 
     /**
      * Get the stored information out of the singleton manager
      * @return The AppInfo stored in the manager
      */
     @Get("/")
-    public AppInfo getInfo(){
+    public AppInfo getHospitalData(){
         return infoManager.getInfo();
     }
 
