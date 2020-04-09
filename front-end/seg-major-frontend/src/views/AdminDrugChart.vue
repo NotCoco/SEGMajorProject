@@ -15,7 +15,10 @@ import AdminDrugList from "@/components/AdminDrugList.vue"
 export default {
   components: {
     AdminDrugList,
-  }
+  },
+  metaInfo: {
+    title: 'Drug Chart Configuration'
+  },
 }
 </script>
 

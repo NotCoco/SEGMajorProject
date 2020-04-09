@@ -63,6 +63,9 @@ export default {
       sites: null
     };
   },
+  metaInfo: {
+    title: 'Home'
+  },
   async mounted() {
     this.sites = await SitesService.getAllSites();
   }

@@ -82,6 +82,9 @@ export default {
       error: false
     };
   },
+  metaInfo: {
+    title: 'Delete Account'
+  },
   validations: {
     password: {
       required,

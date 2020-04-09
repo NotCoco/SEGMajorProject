@@ -92,6 +92,9 @@ export default {
       slugAlreadyExists: false
     };
   },
+  metaInfo: {
+    title: 'Site Settings'
+  },
   validations: {
     site: {
       name: {

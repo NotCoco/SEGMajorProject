@@ -112,6 +112,11 @@ export default {
       success: false,
     }
   },
+  metaInfo: {
+    title: 'Password Reset',
+    titleTemplate: '%s - Admin | KCH Paediatric Liver Service',
+    meta: [{ vmid: 'robots', name: 'robots', content: 'noindex' }]
+  },
   methods: {
     async requestToken() {
       this.$v.email.$touch();

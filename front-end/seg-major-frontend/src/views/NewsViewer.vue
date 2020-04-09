@@ -40,7 +40,14 @@ export default {
   data() {
     return {
       loading: false,
-      news: {}
+      news: {
+        title: 'Loading...'
+      }
+    }
+  },
+  metaInfo() {
+    return {
+      title: `${this.news.title} - News`
     }
   },
   async created() {

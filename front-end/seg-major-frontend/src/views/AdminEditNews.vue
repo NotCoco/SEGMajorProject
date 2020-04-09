@@ -238,6 +238,11 @@ export default {
       urgentAlreadyExists: false
     };
   },
+  metaInfo() {
+    return {
+      title: this.newArticle ? 'New Article' : 'Edit Article'
+    }
+  },
   validations: {
     article: {
       title: {

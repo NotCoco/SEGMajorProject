@@ -45,6 +45,9 @@ export default {
       loading: true
     };
   },
+  metaInfo: {
+    title: 'News'
+  },
   async mounted() {
     this.loading = true;
     this.news = await NewsService.getAllArticles();

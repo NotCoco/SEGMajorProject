@@ -80,6 +80,10 @@ export default {
       mobileNavActive: false
     };
   },
+  metaInfo: {
+    titleTemplate: '%s - Admin | KCH Paediatric Liver Service',
+    meta: [{ vmid: 'robots', name: 'robots', content: 'noindex' }]
+  },
   methods: {
     async logout() {
       await UserService.logout();

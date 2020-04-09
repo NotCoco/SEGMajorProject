@@ -180,6 +180,11 @@ export default {
       slugAlreadyExists: false
     };
   },
+  metaInfo() {
+    return {
+      title: this.newPage ? 'New Page' : 'Edit Page'
+    }
+  },
   validations: {
     page: {
       title: {

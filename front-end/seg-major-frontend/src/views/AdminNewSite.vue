@@ -87,6 +87,9 @@ export default {
       loading: true
     };
   },
+  metaInfo: {
+    title: 'New Site'
+  },
   validations: {
     site: {
       name: {

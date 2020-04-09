@@ -46,6 +46,9 @@ export default {
       sites: null
     };
   },
+  metaInfo: {
+    title: 'Sites'
+  },
   async mounted() {
     this.sites = await SitesService.getAllSites();
   }

@@ -94,6 +94,9 @@ export default {
     UsersTable,
     ChangeUserDetails
   },
+  metaInfo: {
+    title: 'Settings'
+  },
   watch: {
     $route: {
       immediate: true,

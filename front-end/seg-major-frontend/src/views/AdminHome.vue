@@ -18,7 +18,10 @@ export default {
       type: String,
       required: true
     }
-  }
+  },
+  metaInfo: {
+    title: 'Home'
+  },
 };
 </script>
 

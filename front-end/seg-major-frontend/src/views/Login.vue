@@ -91,6 +91,10 @@ export default {
       showPassword: false
     };
   },
+  metaInfo: {
+    title: 'Login - Admin',
+    meta: [{ vmid: 'robots', name: 'robots', content: 'noindex' }]
+  },
   validations: {
     email: {
       required,

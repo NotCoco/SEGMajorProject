@@ -96,6 +96,9 @@ export default {
       error: false
     };
   },
+  metaInfo: {
+    title: 'Create New User'
+  },
   validations: {
     name: {
       required

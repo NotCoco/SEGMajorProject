@@ -63,6 +63,9 @@ export default {
       pages: null
     };
   },
+  metaInfo: {
+    title: 'All Pages'
+  },
   methods: {
     dragEnd() {
       // update page indexes

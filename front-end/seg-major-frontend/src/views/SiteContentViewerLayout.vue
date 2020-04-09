@@ -85,6 +85,15 @@ export default {
       loading: true
     };
   },
+  metaInfo() {
+    return {
+      titleTemplate: titleChunk => {
+        return titleChunk
+          ? `${titleChunk} - ${this.site.name} | KCH Paediatric Liver Service`
+          : `${this.site.name} | KCH Paediatric Liver Service`;
+      }
+    }
+  },
   async mounted() {
     const siteSlug = this.$route.params.siteSlug;
     this.site = await SitesService.getSite(siteSlug);

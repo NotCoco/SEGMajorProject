@@ -110,6 +110,11 @@ export default {
       type: Array
     }
   },
+  metaInfo() {
+    return {
+      title: this.page.title
+    }
+  },
   computed: {
     page() {
       const pageSlug = this.$route.params.pageSlug;

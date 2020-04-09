@@ -28,7 +28,10 @@ export default{
   components: {
     DrugChartLayout,
     Navbar
-  }
+  },
+  metaInfo: {
+    title: 'Drug Chart Creator'
+  },
 }
 </script>
 

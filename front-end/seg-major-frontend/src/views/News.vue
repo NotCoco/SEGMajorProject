@@ -75,6 +75,9 @@ export default {
     NewsCard,
     LoadingSpinner
   },
+  metaInfo: {
+    title: 'News'
+  },
   methods: {
     navigatePrevious() {
       if (!this.hasPreviousPage) return;
