@@ -8,7 +8,6 @@
       <transition name="fade" mode="out-in">
         <loading-spinner v-if="!pages" style="padding-top: 68px" />
         <http-status :httpStatusCode="404" v-else-if="!page" />
-
         <div class="custom-content-container" v-else>
           <h1 class="title">{{ page.title }}</h1>
 
@@ -112,11 +111,15 @@ export default {
   },
   metaInfo() {
     return {
-      title: this.page.title
+      title: this.pages
+              ? (this.page?.title ?? 'Page Not Found')
+              : '' 
     }
   },
   computed: {
     page() {
+      if (!this.pages) return null;
+
       const pageSlug = this.$route.params.pageSlug;
       return this.pages.find(p => p.slug === pageSlug);
     },
