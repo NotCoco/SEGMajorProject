@@ -23,7 +23,7 @@
             </div>
             <div class="field is-grouped">
               <div class="control">
-                <button class="button is-primary" :class="{'is-loading': requestingToken}" @click="requestToken()">Request password reset</button>
+                <button class="button is-primary" :class="{ 'is-loading': requestingToken }" @click="requestToken()">Request password reset</button>
               </div>
               <div class="control">
                 <button class="button is-text no-underline" @click="alreadyHasToken()" :disabled="requestingToken">Already have a token?</button>
@@ -77,7 +77,7 @@
             </div>
             <div class="field is-grouped">
               <div class="control">
-                <button class="button is-primary" :class="{'is-loading': resettingPassword}" @click="resetPassword()">Reset password</button>
+                <button class="button is-primary" :class="{ 'is-loading': resettingPassword }" @click="resetPassword()">Reset password</button>
               </div>
               <div class="control">
                 <button class="button is-text no-underline" @click="doesNotHaveToken()" v-if="!requestSent">Don't have a token?</button>

@@ -33,19 +33,19 @@
                 <li>
                   <router-link to="news"
                                 class="pagination-link"
-                                v-bind="currentPageNumber === 1 ? {'aria-label': 'Page 1', 'aria-current': 'page', 'class': 'is-current'} : {'aria-label': 'Goto page 1'}">1</router-link>
+                                v-bind="currentPageNumber === 1 ? { 'aria-label': 'Page 1', 'aria-current': 'page', 'class': 'is-current' } : { 'aria-label': 'Goto page 1' }">1</router-link>
                 </li>
                 <li v-if="pageCount > 5 && currentPageNumber > 3"><span class="pagination-ellipsis">&hellip;</span></li>
                 <li v-for="pageNumber in middlePageNumbers" :key="pageNumber">
                     <router-link :to="{ path: 'news', query: { page: pageNumber } }"
                                   class="pagination-link"
-                                  v-bind="pageNumber === currentPageNumber ? {'aria-label': `Page ${pageNumber}`, 'aria-current': 'page', 'class': 'is-current'} : {'aria-label': `Goto page ${pageNumber}`}">{{ pageNumber }}</router-link>
+                                  v-bind="pageNumber === currentPageNumber ? { 'aria-label': `Page ${pageNumber}`, 'aria-current': 'page', 'class': 'is-current' } : { 'aria-label': `Goto page ${pageNumber}` }">{{ pageNumber }}</router-link>
                 </li>
                 <li v-if="pageCount > 5 && currentPageNumber < pageCount - 2"><span class="pagination-ellipsis">&hellip;</span></li>
                 <li v-if="pageCount > 1">
                   <router-link :to="{ path: 'news', query: { page: pageCount } }"
                                 class="pagination-link"
-                                v-bind="currentPageNumber === pageCount ? {'aria-label': `Page ${pageCount}`, 'aria-current': 'page', 'class': 'is-current'} : {'aria-label': `Goto page ${pageCount}`}">{{ pageCount }}</router-link>
+                                v-bind="currentPageNumber === pageCount ? { 'aria-label': `Page ${pageCount}`, 'aria-current': 'page', 'class': 'is-current' } : { 'aria-label': `Goto page ${pageCount}` }">{{ pageCount }}</router-link>
                 </li>
               </ul>
             </nav>

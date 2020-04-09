@@ -41,11 +41,11 @@
           </div>
 
           <div v-if="changingDrug" class="buttons">
-            <button v-if="showSaveButton" class="button is-success" :class="{'is-loading': isSaving}" @click="updateDrug()" id="saveButton">Save</button>
-            <button v-if="showDeleteButton" class="button is-danger" :class="{'is-loading': isDeleting}" @click="deleteDrug()" id="deleteButton">Delete</button>
+            <button v-if="showSaveButton" class="button is-success" :class="{ 'is-loading': isSaving }" @click="updateDrug()" id="saveButton">Save</button>
+            <button v-if="showDeleteButton" class="button is-danger" :class="{ 'is-loading': isDeleting }" @click="deleteDrug()" id="deleteButton">Delete</button>
           </div>
           <div v-if="addingDrug" class="buttons">
-            <button class="button is-success" :class="{'is-loading': isSaving}" @click="addDrug()" id="addDrug">Save</button>
+            <button class="button is-success" :class="{ 'is-loading': isSaving }" @click="addDrug()" id="addDrug">Save</button>
             <button class="button is-light" @click="addingDrug = false">Cancel</button>
           </div>
         </div>
@@ -81,7 +81,7 @@ export default {
       options: [
         { title: 'Liquid', img: require("../assets/drug-types/liquid.png") },
         { title: 'Tablets', img: require("../assets/drug-types/tablets.png") },
-        { title: 'Capsules', img:require("../assets/drug-types/capsules.png")},
+        { title: 'Capsules', img: require("../assets/drug-types/capsules.png")},
         { title: 'Topical', img: require("../assets/drug-types/topical.png")},
         { title: 'Suppositories', img: require("../assets/drug-types/suppositories.png")},
         { title: 'Drops', img: require("../assets/drug-types/drops.png") },
@@ -131,7 +131,7 @@ export default {
           if (this.regTest(name)) {
             window.alert("Medicine name contains invalid characters.")
           } else {
-            var data = {"name": name, "type": type}
+            var data = { "name": name, "type": type }
             await MedicineService.createMedicine(data);
             location.reload();
             return;
@@ -150,7 +150,7 @@ export default {
       const type = this.selected.title
 
       if (primaryKey !== "" && name !== "" && type !== "") {
-        var data = {"primaryKey": primaryKey, "name": name, "type": type}
+        var data = { "primaryKey": primaryKey, "name": name, "type": type }
         await MedicineService.deleteMedicine(data);
         location.reload();
         return;
@@ -171,7 +171,7 @@ export default {
           if (this.regTest(name)) {
             window.alert("Medicine name contains invalid characters.")
           } else {
-            var data = {"primaryKey": primaryKey, "name": name, "type": type}
+            var data = { "primaryKey": primaryKey, "name": name, "type": type }
             await MedicineService.updateMedicine(data);
             location.reload();
             return;

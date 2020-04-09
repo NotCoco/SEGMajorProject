@@ -31,8 +31,8 @@ export default {
     await BackendService.getResetRequest(email)
   },
 
-  async resetPassword(token,passwd) {
-    const res = await BackendService.resetPassword(token,passwd)
+  async resetPassword(token, password) {
+    const res = await BackendService.resetPassword(token, password)
     return res.data
   },
 
