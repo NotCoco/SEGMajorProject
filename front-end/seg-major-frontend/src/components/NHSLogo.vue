@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  name: "NHS Logo",
+  name: "NHSLogo",
   props: {
     reverse: {
       type: Boolean,
