@@ -3,7 +3,7 @@
     <section class="hero is-primary">
       <div class="hero-body">
         <div class="custom-content-container">
-          <h1 class="title">Create new user</h1>
+          <h1 class="title">Create New User</h1>
         </div>
       </div>
     </section>

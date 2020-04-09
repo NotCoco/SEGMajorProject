@@ -3,7 +3,7 @@
     <section class="hero is-danger">
       <div class="hero-body">
         <div class="custom-content-container">
-          <h1 class="title is-4">Delete your account</h1>
+          <h1 class="title is-4">Delete Your Account</h1>
         </div>
       </div>
     </section>

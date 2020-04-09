@@ -2,7 +2,7 @@
   <div id="admin-new-site">
     <section class="section">
       <div class="custom-content-container">
-        <h1 class="title">Create a new site</h1>
+        <h1 class="title">Create New Site</h1>
 
         <transition name="fade" mode="out-in">
           <loading-spinner v-if="loading" style="margin-top: 50px;" />

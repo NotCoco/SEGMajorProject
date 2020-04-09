@@ -16,7 +16,7 @@
       </div>
       <div class="column">
         <div v-if="drugBox">
-          <h2 v-if="addingDrug" class="title is-4">Add new drug</h2>
+          <h2 v-if="addingDrug" class="title is-4">Create New Drug</h2>
 
           <div v-if="changingDrug" class="field">
             <label class="label">Name</label>

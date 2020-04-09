@@ -66,7 +66,7 @@
             <router-link
               to="/admin/settings/create-new-user"
               class="button is-primary is-medium"
-            >Create New User</router-link>
+            >Create new user</router-link>
 
             <hr />
 
