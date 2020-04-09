@@ -97,7 +97,7 @@ class AppInfoControllerTest {
     void testUnauthorizedUpdate() {
         assertThrows(HttpClientResponseException.class, () -> {
             AppInfo updatedInfo = new AppInfo("Wowwee", "Cool");
-            HttpRequest request = HttpRequest.PUT("/appinfo", updatedInfo).header("X-API-Key","lol");
+            HttpRequest request = HttpRequest.PUT("/hospitalinfo", updatedInfo).header("X-API-Key","lol");
             client.toBlocking().exchange(request);
         });
     }
@@ -108,7 +108,7 @@ class AppInfoControllerTest {
      * @return The HTTP response governing success
      */
     private HttpResponse updateInformation(AppInfo updatedInfo){
-        HttpRequest request = HttpRequest.PUT("/appinfo", updatedInfo).header("X-API-Key",token);
+        HttpRequest request = HttpRequest.PUT("/hospitalinfo", updatedInfo).header("X-API-Key",token);
         return client.toBlocking().exchange(request);
     }
 
@@ -117,7 +117,7 @@ class AppInfoControllerTest {
      * @return The information AppInfo object stored.
      */
     private AppInfo getInfo(){
-        HttpRequest request = HttpRequest.GET("/appinfo/");
+        HttpRequest request = HttpRequest.GET("/hospitalinfo/");
         return client.toBlocking().retrieve(request, AppInfo.class);
     }
 
