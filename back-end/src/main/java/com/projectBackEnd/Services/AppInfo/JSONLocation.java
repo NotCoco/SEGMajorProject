@@ -1,6 +1,7 @@
 package main.java.com.projectBackEnd.Services.AppInfo;
 
-import java.io.File;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Static class for changing the location of the JSON file - so that the location can be changed
@@ -36,7 +37,7 @@ public class JSONLocation {
     private static void createFile() {
         Writer writer = null;
         try {
-            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(jsonFile.getName()), "utf-8"));
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(jsonFile.getName()), StandardCharsets.UTF_8));
             writer.write("");
         } catch (IOException ex) {
             ex.printStackTrace();
