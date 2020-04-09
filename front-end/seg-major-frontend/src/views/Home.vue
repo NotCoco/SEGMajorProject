@@ -4,8 +4,8 @@
       <div class="hero-body">
         <div class="container">
           <NHS-logo class="nhs-logo" />
-          <h1 class="title">Paediatric Liver Service</h1>
-          <h2 class="subtitle is-4">King's College Hospital</h2>
+          <h1 class="title">{{ appInfo.departmentName }}</h1>
+          <h2 class="subtitle is-4">{{ appInfo.hospitalName }}</h2>
         </div>
       </div>
     </section>
@@ -48,6 +48,7 @@
 <script>
 import BulletinBoard from "@/components/BulletinBoard.vue";
 import SitesService from "@/services/sites-service";
+import AppInfoService from "@/services/app-info-service";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import NHSLogo from "@/components/NHSLogo";
 
@@ -60,22 +61,39 @@ export default {
   },
   data() {
     return {
-      sites: null
+      sites: null,
+      appInfo: {
+        hospitalName: '',
+        departmentName: ''
+      },
     };
   },
   metaInfo: {
     title: 'Home'
   },
-  async mounted() {
-    this.sites = await SitesService.getAllSites();
+  async created() {
+    await Promise.all([
+      AppInfoService.getAppInfo().then(value => this.appInfo = value),
+      SitesService.getAllSites().then(value => this.sites = value),
+    ]);
   }
 };
 </script>
 
 <style lang="scss" scoped>
-.nhs-logo {
-  height: 40px;
-  margin-bottom: 1rem;
+.hero {
+  .title {
+    min-height: 36px;
+  }
+
+  .subtitle {
+    min-height: 30px;
+  }
+
+  .nhs-logo {
+    height: 40px;
+    margin-bottom: 1rem;
+  }
 }
 
 .site-card {
