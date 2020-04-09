@@ -12,10 +12,10 @@ import static main.java.com.projectBackEnd.URLLocation.location;
 /**
  * AppInfoController creating REST API endpoints for the frontend to connect to.
  */
-@Controller("/hospitalinfo")
+@Controller("/appinfo")
 public class AppInfoController {
 
-    protected final AppInfoManagerInterface infoManager = AppInfoManager.getInfoManager();
+    private final AppInfoManagerInterface infoManager = AppInfoManager.getInfoManager();
     protected final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
 
 
