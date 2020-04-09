@@ -15,7 +15,7 @@ import static main.java.com.projectBackEnd.URLLocation.location;
 @Controller("/hospitalinfo")
 public class AppInfoController {
 
-    protected final AppInfoManagerInterface infoManager = AppInfoManager.getInfoManager();
+    private final AppInfoManagerInterface infoManager = AppInfoManager.getInfoManager();
     protected final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
 
 

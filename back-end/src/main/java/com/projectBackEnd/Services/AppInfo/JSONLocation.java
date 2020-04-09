@@ -1,6 +1,7 @@
 package main.java.com.projectBackEnd.Services.AppInfo;
 
-import java.io.File;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Static class for changing the location of the JSON file - so that the location can be changed
@@ -9,7 +10,7 @@ import java.io.File;
 public class JSONLocation {
 
 
-    private static File jsonFile = new File("src/main/resources/AppInfoMain.json");
+    private static File jsonFile = new File("AppInfoMain.json");
 
     /**
      * Set the JSON's location
@@ -24,6 +25,24 @@ public class JSONLocation {
      * @return The JSON file itself.
      */
     static File getJsonFile() {
+        if (!jsonFile.exists()) {
+            createFile();
+        }
         return jsonFile;
+    }
+
+    /**
+     * Create the file if one isn't found at the given location.
+     */
+    private static void createFile() {
+        Writer writer = null;
+        try {
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(jsonFile.getName()), StandardCharsets.UTF_8));
+            writer.write("");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {writer.close();} catch (Exception ex) {/*ignore*/}
+        }
     }
 }
