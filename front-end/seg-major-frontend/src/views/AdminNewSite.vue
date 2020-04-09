@@ -15,7 +15,7 @@
                   v-model="site.name"
                   type="text"
                   placeholder="Enter site name..."
-                  v-on:change="$v.site.name.$touch()"
+                  @change="$v.site.name.$touch()"
                 />
               </div>
               <div v-if="$v.site.name.$dirty">
@@ -31,7 +31,7 @@
                   type="text"
                   v-model="site.slug"
                   placeholder="Enter URL Slug here..."
-                  v-on:input="onSlugChanged()"
+                  @input="onSlugChanged()"
                 />
               </p>
 

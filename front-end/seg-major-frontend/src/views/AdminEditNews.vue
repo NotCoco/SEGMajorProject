@@ -26,7 +26,7 @@
                 v-model="article.title"
                 placeholder="Enter article title here..."
                 :disabled="saving"
-                v-on:change="$v.article.title.$touch()"
+                @change="$v.article.title.$touch()"
               />
             </div>
             <div v-if="$v.article.title.$dirty">
@@ -43,7 +43,7 @@
                 v-model="article.description"
                 placeholder="Enter article description here..."
                 :disabled="saving"
-                v-on:change="$v.article.description.$touch()"
+                @change="$v.article.description.$touch()"
               />
             </div>
             <div v-if="$v.article.description.$dirty">
@@ -66,7 +66,7 @@
                 v-model="article.slug"
                 placeholder="Enter URL Slug here..."
                 :disabled="saving"
-                v-on:input="onSlugChanged()"
+                @input="onSlugChanged()"
               />
             </p>
           </div>

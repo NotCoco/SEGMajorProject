@@ -15,7 +15,7 @@
             <input
               class="input"
               v-model="email"
-              v-on:change="$v.email.$touch()"
+              @change="$v.email.$touch()"
               type="text"
               placeholder="Enter email here..."
             />
@@ -36,8 +36,8 @@
                   v-model="password"
                   :type="showPassword ? 'text' : 'password'"
                   placeholder="Enter password here..."
-                  v-on:change="$v.password.$touch()"
-                  v-on:keyup.enter="login()"
+                  @change="$v.password.$touch()"
+                  @keyup.enter="login()"
                 />
               </div>
               <div class="control">

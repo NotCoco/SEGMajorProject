@@ -64,7 +64,7 @@
 
     <div class="expanded-scrollable-area">
       <transition name="fade" mode="out-in" v-bind:duration="{ leave: 50 }">
-        <router-view v-bind:username="username" v-on:nameChanged="onNameChanged($event)" />
+        <router-view v-bind:username="username" @nameChanged="onNameChanged($event)" />
       </transition>
     </div>
   </div>

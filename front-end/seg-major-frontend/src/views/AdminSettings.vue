@@ -35,7 +35,7 @@
             <p class="card-header-title">Your account</p>
           </header>
           <div class="card-content">
-            <change-user-details v-on:nameChanged="$emit('nameChanged', $event)" style="margin-bottom: 1.5rem" />
+            <change-user-details @nameChanged="$emit('nameChanged', $event)" style="margin-bottom: 1.5rem" />
             
             <article class="message is-danger">
               <div class="message-header">

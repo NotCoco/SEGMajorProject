@@ -33,8 +33,8 @@
                 type="password"
                 v-model="password"
                 placeholder="Enter password..."
-                v-on:change="$v.password.$touch()"
-                v-on:keyup.enter="deleteAccount()"
+                @change="$v.password.$touch()"
+                @keyup.enter="deleteAccount()"
               />
             </div>
             <div v-if="$v.password.$dirty">

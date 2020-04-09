@@ -32,7 +32,7 @@
                 v-model="page.title"
                 placeholder="Enter page title here..."
                 :disabled="saving"
-                v-on:change="$v.page.title.$touch()"
+                @change="$v.page.title.$touch()"
               />
             </div>
             <div v-if="$v.page.title.$dirty">
@@ -56,7 +56,7 @@
                 v-model="page.slug"
                 placeholder="Enter URL Slug here..."
                 :disabled="saving"
-                v-on:input="onSlugChanged()"
+                @input="onSlugChanged()"
               />
             </p>
           </div>

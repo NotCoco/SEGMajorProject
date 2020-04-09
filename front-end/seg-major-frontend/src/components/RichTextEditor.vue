@@ -119,7 +119,7 @@
                 class="file-input"
                 type="file"
                 ref="file"
-                v-on:change="handleFileUpload(commands.image)"
+                @change="handleFileUpload(commands.image)"
               />
               <span class="file-cta">
                 <span class="file-icon" style="margin-right: 12px;">

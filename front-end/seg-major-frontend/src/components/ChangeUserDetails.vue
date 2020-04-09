@@ -13,8 +13,8 @@
               type="text"
               v-model="newName"
               v-bind:disabled="!user.name"
-              v-on:change="$v.newName.$touch()"
-              v-on:keyup.enter="changeUserName()"
+              @change="$v.newName.$touch()"
+              @keyup.enter="changeUserName()"
               placeholder="Enter your name here..."
             />
           </div>
@@ -48,8 +48,8 @@
               type="text"
               v-model="newEmail"
               v-bind:disabled="!user.email"
-              v-on:change="$v.newEmail.$touch()"
-              v-on:keyup.enter="changeEmail()"
+              @change="$v.newEmail.$touch()"
+              @keyup.enter="changeEmail()"
               placeholder="Enter your email..."
             />
           </div>
@@ -83,8 +83,8 @@
               class="input"
               type="password"
               v-model="newPassword"
-              v-on:change="$v.newPassword.$touch()"
-              v-on:keyup.enter="changePassword()"
+              @change="$v.newPassword.$touch()"
+              @keyup.enter="changePassword()"
               placeholder="Enter your new password..."
             />
           </div>

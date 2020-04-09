@@ -15,7 +15,7 @@
                   v-model="site.name"
                   type="text"
                   placeholder="Enter site name..."
-                  v-on:change="$v.$touch()"
+                  @change="$v.$touch()"
                 />
               </div>
               <p class="help is-danger" v-if="!$v.site.name.required">This field is required</p>
@@ -29,7 +29,7 @@
                   type="text"
                   v-model="site.slug"
                   placeholder="Enter URL Slug here..."
-                  v-on:input="onSlugChanged()"
+                  @input="onSlugChanged()"
                 />
               </p>
               <p class="help is-danger" v-if="!$v.site.slug.required">This field is required</p>

@@ -16,7 +16,7 @@
             <input
               class="input"
               v-model="name"
-              v-on:change="$v.name.$touch()"
+              @change="$v.name.$touch()"
               type="text"
               placeholder="Enter name here..."
             />
@@ -32,7 +32,7 @@
             <input
               class="input"
               v-model="email"
-              v-on:change="$v.email.$touch()"
+              @change="$v.email.$touch()"
               type="text"
               placeholder="Enter email here ..."
             />
@@ -51,8 +51,8 @@
               type="password"
               v-model="password"
               placeholder="Enter password..."
-              v-on:change="$v.password.$touch()"
-              v-on:keyup.enter="createAccount()"
+              @change="$v.password.$touch()"
+              @keyup.enter="createAccount()"
             />
           </div>
           <div v-if="$v.password.$dirty">
