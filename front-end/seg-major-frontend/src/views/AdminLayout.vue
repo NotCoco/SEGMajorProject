@@ -11,11 +11,7 @@
         </div>
 
         <transition name="fade" mode="out-in">
-          <div
-            class="navbar-menu"
-            :class="{ 'is-active': mobileNavActive }"
-            :key="mobileNavActive"
-          >
+          <div class="navbar-menu" :class="{ 'is-active': mobileNavActive }" :key="mobileNavActive">
             <div class="navbar-start">
               <router-link to="/admin/sites" class="navbar-item" active-class="is-active">Sites</router-link>
               <router-link
@@ -64,7 +60,11 @@
 
     <div class="expanded-scrollable-area">
       <transition name="fade" mode="out-in" :duration="{ leave: 50 }">
-        <router-view :username="username" @nameChanged="onNameChanged($event)" />
+        <router-view
+          :username="username"
+          @nameChanged="onNameChanged($event)"
+          @appInfoChanged="onAppInfoChanged($event)"
+        />
       </transition>
     </div>
   </div>
@@ -80,15 +80,15 @@ export default {
       username: "...",
       mobileNavActive: false,
       appInfo: {
-        departmentName: ''
-      },
+        departmentName: ""
+      }
     };
   },
   metaInfo() {
     return {
       titleTemplate: `%s - Admin | ${this.appInfo.departmentName}`,
-      meta: [{ vmid: 'robots', name: 'robots', content: 'noindex' }]
-    }
+      meta: [{ vmid: "robots", name: "robots", content: "noindex" }]
+    };
   },
   methods: {
     async logout() {
@@ -97,12 +97,15 @@ export default {
     },
     onNameChanged(newName) {
       this.username = newName;
+    },
+    onAppInfoChanged(newAppInfo) {
+      this.appInfo = Object.assign({}, newAppInfo);
     }
   },
   async created() {
     await Promise.all([
-      AppInfoService.getAppInfo().then(value => this.appInfo = value),
-      UserService.getUserName().then(value => this.username = value),
+      AppInfoService.getAppInfo().then(value => (this.appInfo = value)),
+      UserService.getUserName().then(value => (this.username = value))
     ]);
   }
 };

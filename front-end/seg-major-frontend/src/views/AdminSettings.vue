@@ -9,24 +9,7 @@
             <p class="card-header-title">General</p>
           </header>
           <div class="card-content">
-            <div class="field">
-              <label class="label">Hospital Name</label>
-              <div class="control">
-                <input class="input" type="text" placeholder="Enter hospital name..." />
-              </div>
-            </div>
-
-            <div class="field">
-              <label class="label">Department Name</label>
-              <div class="control">
-                <input class="input" type="text" placeholder="Enter department name..." />
-              </div>
-            </div>
-            <div class="field is-grouped is-grouped-right">
-              <p class="control">
-                <button class="button is-success">Save</button>
-              </p>
-            </div>
+            <change-app-info v-on:appInfoChanged="$emit('appInfoChanged', $event)"></change-app-info>
           </div>
         </div>
 
@@ -88,11 +71,13 @@
 <script>
 import UsersTable from "@/components/UsersTable";
 import ChangeUserDetails from "@/components/ChangeUserDetails";
+import ChangeAppInfo from "@/components/ChangeAppInfo";
 
 export default {
   components: {
     UsersTable,
-    ChangeUserDetails
+    ChangeUserDetails,
+    ChangeAppInfo
   },
   metaInfo: {
     title: 'Settings'
