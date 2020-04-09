@@ -18,7 +18,9 @@ api.interceptors.request.use(function (config) {
 api.interceptors.response.use(function (response) {
   return response;
 }, function (error) {
-  if (error.response.status === 401) {
+  if (!error.response) {
+    // Network error
+  } else if (error.response.status === 401) {
     // session has expired, api key no longer valid so LOG OUT
     const apiKey = localStorage.getItem('api-key')
     if (apiKey != null) {
