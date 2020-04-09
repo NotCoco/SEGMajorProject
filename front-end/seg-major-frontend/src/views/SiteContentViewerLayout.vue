@@ -68,6 +68,7 @@
 
 <script>
 import SitesService from "@/services/sites-service";
+import AppInfoService from "@/services/app-info-service";
 import Navbar from "@/components/Navbar.vue";
 import SearchBar from '@/components/SearchBar.vue';
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -82,22 +83,28 @@ export default {
     return {
       site: { name: "... " },
       pages: null,
-      loading: true
+      loading: true,
+      appInfo: {
+        departmentName: ''
+      },
     };
   },
   metaInfo() {
     return {
       titleTemplate: titleChunk => {
         return titleChunk
-          ? `${titleChunk} - ${this.site.name} | KCH Paediatric Liver Service`
-          : `${this.site.name} | KCH Paediatric Liver Service`;
+          ? `${titleChunk} - ${this.site.name} | ${this.appInfo.departmentName}`
+          : `${this.site.name} | ${this.appInfo.departmentName}`;
       }
     }
   },
-  async mounted() {
+  async created() {
     const siteSlug = this.$route.params.siteSlug;
-    this.site = await SitesService.getSite(siteSlug);
-    this.pages = await SitesService.getAllPages(siteSlug);
+    await Promise.all([
+      AppInfoService.getAppInfo().then(value => this.appInfo = value),
+      SitesService.getSite(siteSlug).then(value => this.site = value),
+      SitesService.getAllPages(siteSlug).then(value => this.pages = value),
+    ]);
     this.loading = false;
   }
 };

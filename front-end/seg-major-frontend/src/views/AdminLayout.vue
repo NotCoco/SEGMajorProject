@@ -72,17 +72,23 @@
 
 <script>
 import UserService from "@/services/user-service";
+import AppInfoService from "@/services/app-info-service";
 
 export default {
   data() {
     return {
       username: "...",
-      mobileNavActive: false
+      mobileNavActive: false,
+      appInfo: {
+        departmentName: ''
+      },
     };
   },
-  metaInfo: {
-    titleTemplate: '%s - Admin | KCH Paediatric Liver Service',
-    meta: [{ vmid: 'robots', name: 'robots', content: 'noindex' }]
+  metaInfo() {
+    return {
+      titleTemplate: `%s - Admin | ${this.appInfo.departmentName}`,
+      meta: [{ vmid: 'robots', name: 'robots', content: 'noindex' }]
+    }
   },
   methods: {
     async logout() {
@@ -93,8 +99,11 @@ export default {
       this.username = newName;
     }
   },
-  async mounted() {
-    this.username = await UserService.getUserName();
+  async created() {
+    await Promise.all([
+      AppInfoService.getAppInfo().then(value => this.appInfo = value),
+      UserService.getUserName().then(value => this.username = value),
+    ]);
   }
 };
 </script>

@@ -91,7 +91,8 @@
 </template>
 
 <script>
-import userService from '../services/user-service.js';
+import UserService from '../services/user-service.js';
+import AppInfoService from "@/services/app-info-service";
 import { required, minLength, email, sameAs } from "vuelidate/lib/validators";
 
 export default {
@@ -110,12 +111,17 @@ export default {
       resettingPassword: false,
       resetFailed: false,
       success: false,
+      appInfo: {
+        departmentName: ''
+      },
     }
   },
-  metaInfo: {
-    title: 'Password Reset',
-    titleTemplate: '%s - Admin | KCH Paediatric Liver Service',
-    meta: [{ vmid: 'robots', name: 'robots', content: 'noindex' }]
+  metaInfo() {
+    return {
+      title: 'Password Reset',
+      titleTemplate: `%s - Admin | ${this.appInfo.departmentName}`,
+      meta: [{ vmid: 'robots', name: 'robots', content: 'noindex' }]
+    }
   },
   methods: {
     async requestToken() {
@@ -125,7 +131,7 @@ export default {
       this.requestingToken = true;
       const email = this.email;
 
-      await userService.getResetRequest(email);
+      await UserService.getResetRequest(email);
 
       this.requestSent = true;
       this.showStepTwo = true;
@@ -154,7 +160,7 @@ export default {
       const newPassword = this.newPassword;
 
       try {
-        await userService.resetPassword(token, newPassword);
+        await UserService.resetPassword(token, newPassword);
         this.resetFailed = false;
         this.success = true;
       } catch {
@@ -180,6 +186,9 @@ export default {
       required,
       sameAsNewPassword: sameAs('newPassword')
     }
+  },
+  async created() {
+    this.appInfo = await AppInfoService.getAppInfo();
   }
 }
 </script>

@@ -5,9 +5,23 @@
 </template>
 
 <script>
+import AppInfoService from '@/services/app-info-service';
+
 export default {
-  metaInfo: {
-    titleTemplate: '%s | KCH Paediatric Liver Service'
+  data() {
+    return {
+      appInfo: {
+        departmentName: ''
+      }
+    }
+  },
+  metaInfo() {
+    return {
+      titleTemplate: `%s | ${this.appInfo.departmentName}`
+    }
+  },
+  async created() {
+    this.appInfo = await AppInfoService.getAppInfo();
   }
 }
 </script>
