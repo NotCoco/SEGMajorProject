@@ -261,7 +261,7 @@ export default {
       }
 
       // if file size is greater than 10MB
-      if (file.size > 10000000) {
+      if (this.file.size > 10000000) {
         alert("This file exceeds the maximum file size of 10MB. Please choose a smaller image.");
         return;
       }
