@@ -121,6 +121,7 @@
                 accept="image/*"
                 ref="file"
                 @change="handleFileUpload(commands.image)"
+                :disabled="uploadingImage"
               />
               <span class="file-cta">
                 <span class="file-icon" style="margin-right: 12px;">
