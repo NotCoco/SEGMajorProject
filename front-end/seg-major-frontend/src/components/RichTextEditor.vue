@@ -124,7 +124,8 @@
               />
               <span class="file-cta">
                 <span class="file-icon" style="margin-right: 12px;">
-                  <i class="material-icons">cloud_upload</i>
+                  <i class="material-icons" v-if="!uploadingImage">cloud_upload</i>
+                  <font-awesome-icon v-else icon="circle-notch" size="lg" spin title="Loading..." />
                 </span>
                 <span class="file-label">Upload image</span>
               </span>
@@ -249,7 +250,8 @@ export default {
           }
         },
         content: this.value ? JSON.parse(this.value) : null
-      })
+      }),
+      uploadingImage: false
     };
   },
   methods: {
@@ -266,7 +268,10 @@ export default {
         return;
       }
 
+      this.uploadingImage = true;
       const res = await ImagesService.uploadImage(this.file);
+      this.uploadingImage = false;
+
       const src = res.config.baseURL + "/images/" + res.data;
       command({ src });
     },
