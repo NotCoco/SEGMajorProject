@@ -21,7 +21,7 @@ class AppInfoManagerTest {
      */
     @BeforeEach
     void setUp() {
-        JSONLocation.setJsonFile("AppInfoTest.json");
+        JSONLocation.setJsonFile("src/test/resources/AppInfoTest.json");
         //Setting this will create the file itself before the AppInfoManager is initialised
         infoManager = AppInfoManager.getInfoManager();
     }

@@ -25,7 +25,7 @@ public class ImageManager implements ImageManagerInterface {
 	 */
 	private ImageManager() {
 		imageManager = this;
-		dir = DirectoryHolder.getDir();
+		dir = DirectoryHolder.getDirectoryHolder().getDir();
 	}
 
 	/**
