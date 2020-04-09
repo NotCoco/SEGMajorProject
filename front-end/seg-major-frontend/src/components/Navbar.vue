@@ -5,8 +5,8 @@
         <router-link to="/" class="navbar-item">
           <NHS-logo class="nhs-logo" />
           <div class="brand-text">
-            <h1 class="brand-top">King's College Hospital</h1>
-            <h1 class="brand-bottom">Paediatric Liver Service</h1>
+            <h1 class="brand-top">{{ appInfo.hospitalName }}</h1>
+            <h1 class="brand-bottom">{{ appInfo.departmentName }}</h1>
           </div>
         </router-link>
 
@@ -42,6 +42,7 @@
 
 <script>
 import NewsService from '@/services/news-service';
+import AppInfoService from "@/services/app-info-service";
 import SearchBar from '@/components/SearchBar.vue';
 import NHSLogo from "@/components/NHSLogo";
 
@@ -86,10 +87,15 @@ export default {
     return {
       urgentNews: undefined,
       localHiddenState: false,
-      mobileNavActive: false
+      mobileNavActive: false,
+      appInfo: {
+        hospitalName: '',
+        departmentName: ''
+      },
     }
   },
   async created() {
+    this.appInfo = await AppInfoService.getAppInfo();
     const items = await NewsService.getAllArticles();
     if (items.length > 0) {
       const firstItem = items[0];
