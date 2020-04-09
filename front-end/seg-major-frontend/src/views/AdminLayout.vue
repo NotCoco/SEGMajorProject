@@ -37,7 +37,7 @@
               <div class="navbar-item has-dropdown is-hoverable is-hidden-touch">
                 <a class="navbar-link">
                   <i class="material-icons" style="margin-right: 12px; opacity: 0.92;">person</i>
-                  {{username}}
+                  {{ username }}
                 </a>
 
                 <div class="navbar-dropdown is-right">

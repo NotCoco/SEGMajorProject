@@ -10,7 +10,7 @@
         </div>
 
         <div class="custom-content-container" v-else>
-          <h1 class="title">{{siteName}}</h1>
+          <h1 class="title">{{ siteName }}</h1>
 
           <div class="pages-list">
             <div v-if="pages.length == 0" class="notification has-text-centered">

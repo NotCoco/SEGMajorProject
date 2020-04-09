@@ -28,7 +28,7 @@
                 >
                   <div class="card">
                     <div class="card-content">
-                      <h5 class="title is-5">{{site.name}}</h5>
+                      <h5 class="title is-5">{{ site.name }}</h5>
                     </div>
                   </div>
                 </router-link>

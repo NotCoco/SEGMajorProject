@@ -13,7 +13,7 @@
                 <router-link to="/admin/sites">Sites</router-link>
               </li>
               <li>
-                <router-link :to="`/admin/sites/${page.site.slug}`">{{page.site.name || ''}}</router-link>
+                <router-link :to="`/admin/sites/${page.site.slug}`">{{ page.site.name || '' }}</router-link>
               </li>
               <li>
                 <router-link :to="`/admin/sites/${page.site.slug}/pages`">Pages</router-link>
@@ -47,7 +47,7 @@
                 class="button is-static"
                 v-if="page.site"
                 :class="{ 'border-none': saving}"
-              >/{{page.site.slug}}/</a>
+              >/{{ page.site.slug }}/</a>
             </p>
             <p class="control is-expanded">
               <input
