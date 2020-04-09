@@ -20,9 +20,9 @@
               >You can create a new page using the add button in the bottom left!</p>
             </div>
             <router-link
-              v-bind:to="page.slug"
+              :to="page.slug"
               v-for="page of pages"
-              v-bind:key="page.primaryKey"
+              :key="page.primaryKey"
             >
               <div class="card">
                 <div class="card-content">

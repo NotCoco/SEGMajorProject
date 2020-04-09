@@ -50,7 +50,7 @@
             <div class="level-right">
               <button
                 class="button is-danger"
-                v-bind:disabled="$v.$anyError || !password"
+                :disabled="$v.$anyError || !password"
                 @click="deleteAccount()"
               >Delete account</button>
             </div>

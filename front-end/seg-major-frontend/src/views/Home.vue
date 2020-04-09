@@ -20,10 +20,10 @@
               <div v-else>
                 <router-link
                   v-for="site of sites"
-                  v-bind:key="site.primaryKey"
+                  :key="site.primaryKey"
                   class="is-block"
                   style="margin-bottom: 20px"
-                  v-bind:to="site.slug"
+                  :to="site.slug"
                   append
                 >
                   <div class="card">

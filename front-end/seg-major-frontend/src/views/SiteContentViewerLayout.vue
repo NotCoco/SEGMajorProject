@@ -1,6 +1,6 @@
 <template>
   <div id="site-content-viewer-layout">
-    <Navbar v-bind:pages="pages" v-bind:showSearchBar="true" />
+    <Navbar :pages="pages" :showSearchBar="true" />
 
     <div class="flex-wrapper">
       <div class="sidebar is-hidden-mobile">
@@ -14,9 +14,9 @@
                 </span>
                 <div class="navigation-items" v-else>
                   <router-link
-                    v-bind:to="`/${page.site.slug}/${page.slug}`"
+                    :to="`/${page.site.slug}/${page.slug}`"
                     v-for="page of pages"
-                    v-bind:key="page.primaryKey"
+                    :key="page.primaryKey"
                     class="navigation-item is-unselectable"
                   >{{ page.title }}</router-link>
                 </div>
@@ -31,7 +31,7 @@
           <search-bar :pages="pages" />
         </div>
         <transition name="fade" mode="out-in">
-          <router-view v-bind:pages="pages" v-bind:key="$route.path" />
+          <router-view :pages="pages" :key="$route.path" />
         </transition>
       </div>
     </div>

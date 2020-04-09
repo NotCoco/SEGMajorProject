@@ -20,7 +20,7 @@
           </div>
           <div v-else>
             <transition name="fade" mode="out-in">
-              <div v-bind:key="currentPageNumber">
+              <div :key="currentPageNumber">
                 <router-link v-for="item in paginatedItems" :key="item.slug" :to="item.slug" append>
                   <news-card :newsItem="item" class="news-card" />
                 </router-link>

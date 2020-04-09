@@ -60,7 +60,7 @@
         </div>
         <button
           class="button is-primary is-medium login-button"
-          v-bind:disabled="$v.$anyError || !email || !password"
+          :disabled="$v.$anyError || !email || !password"
           @click="login()"
         >Login</button>
       </div>

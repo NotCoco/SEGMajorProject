@@ -136,14 +136,14 @@
               class="button is-success"
               :class="{ 'is-loading': saving }"
               @click="save()"
-              v-bind:disabled="$v.$anyError || !article.title || !article.description || !article.slug "
+              :disabled="$v.$anyError || !article.title || !article.description || !article.slug "
             >Save</button>
           </div>
           <div class="saved-notification-container">
             <transition name="fade" mode="out-in">
               <div
                 class="box notification saved-notification"
-                v-bind:key="saved"
+                :key="saved"
                 :class="{ 'is-invisible': !saved }"
               >
                 <font-awesome-icon :icon="['far', 'check-circle']" class="check-icon" />Saved

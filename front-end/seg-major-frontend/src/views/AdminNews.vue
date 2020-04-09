@@ -9,10 +9,10 @@
             <div v-else>
               <router-link
                 v-for="article of news"
-                v-bind:key="article.primaryKey"
+                :key="article.primaryKey"
                 class="is-block"
                 style="margin-bottom: 20px"
-                v-bind:to="article.slug"
+                :to="article.slug"
                 append
               >
                 <news-card :newsItem="article" class="news-card" />

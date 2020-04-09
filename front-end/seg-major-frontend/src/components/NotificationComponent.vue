@@ -1,6 +1,6 @@
 <template>
   <div style="margin-bottom: 25px">
-    <div class="notification" style="margin-bottom: 0;" v-bind:class="color">
+    <div class="notification" style="margin-bottom: 0;" :class="color">
       <div ref="content" :contenteditable="view.editable.toString()"></div>
     </div>
     <div class="card" v-if="view.editable" contenteditable="false">
@@ -8,23 +8,23 @@
         <div class="buttons">
           <button
             class="button is-light rte-menu-button"
-            v-bind:class="{ 'is-active': !this.color }"
+            :class="{ 'is-active': !this.color }"
             @click="setColor('')"
           >Grey</button>
 
           <button
             class="button is-light rte-menu-button"
-            v-bind:class="{ 'is-active': this.color=='is-danger' }"
+            :class="{ 'is-active': this.color=='is-danger' }"
             @click="setColor('is-danger')"
           >Red</button>
           <button
             class="button is-light rte-menu-button"
-            v-bind:class="{ 'is-active': this.color=='is-success' }"
+            :class="{ 'is-active': this.color=='is-success' }"
             @click="setColor('is-success')"
           >Green</button>
           <button
             class="button is-light rte-menu-button"
-            v-bind:class="{ 'is-active': this.color=='is-info' }"
+            :class="{ 'is-active': this.color=='is-info' }"
             @click="setColor('is-info')"
           >Blue</button>
         </div>

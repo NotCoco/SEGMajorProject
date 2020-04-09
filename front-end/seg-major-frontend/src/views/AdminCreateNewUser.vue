@@ -68,7 +68,7 @@
           <div class="level-right">
             <button
               class="button is-success"
-              v-bind:disabled="$v.$anyError || !name || !email || !password"
+              :disabled="$v.$anyError || !name || !email || !password"
               @click="createAccount()"
             >Create user</button>
           </div>

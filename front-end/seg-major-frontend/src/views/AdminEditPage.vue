@@ -13,10 +13,10 @@
                 <router-link to="/admin/sites">Sites</router-link>
               </li>
               <li>
-                <router-link v-bind:to="`/admin/sites/${page.site.slug}`">{{page.site.name || ''}}</router-link>
+                <router-link :to="`/admin/sites/${page.site.slug}`">{{page.site.name || ''}}</router-link>
               </li>
               <li>
-                <router-link v-bind:to="`/admin/sites/${page.site.slug}/pages`">Pages</router-link>
+                <router-link :to="`/admin/sites/${page.site.slug}/pages`">Pages</router-link>
               </li>
               <li class="is-active">
                 <a href="#" aria-current="page">Page Editor</a>
@@ -86,14 +86,14 @@
               class="button is-success"
               :class="{ 'is-loading': saving }"
               @click="save()"
-              v-bind:disabled="$v.$anyError || !page.title || !page.slug"
+              :disabled="$v.$anyError || !page.title || !page.slug"
             >Save</button>
           </div>
           <div class="saved-notification-container">
             <transition name="fade" mode="out-in">
               <div
                 class="box notification saved-notification"
-                v-bind:key="saved"
+                :key="saved"
                 :class="{ 'is-invisible': !saved }"
               >
                 <font-awesome-icon :icon="['far', 'check-circle']" class="check-icon" />Saved

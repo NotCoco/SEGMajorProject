@@ -7,7 +7,7 @@
           <th>Email</th>
         </tr>
       </thead>
-      <tr v-for="user of users" v-bind:key="user.primaryKey">
+      <tr v-for="user of users" :key="user.primaryKey">
         <td>{{ user.name }}</td>
         <td>{{ user.email }}</td>
       </tr>

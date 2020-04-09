@@ -18,12 +18,12 @@
           <nav class="sidebar-navigation">
             <div class="navigation-items">
               <router-link
-                v-bind:to="`/admin/sites/${this.site.slug}/pages`"
+                :to="`/admin/sites/${this.site.slug}/pages`"
                 class="navigation-item is-unselectable"
               >Pages</router-link>
 
               <router-link
-                v-bind:to="`/admin/sites/${this.site.slug}/settings`"
+                :to="`/admin/sites/${this.site.slug}/settings`"
                 class="navigation-item is-unselectable"
               >Site Settings</router-link>
             </div>
@@ -32,7 +32,7 @@
       </div>
 
       <div class="expanded-scrollable-area">
-      <transition name="fade" mode="out-in" v-bind:duration="{ leave: 50 }">
+      <transition name="fade" mode="out-in" :duration="{ leave: 50 }">
 
         <router-view @siteUpdate="setSite($event)" />
       </transition>

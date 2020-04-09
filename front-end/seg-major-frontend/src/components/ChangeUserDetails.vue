@@ -12,7 +12,7 @@
               class="input"
               type="text"
               v-model="newName"
-              v-bind:disabled="!user.name"
+              :disabled="!user.name"
               @change="$v.newName.$touch()"
               @keyup.enter="changeUserName()"
               placeholder="Enter your name here..."
@@ -28,7 +28,7 @@
             <button
               class="button is-success"
               @click="changeUserName()"
-              v-bind:disabled="!user.name || newName == user.name"
+              :disabled="!user.name || newName == user.name"
             >Change name</button>
           </p>
         </div>
@@ -47,7 +47,7 @@
               class="input"
               type="text"
               v-model="newEmail"
-              v-bind:disabled="!user.email"
+              :disabled="!user.email"
               @change="$v.newEmail.$touch()"
               @keyup.enter="changeEmail()"
               placeholder="Enter your email..."
@@ -64,7 +64,7 @@
             <button
               class="button is-success"
               @click="changeEmail()"
-              v-bind:disabled="$v.newEmail.$anyError || !newEmail || newEmail == user.email"
+              :disabled="$v.newEmail.$anyError || !newEmail || newEmail == user.email"
             >Change email</button>
           </p>
         </div>
@@ -99,7 +99,7 @@
             <button
               class="button is-success"
               @click="changePassword()"
-              v-bind:disabled="$v.newPassword.$anyError || !newPassword"
+              :disabled="$v.newPassword.$anyError || !newPassword"
             >Change password</button>
           </p>
         </div>

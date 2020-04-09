@@ -25,10 +25,10 @@
             <draggable v-model="pages" animation="180" @end="dragEnd()">
               <router-link
                 class="is-block"
-                v-bind:to="page.slug"
+                :to="page.slug"
                 append
                 v-for="page of pages"
-                v-bind:key="page.primaryKey"
+                :key="page.primaryKey"
               >
                 <div class="card">
                   <div class="card-content">

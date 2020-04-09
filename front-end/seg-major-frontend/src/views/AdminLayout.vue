@@ -14,7 +14,7 @@
           <div
             class="navbar-menu"
             :class="{ 'is-active': mobileNavActive }"
-            v-bind:key="mobileNavActive"
+            :key="mobileNavActive"
           >
             <div class="navbar-start">
               <router-link to="/admin/sites" class="navbar-item" active-class="is-active">Sites</router-link>
@@ -63,8 +63,8 @@
     </nav>
 
     <div class="expanded-scrollable-area">
-      <transition name="fade" mode="out-in" v-bind:duration="{ leave: 50 }">
-        <router-view v-bind:username="username" @nameChanged="onNameChanged($event)" />
+      <transition name="fade" mode="out-in" :duration="{ leave: 50 }">
+        <router-view :username="username" @nameChanged="onNameChanged($event)" />
       </transition>
     </div>
   </div>

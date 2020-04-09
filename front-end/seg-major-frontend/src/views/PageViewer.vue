@@ -13,7 +13,7 @@
           <h1 class="title">{{ page.title }}</h1>
 
           <div class="page-content-container">
-            <rich-text-editor v-bind:editable="false" v-model="page.content" />
+            <rich-text-editor :editable="false" v-model="page.content" />
           </div>
 
           <div class="bottom-nav-buttons">
@@ -21,7 +21,7 @@
               <div class="level-left">
                 <div class="level-item">
                   <!-- Previous Button-->
-                  <router-link v-bind:to="previousPage.slug" v-if="previousPage">
+                  <router-link :to="previousPage.slug" v-if="previousPage">
                     <div class="button is-light is-large bottom-nav-btn">
                       <i class="material-icons" style="margin-right: 5px">arrow_back_ios</i>
                       {{ previousPage.title }}
@@ -32,7 +32,7 @@
               <div class="level-right">
                 <div class="level-item">
                   <!-- Next Button -->
-                  <router-link v-bind:to="nextPage.slug" v-if="nextPage">
+                  <router-link :to="nextPage.slug" v-if="nextPage">
                     <div class="button is-light is-large bottom-nav-btn">
                       {{ nextPage.title }}
                       <i

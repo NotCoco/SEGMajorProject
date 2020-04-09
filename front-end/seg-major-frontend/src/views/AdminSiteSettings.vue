@@ -51,7 +51,7 @@
               <div class="level-left">
                 <div class="level-item">
                   <router-link
-                    v-bind:to="`/admin/sites/${site.slug}`"
+                    :to="`/admin/sites/${site.slug}`"
                     class="button is-light"
                   >Cancel</router-link>
                 </div>
@@ -63,7 +63,7 @@
                 <button
                   class="button is-success is-medium"
                   @click="save()"
-                  v-bind:disabled="$v.$anyError || !site.name || !site.slug"
+                  :disabled="$v.$anyError || !site.name || !site.slug"
                 >Save</button>
               </div>
             </div>
