@@ -9,7 +9,7 @@ import java.io.File;
 public class JSONLocation {
 
 
-    private static File jsonFile = new File("src/main/resources/AppInfoMain.json");
+    private static File jsonFile = new File("AppInfoMain.json");
 
     /**
      * Set the JSON's location
