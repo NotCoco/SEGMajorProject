@@ -62,8 +62,7 @@ public class AppInfoManager implements AppInfoManagerInterface {
         try {
             return mapper.readValue(file, AppInfo.class);
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            return new AppInfo("Try updating this!", "Try updating this!");
         }
     }
 }
