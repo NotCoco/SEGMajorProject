@@ -3,7 +3,7 @@
     <section class="section">
       <transition name="fade" mode="out-in">
         <loading-spinner v-if="loading" style="padding-top: 68px;" />
-        <div class="custom-content-container" v-if="!loading">
+        <div class="custom-content-container" v-else>
           <nav class="breadcrumb is-right" aria-label="breadcrumbs">
             <ul>
               <li>

@@ -5,8 +5,8 @@
         <h1 class="title">Site Settings</h1>
 
         <transition name="fade" mode="out-in">
-          <div v-if="!loading">
           <loading-spinner v-if="loading" style="margin-top: 50px;" />
+          <div v-else>
             <div class="field">
               <label class="label">Site Name</label>
               <div class="control">
