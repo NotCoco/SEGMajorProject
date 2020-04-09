@@ -6,7 +6,7 @@
       :title="node.attrs.title"
       :style="`max-width: ${maxWidth}px`"
     />
-    <div class="card-container">
+    <div class="card-container" v-if="view.editable">
       <div class="card">
         <div class="card-content">
           <div class="controls-container">

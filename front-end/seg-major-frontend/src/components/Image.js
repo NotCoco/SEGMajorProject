@@ -24,7 +24,7 @@ export default class Image extends BaseImage {
         }
       },
       group: 'block',
-      content: 'block',
+      content: '',
       draggable: true,
       selectable: false,
       parseDOM: [
