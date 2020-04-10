@@ -1,8 +1,10 @@
 <template>
   <div id="site-content-viewer-layout">
     <Navbar :pages="pages" :showSearchBar="true" />
-
-    <div class="flex-wrapper">
+    <section class="section" v-if="site === null">
+      <http-status :httpStatusCode="404" />
+    </section>
+    <div class="flex-wrapper" v-else>
       <div class="sidebar is-hidden-mobile">
         <div class="section">
           <div class="container">
@@ -72,16 +74,18 @@ import AppInfoService from "@/services/app-info-service";
 import Navbar from "@/components/Navbar.vue";
 import SearchBar from '@/components/SearchBar.vue';
 import LoadingSpinner from "@/components/LoadingSpinner";
+import HttpStatus from "@/components/HttpStatus";
 
 export default {
   components: {
     Navbar,
     SearchBar,
-    LoadingSpinner
+    LoadingSpinner,
+    HttpStatus,
   },
   data() {
     return {
-      site: { name: "... " },
+      site: { name: '' },
       pages: null,
       loading: true,
       appInfo: {
@@ -90,21 +94,36 @@ export default {
     };
   },
   metaInfo() {
+    const site = this.site;
     return {
       titleTemplate: titleChunk => {
-        return titleChunk
-          ? `${titleChunk} - ${this.site.name} | ${this.appInfo.departmentName}`
-          : `${this.site.name} | ${this.appInfo.departmentName}`;
+        if (site === null) {
+          return `Page Not Found | ${this.appInfo.departmentName}`;
+        } else if (titleChunk) {
+          return `${titleChunk} - ${site.name} | ${this.appInfo.departmentName}`;
+        } else {
+          return `${site.name} | ${this.appInfo.departmentName}`;
+        }
       }
     }
   },
   async created() {
     const siteSlug = this.$route.params.siteSlug;
-    await Promise.all([
-      AppInfoService.getAppInfo().then(value => this.appInfo = value),
-      SitesService.getSite(siteSlug).then(value => this.site = value),
-      SitesService.getAllPages(siteSlug).then(value => this.pages = value),
-    ]);
+
+    this.appInfo = await AppInfoService.getAppInfo();
+    try {
+      this.site = await SitesService.getSite(siteSlug);
+    } catch (error) {
+      if (error.response.status === 404) {
+        this.site = null;
+      } else {
+        throw(error);
+      }
+    }
+    if (this.site !== null) {
+      this.pages = await SitesService.getAllPages(siteSlug);
+    }
+
     this.loading = false;
   }
 };
