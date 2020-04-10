@@ -211,19 +211,16 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 		String token = verifyUser(email,password);
 		if(token != null){
 			List<User> users = getAll();
-			boolean found = false;
+
 			SessionManager.getSessionManager().terminateSession(token);
 			for(User u: users){
 				if(u.getEmail().equals(email)){
 					delete(u);
-					found = true;
-					break;
+					return;
 				}
 			}
-			if(!found) throw new UserNotExistException("user details incorrect");
 		}
-		else throw new UserNotExistException("user details incorrect");
-
+		throw new UserNotExistException("user details incorrect");
 	}
 	
 
