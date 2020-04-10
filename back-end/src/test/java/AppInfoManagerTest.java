@@ -6,6 +6,9 @@ import main.java.com.projectBackEnd.Services.AppInfo.AppInfoManagerInterface;
 import main.java.com.projectBackEnd.Services.AppInfo.JSONLocation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
+
+import java.io.File;
 
 import static org.junit.Assert.*;
 
@@ -15,15 +18,23 @@ import static org.junit.Assert.*;
 class AppInfoManagerTest {
 
     private static AppInfoManagerInterface infoManager;
-
+    private static String mainTestPath = "src/test/resources/AppInfoTest.json";
     /**
      * Set the JSON's location and initialise a manager for testing
      */
     @BeforeEach
     void setUp() {
-        JSONLocation.setJsonFile("src/test/resources/AppInfoTest.json");
+        JSONLocation.setJsonFile(mainTestPath);
         //Setting this will create the file itself before the AppInfoManager is initialised
         infoManager = AppInfoManager.getInfoManager();
+    }
+
+    /**
+     * Reset the test path
+     */
+    @AfterEach
+    void reset() {
+        JSONLocation.setJsonFile(mainTestPath);
     }
 //======================================================================================================================
 
@@ -57,12 +68,13 @@ class AppInfoManagerTest {
 
     /**
      * Test that changing the json file once the AppInfoManager has been initialised has no effect.
+     * The JSON Location is invalidated.
      */
     @Test
     void testEmptyJSONFile() {
         JSONLocation.setJsonFile("");
-        infoManager.updateInfo(new AppInfo("Interesting New Hospital", "Cool Department in a different dep"));
-            assertEquals(infoManager.getInfo().getDepartmentName(), "Cool Department in a different dep");
+        infoManager.updateInfo(new AppInfo("Interesting New Hospital", "Unique Update Message That Won't Happen"));
+        assertNotEquals("Unique Update Message That Won't Happen", infoManager.getInfo().getDepartmentName());
     }
 
     /**
@@ -71,8 +83,12 @@ class AppInfoManagerTest {
      */
     @Test
     void testUnfoundJSONFile() {
-        JSONLocation.setJsonFile("fr43fdasdf");
+        String newPath = System.getProperty("user.dir")+"/fr43fdasdf";
+        JSONLocation.setJsonFile(newPath);
         infoManager.updateInfo(new AppInfo("Interesting New Hospital", "resettospaghetto"));
         assertEquals(infoManager.getInfo().getDepartmentName(), "resettospaghetto");
+        File created = new File(newPath);
+        assertTrue(created.exists());
+        created.delete();
     }
 }
