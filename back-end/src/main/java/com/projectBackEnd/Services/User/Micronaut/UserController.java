@@ -118,7 +118,7 @@ public class UserController {
 
 		try {
 			PasswordReset.getPasswordResetManager().sendPasswordResetLink(body.getString());
-			return HttpResponse.ok();
+
 		} catch(EmailNotExistException e){
 			//frontend does not want an exception
             e.printStackTrace();

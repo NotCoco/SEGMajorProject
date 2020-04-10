@@ -541,7 +541,28 @@ class UserControllerTest{
 			fail();
 		}	
 	}
+	@Test
+	void testPasswordResetUserNotMatched(){
+		try{
+			userManager.addUser("mail@mail.com","password","name");
+		} catch(InvalidEmailException|EmailExistsException|IncorrectNameException|InvalidPasswordException e){
+			fail();
+		}
 
+		try{
+			String token = ResetLinkManager.getResetLinkManager().create("mail@mail.com");
+			assertTrue(ResetLinkManager.getResetLinkManager().exist(token));
+			userManager.deleteUser("mail@mail.com","password");
+ 			HttpClientResponseException thrown4 = assertThrows(HttpClientResponseException.class, () -> {
+				client.toBlocking().exchange(HttpRequest.PUT("/user/password_reset_change",new PasswordResetBody(token,"")));
+			});
+			
+
+
+		} catch(EmailNotExistException|UserNotExistException e){
+			fail();
+		}	
+	}
 	/**
 	* Test if getting a name from correct accounts behaves correctly
 	*/
@@ -582,6 +603,18 @@ class UserControllerTest{
 				client.toBlocking().exchange(HttpRequest.GET("/user/user_details").header("X-API-Key",""));
 			});
 			assertEquals(HttpStatus.UNAUTHORIZED , thrown2.getStatus());	
+			assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name",token).getStatus());
+			String token0 = userManager.verifyUser("email@email.com", "password");
+			try{
+				userManager.deleteUser("email@email.com", "password");			
+			}
+			catch(UserNotExistException e){
+				fail();
+			}
+			HttpClientResponseException thrown3 = assertThrows(HttpClientResponseException.class, () -> {
+				client.toBlocking().exchange(HttpRequest.GET("/user/user_details").header("X-API-Key",token0));
+			});
+			assertEquals(HttpStatus.NOT_FOUND , thrown3.getStatus());	
 	}
 	/**
 	* Testing if changing email with correct user details behaves correctly
@@ -608,26 +641,33 @@ class UserControllerTest{
 
 
 	}
-	/**
-	* test if change email body returns 
-	*/
-	@Test
-	void testChangeEmailBody(){
 
-	}	
 	/**
 	* Test if changing an email to a user that does not exist returns an error
 	*/
 	@Test
 	void testChangeEmailUserNotExist(){
-			HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-				client.toBlocking().exchange(HttpRequest.PUT("/user/change_email",new StringBody("email@email.com")).header("X-API-Key",""));
-			});
-			assertEquals(HttpStatus.UNAUTHORIZED , thrown.getStatus());	
-			HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
-				client.toBlocking().exchange(HttpRequest.PUT("/user/change_email",new StringBody("email@email.com")).header("X-API-Key","verycorrecttoken"));
-			});
-			assertEquals(HttpStatus.UNAUTHORIZED , thrown1.getStatus());	
+		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+			client.toBlocking().exchange(HttpRequest.PUT("/user/change_email",new StringBody("email@email.com")).header("X-API-Key",""));
+		});
+		assertEquals(HttpStatus.UNAUTHORIZED , thrown.getStatus());	
+		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
+			client.toBlocking().exchange(HttpRequest.PUT("/user/change_email",new StringBody("email@email.com")).header("X-API-Key","verycorrecttoken"));
+		});
+		assertEquals(HttpStatus.UNAUTHORIZED , thrown1.getStatus());
+
+		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name",token).getStatus());
+		String token0 = userManager.verifyUser("email@email.com", "password");
+		try{
+			userManager.deleteUser("email@email.com", "password");			
+		}
+		catch(UserNotExistException e){
+			fail();
+		}
+		HttpClientResponseException thrown3 = assertThrows(HttpClientResponseException.class, () -> {
+			client.toBlocking().exchange(HttpRequest.PUT("/user/change_email",new StringBody("email@email.com")).header("X-API-Key",token0));
+		});
+		assertEquals(HttpStatus.NOT_FOUND , thrown3.getStatus());		
 	}
 	/**
 	* Test if changing an email to an existing one returns an error
@@ -678,7 +718,21 @@ class UserControllerTest{
 		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
 				client.toBlocking().exchange(HttpRequest.PUT("/user/change_name",new StringBody("name")).header("X-API-Key","vERyCorreCtToken123456"));
 		});
-		assertEquals(HttpStatus.UNAUTHORIZED , thrown1.getStatus());	
+		assertEquals(HttpStatus.UNAUTHORIZED , thrown1.getStatus());
+
+
+		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name",token).getStatus());
+		String token0 = userManager.verifyUser("email@email.com", "password");
+		try{
+			userManager.deleteUser("email@email.com", "password");			
+		}
+		catch(UserNotExistException e){
+			fail();
+		}
+		HttpClientResponseException thrown3 = assertThrows(HttpClientResponseException.class, () -> {
+			client.toBlocking().exchange(HttpRequest.PUT("/user/change_name",new StringBody("name")).header("X-API-Key",token0));
+		});
+		assertEquals(HttpStatus.NOT_FOUND , thrown3.getStatus());		
 	}
 	/**
 	* Test if changing a name to invalid throws an http exception
@@ -748,6 +802,20 @@ class UserControllerTest{
 				client.toBlocking().exchange(HttpRequest.PUT("/user/change_password",new StringBody("pass")).header("X-API-Key","312dsahdu32br23o87"));
 		});
 		assertEquals(HttpStatus.UNAUTHORIZED , thrown1.getStatus());	
+
+
+		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name",token).getStatus());
+		String token0 = userManager.verifyUser("email@email.com", "password");
+		try{
+			userManager.deleteUser("email@email.com", "password");			
+		}
+		catch(UserNotExistException e){
+			fail();
+		}
+		HttpClientResponseException thrown3 = assertThrows(HttpClientResponseException.class, () -> {
+			client.toBlocking().exchange(HttpRequest.PUT("/user/change_password",new StringBody("pass")).header("X-API-Key",token0));
+		});
+		assertEquals(HttpStatus.NOT_FOUND , thrown3.getStatus());	
 	}
 	/**
 	* Test if changing a password to invalid password throws a HTTP exception
@@ -774,7 +842,23 @@ class UserControllerTest{
 		assertEquals(HttpStatus.BAD_REQUEST , thrown2.getStatus());	
 		sessionManager.terminateSession(token);
 	}
+	/**
+	* test if change email body getters ands setters work correctly
+	*/
+	@Test
+	void testChangeEmailBody(){
+		ChangeEmailBody b = new ChangeEmailBody("","");
+		ChangeEmailBody b1 = new ChangeEmailBody();
+		assertNotNull(b);
+		assertNotNull(b1);
+		assertEquals(b.getOldEmail(),"");
+		assertEquals(b.getNewEmail(),"");
+		b.setOldEmail("1");
+		b.setNewEmail("1");
+		assertEquals(b.getOldEmail(),"1");
+		assertEquals(b.getNewEmail(),"1");
 
+	}	
 	/**
 	 * Create a post request to add user
 	 * @return HTTP response from the request
