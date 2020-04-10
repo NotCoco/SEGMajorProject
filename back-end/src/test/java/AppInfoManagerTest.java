@@ -23,7 +23,7 @@ class AppInfoManagerTest {
      * Set the JSON's location and initialise a manager for testing
      */
     @BeforeAll
-    void setUp() {
+    static void setUp() {
         JSONLocation.setJsonFile(mainTestPath);
         //Setting this will create the file itself before the AppInfoManager is initialised
         infoManager = AppInfoManager.getInfoManager();
