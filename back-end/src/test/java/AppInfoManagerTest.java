@@ -71,24 +71,11 @@ class AppInfoManagerTest {
      * The JSON Location is invalidated.
      */
     @Test
-    void testEmptyJSONFile() {
+    void testEmptyUnfoundJSONFile() {
         JSONLocation.setJsonFile("");
-        infoManager.updateInfo(new AppInfo("Interesting New Hospital", "Unique Update Message That Won't Happen"));
-        assertNotEquals("Unique Update Message That Won't Happen", infoManager.getInfo().getDepartmentName());
+        infoManager.updateInfo(new AppInfo("Interesting New Hospital", "Unique Update Message "));
+        assertEquals("Unique Update Message ", infoManager.getInfo().getDepartmentName());
     }
 
-    /**
-     * Test that changing the json file once the AppInfoManager has been initialised has no effect.
-     * (If runtime changing is enabled, this will create a new file with the spam name)
-     */
-    @Test
-    void testUnfoundJSONFile() {
-        String newPath = System.getProperty("user.dir")+"/fr43fdasdf";
-        JSONLocation.setJsonFile(newPath);
-        infoManager.updateInfo(new AppInfo("Interesting New Hospital", "resettospaghetto"));
-        assertEquals(infoManager.getInfo().getDepartmentName(), "resettospaghetto");
-        File created = new File(newPath);
-        assertTrue(created.exists());
-        created.delete();
-    }
+
 }

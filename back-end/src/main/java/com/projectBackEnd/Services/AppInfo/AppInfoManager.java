@@ -37,7 +37,7 @@ public class AppInfoManager implements AppInfoManagerInterface {
      */
     public void updateInfo(AppInfo updatedVersion) {
         try {
-            file = JSONLocation.getJsonFile();
+            //file = JSONLocation.getJsonFile(); Allows dynamic JSON location changing
             mapper.writeValue(file, updatedVersion);
             savedInfo = updatedVersion;
         } catch (IOException e) {
