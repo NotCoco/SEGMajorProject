@@ -90,20 +90,20 @@
             <div class="control">
               <label class="checkbox">
                 <input type="checkbox" v-model="article.urgent" />
-                <span class="icon">
-                  <i class="material-icons" style="font-size:16px;">flag</i>
-                </span>
-                Urgent
+                <span class="icon is-small">
+                  <font-awesome-icon icon="exclamation-triangle" />
+                </span>Urgent
               </label>
             </div>
 
             <div class="control">
               <label class="checkbox">
                 <input type="checkbox" v-model="article.pinned" />
-                <span class="icon">
-                  <i class="material-icons" style="font-size:16px;">star</i>
+                <span>
+                  <span class="icon is-small">
+                    <font-awesome-icon icon="thumbtack" />
+                  </span>Pinned
                 </span>
-                Pinned
               </label>
             </div>
           </div>
@@ -172,6 +172,13 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+
+  .checkbox .icon {
+    display: inline-block;
+    margin-left: 5px;
+    margin-right: 5px;
+    text-align: center;
+  }
 }
 
 .saved-notification-container {
