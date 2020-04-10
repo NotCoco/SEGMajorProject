@@ -10,6 +10,8 @@ info:
     url: ''
     name: ''
 tags:
+- name: appinfo
+  description: Create and update application information
 - name: sites
   description: Create, retrieve, update and delete sites and their pages
 - name: images
@@ -19,6 +21,36 @@ tags:
 - name: medicines
   description: Create, retrieve, update and delete medicines
 paths:
+  /appinfo:
+    get:
+      tags:
+      - appinfo
+      summary: Get the application information
+      produces:
+      - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/AppInfo'
+    put:
+      tags:
+      - appinfo
+      summary: Update the application information
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: AppInfo object to be updated
+        required: true
+        schema:
+          $ref: '#/definitions/AppInfo'
+      responses:
+        204:
+          description: No content
+      security:
+      - ApiKeyHeader: []
   /sites:
     get:
       tags:
