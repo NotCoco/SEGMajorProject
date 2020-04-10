@@ -385,7 +385,7 @@ definitions:
   SiteDescription:
     type: object
     properties:
-      id:
+      primaryKey:
         type: number
       slug:
         type: string
@@ -410,7 +410,7 @@ definitions:
     - $ref: '#/definitions/PageIndex'
     - type: object
       properties:
-        id:
+        primaryKey:
           type: number
         title:
           type: string
@@ -435,7 +435,7 @@ definitions:
   News:
     type: object
     properties:
-      id:
+      primaryKey:
         type: number
       title:
         type: string
@@ -461,7 +461,7 @@ definitions:
   Medicine:
     type: object
     properties:
-      id:
+      primaryKey:
         type: number
       name:
         type: string
