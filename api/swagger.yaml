@@ -414,6 +414,29 @@ securityDefinitions:
     in: header
     name: X-API-Key
 definitions:
+  UserInfo:
+    type: object
+    properties:
+      name:
+        type: string
+        example: Jane Doe
+      email:
+        type: string
+        format: email
+        example: jane.doe@example.com
+  UserAuth:
+    type: object
+    properties:
+      email:
+        type: string
+        format: email
+        example: jane.doe@example.com
+      password:
+        type: string
+  User:
+    allOf:
+    - $ref: '#/definitions/UserInfo'
+    - $ref: '#/definitions/UserAuth'
   AppInfo:
     type: object
     properties:
