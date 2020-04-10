@@ -43,7 +43,7 @@
 </template>
 
 <style lang="scss" scoped>
-@import "@/styles";
+@import "@/variables";
 
 #root {
   height: 100%;
