@@ -607,6 +607,13 @@ class UserControllerTest{
 		sessionManager.terminateSession(token2);
 
 
+	}
+	/**
+	* test if change email body returns 
+	*/
+	@Test
+	void testChangeEmailBody(){
+
 	}	
 	/**
 	* Test if changing an email to a user that does not exist returns an error

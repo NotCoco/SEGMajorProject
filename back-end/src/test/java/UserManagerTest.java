@@ -242,6 +242,7 @@ class UserManagerTest{
 	 */
 	@Test
 	void testDeleteNotExistingUser() {
+		assertThrows(UserNotExistException.class,() -> {userManager.deleteUser("user0@email.com","password0");});
 		fillDatabase(getTestUsers());
 		assertThrows(UserNotExistException.class,() -> {userManager.deleteUser("user0@email.com","password0");});
 	}
@@ -313,6 +314,24 @@ class UserManagerTest{
 		userManager.changeName("user1@email.com", "n a me");
 		assertEquals("n a me",userManager.getName("user1@email.com"));
 
+	}
+	/**
+	 * Tests that the manager is able to get the name of an existing user, expects success
+	 * @throws UserNotExistException This exception is not expected but may be thrown
+	 */
+	@Test
+	void testGetName() throws UserNotExistException{
+		fillDatabase(getTestUsers());
+		assertEquals("name",userManager.getName("user1@email.com"));
+	}
+	/**
+	* test if get name of not existing user throws UserNotExistException
+	*/
+	@Test
+	void testGetNameIncorrect() {
+		assertThrows(UserNotExistException.class,() -> {userManager.getName("user1@email.com");});
+		fillDatabase(getTestUsers());
+		assertThrows(UserNotExistException.class,() -> {userManager.getName("user009@email.com");});
 	}
 	/**
 	 * Attempts to change the name of a non existing user, expects an exception to be thrown

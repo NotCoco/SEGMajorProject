@@ -194,8 +194,8 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 			alg.update(withSalt.getBytes(StandardCharsets.UTF_8));
 			return String.format("%0128x", new BigInteger(1, alg.digest()));
 		}
-        catch (NoSuchAlgorithmException e) { 
-            throw new RuntimeException(e);
+       		catch (NoSuchAlgorithmException e) { 
+            		throw new RuntimeException(e);
 		}
 		
 	}
@@ -208,7 +208,7 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 	 * @throws UserNotExistException Invalid user
 	 */
 	public void deleteUser(String email, String password) throws UserNotExistException{
-		String token = verifyUser(email,password) ;
+		String token = verifyUser(email,password);
 		if(token != null){
 			List<User> users = getAll();
 			boolean found = false;
