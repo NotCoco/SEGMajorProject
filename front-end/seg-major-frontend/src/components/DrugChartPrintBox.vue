@@ -25,9 +25,6 @@
     </div>
   
     <table class="print">
-      <tbody style="display: none;">
-        <tr>The information below is an aid to help with the timing of your child's medicines after the Kasai Prucedure. Always read the Patient Information Leaflet supplied with the medication and the label on the front of each medication. A nurse on the ward will go through the medications with you prior to discharge.</tr>
-      </tbody>
       <!-- The table displays all of the added medicines -->
       <tr>
         <table style="width: 1000px;">
@@ -58,8 +55,8 @@
         <tr>
           <!-- Footer for notification -->
           <div class="relative">
-            <br><b>If you have queries regarding your child`s medication please contact the Liver Clinical Nurse Specialist Team on 0203-299-3773 or the pharmacy team at
-              King`s directly on 0203-299-9000 ext 5723 between 9:00 AM- 5:00 PM Monday to Friday. Out of these hours please contact rays of Sunshine Ward on 0203-299-3577.</b>
+            <br><b>If you have queries regarding your child's medication please contact the Liver Clinical Nurse Specialist Team on 0203-299-3773 or the pharmacy team at
+              King's directly on 0203-299-9000 ext 5723 between 9:00 AM- 5:00 PM Monday to Friday. Out of these hours please contact rays of Sunshine Ward on 0203-299-3577.</b>
           </div>
         </tr>
       </tbody>
