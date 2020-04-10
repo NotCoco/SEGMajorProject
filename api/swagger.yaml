@@ -382,6 +382,15 @@ securityDefinitions:
     in: header
     name: X-API-Key
 definitions:
+  AppInfo:
+    type: object
+    properties:
+      hospitalName:
+        type: string
+        example: King's College Hospital
+      departmentName:
+        type: string
+        example: Paediatric Liver Service
   SiteDescription:
     type: object
     properties:
