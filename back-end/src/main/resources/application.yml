@@ -3,15 +3,14 @@ datasources:
     url: ${JDBC_URL:`jdbc:mysql:///segmajor0105?cloudSqlInstance=even-kite-271719:europe-west2:segmedapp01773&socketFactory=com.google.cloud.sql.mysql.SocketFactory&user=client&password=testClientPw`}
     username: ${JDBC_USER:client}
     password: ${JDBC_PASSWORD:testClientPw}
+
     driverClassName: ${JDBC_DRIVER:com.mysql.jdbc.Driver}
     dialect: org.hibernate.dialect.MySQL8Dialect
 
 jpa:
   default:
     packages-to-scan:
-
       - 'com.projectBackEnd.Services'
-
     properties:
       hibernate:
         hbm2ddl:
@@ -30,7 +29,7 @@ micronaut:
     maxRequestSize: 100MB
     multipart:
       maxFileSize: 100MB
-    host: 178.62.55.191
+    host: localhost	
     netty:
       maxHeaderSize: 500KB
       worker:
