@@ -1,9 +1,8 @@
 datasources:
   default:
-    url: ${JDBC_URL:`jdbc:mysql:///segmajor0105?cloudSqlInstance=even-kite-271719:europe-west2:segmedapp01773&socketFactory=com.google.cloud.sql.mysql.SocketFactory&user=client&password=testClientPw`}
-    username: ${JDBC_USER:client}
-    password: ${JDBC_PASSWORD:testClientPw}
-
+    url: ${JDBC_URL:`jdbc:mysql://127.0.0.1:3306/testunittest`}
+    username: ${JDBC_USER:root}
+    password: ${JDBC_PASSWORD:}
     driverClassName: ${JDBC_DRIVER:com.mysql.jdbc.Driver}
     dialect: org.hibernate.dialect.MySQL8Dialect
 
@@ -19,7 +18,7 @@ jpa:
 
 micronaut:
   server:
-    cors: 
+    cors:
       enabled: true
       configurations:
         web:
@@ -29,11 +28,10 @@ micronaut:
     maxRequestSize: 100MB
     multipart:
       maxFileSize: 100MB
-    host: localhost	
+    host: localhost
     netty:
       maxHeaderSize: 500KB
       worker:
         threads: 8
       childOptions:
         autoRead: true
-
