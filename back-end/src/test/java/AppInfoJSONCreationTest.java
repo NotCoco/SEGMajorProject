@@ -12,7 +12,9 @@ import static org.junit.Assert.*;
 
 /**
  * This class tests that a JSON will be created if the file location is not existing already.
- * It will take place on servers etc. It must be in a separate class as the file is a class static variable.
+ * It will take place on servers etc. It must be in a separate class as the file is a class static variable
+ * To test this class, it must be executed separately from other classes as if other AppInfo classes run first,
+ * the static will be preset.
  */
 class AppInfoJSONCreationTest {
 
@@ -48,11 +50,5 @@ class AppInfoJSONCreationTest {
         infoManager.updateInfo(new AppInfo("Interesting Hospital", "Cool Department"));
         assertEquals(infoManager.getInfo().getHospitalName(), "Interesting Hospital");
     }
-    /**
-     * Prove the created file exists
-     */
-    @Test
-    void testCreatedFileExists() {
-        assertTrue(new File(path).exists());
-    }
+
 }
