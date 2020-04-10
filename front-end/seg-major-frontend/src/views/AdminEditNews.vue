@@ -97,8 +97,8 @@
             </div>
 
             <div class="control">
-              <label class="checkbox">
-                <input type="checkbox" v-model="article.pinned" />
+              <label class="checkbox" :disabled="article.urgent">
+                <input type="checkbox" :disabled="article.urgent" v-model="article.pinned" />
                 <span>
                   <span class="icon is-small">
                     <font-awesome-icon icon="thumbtack" />
