@@ -15,20 +15,16 @@ import static main.java.com.projectBackEnd.URLLocation.location;
 @Controller("/appinfo")
 public class AppInfoController {
 
-    protected final AppInfoManagerInterface infoManager = AppInfoManager.getInfoManager();
+    private final AppInfoManagerInterface infoManager = AppInfoManager.getInfoManager();
     protected final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
 
-    /**
-     * Default constructor
-     */
-    public AppInfoController() {}
 
     /**
      * Get the stored information out of the singleton manager
      * @return The AppInfo stored in the manager
      */
     @Get("/")
-    public AppInfo getInfo(){
+    public AppInfo getHospitalData(){
         return infoManager.getInfo();
     }
 

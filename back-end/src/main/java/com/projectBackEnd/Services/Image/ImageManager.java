@@ -15,7 +15,7 @@ public class ImageManager implements ImageManagerInterface {
 	//Random name related variables
 	private final static String lexicon = "ABCDEFGHIJKLMNOPQRSTUVWXYZ12345674890";
 	private final java.util.Random rand = new java.util.Random();
-	private final Set<String> identifiers = new HashSet<String>();
+	private final Set<String> identifiers = new HashSet<>();
 
 	//Directory of the folder where the images are saved
 	private final String dir;
@@ -25,7 +25,7 @@ public class ImageManager implements ImageManagerInterface {
 	 */
 	private ImageManager() {
 		imageManager = this;
-		dir = DirectoryHolder.getDir();
+		dir = DirectoryHolder.getDirectoryHolder().getDir();
 	}
 
 	/**
@@ -65,14 +65,16 @@ public class ImageManager implements ImageManagerInterface {
 		if (extension == null) return null;
 		byte[] data = Base64.getDecoder().decode(fileBytes.getBytes(StandardCharsets.UTF_8));
 		String randomName = randomIdentifier();
-		String path = dir + randomName + "." + extension.toLowerCase();
+		identifiers.add(randomName);
+		String fullName = randomName + "." + extension.toLowerCase();
+		String path = dir + fullName;
 		try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(new File(path)))) {
 			outputStream.write(data);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}
-		return (randomName + "." + extension);
+		return fullName;
 	}
 
 	/**
