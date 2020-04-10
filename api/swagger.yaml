@@ -396,8 +396,6 @@ definitions:
       description:
         type: string
         example: A rare disease of the liver and bile ducts that occurs in infants.
-      published:
-        type: boolean
   Site:
     allOf:
     - $ref: '#/definitions/SiteDescription'
@@ -419,8 +417,6 @@ definitions:
           example: Introduction
         content:
           type: string
-        published:
-          type: boolean
   PageIndex:
     type: object
     properties:
