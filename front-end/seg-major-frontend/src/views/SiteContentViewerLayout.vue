@@ -95,14 +95,15 @@ export default {
   },
   metaInfo() {
     const site = this.site;
+    const appInfo = this.appInfo;
     return {
       titleTemplate: titleChunk => {
         if (site === null) {
-          return `Page Not Found | ${this.appInfo.departmentName}`;
+          return `Page Not Found | ${appInfo.departmentName}`;
         } else if (titleChunk) {
-          return `${titleChunk} - ${site.name} | ${this.appInfo.departmentName}`;
+          return `${titleChunk} - ${site.name} | ${appInfo.departmentName}`;
         } else {
-          return `${site.name} | ${this.appInfo.departmentName}`;
+          return `${site.name} | ${appInfo.departmentName}`;
         }
       }
     }
