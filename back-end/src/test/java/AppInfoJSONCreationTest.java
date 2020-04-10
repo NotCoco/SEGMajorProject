@@ -29,6 +29,9 @@ class AppInfoJSONCreationTest {
         infoManager = AppInfoManager.getInfoManager();
     }
 
+    /**
+     * Delete the file we created
+     */
     @AfterAll
     static void deleteFile() {
         File madeFile = new File(path);
