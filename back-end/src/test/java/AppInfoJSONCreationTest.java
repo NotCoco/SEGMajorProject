@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
 class AppInfoJSONCreationTest {
 
     private static AppInfoManagerInterface infoManager;
-    private static String path = "HelloIWillExist.json";
+    private static String path = System.getProperty("user.dir")+"/HelloIWillExist.json";
 
     /**
      * Set the JSON's location and initialise a manager for testing
