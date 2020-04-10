@@ -36,24 +36,24 @@
 
         <button
           class="button is-light rte-menu-button"
-          :class="{ 'is-active': isActive.heading({ level: 1 }) }"
-          @click="commands.heading({ level: 1 })"
+          :class="{ 'is-active': isActive.heading({ level: 2 }) }"
+          @click="commands.heading({ level: 2 })"
         >
           <span class="rte-menu-button-text-icon">H1</span>
         </button>
 
         <button
           class="button is-light rte-menu-button"
-          :class="{ 'is-active': isActive.heading({ level: 2 }) }"
-          @click="commands.heading({ level: 2 })"
+          :class="{ 'is-active': isActive.heading({ level: 3 }) }"
+          @click="commands.heading({ level: 3 })"
         >
           <span class="rte-menu-button-text-icon">H2</span>
         </button>
 
         <button
           class="button is-light rte-menu-button"
-          :class="{ 'is-active': isActive.heading({ level: 3 }) }"
-          @click="commands.heading({ level: 3 })"
+          :class="{ 'is-active': isActive.heading({ level: 4 }) }"
+          @click="commands.heading({ level: 4 })"
         >
           <span class="rte-menu-button-text-icon">H3</span>
         </button>
