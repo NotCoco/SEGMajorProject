@@ -87,9 +87,9 @@ public class Session implements TableEntity<Session> {
 		String alphaNum = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvxyz";
 		do {
 			StringBuilder sb = new StringBuilder();
-			for(int i = 0; i < 26;++i) sb.append(alphaNum.charAt(rand.nextInt(alphaNum.length())));
+			for(int i = 0; i < SessionManager.tokenLength;++i) sb.append(alphaNum.charAt(rand.nextInt(alphaNum.length())));
 			s = sb.toString();
-		} while(s == null && SessionManager.getSessionManager().verifySession(s));
+		} while(s == null || SessionManager.getSessionManager().verifySession(s));
 		return s;
 
 	}

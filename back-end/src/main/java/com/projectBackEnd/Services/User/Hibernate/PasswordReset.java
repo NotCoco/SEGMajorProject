@@ -40,9 +40,9 @@ public class PasswordReset implements PasswordResetInterface {
 
 		String token = ResetLinkManager.getResetLinkManager().create(email);
 		String title = "Password Reset Request";
-		String content = "please click the link to reset the password " + token + "\n if you did not request password reset please ignore this message";
-		if(SendMail.send(email, title, content)) return;
-		else throw new ServerErrorException("error has occured");
+		String content = "please click the link to reset the password: \n" + token + "\n if you did not request password reset please ignore this message";
+		if(!SendMail.send(email, title, content))
+		 	throw new ServerErrorException("error has occured");
 	
 	}
 

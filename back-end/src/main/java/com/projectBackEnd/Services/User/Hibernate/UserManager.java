@@ -166,11 +166,15 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 	}
 
 	/**
-	 * Get a list of all the users stored in the database
+	 * Get a list of all the users stored in the database, without the passwords
 	 * @return List of users
 	 */
 	public List<User> getUsers(){
-		return getAll();
+		List<User> users = getAll();
+		for(User u: users){
+			u.setPassword("");
+		}
+		return users;
 	}
 
 
@@ -190,8 +194,8 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 			alg.update(withSalt.getBytes(StandardCharsets.UTF_8));
 			return String.format("%0128x", new BigInteger(1, alg.digest()));
 		}
-        catch (NoSuchAlgorithmException e) { 
-            throw new RuntimeException(e);
+       		catch (NoSuchAlgorithmException e) { 
+            		throw new RuntimeException(e);
 		}
 		
 	}
@@ -204,22 +208,19 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 	 * @throws UserNotExistException Invalid user
 	 */
 	public void deleteUser(String email, String password) throws UserNotExistException{
-		String token = verifyUser(email,password) ;
+		String token = verifyUser(email,password);
 		if(token != null){
 			List<User> users = getAll();
-			boolean found = false;
+
 			SessionManager.getSessionManager().terminateSession(token);
 			for(User u: users){
 				if(u.getEmail().equals(email)){
 					delete(u);
-					found = true;
-					break;
+					return;
 				}
 			}
-			if(!found) throw new UserNotExistException("user details incorrect");
 		}
-		else throw new UserNotExistException("user details incorrect");
-
+		throw new UserNotExistException("user details incorrect");
 	}
 	
 

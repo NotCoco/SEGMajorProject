@@ -79,14 +79,67 @@ class ResetLinkManagerTest {
             fail();
         }
     }
+    /**
+     * Tests that the manager is able to delete a token for a link being reset
+     */
+	@Test
+	void testDelete(){
+        fill();
+        try {
+            String a = linkManager.create("test@test.com");
+	    linkManager.delete(a);
+            assertNull(linkManager.getEmail(a));
+        } catch (EmailNotExistException e){
+            fail();
+        }
+
+
+	}
+    /**
+     * Tests that the manager is able to delete a not existing token for a link being reset and not couse issues
+     */
+	@Test
+	void testDeleteNotExist(){
+        fill();
+
+
+			linkManager.delete("");
+            assertNull(linkManager.getEmail(""));
+
+			linkManager.delete(null);
+            assertNull(linkManager.getEmail(null));
+
+
+			linkManager.delete("email@email.com");
+            assertNull(linkManager.getEmail("email@email.com"));
+
+        try {
+            String a = linkManager.create("test@test.com");
+
+ 	} catch (EmailNotExistException e){
+            fail();
+        }
+			linkManager.delete("email@email.com");
+            assertNull(linkManager.getEmail("email@email.com"));
+	}
 
     /**
      * Attempts to create a token for an email which does not exist, expects and exception to be thrown
      */
     @Test
     void testCreateEmailNotExist() {
+
         fill();
         assertThrows(EmailNotExistException.class,() -> {linkManager.create("test2@test.com");});
+    }
+  /**
+     * Attempts to create a token for an null email, expects and exception to be thrown
+     * 
+     */
+    @Test
+    void testCreateEmailNullExist() {
+        fill();
+        assertThrows(EmailNotExistException.class,() -> {linkManager.create(null);});
     }
 
     /**

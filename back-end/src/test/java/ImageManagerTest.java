@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
-
+import java.io.File;
 import static org.junit.Assert.*;
 
 /**
@@ -160,6 +160,18 @@ class ImageManagerTest {
 
         imageManager.deleteAll();
         assertEquals(0, imageManager.getImageUrls().size());
+    }
+
+    @Test
+    /**
+     * Test that a directory can be created if one isn't found
+     */
+    void testCreateDirectory() {
+        String path = System.getProperty("user.dir")+"/toDisappear/";
+        DirectoryHolder.getDirectoryHolder().setDir(path);
+        File found = new File(path);
+        assertTrue(found.exists());
+        found.delete();
     }
 
     /**

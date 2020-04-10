@@ -69,7 +69,7 @@ class AppInfoControllerTest {
     @Test
     void testUpdatingInfo() {
         updateInformation(new AppInfo("Interesting New Hospital", "Cool Department"));
-        assertEquals(getInfo().getHospitalName(), "Interesting New Hospital");
+        assertEquals("Interesting New Hospital", getInfo().getHospitalName());
     }
 
     /**
@@ -78,7 +78,7 @@ class AppInfoControllerTest {
     @Test
     void testUpdatingAndGettingInfo() {
         updateInformation(new AppInfo("Cool", "Cool Department"));
-        assertEquals(getInfo().getHospitalName(), "Cool");
+        assertEquals("Cool", getInfo().getHospitalName());
     }
 
     /**
@@ -87,7 +87,7 @@ class AppInfoControllerTest {
     @Test
     void testUpdatingAndGettingInfoAgain() {
         updateInformation(new AppInfo("Fancy update", "Cool Department"));
-        assertEquals(getInfo().getHospitalName(), "Fancy update");
+        assertEquals("Fancy update", getInfo().getHospitalName());
     }
 
     /**
