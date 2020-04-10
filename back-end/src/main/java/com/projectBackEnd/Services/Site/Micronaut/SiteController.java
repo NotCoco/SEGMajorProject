@@ -4,6 +4,8 @@ import io.micronaut.http.HttpHeaders;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
+import main.java.com.projectBackEnd.DuplicateKeysException;
+import main.java.com.projectBackEnd.InvalidFieldsException;
 import main.java.com.projectBackEnd.Services.Session.SessionManager;
 import main.java.com.projectBackEnd.Services.Session.SessionManagerInterface;
 import main.java.com.projectBackEnd.Services.Site.Hibernate.Site;
@@ -49,15 +51,20 @@ public class SiteController {
      * @return HTTP response with relevant information resulting from the insertion of the site
      */
     @Post("/")
-    public HttpResponse<Site> add(@Header("X-API-Key") String session,@Body SiteAddCommand command) {
+    public HttpResponse add(@Header("X-API-Key") String session,@Body SiteAddCommand command) {
 
 		if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
-        Site s = siteManager.addSite(new Site(command.getSlug(), command.getName()));
-        if(siteManager.getByPrimaryKey(s.getPrimaryKey()) == null) return HttpResponse.serverError();
+		Site site;
+		try {
+            site = siteManager.addSite(new Site(command.getSlug(), command.getName()));
+        } catch (DuplicateKeysException | InvalidFieldsException e) {
+            return HttpResponse.badRequest(e.getMessage());
+        }
+        //if(siteManager.getByPrimaryKey(s.getPrimaryKey()) == null) return HttpResponse.serverError();
 
         return HttpResponse
-                .created(s)
-                .headers(headers -> headers.location(location(s.getSlug(), "/sites/")));
+                .created(site)
+                .headers(headers -> headers.location(location(site.getSlug(), "/sites/")));
     }
 
     /**
@@ -71,7 +78,11 @@ public class SiteController {
 
         if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
         Site newSite = new Site(updatedSiteCommand.getPrimaryKey(), updatedSiteCommand.getSlug(), updatedSiteCommand.getName());
-        siteManager.update(newSite);
+        try {
+            siteManager.update(newSite);
+        } catch (DuplicateKeysException | InvalidFieldsException e) {
+            return HttpResponse.badRequest(e.getMessage());
+        }
 
         return HttpResponse
                 .noContent()

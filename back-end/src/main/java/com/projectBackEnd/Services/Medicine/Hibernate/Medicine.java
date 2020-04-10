@@ -10,10 +10,14 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import javax.validation.constraints.NotNull;
-
+/**
+ * Medicine objects are database entities for the table 'Medicines' defined in this class.
+ * The have an auto-increment 'ID' from the database.
+ * Inspiration : https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
+ */
 @Entity
 @Table(name = Medicine.TABLENAME)
-public class Medicine implements TableEntity {
+public class Medicine implements TableEntity<Medicine> {
 
     // 'Medicine' database table name and attributes
     static final String TABLENAME = "Medicines";
@@ -115,15 +119,14 @@ public class Medicine implements TableEntity {
 
     /**
      * Copy the values of the input TableEntity object
-     * @param toCopy    Medicine object to copy
+     * @param medicineToCopy    Medicine object to copy
      * @return this, updated medicine object
      */
     @Override
-    public TableEntity copy(TableEntity toCopy) {
+    public Medicine copy(Medicine medicineToCopy) {
 
-        Medicine medToCopy = (Medicine) toCopy;
-        setName(medToCopy.getName());
-        setType(medToCopy.getType());
+        setName(medicineToCopy.getName());
+        setType(medicineToCopy.getType());
 
         return this;
 

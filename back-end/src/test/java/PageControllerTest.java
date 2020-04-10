@@ -115,7 +115,7 @@ class PageControllerTest {
         addPage(new PageAddCommand("testSiteA", "anotherPage", 12, "Title", "nutri!tion/information"),token);
         addPage(new PageAddCommand("testSiteA", "coolPage", 20, "Title", "nutri!tion/information"),token);
         addPage(new PageAddCommand("testSiteA", "Paaage", 13, "Title", "nutri!tion/information"),token);
-        //public PagePatchCommand(int id, String slug, int index) {
+
         List<Page> allPagesWithID = pageManager.getAllPages();
         List<PagePatchCommand> input = new ArrayList<>();
 
@@ -130,6 +130,18 @@ class PageControllerTest {
 
     }
 
+    /**
+     * Test what happens when a page is patched but it doesn't exist
+     */
+    @Test
+    void testPatchingUnfoundPages() {
+        List<PagePatchCommand> input = new ArrayList<>();
+        input.add(new PagePatchCommand(-1, "unfound_slug", 2));
+        HttpRequest request = HttpRequest.PATCH("/sites/"+ "testSiteA" +"/page-indices", input).header("X-API-Key",token);
+        HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+            client.toBlocking().exchange(request);
+        });
+    }
 
 	/**
 	* Test if patching with invalid token returns unauthorized HTTP response
@@ -141,7 +153,7 @@ class PageControllerTest {
         addPage(new PageAddCommand("testSiteA", "anotherPage", 12, "Title", "nutri!tion/information"),token);
         addPage(new PageAddCommand("testSiteA", "coolPage", 20, "Title", "nutri!tion/information"),token);
         addPage(new PageAddCommand("testSiteA", "Paaage", 13, "Title", "nutri!tion/information"),token);
-        //public PagePatchCommand(int id, String slug, int index) {
+
         List<Page> allPagesWithID = pageManager.getAllPages();
         List<PagePatchCommand> input = new ArrayList<>();
 
@@ -305,6 +317,54 @@ class PageControllerTest {
     }
 
     /**
+     * Attemps to update a page to null index value
+     */
+    @Test
+    void updateToNullIndexValues() {
+        addSite("testSiteA", "name1",token);
+        addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
+        addPage(new PageAddCommand("testSiteA", "sameKey", 1, "Title", "nutri!tion/information"),token);
+        int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
+        try {
+            putPage(new PageUpdateCommand(idOfMadePage, "notvalid", "sameKey", null, "test222", "nutri!tion/information"),token);
+            fail();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        assertNotNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
+    }
+    /**
+     * Attemps to update a page to null other non-index values - keeping a valid site and index to
+     * not produce null pointer exceptions
+     */
+    @Test
+    void updateToNullValues() {
+        addSite("testSiteA", "name1",token);
+        addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
+        addPage(new PageAddCommand("testSiteA", "sameKey", 1, "Title", "nutri!tion/information"),token);
+        int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
+        HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class, () -> {
+            putPage(new PageUpdateCommand(idOfMadePage, "testSiteA", null, 1, null, null), token);
+        });
+
+        assertNotNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
+    }
+
+    /**
+     * Attemps to update a page with a null primary key
+     */
+    @Test
+    void updateWithNullPrimaryKey() {
+        addSite("testSiteA", "name1",token);
+        try {
+            putPage(new PageUpdateCommand(null, "testSiteA", "set", 1, "set", "notnull"),token);
+            fail();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Tests that the endpoint is able to update an existing legal page's title to a legal value
      */
     @Test
@@ -313,7 +373,7 @@ class PageControllerTest {
         addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
         assertNotNull(pageManager.getAllPages().get(0));
         int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
-        //protected HttpResponse putPage(new PageUpdateCommand(int id, String siteName, String slug, int index, String title, String content) {
+
         putPage(new PageUpdateCommand(idOfMadePage, "testSiteA", "nutrition/slu!#g", 1, "newTitle", "nutri!tion/information"),token);
         assertEquals("newTitle",pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getTitle());
         Page testPage = getPage("testSiteA", "nutrition/slu!#g");
@@ -328,7 +388,7 @@ class PageControllerTest {
         addSite("testSiteA", "name!",token);
         addSite("testSiteB", "name!",token);
         addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
-        //gets id of above page
+
         int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
 
         putPage(new PageUpdateCommand(idOfMadePage, "testSiteA", "nutrition/slu!#g", 1, "newTitle", "nutri!tion/information"),token);
@@ -345,7 +405,7 @@ class PageControllerTest {
         addSite("testSiteA", "name1",token);
         addSite("testSiteB", "name1",token);
         addPage(new PageAddCommand("testSiteA", "nutrition/slu!#g", 1, "Title", "nutri!tion/information"),token);
-        //gets id of above page
+
         int idOfMadePage = pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g").getPrimaryKey();
 
         putPage(new PageUpdateCommand(idOfMadePage, "testSiteA", "nutrition/sl123u!#g", 1, "newTitle", "nutri!tion/information"),token);

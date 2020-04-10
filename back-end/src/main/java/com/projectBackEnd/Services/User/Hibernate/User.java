@@ -19,9 +19,9 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = User.TABLENAME)
-public class User implements TableEntity {
+public class User implements TableEntity<User> {
 
-	// table columns (attributes)
+	// Table columns (attributes)
 	final static String TABLENAME = "Users";
 	private final static String KEY = "id";
 	private final static String EMAIL = "email";
@@ -127,16 +127,15 @@ public class User implements TableEntity {
 
 	/**
 	 * Copy the values of the input TableEntity object
-	 * @param toCopy    User object to copy
+	 * @param userToCopy    User object to copy
 	 * @return this, updated User object
 	 */
   	@Override
-    public TableEntity copy(TableEntity toCopy) {
-  		User newUserVersion = (User) toCopy;
-        setEmail(newUserVersion.getEmail());
-        setPassword(newUserVersion.getPassword());
-        setName(newUserVersion.getName());
-      	return newUserVersion;
+    public User copy(User userToCopy) {
+        setEmail(userToCopy.getEmail());
+        setPassword(userToCopy.getPassword());
+        setName(userToCopy.getName());
+      	return this;
     }
 
 }

@@ -1,6 +1,8 @@
 
 package test.java;
 
+import main.java.com.projectBackEnd.DuplicateKeysException;
+import main.java.com.projectBackEnd.InvalidFieldsException;
 import main.java.com.projectBackEnd.Services.Site.Hibernate.Site;
 import main.java.com.projectBackEnd.Services.Site.Hibernate.SiteManager;
 import main.java.com.projectBackEnd.Services.Site.Hibernate.SiteManagerInterface;
@@ -52,7 +54,11 @@ class SiteManagerTest {
     }
 //======================================================================================================================
     //Testing the Site Creation Constructors
-
+    /* If a method throws these exceptions, it should fail as they should not be thrown.
+     * This would be repeated over all the tests and so has not been added.
+     * @throws DuplicateKeysException If addition of this object article will cause a duplicate slug present
+     * @throws InvalidFieldsException If the object contains fields which cannot be added to the database e.g. nulls
+     */
     /**
      * Testing that creating a site object correctly assigns all the fields with expected values
      */
@@ -112,7 +118,7 @@ class SiteManagerTest {
      * Test the fill database method below, and the getAllSites method to show that all are successfully added.
      */
     @Test
-     void testFillingAndGetting() {
+     void testFillingAndGetting() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfSites());
         assertEquals(getListOfSites().size(), siteManager.getAllSites().size());
     }
@@ -121,7 +127,7 @@ class SiteManagerTest {
      * Test the fill database method such that all the sites stored have matching names and types to the ones added.
      */
     @Test
-     void testFillingAndGettingValues() {
+     void testFillingAndGettingValues() throws DuplicateKeysException, InvalidFieldsException {
         ArrayList<Site> addedSites = getListOfSites();
         fillDatabase(addedSites);
         List<Site> foundSites = siteManager.getAllSites();
@@ -158,7 +164,7 @@ class SiteManagerTest {
      * Testing a database will be flushed by the deleteAll method used between tests
      */
     @Test
-     void testDeleteAllFilledDatabase() {
+     void testDeleteAllFilledDatabase() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfSites());
         assertEquals(getListOfSites().size(), siteManager.getAllSites().size());
         siteManager.deleteAll();
@@ -171,7 +177,7 @@ class SiteManagerTest {
      * Test adding a regular Site article to the database.
      */
     @Test
-     void testAddSite() {
+     void testAddSite() throws DuplicateKeysException, InvalidFieldsException {
         siteManager.addSite(new Site("''DROP TABLE';;';;//#slug", "same"));
         siteManager.addSite(new Site(231, "popslug", "name"));
         assertEquals(2, siteManager.getAllSites().size());
@@ -184,17 +190,20 @@ class SiteManagerTest {
      * Adding a site object with null values will not be added to the database.
      */
     @Test
-     void testAddSiteWithNullValues() {
+     void testAddSiteWithNullValues() throws DuplicateKeysException, InvalidFieldsException {
         int sizeBefore = siteManager.getAllSites().size();
-        siteManager.addSite(new Site(null, null));
-        assertEquals(sizeBefore, siteManager.getAllSites().size());
+        try {
+            siteManager.addSite(new Site(null, null));
+        } catch (InvalidFieldsException e) {
+            assertEquals(sizeBefore, siteManager.getAllSites().size());
+        }
     }
 
     /**
      * Testing adding sites with empty values
      */
     @Test
-     void testAddSiteWithEmptyStringValues() {
+     void testAddSiteWithEmptyStringValues() throws DuplicateKeysException, InvalidFieldsException {
         int sizeBefore = siteManager.getAllSites().size();
         siteManager.addSite(new Site("   ", ""));
         assertEquals(sizeBefore+1, siteManager.getAllSites().size());
@@ -203,7 +212,7 @@ class SiteManagerTest {
      * Testing adding sites which share the same slug. This should not be possible.
      */
     @Test
-     void testDuplicateSlugAddition() {
+     void testDuplicateSlugAddition() throws DuplicateKeysException, InvalidFieldsException {
         int sizeBefore = siteManager.getAllSites().size();
         String slug = "identicalSlug!";
         siteManager.addSite(new Site(slug, "differentName"));
@@ -211,7 +220,7 @@ class SiteManagerTest {
         try {
             siteManager.addSite(new Site(slug, "sameName"));
             fail();
-        } catch (PersistenceException e) {
+        } catch (DuplicateKeysException e) {
             e.printStackTrace();
         }
         assertEquals(sizeBefore+1, siteManager.getAllSites().size());
@@ -223,7 +232,7 @@ class SiteManagerTest {
      * Testing that site objects can be found and made from their primary key.
      */
     @Test
-     void testGetByPrimaryKey() {
+     void testGetByPrimaryKey() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfSites());
         Site foundSite = siteManager.getAllSites().get(0);
         int sitePK = foundSite.getPrimaryKey();
@@ -244,7 +253,7 @@ class SiteManagerTest {
      * Testing an error is thrown if a primary key searched for is null
      */
     @Test
-     void testGetNullPrimaryKey() {
+     void testGetNullPrimaryKey() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfSites());
         int previousSize = siteManager.getAllSites().size();
         try {
@@ -262,7 +271,7 @@ class SiteManagerTest {
      * Test that deleting a site article from the database reduces the number of site articles the database.
      */
     @Test
-     void testDelete() {
+     void testDelete() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfSites());
         siteManager.delete(siteManager.getAllSites().get(1).getPrimaryKey());
         assertEquals( getListOfSites().size()-1, siteManager.getAllSites().size());
@@ -305,7 +314,7 @@ class SiteManagerTest {
      * Test the correct article was infact deleted when using delete
      */
     @Test
-     void testCorrectSiteDeletedUsingPrimaryKey() {
+     void testCorrectSiteDeletedUsingPrimaryKey() throws DuplicateKeysException, InvalidFieldsException {
         Site toBeDeleted = siteManager.addSite(new Site("getting deleted", "soon won't exist"));
         Site alsoAdded = siteManager.addSite(new Site("content", "slug3"));
         assertEquals(2, siteManager.getAllSites().size());
@@ -322,7 +331,7 @@ class SiteManagerTest {
      * Testing updating one of the existing site articles into another one
      */
     @Test
-     void testUpdateSite() {
+     void testUpdateSite() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfSites());
         int id = siteManager.getAllSites().get(0).getPrimaryKey();
         Site replacementSite = new Site(id, "another unique slug", "name");
@@ -337,7 +346,7 @@ class SiteManagerTest {
      * Testing updating a site article so it violates the unique - it should throw an error
      */
     @Test
-     void testUpdateSiteWithDupeSlug() {
+     void testUpdateSiteWithDupeSlug()throws DuplicateKeysException, InvalidFieldsException {
         Site toBeUpdated = siteManager.addSite(new Site("slug", "Spicy name!"));
         siteManager.addSite(new Site("I should be unique slug", "Spicy unique name!"));
         int previousSize = siteManager.getAllSites().size();
@@ -346,7 +355,7 @@ class SiteManagerTest {
         try {
             siteManager.update(replacementSite);
             fail();
-        } catch (PersistenceException e) {
+        } catch (DuplicateKeysException e) {
             e.printStackTrace();
             assertEquals(siteManager.getAllSites().size(), previousSize);
         }
@@ -356,7 +365,7 @@ class SiteManagerTest {
      * Test update a site article with nulls - should throw an error
      */
     @Test
-     void testUpdateSiteWithNullValues() {
+     void testUpdateSiteWithNullValues() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfSites());
         int previousSize = siteManager.getAllSites().size();
         int id = siteManager.getAllSites().get(0).getPrimaryKey();
@@ -364,7 +373,7 @@ class SiteManagerTest {
         try {
             siteManager.update(replacementSite);
             fail();
-        } catch (PersistenceException e) {
+        } catch (InvalidFieldsException e) {
             e.printStackTrace();
             assertEquals(siteManager.getAllSites().size(), previousSize);
         }
@@ -374,7 +383,7 @@ class SiteManagerTest {
      * Test update a site article with empty string values
      */
     @Test
-     void testUpdateSiteWithEmptyStringValues() {
+     void testUpdateSiteWithEmptyStringValues() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfSites());
         int id = siteManager.getAllSites().get(0).getPrimaryKey();
         Site replacementSite = new Site(id, "", "");
@@ -388,10 +397,10 @@ class SiteManagerTest {
      * Test what happens if a null site is updated
      */
     @Test
-     void testUpdateNullSite() {
+     void testUpdateNullSite() throws DuplicateKeysException, InvalidFieldsException {
         try {
             siteManager.update(new Site());
-        } catch (IllegalArgumentException e) {
+        } catch (InvalidFieldsException e) {
             e.printStackTrace();
         }
     }
@@ -400,7 +409,7 @@ class SiteManagerTest {
      * Test updating a site that doesn't exist
      */
     @Test
-     void testUpdateUnfoundSite() {
+     void testUpdateUnfoundSite() throws DuplicateKeysException, InvalidFieldsException {
         int previousSize = siteManager.getAllSites().size();
         assertNull(siteManager.getByPrimaryKey(-100));
         Site newSite = new Site("slug", "Spicy name!");
@@ -413,7 +422,7 @@ class SiteManagerTest {
      * Test that unique slugs can be used to obtain the Site from the database.
      */
     @Test
-     void testGetSiteBySlug() {
+     void testGetSiteBySlug()throws DuplicateKeysException, InvalidFieldsException  {
         fillDatabase(getListOfSites());
         siteManager.addSite(new Site("unique-slug", "f"));
         Site found = siteManager.getSiteBySlug("unique-slug");
@@ -425,7 +434,7 @@ class SiteManagerTest {
      * Test searching for a slug that doesn't exist in the table.
      */
     @Test
-     void testGetNewsByUnfoundSlug() {
+     void testGetNewsByUnfoundSlug() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfSites());
         Site found = siteManager.getSiteBySlug("not a slug in the database sorry");
         assertNull(found);
@@ -435,7 +444,7 @@ class SiteManagerTest {
      * Testing an error is thrown if a slug searched for is null
      */
     @Test
-     void testGetNewsByNullSlug() {
+     void testGetNewsByNullSlug() throws DuplicateKeysException, InvalidFieldsException {
         fillDatabase(getListOfSites());
         Site found = siteManager.getSiteBySlug(null);
         assertNull(found);
@@ -465,7 +474,7 @@ class SiteManagerTest {
      * Fill the database with a given list of sites
      * @param listOfSites The list of sites to go into the database
      */
-    private void fillDatabase(ArrayList<Site> listOfSites) {
+    private void fillDatabase(ArrayList<Site> listOfSites) throws DuplicateKeysException, InvalidFieldsException {
         for (int i = 0; i<listOfSites.size(); ++i) siteManager.addSite(listOfSites.get(i));
     }
 

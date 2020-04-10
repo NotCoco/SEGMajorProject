@@ -60,7 +60,17 @@ class SessionManagerTest {
 		assertEquals(1,sessions.stream().filter(s->(s.getToken().equals(token))).count());
 	}
 
-
+	/**
+	 * Test copying sessions
+	 */
+ 	@Test
+	void testCopySessions() {
+ 		Session session1 = new Session();
+ 		Session session2 = new Session("12,", 4);
+ 		session1.copy(session2);
+ 		assertEquals(session2.getEmail(), session1.getEmail());
+ 		assertEquals(session2.getToken(), session1.getToken());
+	}
 	/**
 	 * Tests that the manager is able to verify existing sessions depending on if the correct token is supplied,
 	 * expects success

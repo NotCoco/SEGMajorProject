@@ -134,7 +134,7 @@ class SiteControllerTest {
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
             client.toBlocking().exchange(HttpRequest.POST("/sites", new SiteAddCommand("slug", "")).header("X-API-Key",token));
         });
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatus());
     }
 
     /**
@@ -145,7 +145,7 @@ class SiteControllerTest {
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
             client.toBlocking().exchange(HttpRequest.POST("/sites", new SiteAddCommand("", ".")).header("X-API-Key",token));
         });
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatus());
     }
 
     /**
@@ -220,7 +220,7 @@ class SiteControllerTest {
     void testDeleteAndGetSite(){
         HttpResponse response = addSite("testSlug", "testSite");
         String url =  getEUrl(response);
-        // Asserting that we've added a site
+
         assertEquals(HttpStatus.CREATED, response.getStatus());
 
         HttpRequest request = HttpRequest.DELETE("/sites/"+url).header("X-API-Key",token);
@@ -275,7 +275,7 @@ class SiteControllerTest {
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
             client.toBlocking().exchange(HttpRequest.PUT("/sites", new SiteUpdateCommand(id, "slug", "")).header("X-API-Key",token));
         });
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, thrown.getStatus());
+        assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatus());
     }
 	/**
 	*	Test if updating while using incorrect session token returns an HTTP unauthorized exception

@@ -204,7 +204,6 @@ class MedicineControllerTest{
     void testDeleteAndGetMedicine(){
         HttpResponse response = addMedicine(new MedicineAddCommand("Med1", "Liquid"));
         int id =  getEId(response).intValue();
-        // Asserting that we've added a medicine
         assertEquals(HttpStatus.CREATED, response.getStatus());
 
         HttpRequest request = HttpRequest.DELETE("/medicines/"+id).header("X-API-Key",token);

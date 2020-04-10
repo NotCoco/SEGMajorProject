@@ -17,11 +17,11 @@ import java.io.Serializable;
  * They have a Token, a date of the session been created, a Timeout, and an Email
  * within the site, a title, and some content.
  *
- * https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
+ * Inspiration : https://examples.javacodegeeks.com/enterprise-java/hibernate/hibernate-annotations-example/
  */
 @Entity
 @Table(name = Session.TABLENAME)
-public class Session implements TableEntity {
+public class Session implements TableEntity<Session> {
 
 	// 'Session' database table name and columns
 	final static String TABLENAME = "Sessions";
@@ -36,15 +36,12 @@ public class Session implements TableEntity {
 	@Column(name = TOKEN)
 	private String token;
 
-	// The date, used in email generation
 	@Column(name = DATE)
 	private Timestamp date;
 
-	// A timeout upper bound (seconds)
 	@Column(name = TIMEOUT)
 	private Timestamp timeout;
 
-	// The email of the user associated with the session
 	@Column(name = EMAIL)
 	private String email;
 
@@ -136,19 +133,16 @@ public class Session implements TableEntity {
 
 	/**
 	 * Copy the values of input object
-	 * @param toCopy	Session to copy
+	 * @param sessionToCopy	Session to copy
 	 * @return updated object
 	 */
-	public TableEntity copy(TableEntity toCopy) {
+	public Session copy(Session sessionToCopy) {
 
-		if (toCopy instanceof Session){
-			token = ((Session)toCopy).getToken();
-			date = ((Session)toCopy).getDate();
-			timeout = ((Session)toCopy).getTimeout();
-			email = ((Session)toCopy).getEmail();
-			return this;
-		}
-		else return null;
+		token = sessionToCopy.getToken();
+		date = sessionToCopy.getDate();
+		timeout = sessionToCopy.getTimeout();
+		email = sessionToCopy.getEmail();
+		return this;
 	}
 
 

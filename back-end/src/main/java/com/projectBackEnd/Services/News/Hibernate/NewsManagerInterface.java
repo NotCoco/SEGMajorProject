@@ -1,5 +1,8 @@
 package main.java.com.projectBackEnd.Services.News.Hibernate;
 
+import main.java.com.projectBackEnd.DuplicateKeysException;
+import main.java.com.projectBackEnd.InvalidFieldsException;
+
 import java.util.List;
 
 
@@ -8,9 +11,9 @@ import java.util.List;
  */
 public interface NewsManagerInterface {
 
-    News addNews(News news);
+    News addNews(News news) throws DuplicateKeysException, InvalidFieldsException;
 
-    News update(News news);
+    News update(News news) throws DuplicateKeysException, InvalidFieldsException ;
 
     News getByPrimaryKey(Integer id);
 
