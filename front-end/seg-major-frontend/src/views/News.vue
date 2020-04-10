@@ -5,7 +5,7 @@
       <div class="hero-body">
         <div class="container">
           <h1 class="title">News</h1>
-          <h2 class="subtitle">Get the latest news and advice</h2>
+          <h2 class="subtitle">Read our latest news and guidance</h2>
         </div>
       </div>
     </section>
