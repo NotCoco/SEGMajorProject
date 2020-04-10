@@ -50,13 +50,14 @@ class UserControllerTest{
 	private static final UserManagerInterface userManager = UserManager.getUserManager();
 	private static final ResetLinkManagerInterface linkManager = ResetLinkManager.getResetLinkManager();	
 	private static final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
+	private static String token;
 	/**
 	* Set database to test database
 	*/
     @BeforeAll
     static void setUpDatabase() {
         HibernateUtility.setResource("testhibernate.cfg.xml");
-
+	
     }
 	/**
 	* Closes the database and deletes any user, link or session objects
@@ -69,35 +70,42 @@ class UserControllerTest{
         HibernateUtility.shutdown();
     }
 	/**
-	* Deletes all session, user or link objects
+	* Deletes all session, user or link objects and add user for authorisation
 	*/
     @BeforeEach
     void setUp() {
 		((EntityManager)userManager).deleteAll();
 		((EntityManager)linkManager).deleteAll();
 		((EntityManager)sessionManager).deleteAll();
+	try{
+		userManager.addUser("unique_email@email.com","pass","not me");
+		token = userManager.verifyUser("unique_email@email.com","pass");
+	}
+	catch(Exception e){
+		fail();
+	}
     }
 	/**
 	* Test if creating a valid user behaves correctly
 	*/
 	@Test
 	void testCreateUser(){
-		assertEquals(HttpStatus.CREATED,addUser("username@mail.com","password","na me").getStatus());
+		assertEquals(HttpStatus.CREATED,addUser("username@mail.com","password","na me",token).getStatus());
 		String token1 = userManager.verifyUser("username@mail.com","password");
 		assertNotNull(token1);
 		sessionManager.terminateSession(token1);
 
-		assertEquals(HttpStatus.CREATED,addUser("name@mail.com","passw@/-ord","name").getStatus());
+		assertEquals(HttpStatus.CREATED,addUser("name@mail.com","passw@/-ord","name",token).getStatus());
 		String token2 = userManager.verifyUser("name@mail.com","passw@/-ord");
 		assertNotNull(token2);
 		sessionManager.terminateSession(token2);
 
-		assertEquals(HttpStatus.CREATED,addUser("nam123e@mail.com","pas321sw@/-ord","na-me").getStatus());
+		assertEquals(HttpStatus.CREATED,addUser("nam123e@mail.com","pas321sw@/-ord","na-me",token).getStatus());
 		String token3 = userManager.verifyUser("nam123e@mail.com","pas321sw@/-ord");
 		assertNotNull(token3);
 		sessionManager.terminateSession(token3);	
 	
-		assertEquals(HttpStatus.CREATED,addUser("nam123e2@mail.com","pa  s321sw@/-ord","nam e").getStatus());
+		assertEquals(HttpStatus.CREATED,addUser("nam123e2@mail.com","pa  s321sw@/-ord","nam e",token).getStatus());
 		String token4 = userManager.verifyUser("nam123e2@mail.com","pa  s321sw@/-ord");
 		assertNotNull(token4);
 		sessionManager.terminateSession(token4);
@@ -109,22 +117,22 @@ class UserControllerTest{
 	@Test
 	void testCreateUserIncorrectPassword(){
 		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class,()->{
-			addUser("name@name.pl","","name");
+			addUser("name@name.pl","","name",token);
 		});
 		assertEquals(HttpStatus.BAD_REQUEST, thrown1.getStatus());
 	
 		HttpClientResponseException thrown2 = assertThrows(HttpClientResponseException.class,()->{
-			addUser("name@name.pl",null,"name");
+			addUser("name@name.pl",null,"name",token);
 		});
 		assertEquals(HttpStatus.BAD_REQUEST, thrown2.getStatus());
 
 		HttpClientResponseException thrown3 = assertThrows(HttpClientResponseException.class,()->{
-			addUser("name@name.pl","	 ","name");
+			addUser("name@name.pl","	 ","name",token);
 		});
 		assertEquals(HttpStatus.BAD_REQUEST, thrown3.getStatus());
 
      	HttpClientResponseException thrown4 = assertThrows(HttpClientResponseException.class, () -> {
-            	client.toBlocking().retrieve(HttpRequest.POST("/user/create",new UserBody("name@name.pl","","lmao")));
+            	client.toBlocking().retrieve(HttpRequest.POST("/user/create",new UserBody("name@name.pl","","lmao")).header("X-API-Key",token));
         });
 		assertEquals(HttpStatus.BAD_REQUEST, thrown4.getStatus());
 		assertEquals("invalid password", thrown4.getResponse().getBody().get());
@@ -136,27 +144,42 @@ class UserControllerTest{
 	@Test
 	void testCreateUserIncorrectName(){
 		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class,()->{
-			addUser("name@name.pl","password","");
+			addUser("name@name.pl","password","",token);
 		});
 		assertEquals(HttpStatus.BAD_REQUEST, thrown1.getStatus());
 
 
 		HttpClientResponseException thrown2 = assertThrows(HttpClientResponseException.class,()->{
-			addUser("name@name.pl","password",null);
+			addUser("name@name.pl","password",null,token);
 		});
 		assertEquals(HttpStatus.BAD_REQUEST, thrown2.getStatus());
 
 		HttpClientResponseException thrown4 = assertThrows(HttpClientResponseException.class,()->{
-			addUser("name@name.pl","password"," 	");
+			addUser("name@name.pl","password"," 	",token);
 		});
 		assertEquals(HttpStatus.BAD_REQUEST, thrown4.getStatus());
 
      	HttpClientResponseException thrown3 = assertThrows(HttpClientResponseException.class, () -> {
-            	client.toBlocking().retrieve(HttpRequest.POST("/user/create",new UserBody("name@name.pl","password",null)));
+            	client.toBlocking().retrieve(HttpRequest.POST("/user/create",new UserBody("name@name.pl","password",null)).header("X-API-Key",token));
         });
 		assertEquals(HttpStatus.BAD_REQUEST, thrown3.getStatus());
 		assertEquals("invalid name", thrown3.getResponse().getBody().get());
 
+	}
+	/**
+	* Test if creating user while not having a correct session token returns an HTTP error
+	*/
+	@Test
+	void testCreateUserUnauthorized(){
+		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
+			addUser("username@mail.com","password","na me","");
+		});
+		assertEquals(HttpStatus.UNAUTHORIZED , thrown.getStatus());
+
+		HttpClientResponseException thrown2 = assertThrows(HttpClientResponseException.class, () -> {
+			addUser("username@mail.com","password","na me","321bYUdsd36782F14ASd3DSa12vbuyds");
+		});
+		assertEquals(HttpStatus.UNAUTHORIZED , thrown2.getStatus());
 	}
 
 	/**
@@ -165,37 +188,37 @@ class UserControllerTest{
 	@Test
 	void testCreateUserIncorrectEmail(){
 		HttpClientResponseException thrown1 = assertThrows(HttpClientResponseException.class,()->{
-			addUser("name","password","name");
+			addUser("name","password","name",token);
 		});
 		assertEquals(HttpStatus.BAD_REQUEST, thrown1.getStatus());
 		HttpClientResponseException thrown2 = assertThrows(HttpClientResponseException.class,()->{
-			addUser("name@","password","name");
+			addUser("name@","password","name",token);
 		});
 		assertEquals(HttpStatus.BAD_REQUEST, thrown2.getStatus());
 		HttpClientResponseException thrown3 = assertThrows(HttpClientResponseException.class,()->{
-			addUser("@name","password","name");
+			addUser("@name","password","name",token);
 		});
 		assertEquals(HttpStatus.BAD_REQUEST, thrown3.getStatus());
 		HttpClientResponseException thrown4 = assertThrows(HttpClientResponseException.class,()->{
-			addUser("@","password","name");
+			addUser("@","password","name",token);
 		});
 		assertEquals(HttpStatus.BAD_REQUEST, thrown4.getStatus());
 		HttpClientResponseException thrown5 = assertThrows(HttpClientResponseException.class,()->{
-			addUser("@","password","name");
+			addUser("@","password","name",token);
 		});
 		assertEquals(HttpStatus.BAD_REQUEST, thrown5.getStatus());
 		HttpClientResponseException thrown6 = assertThrows(HttpClientResponseException.class,()->{
-			addUser("","password","name");
+			addUser("","password","name",token);
 		});	
 		assertEquals(HttpStatus.BAD_REQUEST, thrown6.getStatus());
 		HttpClientResponseException thrown7 = assertThrows(HttpClientResponseException.class,()->{
-			addUser(null,"password","name");
+			addUser(null,"password","name",token);
 		});
 		assertEquals(HttpStatus.BAD_REQUEST, thrown7.getStatus());
 
 
         HttpClientResponseException thrown8 = assertThrows(HttpClientResponseException.class, () -> {
-            	client.toBlocking().retrieve(HttpRequest.POST("/user/create",new UserBody(null,"pas1234//--+sword","name")));
+            	client.toBlocking().retrieve(HttpRequest.POST("/user/create",new UserBody(null,"pas1234//--+sword","name")).header("X-API-Key",token));
         });
 		assertEquals(HttpStatus.BAD_REQUEST, thrown8.getStatus());
 		assertEquals("invalid email address", thrown8.getResponse().getBody().get());
@@ -213,14 +236,14 @@ class UserControllerTest{
 		catch(InvalidEmailException | EmailExistsException | IncorrectNameException | InvalidPasswordException e){
 			fail();
 		}
-		String token = userManager.verifyUser("username@mail.com","password");
-		assertNotNull(token);
-		sessionManager.terminateSession(token);
+		String token1 = userManager.verifyUser("username@mail.com","password");
+		assertNotNull(token1);
+		sessionManager.terminateSession(token1);
 	
 		
 
         HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
-            	client.toBlocking().retrieve(HttpRequest.POST("/user/create",new UserBody("username@mail.com","password","name")));
+            	client.toBlocking().retrieve(HttpRequest.POST("/user/create",new UserBody("username@mail.com","password","name")).header("X-API-Key",token));
         });
 		assertEquals(HttpStatus.BAD_REQUEST, thrown.getStatus());
 		assertEquals("user already exsits", thrown.getResponse().getBody().get());
@@ -231,15 +254,15 @@ class UserControllerTest{
 	*/
 	@Test
 	void TestLoginCorrect(){
-		assertEquals(HttpStatus.CREATED, addUser("mail@mail.com", "pass", "name").getStatus());
+		assertEquals(HttpStatus.CREATED, addUser("mail@mail.com", "pass", "name",token).getStatus());
 		HttpResponse<String> response = login("mail@mail.com", "pass");
 		assertEquals(HttpStatus.OK, response.getStatus());
 
-		assertEquals(HttpStatus.CREATED, addUser("mail1@mail.com", "pa  s321sw@/-ord", "name").getStatus());
+		assertEquals(HttpStatus.CREATED, addUser("mail1@mail.com", "pa  s321sw@/-ord", "name",token).getStatus());
 		String response1 = getToken("mail1@mail.com", "pa  s321sw@/-ord");
 		assertNotNull(response1);
 
-		assertEquals(HttpStatus.CREATED, addUser("mail2@mail.com", "pas321sw@/-ord", "name").getStatus());
+		assertEquals(HttpStatus.CREATED, addUser("mail2@mail.com", "pas321sw@/-ord", "name",token).getStatus());
 		String response2 = getToken("mail2@mail.com", "pas321sw@/-ord");
 		assertNotNull(response2);
 
@@ -293,7 +316,7 @@ class UserControllerTest{
 	*/
 	@Test
 	void testLogout(){
-		addUser("admin@admin.com","admin","not me");
+		addUser("admin@admin.com","admin","not me",token);
 		String token = getToken("admin@admin.com","admin");
 		assertEquals(HttpStatus.OK, client.toBlocking().exchange(HttpRequest.GET("/user/logout").header("X-API-Key", token)).getStatus());
 		assertFalse(sessionManager.verifySession(token));
@@ -321,14 +344,15 @@ class UserControllerTest{
 	@Test
 	void testGetAll(){
 
-		assertEquals(HttpStatus.CREATED,addUser("admin@admin.com","admin","not me").getStatus());
-		assertEquals(HttpStatus.CREATED,addUser("admin1@admin.com","admin","not me").getStatus());
-		assertEquals(HttpStatus.CREATED,addUser("admin2@admin.com","admin","not me").getStatus());
+		assertEquals(HttpStatus.CREATED,addUser("admin@admin.com","admin","not me",token).getStatus());
+		assertEquals(HttpStatus.CREATED,addUser("admin1@admin.com","admin","not me",token).getStatus());
+		assertEquals(HttpStatus.CREATED,addUser("admin2@admin.com","admin","not me",token).getStatus());
 		String token = getToken("admin@admin.com","admin");
 		List<User> users = client.toBlocking().retrieve(HttpRequest.GET("/user").header("X-API-Key", token), Argument.of(List.class, User.class));
-		assertEquals(users.size(),3);
+		assertEquals(users.size(),4);
 		for(User u:users){
 			assertEquals(u.getName(),"not me");
+			assertNull(u.getPassword());
 		}
 		
 	}
@@ -354,19 +378,19 @@ class UserControllerTest{
 	*/
  	@Test
 	void testDeleteCorrect(){
-			addUser("username@mail.com","password","na me");
+			addUser("username@mail.com","password","na me",token);
 			assertEquals(HttpStatus.OK,delete("username@mail.com","password").getStatus());
 			assertNull(userManager.verifyUser("username@mail.com","password"));
 
-			addUser("name@mail.com","passw@/-ord","name");
+			addUser("name@mail.com","passw@/-ord","name",token);
 			assertEquals(HttpStatus.OK,delete("name@mail.com","passw@/-ord").getStatus());
 			assertNull(userManager.verifyUser("name@mail.com","passw@/-ord"));
 
-			addUser("nam123e@mail.com","pas32sw@/-ord","na-me");
+			addUser("nam123e@mail.com","pas32sw@/-ord","na-me",token);
 			assertEquals(HttpStatus.OK,delete("nam123e@mail.com","pas32sw@/-ord").getStatus());
 			assertNull(userManager.verifyUser("nam123e@mail.com","pas32sw@/-ord"));
 
-			addUser("nam123e@mail.com","pas32  1sw@/-ord","na-me");
+			addUser("nam123e@mail.com","pas32  1sw@/-ord","na-me",token);
 			assertEquals(HttpStatus.OK,delete("nam123e@mail.com","pas32  1sw@/-ord").getStatus());
 			assertNull(userManager.verifyUser("nam123e@mail.com","pas32  1sw@/-ord"));
 	}
@@ -417,7 +441,7 @@ class UserControllerTest{
 	*/
 	@Test
 	void testGetPasswordResetCorrect(){
-		assertEquals(HttpStatus.CREATED,addUser("test@gmail.com","password","name").getStatus());
+		assertEquals(HttpStatus.CREATED,addUser("test@gmail.com","password","name",token).getStatus());
 		assertTrue(userManager.verifyEmail("test@gmail.com"));
 
 		HttpResponse response = client.toBlocking().exchange(HttpRequest.POST("/user/password_reset_request",new StringBody("test@gmail.com")));
@@ -523,21 +547,21 @@ class UserControllerTest{
 	*/
 	@Test
 	void testGetUserDetailsCorrect(){
-		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name").getStatus());
-		String token = userManager.verifyUser("email@email.com", "password");
-		UserBody u = getUserDetails(token);
+		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name",token).getStatus());
+		String token0 = userManager.verifyUser("email@email.com", "password");
+		UserBody u = getUserDetails(token0);
 		assertEquals("name",u.getName());
 		assertEquals("email@email.com",u.getEmail());
-		sessionManager.terminateSession(token);
+		sessionManager.terminateSession(token0);
 
-		assertEquals(HttpStatus.CREATED, addUser("email1@email.com", "password","na me").getStatus());
+		assertEquals(HttpStatus.CREATED, addUser("email1@email.com", "password","na me",token).getStatus());
 		String token1 = userManager.verifyUser("email1@email.com", "password");
 		UserBody u1 = getUserDetails(token1);
 		assertEquals("na me",u1.getName());
 		assertEquals("email1@email.com",u1.getEmail());
 		sessionManager.terminateSession(token1);
 
-		assertEquals(HttpStatus.CREATED, addUser("email2@email.com", "password","na-me").getStatus());
+		assertEquals(HttpStatus.CREATED, addUser("email2@email.com", "password","na-me",token).getStatus());
 		String token2 = userManager.verifyUser("email2@email.com", "password");
 		UserBody u2 = getUserDetails(token2);
 		assertEquals("na-me",u2.getName());
@@ -564,13 +588,24 @@ class UserControllerTest{
 	*/
 	@Test
 	void testChangeEmailCorrect(){
-		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name").getStatus());
+		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name",token).getStatus());
+
 		String token = userManager.verifyUser("email@email.com", "password");
+
+		assertNotNull(token);
 		assertEquals(HttpStatus.OK,changeEmail(token,"newemail@email.com").getStatus());
 		sessionManager.terminateSession(token);
+
 		String token1 = userManager.verifyUser("newemail@email.com", "password");
+
 		assertNotNull(token1);
+		assertEquals(HttpStatus.OK,changeEmail(token1,"email@email.com").getStatus());
 		sessionManager.terminateSession(token1);
+
+		String token2 = userManager.verifyUser("email@email.com", "password");
+		assertNotNull(token2);
+		sessionManager.terminateSession(token2);
+
 
 	}	
 	/**
@@ -592,8 +627,8 @@ class UserControllerTest{
 	*/
 	@Test
 	void testChangeEmailEmailExist(){
-		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name").getStatus());
-		assertEquals(HttpStatus.CREATED, addUser("email1@email.com", "password","name").getStatus());
+		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name",token).getStatus());
+		assertEquals(HttpStatus.CREATED, addUser("email1@email.com", "password","name",token).getStatus());
 		String token = userManager.verifyUser("email@email.com", "password");
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
 				client.toBlocking().exchange(HttpRequest.PUT("/user/change_email",new StringBody("email1@email.com")).header("X-API-Key",token));
@@ -607,7 +642,7 @@ class UserControllerTest{
 	*/
 	@Test
 	void testChangeNameCorrect(){
-		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name").getStatus());
+		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name",token).getStatus());
 		String token = userManager.verifyUser("email@email.com", "password");
 		try{
 			assertEquals(HttpStatus.OK,changeName(token,"na me").getStatus());
@@ -643,7 +678,7 @@ class UserControllerTest{
 	*/
 	@Test
 	void testChangeNameInvalid(){
-		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name").getStatus());
+		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name",token).getStatus());
 		String token = userManager.verifyUser("email@email.com", "password");
 
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
@@ -668,7 +703,7 @@ class UserControllerTest{
 	*/
 	@Test
 	void testChangePasswordCorrect(){
-		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name").getStatus());
+		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name",token).getStatus());
 		String token = userManager.verifyUser("email@email.com", "password");
 
 		assertEquals(HttpStatus.OK,changePassword(token,"newPassoword").getStatus());
@@ -712,7 +747,7 @@ class UserControllerTest{
 	*/
 	@Test
 	void testChangePasswordInvalid(){
-		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name").getStatus());
+		assertEquals(HttpStatus.CREATED, addUser("email@email.com", "password","name",token).getStatus());
 		String token = userManager.verifyUser("email@email.com", "password");
 
 		HttpClientResponseException thrown = assertThrows(HttpClientResponseException.class, () -> {
@@ -737,8 +772,8 @@ class UserControllerTest{
 	 * Create a post request to add user
 	 * @return HTTP response from the request
 	 */
-	private HttpResponse addUser(String email, String password, String name){
-		return client.toBlocking().exchange(HttpRequest.POST("/user/create",new UserBody(email,password,name)));
+	private HttpResponse addUser(String email, String password, String name,String token){
+		return client.toBlocking().exchange(HttpRequest.POST("/user/create",new UserBody(email,password,name)).header("X-API-Key", token));
 	}
 
 	/**

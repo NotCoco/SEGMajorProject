@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 public class SessionManager extends EntityManager implements SessionManagerInterface {
 
 	private static SessionManagerInterface sessionManager;
-
+	public static final int tokenLength = 50;
 	/**
 	 * Private constructor implementing the singleton design pattern
 	 */
@@ -76,7 +76,7 @@ public class SessionManager extends EntityManager implements SessionManagerInter
 	 */
 	public boolean verifySession(String token) {
 
-		if(token == null || token.length() != 26) return false;
+		if(token == null || token.length() != tokenLength) return false;
 
 		List<Session> sessions = getAll();
 		Timestamp now;

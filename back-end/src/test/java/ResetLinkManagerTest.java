@@ -87,7 +87,7 @@ class ResetLinkManagerTest {
         fill();
         try {
             String a = linkManager.create("test@test.com");
-			linkManager.delete(a);
+	    linkManager.delete(a);
             assertNull(linkManager.getEmail(a));
         } catch (EmailNotExistException e){
             fail();
@@ -113,7 +113,14 @@ class ResetLinkManagerTest {
 			linkManager.delete("email@email.com");
             assertNull(linkManager.getEmail("email@email.com"));
 
+        try {
+            String a = linkManager.create("test@test.com");
 
+ 	} catch (EmailNotExistException e){
+            fail();
+        }
+			linkManager.delete("email@email.com");
+            assertNull(linkManager.getEmail("email@email.com"));
 	}
 
     /**

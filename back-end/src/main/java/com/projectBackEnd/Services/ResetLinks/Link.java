@@ -96,7 +96,7 @@ public class Link implements TableEntity<Link> {
 			sb.append(alphaNum.charAt(rand.nextInt(alphaNum.length())));
 		}
 		s = sb.toString();
-	}while(s == null && ResetLinkManager.getResetLinkManager().exist(s));
+	}while(s == null || ResetLinkManager.getResetLinkManager().exist(s));
 		return s;
 	}
 }

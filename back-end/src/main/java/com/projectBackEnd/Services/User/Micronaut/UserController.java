@@ -36,8 +36,8 @@ public class UserController {
 	 * @return HTTP response with relevant information resulting from the insertion of the user
 	 */
 	@Post("/create")
-	public HttpResponse createUser(@Body UserBody user) {
-
+	public HttpResponse createUser(@Header("X-API-Key") String session, @Body UserBody user) {
+		if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
 		try {
 			userManager.addUser(user.getEmail(),user.getPassword(),user.getName());
 			return HttpResponse.created("user created"); 
@@ -139,7 +139,7 @@ public class UserController {
 	public HttpResponse<String> passwordReset(@Body PasswordResetBody body) {
 
 		try{
-        	PasswordReset.getPasswordResetManager().changePassword(body.getToken(), body.getPassword());
+        		PasswordReset.getPasswordResetManager().changePassword(body.getToken(), body.getPassword());
 			return HttpResponse.ok();
 		} catch(TokenNotExistException e){
 			return HttpResponse.notFound("incorrect token");

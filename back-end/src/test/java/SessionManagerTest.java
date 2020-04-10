@@ -80,10 +80,12 @@ class SessionManagerTest {
 		fillDatabase(getTestSessions());
 		String token = sessionManager.getNewSession("1",100);
 		List<Session> sessions = (List<Session>)((EntityManager) sessionManager).getAll();
-		assertEquals(1,sessions.stream().filter(s->(s.getToken().equals(token))).count());
-		assertEquals(0,sessions.stream().filter(s->(s.getToken().equals(""))).count());
-		assertEquals(0,sessions.stream().filter(s->(s.getToken().equals("random string"))).count());
-		assertEquals(0,sessions.stream().filter(s->(s.getToken().equals(null))).count());
+		assertTrue(sessionManager.verifySession(token));
+		assertFalse(sessionManager.verifySession(""));
+		assertFalse(sessionManager.verifySession("random string"));
+		assertFalse(sessionManager.verifySession(null));
+		assertFalse(sessionManager.verifySession("||||||||||||||||||||||||||||||||||||||||||||||||||"));
+
 	}
 
 	/**
@@ -109,11 +111,36 @@ class SessionManagerTest {
 	@Test
 	void testTerminateSession() {
 		String token = sessionManager.getNewSession("1",100);
+		sessionManager.getNewSession("2",100);
+		List<Session> sessions = (List<Session>)((EntityManager) sessionManager).getAll();
+		assertEquals(2,sessions.size());
+		sessionManager.terminateSession(token);
+		assertEquals(1,((EntityManager) sessionManager).getAll().size());
+	}
+	/**
+	* tests that the manager does not terminate any sessions if terminate session is called with incorrect token
+	*/
+	@Test
+	void testTerminateIncorrectSession(){
+		String token = sessionManager.getNewSession("1",100);
 		List<Session> sessions = (List<Session>)((EntityManager) sessionManager).getAll();
 		assertEquals(1,sessions.size());
 		assertEquals(token,sessions.get(0).getToken());
+		sessionManager.terminateSession("VerYCorRecTTokEn213sdasd2");
+		assertEquals(1,((EntityManager) sessionManager).getAll().size());
+	}
+	/**
+	* tests that the manager terminates all timed out sessions of given user while terminating one session
+	*/
+	@Test
+	void testTerminateSessions(){
+		String token = sessionManager.getNewSession("1",100);
+		sessionManager.getNewSession("2",100);
+		sessionManager.getNewSession("1",0);
+		List<Session> sessions = (List<Session>)((EntityManager) sessionManager).getAll();
+		assertEquals(3,sessions.size());
 		sessionManager.terminateSession(token);
-		assertEquals(0,((EntityManager) sessionManager).getAll().size());
+		assertEquals(1,((EntityManager) sessionManager).getAll().size());
 	}
 
 	/**

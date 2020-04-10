@@ -32,7 +32,7 @@ micronaut:
     maxRequestSize: 100MB
     multipart:
       maxFileSize: 100MB
-    host: 178.62.55.191
+    host: localhost
     netty:
       maxHeaderSize: 500KB
       worker:

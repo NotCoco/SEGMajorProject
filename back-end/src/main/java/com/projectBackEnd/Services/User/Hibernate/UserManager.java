@@ -166,11 +166,15 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 	}
 
 	/**
-	 * Get a list of all the users stored in the database
+	 * Get a list of all the users stored in the database, without the passwords
 	 * @return List of users
 	 */
 	public List<User> getUsers(){
-		return getAll();
+		List<User> users = getAll();
+		for(User u: users){
+			u.setPassword("");
+		}
+		return users;
 	}
 
 
