@@ -6,11 +6,20 @@
         <loading-spinner class="loading-spinner" v-if="loading" />
         <http-status :httpStatusCode="404" v-else-if="news === null" />
         <article v-else>
-          <h3 class="subtitle has-text-weight-bold is-uppercase" style="margin-bottom: 2rem;">News</h3>
-          <h1 class="title">{{ news.title }}</h1>
-          <h2 class="subtitle">{{ news.description }}</h2>
-          <time class="subtitle" :datetime="news.date.toISOString().substring(0, 10)" pubdate>{{ news.date.toLocaleDateString("en-GB") }}</time>
-          <rich-text-editor v-model="news.content" :editable="false" class="content" />
+          <div class="header">
+            <div class="level is-mobile">
+              <div class="level-left">
+                <h3 class="subtitle has-text-weight-bold is-uppercase">News</h3>
+              </div>
+              <div class="level-right">
+                <time class="subtitle has-text-grey" :datetime="news.date.toISOString().substring(0, 10)" pubdate>{{ news.date.toLocaleDateString("en-GB") }}</time>
+              </div>
+            </div>
+            <h1 class="title">{{ news.title }}</h1>
+            <h2 class="subtitle">{{ news.description }}</h2>
+          </div>
+          <hr>
+          <rich-text-editor v-model="news.content" :editable="false" />
         </article>
       </div>
     </section>
@@ -18,8 +27,14 @@
 </template>
 
 <style lang="scss" scoped>
-.content {
-  margin-top: 2rem;
+.header {
+  .level {
+    margin-bottom: 1rem;
+  }
+}
+
+hr {
+  width: 25%;
 }
 </style>
 
