@@ -61,7 +61,7 @@ public class AppInfo {
      * Get the oontact details as stored in the object
      * @return The contact details string
      */
-    public void getContactDetails() {
+    public String getContactDetails() {
         return contactDetails;
     }
 

@@ -96,7 +96,7 @@ class AppInfoControllerTest {
     @Test
     void testUnauthorizedUpdate() {
         assertThrows(HttpClientResponseException.class, () -> {
-            AppInfo updatedInfo = new AppInfo("Wowwee", "Cool");
+            AppInfo updatedInfo = new AppInfo("Wowwee", "Cool", "New info");
             HttpRequest request = HttpRequest.PUT("/appinfo", updatedInfo).header("X-API-Key","lol");
             client.toBlocking().exchange(request);
         });
