@@ -260,13 +260,24 @@ paths:
             example: E85GXH3E.webp
       security:
       - ApiKeyHeader: []
-  /images/{imageUrl}:
+  /images/{image}:
     parameters:
-    - name: imageUrl
+    - name: image
       in: path
-      description: Image URL
+      description: Image file name and extension
       required: true
       type: string
+    get:
+      tags:
+      - images
+      summary: Get an image
+      produces:
+      - image
+      responses:
+        200:
+          description: OK
+          schema:
+            type: file
     delete:
       tags:
       - images
