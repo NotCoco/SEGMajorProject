@@ -43,7 +43,7 @@ function searchNode(node, regex) {
     }
     case "heading": { // Base case
       const text = getCombinedContent(node);
-      return regex.test(text) ? (5 - node.attrs.level) : 0;
+      return regex.test(text) ? (6 - node.attrs.level) : 0;
     }
     default: { // Recursive case
       if (!node.content) return 0;
