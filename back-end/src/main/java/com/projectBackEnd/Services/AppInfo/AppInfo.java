@@ -7,7 +7,7 @@ public class AppInfo {
 
     private String hospitalName;
     private String departmentName;
-
+    private String contactDetails();
     /**
      * Default constructor
      */
@@ -17,10 +17,12 @@ public class AppInfo {
      * Create data storage objects
      * @param hospitalName      The name of the hospital
      * @param departmentName    The name of the department using the software
+     * @param contactDetails    The contact information of the hospital
      */
-    public AppInfo(String hospitalName, String departmentName) {
+    public AppInfo(String hospitalName, String departmentName, String contactDetails) {
         this.hospitalName = hospitalName;
         this.departmentName = departmentName;
+        this.contactDetails = contactDetails;
     }
 
     /**
@@ -53,5 +55,21 @@ public class AppInfo {
      */
     public void setDepartmentName(String departmentName) {
         this.departmentName = departmentName;
+    }
+
+    /**
+     * Get the oontact details as stored in the object
+     * @return The contact details string
+     */
+    public void getContactDetails() {
+        return contactDetails();
+    }
+
+    /**
+     * Set the contact details to be stored in the object
+     * @param contactDetails The new contact details to update with
+     */
+    public void setContactDetails(String contactDetails) {
+        this.contactDetails = contactDetails;
     }
 }
