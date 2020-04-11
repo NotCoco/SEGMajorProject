@@ -127,5 +127,6 @@ export default {
 <style lang="scss" scoped>
 .field {
     height:100%;
+    overflow:auto;
 }
 </style>
