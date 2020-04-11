@@ -124,5 +124,8 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+.field {
+    height:100%;
+}
 </style>
