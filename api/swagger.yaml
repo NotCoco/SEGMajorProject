@@ -20,6 +20,8 @@ tags:
   description: Create, retrieve, update and delete news posts
 - name: medicines
   description: Create, retrieve, update and delete medicines
+- name: users
+  description: Manage authentication and user profiles
 paths:
   /appinfo:
     get:
@@ -408,6 +410,220 @@ paths:
       - ApiKeyHeader: []
       tags:
         - medicines
+  /user:
+    get:
+      tags:
+      - users
+      summary: Get a list of all users
+      produces:
+      - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UserInfo'
+      security:
+      - ApiKeyHeader: []
+  /user/user_details:
+    get:
+      tags:
+      - users
+      summary: Get details of the currently authenticated user
+      produces:
+      - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/UserInfo'
+      security:
+      - ApiKeyHeader: []
+  /user/create:
+    post:
+      tags:
+      - users
+      summary: Add a new user
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: User object to be added
+        required: true
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        201:
+          description: Created
+      security:
+      - ApiKeyHeader: []
+  /user/delete:
+    delete:
+      tags:
+      - users
+      summary: Delete an existing user
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: User object to be deleted
+        required: true
+        schema:
+          $ref: '#/definitions/UserAuth'
+      responses:
+        200:
+          description: OK
+      security:
+      - ApiKeyHeader: []
+  /user/login:
+    post:
+      tags:
+      - users
+      summary: Login
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: User to login
+        required: true
+        schema:
+          $ref: '#/definitions/UserAuth'
+      responses:
+        200:
+          description: OK
+          schema:
+            type: string
+            description: API key
+            example: pbOxUSOdf7115huJgud3GYci4F
+  /user/logout:
+    get:
+      tags:
+      - users
+      summary: Logout
+      responses:
+        200:
+          description: OK
+      security:
+      - ApiKeyHeader: []
+  /user/password_reset_request:
+    post:
+      tags:
+      - users
+      summary: Request a password reset token
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Email of the user to reset
+        required: true
+        schema:
+          type: object
+          properties:
+            string:
+              type: string
+              format: email
+              example: jane.doe@example.com
+      responses:
+        200:
+          description: OK (even if the email is not recognised)
+  /user/password_reset_change:
+    put:
+      tags:
+      - users
+      summary: Complete a password reset
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Reset token and new password
+        required: true
+        schema:
+          type: object
+          properties:
+            token:
+              type: string
+            password:
+              type: string
+      responses:
+        200:
+          description: OK
+  /user/change_email:
+    put:
+      tags:
+      - users
+      summary: Change user email
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: New email
+        required: true
+        schema:
+          type: object
+          properties:
+            string:
+              type: string
+              format: email
+              example: john.doe@example.com
+      responses:
+        200:
+          description: OK
+      security:
+      - ApiKeyHeader: []
+  /user/change_name:
+    put:
+      tags:
+      - users
+      summary: Change user name
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: New name
+        required: true
+        schema:
+          type: object
+          properties:
+            string:
+              type: string
+              example: John Doe
+      responses:
+        200:
+          description: OK
+      security:
+      - ApiKeyHeader: []
+  /user/change_password:
+    put:
+      tags:
+      - users
+      summary: Change user password
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: New password
+        required: true
+        schema:
+          type: object
+          properties:
+            string:
+              type: string
+      responses:
+        200:
+          description: OK
+      security:
+      - ApiKeyHeader: []
 securityDefinitions:
   ApiKeyHeader:
     type: apiKey
