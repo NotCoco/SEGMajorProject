@@ -247,7 +247,7 @@ paths:
       - application/json
       parameters:
       - in: formData
-        name: image
+        name: file
         description: Image content
         required: true
         type: file
