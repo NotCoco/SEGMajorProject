@@ -7,7 +7,7 @@ public class AppInfo {
 
     private String hospitalName;
     private String departmentName;
-    private String contactDetails();
+    private String contactDetails;
     /**
      * Default constructor
      */
