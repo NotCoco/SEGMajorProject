@@ -62,7 +62,7 @@ public class AppInfo {
      * @return The contact details string
      */
     public void getContactDetails() {
-        return contactDetails();
+        return contactDetails;
     }
 
     /**
