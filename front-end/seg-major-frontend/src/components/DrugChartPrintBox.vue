@@ -55,8 +55,7 @@
         <tr>
           <!-- Footer for notification -->
           <div class="relative">
-            <br><b>If you have queries regarding your child's medication please contact the Liver Clinical Nurse Specialist Team on 0203-299-3773 or the pharmacy team at
-              King's directly on 0203-299-9000 ext 5723 between 9:00 AM- 5:00 PM Monday to Friday. Out of these hours please contact rays of Sunshine Ward on 0203-299-3577.</b>
+            <br><b>"appInfo.contactDetails"</b>
           </div>
         </tr>
       </tbody>
@@ -64,11 +63,18 @@
   </div>
 </template>
 
+import AppInfoService from "@/services/app-info-service";
+
 <script>
 export default {
   name: "DrugChartPrintBox",
   data() {
     return {
+      appInfo: {
+        hospitalName: null,
+        departmentName: null,
+        contactDetails: null
+      },
       //empty list for current added drugs
       items: [],
     };
