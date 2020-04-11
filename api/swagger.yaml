@@ -255,7 +255,9 @@ paths:
         201:
           description: Created
           schema:
-            $ref: '#/definitions/Image'
+            type: string
+            description: File name and extension of the uploaded image
+            example: E85GXH3E.webp
       security:
       - ApiKeyHeader: []
   /images/{imageUrl}:
@@ -706,12 +708,6 @@ definitions:
       index:
         type: integer
         example: 0
-  Image:
-    type: object
-    properties:
-      imageUrl:
-        type: string
-        example: https://example.com/images/202002281.png
   News:
     type: object
     properties:
