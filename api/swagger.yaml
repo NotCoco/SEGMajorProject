@@ -675,6 +675,9 @@ definitions:
       departmentName:
         type: string
         example: Paediatric Liver Service
+      contactDetails:
+        type: string
+        example: Contact us, the liver specialist team on 1234-567-789
   SiteDescription:
     type: object
     properties:

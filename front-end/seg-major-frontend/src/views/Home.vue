@@ -64,7 +64,8 @@ export default {
       sites: null,
       appInfo: {
         hospitalName: '',
-        departmentName: ''
+        departmentName: '',
+        contactDetails: ''
       },
     };
   },

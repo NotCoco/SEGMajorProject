@@ -39,12 +39,33 @@
       </div>
     </div>
 
+    <div class="field">
+      <label class="label">Contact Details</label>
+      <div class="control">
+        <input
+          class="input"
+          type="text"
+          v-model="newAppInfo.contactDetails"
+          v-bind:disabled="!appInfo.contactDetails"
+          v-on:change="$v.newAppInfo.contactDetails.$touch()"
+          v-on:keyup.enter="changeAppInfo()"
+          placeholder="Enter new contact details..."
+        />
+      </div>
+      <div v-if="$v.newAppInfo.departmentName.$dirty">
+        <p
+          class="help is-danger"
+          v-if="!$v.newAppInfo.contactDetails.required"
+        >This field is required</p>
+      </div>
+    </div>
+
     <div class="field is-grouped is-grouped-right">
       <p class="control">
         <button
           class="button is-success"
           @click="changeAppInfo()"
-          :disabled="$v.$anyError || !appInfo.departmentName || !appInfo.departmentName || (appInfo.hospitalName == newAppInfo.hospitalName && appInfo.departmentName == newAppInfo.departmentName)"
+          :disabled="$v.$anyError || !appInfo.departmentName || !appInfo.departmentName || !appInfo.contactDetails || (appInfo.hospitalName == newAppInfo.hospitalName && appInfo.departmentName == newAppInfo.departmentName && appInfo.contactDetails == newAppInfo.contactDetails)"
         >Save</button>
       </p>
     </div>
@@ -60,11 +81,13 @@ export default {
     return {
       appInfo: {
         hospitalName: null,
-        departmentName: null
+        departmentName: null,
+        contactDetails: null
       },
       newAppInfo: {
         hospitalName: null,
-        departmentName: null
+        departmentName: null,
+        contactDetails: null
       }
     };
   },
@@ -74,6 +97,9 @@ export default {
         required
       },
       departmentName: {
+        required
+      },
+      contactDetails: {
         required
       }
     }
