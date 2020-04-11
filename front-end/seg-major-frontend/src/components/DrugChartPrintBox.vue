@@ -55,7 +55,7 @@
         <tr>
           <!-- Footer for notification -->
           <div class="relative">
-            <br><b>"appInfo.contactDetails"</b>
+            <br><b>{{ appInfo.contactDetails }}</b>
           </div>
         </tr>
       </tbody>
@@ -71,13 +71,16 @@ export default {
   data() {
     return {
       appInfo: {
-        hospitalName: null,
-        departmentName: null,
-        contactDetails: null
+        hospitalName: ''',
+        departmentName: '',
+        contactDetails: ''
       },
       //empty list for current added drugs
       items: [],
-    };
+    }
+  },
+  async created() {
+    this.appInfo = await AppInfoService.getAppInfo();
   },
   methods: {
     /**
