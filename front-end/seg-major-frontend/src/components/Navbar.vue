@@ -90,7 +90,8 @@ export default {
       mobileNavActive: false,
       appInfo: {
         hospitalName: '',
-        departmentName: ''
+        departmentName: '',
+        contactDetails: ''
       },
     }
   },

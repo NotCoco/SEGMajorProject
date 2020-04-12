@@ -68,7 +68,7 @@ class AppInfoControllerTest {
      */
     @Test
     void testUpdatingInfo() {
-        updateInformation(new AppInfo("Interesting New Hospital", "Cool Department"));
+        updateInformation(new AppInfo("Interesting New Hospital", "Cool Department", "Fancy contact details"));
         assertEquals("Interesting New Hospital", getInfo().getHospitalName());
     }
 
@@ -77,7 +77,7 @@ class AppInfoControllerTest {
      */
     @Test
     void testUpdatingAndGettingInfo() {
-        updateInformation(new AppInfo("Cool", "Cool Department"));
+        updateInformation(new AppInfo("Cool", "Cool Department", "Cool contact details"));
         assertEquals("Cool", getInfo().getHospitalName());
     }
 
@@ -86,7 +86,7 @@ class AppInfoControllerTest {
      */
     @Test
     void testUpdatingAndGettingInfoAgain() {
-        updateInformation(new AppInfo("Fancy update", "Cool Department"));
+        updateInformation(new AppInfo("Fancy update", "Cool Department", "New contact details"));
         assertEquals("Fancy update", getInfo().getHospitalName());
     }
 
@@ -96,7 +96,7 @@ class AppInfoControllerTest {
     @Test
     void testUnauthorizedUpdate() {
         assertThrows(HttpClientResponseException.class, () -> {
-            AppInfo updatedInfo = new AppInfo("Wowwee", "Cool");
+            AppInfo updatedInfo = new AppInfo("Wowwee", "Cool", "New info");
             HttpRequest request = HttpRequest.PUT("/appinfo", updatedInfo).header("X-API-Key","lol");
             client.toBlocking().exchange(request);
         });
