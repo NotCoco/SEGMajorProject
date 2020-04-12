@@ -41,8 +41,9 @@
           </div>
           
           <div class="footer">
+           
             <p>{{ appInfo.contactDetails }}</p>
-            <p>Site editors can <a href="/admin">
+            <p>Site editors can <a href="/login">
             log in here</a>.</p>
           </div>
         </div>  
@@ -115,8 +116,9 @@ export default {
   position: fixed;
   left: 0;
   bottom: 0;
+  height: 10%;
   width: 100%;
-  color: white;
+  color: black;
   text-align: center;
 }
 </style>
