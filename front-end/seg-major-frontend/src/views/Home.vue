@@ -38,16 +38,16 @@
 
           <div class="column is-narrow">
             <bulletin-board />
-          </div>
         </div>
       </div>
     </div>
+      <footer>
+        <p>{{ appInfo.contactDetails }}</p>
+        <p>Site editors can <a href="/admin">
+        log in here</a>.</p>
+      </footer>
   </div>
-  <footer>
-    <p>{{ appInfo.contactDetails }}</p>
-    <p>Site editors can <a href="/admin">
-    log in here</a>.</p>
-  </footer>
+
 </template>
 
 <script>
