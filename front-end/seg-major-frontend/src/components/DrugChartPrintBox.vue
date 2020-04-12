@@ -63,9 +63,10 @@
   </div>
 </template>
 
-import AppInfoService from "@/services/app-info-service";
+
 
 <script>
+import AppInfoService from "@/services/app-info-service";
 export default {
   name: "DrugChartPrintBox",
   data() {
