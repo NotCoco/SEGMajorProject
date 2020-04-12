@@ -71,7 +71,7 @@ export default {
   data() {
     return {
       appInfo: {
-        hospitalName: ''',
+        hospitalName: '',
         departmentName: '',
         contactDetails: ''
       },
