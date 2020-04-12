@@ -38,14 +38,15 @@
 
           <div class="column is-narrow">
             <bulletin-board />
-        </div>
+          </div>
+          
+          <div class="footer">
+            <p>{{ appInfo.contactDetails }}</p>
+            <p>Site editors can <a href="/admin">
+            log in here</a>.</p>
+          </div>
       </div>
     </div>
-      <footer>
-        <p>{{ appInfo.contactDetails }}</p>
-        <p>Site editors can <a href="/admin">
-        log in here</a>.</p>
-      </footer>
   </div>
 
 </template>
@@ -107,5 +108,14 @@ export default {
   &:hover {
     background-color: #f8f8f8;
   }
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  color: white;
+  text-align: center;
 }
 </style>
