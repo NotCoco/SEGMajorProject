@@ -40,17 +40,16 @@
             <bulletin-board />
           </div>
           
-          <div class="footer">
-           
+          <div class="footer">           
             <p>{{ appInfo.contactDetails }}</p>
             <p>Site editors can <a href="/admin">
             log in here</a>.</p>
           </div>
+          
         </div>  
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
