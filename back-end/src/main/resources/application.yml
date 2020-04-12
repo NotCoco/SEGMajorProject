@@ -23,6 +23,7 @@ micronaut:
       configurations:
         web:
           allowedOrigins:
+            - localhost
             - 3.127.132.71
             - https://paediatric-liver-service.netlify.com
     maxRequestSize: 100MB
