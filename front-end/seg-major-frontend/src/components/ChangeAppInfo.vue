@@ -42,9 +42,8 @@
     <div class="field">
       <label class="label">Contact Details</label>
       <div class="control">
-        <input
-          class="input"
-          type="text"
+        <textarea
+          class="textarea"
           v-model="newAppInfo.contactDetails"
           v-bind:disabled="!appInfo.contactDetails"
           v-on:change="$v.newAppInfo.contactDetails.$touch()"
@@ -126,8 +125,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.field {
-    height:100%;
-    overflow:auto;
-}
 </style>
