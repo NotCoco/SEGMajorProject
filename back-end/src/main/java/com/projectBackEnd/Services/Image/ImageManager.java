@@ -1,5 +1,7 @@
 package main.java.com.projectBackEnd.Services.Image;
 
+import main.java.com.projectBackEnd.TokenGenerator;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -14,7 +16,7 @@ public class ImageManager implements ImageManagerInterface {
 
 	//Random name related variables
 	private final static String lexicon = "ABCDEFGHIJKLMNOPQRSTUVWXYZ12345674890";
-	private final java.util.Random rand = new java.util.Random();
+
 
 	//Directory of the folder where the images are saved
 	private final String dir;
@@ -41,14 +43,7 @@ public class ImageManager implements ImageManagerInterface {
 	 * @return generated name
 	 */
 	private String randomIdentifier() {
-		StringBuilder builder = new StringBuilder();
-		while(builder.toString().length() == 0) {
-			int length = rand.nextInt(5)+5;
-			for(int i = 0; i < length; i++) {
-				builder.append(lexicon.charAt(rand.nextInt(lexicon.length())));
-			}
-		}
-		return builder.toString();
+		return TokenGenerator.generateToken(8, lexicon);
 	}
 
 	/**
