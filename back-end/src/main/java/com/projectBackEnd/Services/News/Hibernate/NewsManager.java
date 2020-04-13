@@ -126,13 +126,16 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
      */
     private static List<News> sort(List<News> all) {
 
-            List<News> sortedByDate = all.stream().sorted(
-                    Comparator.comparing(News::getDate, Comparator.nullsLast(Comparator.reverseOrder())))
-                    .collect(Collectors.toList());
-            return Stream.concat(sortedByDate.stream().filter(n -> n.isUrgent() && n.isPinned()),
-                    Stream.concat(sortedByDate.stream().filter(n -> n.isUrgent()),
-                     Stream.concat(sortedByDate.stream().filter(n -> n.isPinned()), sortedByDate.stream()))).distinct()
-                      .collect(Collectors.toList());
+        List<News> sortedByDate = all.stream().sorted(
+                Comparator.comparing(News::getDate, Comparator.nullsLast(Comparator.reverseOrder())))
+                .collect(Collectors.toList());
+
+        return Stream.concat(Stream.concat(Stream.concat(
+                sortedByDate.stream().filter(n -> n.isPinned() && n.isUrgent()),
+                sortedByDate.stream().filter(n -> !n.isPinned() && n.isUrgent())),
+                sortedByDate.stream().filter(n -> n.isPinned() && !n.isUrgent())),
+                sortedByDate.stream().filter(n -> !n.isPinned() && !n.isUrgent()))
+                .collect(Collectors.toList());
 
     }
 
