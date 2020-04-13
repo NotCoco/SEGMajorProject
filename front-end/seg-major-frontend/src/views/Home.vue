@@ -114,5 +114,6 @@ export default {
 .footer {
   text-align: center;
   padding: 50px;
+  width: 100%;
 }
 </style>
