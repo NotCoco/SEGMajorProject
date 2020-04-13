@@ -124,7 +124,7 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
      * Urgent and pinned, urgent only, pinned only, neither pinned nor urgent.
      * @return sorted list of news
      */
-    private static List<News> sort(List<News> all) {
+    private static List<News> sortTest(List<News> all) {
 
         List<News> sortedByDate = all.stream().sorted(
                 Comparator.comparing(News::getDate, Comparator.nullsLast(Comparator.reverseOrder())))
@@ -137,6 +137,56 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
                 sortedByDate.stream().filter(n -> !n.isPinned() && !n.isUrgent()))
                 .collect(Collectors.toList());
 
+    }
+
+    public static List<News> sort(List<News> all) {
+        // Get pinned AND urgent
+        Stream<News> pinnedAndUrgent = all.stream().filter(n -> n.isPinned() && n.isUrgent())
+                .sorted(Comparator.comparing(News::getDate, Comparator.nullsLast(Comparator.reverseOrder())));
+        // Get urgent only
+        Stream<News> urgentDates = all.stream().filter(n -> !n.isPinned() && n.isUrgent())
+                .sorted(Comparator.comparing(News::getDate, Comparator.nullsLast(Comparator.reverseOrder())));
+        // Get pinned only
+        Stream<News> pinnedDates = all.stream().filter(n -> n.isPinned() && !n.isUrgent())
+                .sorted(Comparator.comparing(News::getDate, Comparator.nullsLast(Comparator.reverseOrder())));
+        // Get neither pinned nor urgent
+        Stream<News> regular = all.stream().filter(n -> !n.isPinned() && !n.isUrgent())
+                .sorted(Comparator.comparing(News::getDate, Comparator.nullsLast(Comparator.reverseOrder())));
+
+        // Concatenate all lists together to make sorted list
+        List<News> sorted = Stream.concat(Stream.concat(Stream.concat(pinnedAndUrgent, urgentDates), pinnedDates), regular)
+                .collect(Collectors.toList());
+
+        return sorted;
+    }
+
+    public static List<News> megaFast(List<News> all) {
+        // Get pinned AND urgent
+        List<News> sortedByDate = all.stream().sorted(
+                Comparator.comparing(News::getDate, Comparator.nullsLast(Comparator.reverseOrder())))
+                .collect(Collectors.toList());
+        Stream<News> pinnedAndUrgent = sortedByDate.stream().filter(n -> n.isPinned() && n.isUrgent());
+        // Get urgent only
+        Stream<News> urgentDates = sortedByDate.stream().filter(n -> !n.isPinned() && n.isUrgent());
+        // Get pinned only
+        Stream<News> pinnedDates = sortedByDate.stream().filter(n -> n.isPinned() && !n.isUrgent());
+        // Get neither pinned nor urgent
+        Stream<News> regular = sortedByDate.stream().filter(n -> !n.isPinned() && !n.isUrgent());
+
+        // Concatenate all lists together to make sorted list
+        List<News> sorted = Stream.concat(Stream.concat(Stream.concat(pinnedAndUrgent, urgentDates), pinnedDates), regular)
+                .collect(Collectors.toList());
+
+        return sorted;
+    }
+    public static List<News> twoSortFirst(List<News> all) {
+        List<News> sortedByDate = all.stream().sorted(
+                Comparator.comparing(News::getDate, Comparator.nullsLast(Comparator.reverseOrder())))
+                .collect(Collectors.toList());
+        return Stream.concat(sortedByDate.stream().filter(n -> n.isUrgent() && n.isPinned()),
+                Stream.concat(sortedByDate.stream().filter(n -> n.isUrgent()),
+                        Stream.concat(sortedByDate.stream().filter(n -> n.isPinned()), sortedByDate.stream()))).distinct()
+                .collect(Collectors.toList());
     }
 
     /**
