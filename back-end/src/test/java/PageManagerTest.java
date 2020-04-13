@@ -575,7 +575,7 @@ class PageManagerTest {
         try {
             pageManager.update(new Page());
             fail();
-        } catch (IllegalArgumentException|NullPointerException e) {
+        } catch (InvalidFieldsException e) {
             assertEquals(0, pageManager.getAllPages().size());
         }
     }

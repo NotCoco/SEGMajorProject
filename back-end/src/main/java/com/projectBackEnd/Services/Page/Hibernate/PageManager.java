@@ -117,7 +117,7 @@ public class PageManager extends EntityManager implements PageManagerInterface {
      * @return Whether the object is valid or not.
      * @throws InvalidFieldsException if the site object isn't valid
      */
-    private static void checkValidity(Page page) throws InvalidFieldsException {
+    private static void checkFieldValidity(Page page) throws InvalidFieldsException {
         if (!(page.getSite() != null &&
                 page.getSlug() != null &&
                 page.getIndex() != null)) throw new InvalidFieldsException("Invalid fields");
@@ -130,7 +130,7 @@ public class PageManager extends EntityManager implements PageManagerInterface {
      * @throws DuplicateKeysException If the addition of this page will violate another page's unique keys
      */
     private void checkAddValidity(Page page) throws InvalidFieldsException, DuplicateKeysException {
-        checkValidity(page);
+        checkFieldValidity(page);
         if (getPageBySiteAndSlug(page.getSite().getSlug(), page.getSlug()) != null)
             throw new DuplicateKeysException("Page with slug: " + page.getSlug() + " already exists in site." );
     }
@@ -142,7 +142,7 @@ public class PageManager extends EntityManager implements PageManagerInterface {
      * @throws DuplicateKeysException If the updating of this page will violate another page's unique keys
      */
     private void checkUpdateValidity(Page page) throws InvalidFieldsException, DuplicateKeysException {
-        checkValidity(page);
+        checkFieldValidity(page);
         Page pageMatch = getPageBySiteAndSlug(page.getSite().getSlug(), page.getSlug());
         if (pageMatch != null && !pageMatch.getPrimaryKey().equals(page.getPrimaryKey()))
             throw new DuplicateKeysException("Page with slug: " + page.getSlug() + " already exists in site.");

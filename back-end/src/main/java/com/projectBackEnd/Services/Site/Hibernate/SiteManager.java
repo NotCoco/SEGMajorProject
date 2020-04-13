@@ -96,7 +96,7 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
      * @return Whether it is valid for addition or not.
      * @throws InvalidFieldsException if the site object isn't valid i.e. has null fields
      */
-    private static void checkValidity(Site site) throws InvalidFieldsException {
+    private static void checkFieldValidity(Site site) throws InvalidFieldsException {
         if (!(site.getSlug() != null &&
                 site.getName() != null)) throw new InvalidFieldsException("Invalid fields");
     }
@@ -108,7 +108,7 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
      * @throws DuplicateKeysException If the updating of this site will violate another site's unique keys
      */
     private void checkUpdateValidity(Site site) throws InvalidFieldsException, DuplicateKeysException {
-        checkValidity(site);
+        checkFieldValidity(site);
         Site foundSiteMatch = getSiteBySlug(site.getSlug());
         if (foundSiteMatch != null && !foundSiteMatch.getPrimaryKey().equals(site.getPrimaryKey()))
             throw new DuplicateKeysException("Site with slug: " + site.getSlug() + " already exists.");
@@ -121,7 +121,7 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
      * @throws DuplicateKeysException If the addition of this site will violate another site's unique keys
      */
     private void checkAddValidity(Site site) throws InvalidFieldsException, DuplicateKeysException {
-        checkValidity(site);
+        checkFieldValidity(site);
         if (getSiteBySlug(site.getSlug()) != null)
             throw new DuplicateKeysException("Site with slug: " + site.getSlug() + " already exists.");
     }
