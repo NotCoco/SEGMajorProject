@@ -154,6 +154,43 @@ class NewsManagerTest {
     }
 
     /**
+     * Testing the order of news with a custom list from getAllNews
+     */
+    @Test
+    void testOrderOfNewsLong() throws DuplicateKeysException, InvalidFieldsException {
+        // News(Integer primaryKey, Date date, boolean pinned, String description, String title, boolean urgent, String content, String slug) {
+        ArrayList<News> listToBeSorted = new ArrayList<>();
+        listToBeSorted.add(new News(new Date(1000000000L), false, "description1", "title1",
+                false, "content1", "slug11")); //Oldest
+        listToBeSorted.add(new News(new Date(2000000000L), false, "description1", "title1",
+                true, "content1", "slug4")); //Urgent
+        listToBeSorted.add(new News(new Date(3000000000L), false, "description1", "title1",
+                false, "content1", "slug10"));
+        listToBeSorted.add(new News(new Date(4000000000L), false, "description1", "title1",
+                false, "content1", "slug9"));
+        listToBeSorted.add(new News(new Date(5000000000L), false, "description1", "title1",
+                false, "content1", "slug8"));
+        listToBeSorted.add(new News(new Date(6000000000L), false, "description1", "title1",
+                true, "content1", "slug3")); //Youngest urgent
+        listToBeSorted.add(new News(new Date(8000000000L), true, "description1", "title1",
+                false, "content1", "slug5")); //pinned
+        listToBeSorted.add(new News(new Date(9000000000L), false, "description1", "title1",
+                false, "content1", "slug7"));
+        listToBeSorted.add(new News(new Date(100000000000L), false, "description1", "title1",
+                false, "content1", "slug6")); //youngest
+        listToBeSorted.add(new News(new Date(98409000000000L), true, "description1", "title1",
+                true, "content1", "slug2")); //Urgent pinned
+        listToBeSorted.add(new News(new Date(104150000000000L), true, "description1", "title1",
+                true, "content1", "slug1")); //Urgent pinned
+        fillDatabase(listToBeSorted);
+        List<News> sorted = newsManager.getAllNews();
+        for (int i = 0; i < sorted.size(); ++i) {
+            int j = i+1;
+            assertEquals("slug"+j, sorted.get(i).getSlug());
+        }
+    }
+
+    /**
      * Test that an empty table returns no news
      */
     @Test
