@@ -111,6 +111,7 @@ export default {
 
       await AppInfoService.updateAppInfo(this.newAppInfo);
       this.$emit("appInfoChanged", this.newAppInfo);
+      this.appInfo = this.newAppInfo;
     }
   },
   watch: {
