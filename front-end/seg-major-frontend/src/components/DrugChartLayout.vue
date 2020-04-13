@@ -140,7 +140,7 @@ export default{
 @media print {
   html, body {
     height: 100%;
-    overflow: unset;
+    overflow: visible !important;
   }
 }
 </style>
@@ -157,7 +157,7 @@ export default{
 @media print {
   html, body {
     height: 100%;
-    overflow: unset;
+    overflow: visible !important;
   }
 }
 </style>
