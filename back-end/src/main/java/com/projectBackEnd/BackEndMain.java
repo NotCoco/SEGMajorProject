@@ -9,16 +9,11 @@ import main.java.com.projectBackEnd.Services.User.Hibernate.Exceptions.*;
  */
 public class BackEndMain {
 
+	/**
+	 * When invoked, this method will cause the Micronaut endpoints to be deployed.
+	 * @param args Arguments for command line running.
+	 */
 	public static void main(String []args){
-		
-		if(UserManager.getUserManager().getUsers().size() == 0){
-			try{
-				UserManager.getUserManager().addUser("admin@admin.com","admin", "name");
-			}
-			catch(EmailExistsException|InvalidEmailException|IncorrectNameException|InvalidPasswordException e){
-
-			}
-		}
 		Micronaut.run(BackEndMain.class);
 	}
 }
