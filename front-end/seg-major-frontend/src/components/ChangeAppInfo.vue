@@ -51,7 +51,7 @@
           placeholder="Enter new contact details..."
         />
       </div>
-      <div v-if="$v.newAppInfo.departmentName.$dirty">
+      <div v-if="$v.newAppInfo.contactDetails.$dirty">
         <p
           class="help is-danger"
           v-if="!$v.newAppInfo.contactDetails.required"
