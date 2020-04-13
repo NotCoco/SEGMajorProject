@@ -311,9 +311,8 @@ class PageControllerTest {
             putPage(new PageUpdateCommand(idOfMadePage, "notvalid", "sameKey", 1, "newTitle", "nutri!tion/information"),token);
             fail();
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            assertNotNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
         }
-        assertNotNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
     }
 
     /**
@@ -329,9 +328,8 @@ class PageControllerTest {
             putPage(new PageUpdateCommand(idOfMadePage, "notvalid", "sameKey", null, "test222", "nutri!tion/information"),token);
             fail();
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            assertNotNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
         }
-        assertNotNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
     }
     /**
      * Attemps to update a page to null other non-index values - keeping a valid site and index to
@@ -358,9 +356,10 @@ class PageControllerTest {
         addSite("testSiteA", "name1",token);
         try {
             putPage(new PageUpdateCommand(null, "testSiteA", "set", 1, "set", "notnull"),token);
-            fail();
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            assertThrows(HttpClientResponseException.class, () -> {
+                getPage("testSiteA", "set");
+            });
         }
     }
 
@@ -430,9 +429,8 @@ class PageControllerTest {
             putPage(new PageUpdateCommand(idOfMadePage, "notvalid", "nutrition/slu!#g", 1, "newTitle", "nutri!tion/information"),token);
             fail();
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            assertNotNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
         }
-        assertNotNull(pageManager.getPageBySiteAndSlug("testSiteA", "nutrition/slu!#g"));
     }
 
 	/**

@@ -188,7 +188,7 @@ class ImageManagerTest {
         }
         catch (IOException e)
         {
-            e.printStackTrace();
+            /*ignore*/
         }
         return contentBuilder.toString();
     }

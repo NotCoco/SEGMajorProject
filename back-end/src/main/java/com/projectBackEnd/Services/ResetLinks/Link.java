@@ -1,12 +1,12 @@
 package main.java.com.projectBackEnd.Services.ResetLinks;
 import main.java.com.projectBackEnd.TableEntity;
+import main.java.com.projectBackEnd.TokenGenerator;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.Random;
 
 
 /**
@@ -83,20 +83,14 @@ public class Link implements TableEntity<Link> {
 
 
 	/**
-	 * Generate a random Token (50 String Long)
+	 * Generate a random unique Token (50 characters Long)
 	 * @return Token String
 	 */
 	private String generateToken(){
-	Random rand = new Random();
-	String s;
-        String alphaNum = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvxyz";
-	do{
-		StringBuilder sb = new StringBuilder();
-		for(int i = 0; i < 50;++i){
-			sb.append(alphaNum.charAt(rand.nextInt(alphaNum.length())));
-		}
-		s = sb.toString();
-	}while(s == null || ResetLinkManager.getResetLinkManager().exist(s));
-		return s;
+		String token;
+		do {
+			token = TokenGenerator.generateToken(50, "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvxyz");
+		} while(ResetLinkManager.getResetLinkManager().exist(token));
+		return token;
 	}
 }

@@ -36,14 +36,9 @@ public class DirectoryHolder {
 	 * @param newDir The new directory to be set
 	 */
 	public void setDir(String newDir) {
-
 		File locationOfImageStorage = new File(newDir);
-		if (!locationOfImageStorage.exists()) {
-			if (locationOfImageStorage.mkdirs()) System.out.println("Directory is created!");
-			else System.out.println("Failed to create directory!");
-		}
+		if (!locationOfImageStorage.exists()) locationOfImageStorage.mkdirs();
 		dir = newDir;
-
 	}
 
 	/**

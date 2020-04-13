@@ -48,7 +48,6 @@ public abstract class EntityManager <T extends TableEntity> {
             insertTuple(newObject, session);
         } catch(HibernateException ex) {
             if (session.getTransaction() != null) session.getTransaction().rollback();
-            ex.printStackTrace();
         } finally {
             session.close();
         }
@@ -85,7 +84,6 @@ public abstract class EntityManager <T extends TableEntity> {
             fromDatabase = update(updatedCopy, session);
         } catch(HibernateException ex) {
             if (session.getTransaction() != null) session.getTransaction().rollback();
-            ex.printStackTrace();
         } finally {
             session.close();
         }
@@ -127,7 +125,6 @@ public abstract class EntityManager <T extends TableEntity> {
             found = getByPrimaryKey(pk, session);
         } catch(HibernateException ex) {
             if (session.getTransaction() != null) session.getTransaction().rollback();
-            ex.printStackTrace();
         } finally {
             session.close();
         }
@@ -164,7 +161,6 @@ public abstract class EntityManager <T extends TableEntity> {
             results = getAll(session);
         } catch(HibernateException ex) {
             if (session.getTransaction() != null) session.getTransaction().rollback();
-            ex.printStackTrace();
         } finally {
             session.close();
         }
@@ -199,7 +195,6 @@ public abstract class EntityManager <T extends TableEntity> {
             delete(object, session);
         } catch(HibernateException ex) {
             if (session.getTransaction() != null) session.getTransaction().rollback();
-            ex.printStackTrace();
         } finally {
             session.close();
         }
@@ -235,7 +230,6 @@ public abstract class EntityManager <T extends TableEntity> {
             delete(pk, session);
         } catch(HibernateException ex) {
             if (session.getTransaction() != null) session.getTransaction().rollback();
-            ex.printStackTrace();
         } finally {
             session.close();
         }
@@ -270,7 +264,6 @@ public abstract class EntityManager <T extends TableEntity> {
             deleteAll(session);
         } catch(HibernateException ex) {
             if (session.getTransaction() != null) session.getTransaction().rollback();
-            ex.printStackTrace();
         } finally {
             session.close();
         }

@@ -34,15 +34,15 @@ public class AppInfoManager implements AppInfoManagerInterface {
     /**
      * Update the object stored in the json and fields of the manager object.
      * @param updatedVersion The new storage object for the JSON
+     * @throws IOException Exception thrown if file cannot be found to edit.
      */
     public void updateInfo(AppInfo updatedVersion) {
+        //file = JSONLocation.getJsonFile(); Allows dynamic JSON location changing
         try {
-            //file = JSONLocation.getJsonFile(); Allows dynamic JSON location changing
             mapper.writeValue(file, updatedVersion);
             savedInfo = updatedVersion;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (IOException e) { /*ignore*/ }
+
     }
 
     /**

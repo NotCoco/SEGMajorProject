@@ -40,7 +40,7 @@ public class JSONLocation {
             writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(jsonFile.getName()), StandardCharsets.UTF_8));
             writer.write("");
         } catch (IOException ex) {
-            ex.printStackTrace();
+            /*ignore*/
         } finally {
             try {writer.close();} catch (Exception ex) {/*ignore*/}
         }
