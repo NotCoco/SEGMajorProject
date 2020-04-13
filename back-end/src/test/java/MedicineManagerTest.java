@@ -310,7 +310,6 @@ class MedicineManagerTest {
             medicineManager.getByPrimaryKey(null);
             fail();
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
             assertEquals(medicineManager.getAllMedicines().size(), previousSize);
         }
     }
@@ -342,7 +341,6 @@ class MedicineManagerTest {
             medicineManager.delete(-1);
             fail();
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
             assertEquals(medicineManager.getAllMedicines().size(), previousSize);
             // Check that nothing has been removed
         }
@@ -359,8 +357,7 @@ class MedicineManagerTest {
             medicineManager.delete(null);
             fail();
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            assertEquals(medicineManager.getAllMedicines().size(), previousSize);
+            assertEquals(previousSize, medicineManager.getAllMedicines().size());
             // Check that nothing has been removed
         }
     }
@@ -416,10 +413,13 @@ class MedicineManagerTest {
      */
     @Test
     void testUpdateNullMedicine() {
+        fillDatabase(getListOfMedicines());
+        int previousSize = medicineManager.getAllMedicines().size();
         try {
             medicineManager.update(new Medicine());
+            fail();
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            assertEquals(previousSize, medicineManager.getAllMedicines().size());
         }
     }
 

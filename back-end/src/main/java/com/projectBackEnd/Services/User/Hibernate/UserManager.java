@@ -22,15 +22,33 @@ public class UserManager extends EntityManager implements UserManagerInterface {
 	private static UserManagerInterface userManager;
 	private static final int TIMEOUT = 18000; //Amount of time for which session will be valid (seconds)
 
+	private static String firstAccountEmail = "admin@admin.com";
+	private static String firstAccountPass = "admin";
+	private static String firstAccountName = "Administrator";
+
 	/**
-	 * Private constructor implementing the Singleton design pattern
+	 * Private constructor implementing the Singleton design pattern - also adds the first user if necessary.
 	 */
     private UserManager() {
         super();
         setSubclass(User.class);
         HibernateUtility.addAnnotation(User.class);
 		userManager = this;
+		createFirstUser();
     }
+
+	/**
+	 * Method creates the first user incase there aren't any admin accounts.
+	 */
+	private void createFirstUser() {
+		if (UserManager.getUserManager().getUsers().size() == 0){
+			try {
+				UserManager.getUserManager().addUser(firstAccountEmail,firstAccountPass, firstAccountName);
+			} catch (EmailExistsException|InvalidEmailException|IncorrectNameException|InvalidPasswordException e){
+				/*Ignore*/
+			}
+		}
+	}
 
 	/**
 	 * Get get the user manager

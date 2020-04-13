@@ -39,9 +39,16 @@
           <div class="column is-narrow">
             <bulletin-board />
           </div>
-        </div>
+
+          
+        </div>  
       </div>
     </div>
+     <div class="footer">           
+            <p>{{ appInfo.contactDetails }}</p>
+            <p>Site editors can <a href="/admin">
+            log in here</a>.</p>
+          </div>
   </div>
 </template>
 
@@ -64,7 +71,8 @@ export default {
       sites: null,
       appInfo: {
         hospitalName: '',
-        departmentName: ''
+        departmentName: '',
+        contactDetails: ''
       },
     };
   },
@@ -101,5 +109,11 @@ export default {
   &:hover {
     background-color: #f8f8f8;
   }
+}
+
+.footer {
+  text-align: center;
+  padding: 50px;
+  width: 100%;
 }
 </style>

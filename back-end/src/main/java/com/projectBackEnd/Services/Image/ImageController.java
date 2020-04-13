@@ -43,7 +43,6 @@ public class ImageController {
 		try {
 			return saveImage(file);
 		} catch (IOException e){
-			e.printStackTrace();
 			return HttpResponse.noContent();
 		}
 	}

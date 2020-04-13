@@ -97,19 +97,6 @@ public class News implements TableEntity<News> {
     }
 
     /**
-     * Check a news object to ensure all of the required fields are not null
-     * @param news The news object that will be checked
-     * @return Whether the object is valid or not.
-     */
-    static boolean checkValidity(News news) {
-        return (news.getDate() != null &&
-                news.getDescription() != null &&
-                news.getTitle() != null &&
-                news.getContent() != null &&
-                news.getSlug() != null);
-    }
-
-    /**
      * Constructor taking primary key
      * @param primaryKey    Primary key of the News object
      * @param date          Date of publication for the News object

@@ -27,7 +27,7 @@
     <table class="print">
       <!-- The table displays all of the added medicines -->
       <tr>
-        <table style="width: 1000px;">
+        <table style="width: 960px;">
           <!-- table head -->
           <thead class="thead-light">
             <th valign="left">Time&nbsp;</th>
@@ -46,7 +46,7 @@
               <td class="print" v-else><b>{{ item.Dose }}{{ item.Unit }}</b><br>{{ item.Freq }}&nbsp;</td>
               <!-- delete items -->
               <td class="print-hide" align="absmiddle"><button class="button" style="width: 10px;height: 30px;" @click="deleteItem(item)"><font-awesome-icon icon="times" /></button><br></td>
-              <td class="print" style="width: 50px;" v-for="n in 31" :key="n"></td>
+              <td class="print" style="width: 50px;" v-for="n in 20" :key="n"></td>
             </tr>
           </tbody>
         </table>
@@ -55,8 +55,7 @@
         <tr>
           <!-- Footer for notification -->
           <div class="relative">
-            <br><b>If you have queries regarding your child's medication please contact the Liver Clinical Nurse Specialist Team on 0203-299-3773 or the pharmacy team at
-              King's directly on 0203-299-9000 ext 5723 between 9:00 AM- 5:00 PM Monday to Friday. Out of these hours please contact rays of Sunshine Ward on 0203-299-3577.</b>
+            <br><b>{{ appInfo.contactDetails }}</b>
           </div>
         </tr>
       </tbody>
@@ -64,14 +63,25 @@
   </div>
 </template>
 
+
+
 <script>
+import AppInfoService from "@/services/app-info-service";
 export default {
   name: "DrugChartPrintBox",
   data() {
     return {
+      appInfo: {
+        hospitalName: '',
+        departmentName: '',
+        contactDetails: ''
+      },
       //empty list for current added drugs
       items: [],
-    };
+    }
+  },
+  async created() {
+    this.appInfo = await AppInfoService.getAppInfo();
   },
   methods: {
     /**
@@ -96,8 +106,10 @@ export default {
 }
 </script>
 
+
 <style lang="scss" media="print" scoped>
 /* Style the body */
+
 .striped.table-layout {
   border-collapse: separate;
   border-spacing: 5px 25px;

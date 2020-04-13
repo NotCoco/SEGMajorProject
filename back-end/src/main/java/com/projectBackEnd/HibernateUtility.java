@@ -29,8 +29,7 @@ public class HibernateUtility {
         try {
             return createFactory(new Configuration());
         } catch (Throwable ex) {
-            System.err.println("SF creation failure." + ex);
-            throw new ExceptionInInitializerError(ex);
+            throw new ExceptionInInitializerError("Session Factory Creation Failure: " + ex);
         }
 
     }
@@ -85,7 +84,7 @@ public class HibernateUtility {
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            return;
         }
     }
 

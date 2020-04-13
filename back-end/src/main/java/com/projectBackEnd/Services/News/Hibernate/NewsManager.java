@@ -53,9 +53,8 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
      * @throws InvalidFieldsException If the object contains fields which cannot be added to the database e.g. nulls
      */
     public News addNews(News news) throws DuplicateKeysException, InvalidFieldsException {
-        if (!News.checkValidity(news)) throw new InvalidFieldsException("Fields invalid");
-        else if (getNewsBySlug(news.getSlug()) != null) throw new DuplicateKeysException("Slug already exists: " + news.getSlug());
-        else return (News) insertTuple(news);
+        checkAddValidity(news);
+        return (News) insertTuple(news);
     }
 
 
@@ -67,12 +66,8 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
      * @throws InvalidFieldsException If the object contains fields which cannot be added to the database e.g. nulls
      */
     public News update(News updatedVersion) throws DuplicateKeysException, InvalidFieldsException {
-        News newsMatch = getNewsBySlug(updatedVersion.getSlug());
-        if (!News.checkValidity(updatedVersion)) throw new InvalidFieldsException("Fields invalid");
-        else if (newsMatch != null && !newsMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey()))
-            throw new DuplicateKeysException("Slug already exists: " + updatedVersion.getSlug());
-
-        else return (News) super.update(updatedVersion);
+        checkUpdateValidity(updatedVersion);
+        return (News) super.update(updatedVersion);
     }
 
 
@@ -125,12 +120,11 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
 
 
     /**
-     * Sort all the News from the database by lowest date, in the following order :
+     * Sort all the News from the database by highest (most recent) date, in the following order :
      * Urgent and pinned, urgent only, pinned only, neither pinned nor urgent.
      * @return sorted list of news
      */
     private static List<News> sort(List<News> all) {
-
         // Get pinned AND urgent
         Stream<News> pinnedAndUrgent = all.stream().filter(n -> n.isPinned() && n.isUrgent())
                 .sorted(Comparator.comparing(News::getDate, Comparator.nullsLast(Comparator.reverseOrder())));
@@ -148,9 +142,47 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
         List<News> sorted = Stream.concat(Stream.concat(Stream.concat(pinnedAndUrgent, urgentDates), pinnedDates), regular)
                 .collect(Collectors.toList());
 
+        //This method should not be broken down due to efficiency concerns - other sort algorithms were raced
+        //Against it sorting lists of 500,000 randomly generated news objects and this was fastest.
         return sorted;
-
     }
 
+    /**
+     * Check a news object to ensure all of the required fields are not null
+     * @param news The news object that will be checked
+     * @return Whether the object is valid or not.
+     * @throws InvalidFieldsException if the site object isn't valid
+     */
+    private static void checkFieldValidity(News news) throws InvalidFieldsException {
+        if (!(news.getDate() != null &&
+                news.getDescription() != null &&
+                news.getTitle() != null &&
+                news.getContent() != null &&
+                news.getSlug() != null)) throw new InvalidFieldsException("Invalid fields");
+    }
 
+    /**
+     * Checks a news article is valid to update another article with the same primary key
+     * @param news The news article to check
+     * @throws InvalidFieldsException If the fields of the news article are null when they shouldn't be
+     * @throws DuplicateKeysException If the updating of this news article violates another article's unique key
+     */
+    private void checkUpdateValidity(News news) throws InvalidFieldsException, DuplicateKeysException {
+        checkFieldValidity(news);
+        News newsMatch = getNewsBySlug(news.getSlug());
+        if (newsMatch != null && !newsMatch.getPrimaryKey().equals(news.getPrimaryKey()))
+            throw new DuplicateKeysException("Slug already exists: " + news.getSlug());
+    }
+
+    /**
+     * Checks whether a news article is valid for addition
+     * @param news The news article to check
+     * @throws InvalidFieldsException If the fields of the news article are null when they shouldn't be
+     * @throws DuplicateKeysException If the addition of this article violates another article's unique key
+     */
+    private void checkAddValidity(News news) throws InvalidFieldsException, DuplicateKeysException {
+        checkFieldValidity(news);
+        if (getNewsBySlug(news.getSlug()) != null)
+            throw new DuplicateKeysException("Slug already exists: " + news.getSlug());
+    }
 }

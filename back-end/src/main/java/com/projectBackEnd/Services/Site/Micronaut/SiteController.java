@@ -29,13 +29,6 @@ public class SiteController {
 	private final SessionManagerInterface sessionManager = SessionManager.getSessionManager();
 
     /**
-     * Default constructor
-     */
-    SiteController() {
-        super();
-    }
-
-    /**
      * Get a list of all the sites stored in the database via an HTTP GET request
      * @return List of all the sites
      */
@@ -60,7 +53,6 @@ public class SiteController {
         } catch (DuplicateKeysException | InvalidFieldsException e) {
             return HttpResponse.badRequest(e.getMessage());
         }
-        //if(siteManager.getByPrimaryKey(s.getPrimaryKey()) == null) return HttpResponse.serverError();
 
         return HttpResponse
                 .created(site)
@@ -118,8 +110,7 @@ public class SiteController {
     public HttpResponse delete(@Header("X-API-Key") String session,String slug) {
 
 		if(!sessionManager.verifySession(session)) return HttpResponse.unauthorized();
-        Site s = siteManager.getSiteBySlug(slug);
-        siteManager.delete(s.getPrimaryKey());
+        siteManager.delete(siteManager.getSiteBySlug(slug).getPrimaryKey());
 
         return HttpResponse.noContent();
     }
