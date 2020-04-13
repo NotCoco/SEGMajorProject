@@ -136,17 +136,16 @@ export default{
   }
 };
 </script>
-
-<style>
-@media print {
-  html, body {
-    height: 100%;
-    overflow: unset;
-  }
-}
+<style lang="scss" scoped>
+   html, body {
+      height: 100%;
+      overflow: unset;
+    }
+  
 </style>
 
 <style lang="scss" scoped>
+
 .table-layout{
   border-collapse: separate; 
   border-spacing: 15px 10px;
@@ -154,5 +153,11 @@ export default{
 
 .vertical-separator {
   border-right: 1px #dbdbdb solid;
+}
+@media print {
+  html, body {
+    height: 100%;
+    overflow: unset;
+  }
 }
 </style>

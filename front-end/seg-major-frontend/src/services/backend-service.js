@@ -2,7 +2,7 @@ import axios from 'axios'
 import router from '@/router'
 
 const api = axios.create({
-  baseURL: 'https://getnova.app'
+  baseURL: 'http://localhost:8080'
 })
 
 // request interceptor

@@ -44,7 +44,7 @@
         </div>  
       </div>
     </div>
-     <div class="footer">           
+     <div class="footer" style="width: 100%;">           
             <p>{{ appInfo.contactDetails }}</p>
             <p>Site editors can <a href="/admin">
             log in here</a>.</p>

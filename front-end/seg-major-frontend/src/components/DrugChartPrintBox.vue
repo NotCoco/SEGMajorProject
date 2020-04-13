@@ -27,7 +27,7 @@
     <table class="print">
       <!-- The table displays all of the added medicines -->
       <tr>
-        <table style="width: 1000px;">
+        <table style="width: 960px;">
           <!-- table head -->
           <thead class="thead-light">
             <th valign="left">Time&nbsp;</th>
@@ -46,7 +46,7 @@
               <td class="print" v-else><b>{{ item.Dose }}{{ item.Unit }}</b><br>{{ item.Freq }}&nbsp;</td>
               <!-- delete items -->
               <td class="print-hide" align="absmiddle"><button class="button" style="width: 10px;height: 30px;" @click="deleteItem(item)"><font-awesome-icon icon="times" /></button><br></td>
-              <td class="print" style="width: 50px;" v-for="n in 31" :key="n"></td>
+              <td class="print" style="width: 50px;" v-for="n in 20" :key="n"></td>
             </tr>
           </tbody>
         </table>
@@ -106,8 +106,17 @@ export default {
 }
 </script>
 
+<style lang="scss" scoped>
+   html, body {
+      height: 100%;
+      overflow: unset;
+    }
+  
+</style>
+
 <style lang="scss" media="print" scoped>
 /* Style the body */
+
 .striped.table-layout {
   border-collapse: separate;
   border-spacing: 5px 25px;
