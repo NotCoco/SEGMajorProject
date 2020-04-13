@@ -98,13 +98,14 @@ class PageManagerTest {
      */
     @Test
     void testSavePageWithNullSite() {
+        assertNull(siteManager.getSiteBySlug("this is not a slug of a given site"));
         Page page = new Page("this is not a slug of a given site", "cool slug", 1, "Interesting", "Content");
         assertNull(page.getSite());
         try {
             pageManager.addPage(page);
             fail();
         } catch (InvalidFieldsException|DuplicateKeysException e) {
-            e.printStackTrace();
+            assertNull(pageManager.getPageBySiteAndSlug("this is not a slug of a given site", "Slug3"));
         }
     }
 
@@ -294,7 +295,7 @@ class PageManagerTest {
                 pageManager.addPage(p);
                 fail();
             } catch (DuplicateKeysException | InvalidFieldsException e) {
-                e.printStackTrace();
+                assertEquals(0, pageManager.getAllPages().size());
             }
         }
     }
@@ -322,11 +323,11 @@ class PageManagerTest {
         pageManager.addPage(page1);
         try {
             pageManager.addPage(page2);
+            fail();
         } catch (DuplicateKeysException e) {
-            e.printStackTrace();
+            assertEquals(1, pageManager.getAllPages().size());
         }
 
-        assertEquals(1, pageManager.getAllPages().size());
     }
 
     /**
@@ -351,9 +352,9 @@ class PageManagerTest {
             pageManager.addPage(new Page("", "",2, "", ""));
             fail();
         } catch (InvalidFieldsException n) {
-            n.printStackTrace();
+            assertEquals(0, pageManager.getAllPages().size());
         }
-        assertEquals(0, pageManager.getAllPages().size());
+
     }
 
     /**
@@ -417,7 +418,6 @@ class PageManagerTest {
             pageManager.getByPrimaryKey(null);
             fail();
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
             assertEquals(pageManager.getAllPages().size(), previousSize);
         }
     }
@@ -497,7 +497,6 @@ class PageManagerTest {
             pageManager.delete(-1);
             fail();
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
             assertEquals(pageManager.getAllPages().size(), previousSize);
             // Check that nothing has been removed
         }
@@ -527,7 +526,6 @@ class PageManagerTest {
             pageManager.delete(null);
             fail();
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
             assertEquals(pageManager.getAllPages().size(), previousSize);
             // Check that nothing has been removed
         }
@@ -578,7 +576,7 @@ class PageManagerTest {
             pageManager.update(new Page());
             fail();
         } catch (IllegalArgumentException|NullPointerException e) {
-            e.printStackTrace();
+            assertEquals(0, pageManager.getAllPages().size());
         }
     }
 
@@ -608,7 +606,6 @@ class PageManagerTest {
             pageManager.update(badPage);
             fail();
         } catch(InvalidFieldsException e) {
-            e.printStackTrace();
             assertEquals(pageManager.getAllPages().size(), previousSize);
         }
 
@@ -623,18 +620,16 @@ class PageManagerTest {
         Page page2 = pageManager.addPage(new Page(testSiteB.getSlug(), "sameSlug", 1, "TitleB", "ContentB"));
         Page replacement = new Page(page2.getPrimaryKey(), testSiteA.getSlug(), "sameSlug", 1, "TitleB", "ContentB");
         try {
-            System.out.println();
             pageManager.update(replacement);
             fail();
         } catch (DuplicateKeysException e) {
-            e.printStackTrace();
+            int count = 0;
+            List<Page> allFound = pageManager.getAllPages();
+            for (int i =0; i <allFound.size(); ++i) {
+                if (allFound.get(i).getSite().getSlug().equals(testSiteA.getSlug()) && allFound.get(i).getSlug().equals("sameSlug")) ++count;
+            }
+            assertEquals(1, count);
         }
-        int count = 0;
-        List<Page> allFound = pageManager.getAllPages();
-        for (int i =0; i <allFound.size(); ++i) {
-            if (allFound.get(i).getSite().getSlug().equals(testSiteA.getSlug()) && allFound.get(i).getSlug().equals("sameSlug")) ++count;
-        }
-        assertEquals(1, count);
 
     }
 

@@ -66,7 +66,6 @@ public class ImageManager implements ImageManagerInterface {
 		try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(new File(dir + fullName)))) {
 			outputStream.write(data);
 		} catch (IOException e) {
-			e.printStackTrace();
 			return null;
 		}
 		return fullName;
@@ -109,9 +108,8 @@ public class ImageManager implements ImageManagerInterface {
 		try {
 			return directory.listFiles();
 		} catch (Exception e){
-			e.printStackTrace();
+			return null;
 		}
-		return null;
 	}
 
 	/**

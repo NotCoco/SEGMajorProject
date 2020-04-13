@@ -215,9 +215,9 @@ class NewsManagerTest {
             newsManager.addNews(new News(null, true, null, null, false, null, null));
             fail();
         } catch (InvalidFieldsException e) {
-            e.printStackTrace();
+            assertEquals(sizeBefore, newsManager.getAllNews().size());
         }
-        assertEquals(sizeBefore, newsManager.getAllNews().size());
+
     }
 
     /**
@@ -243,9 +243,9 @@ class NewsManagerTest {
                     "desc213ription1", "ti321tle1", false, "con321tent1", "slug1"));
             fail();
         } catch (DuplicateKeysException e) {
-            e.printStackTrace();
+            assertEquals(sizeBefore+1, newsManager.getAllNews().size());
         }
-        assertEquals(sizeBefore+1, newsManager.getAllNews().size());
+
     }
 
     //Testing NewsManagerInterface: getByPrimaryKey
@@ -283,7 +283,6 @@ class NewsManagerTest {
             newsManager.getByPrimaryKey(null);
             fail();
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
             assertEquals(newsManager.getAllNews().size(), previousSize);
         }
     }
@@ -314,7 +313,6 @@ class NewsManagerTest {
             newsManager.delete(-1);
             fail();
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
             assertEquals(newsManager.getAllNews().size(), previousSize);
             // Check that nothing has been removed
         }
@@ -329,7 +327,6 @@ class NewsManagerTest {
             newsManager.delete(null);
             fail();
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
             assertEquals(newsManager.getAllNews().size(), previousSize);
             // Check that nothing has been removed
         }
@@ -399,14 +396,14 @@ class NewsManagerTest {
             newsManager.update(replacementNews);
             fail();
         } catch (DuplicateKeysException e) {
-            e.printStackTrace();
+            int count = 0;
+            List<News> allFound = newsManager.getAllNews();
+            for (int i =0; i <allFound.size(); ++i) {
+                if (allFound.get(i).getSlug().equals("slug1")) ++count;
+            }
+            assertEquals(1, count);
         }
-        int count = 0;
-        List<News> allFound = newsManager.getAllNews();
-        for (int i =0; i <allFound.size(); ++i) {
-            if (allFound.get(i).getSlug().equals("slug1")) ++count;
-        }
-        assertEquals(1, count);
+
     }
 
     /**
@@ -423,7 +420,6 @@ class NewsManagerTest {
             newsManager.update(replacementNews);
             fail();
         } catch (InvalidFieldsException e) {
-            e.printStackTrace();
             assertEquals(newsManager.getAllNews().size(), previousSize);
         }
     }
@@ -452,7 +448,7 @@ class NewsManagerTest {
         try {
             newsManager.update(new News());
         } catch (InvalidFieldsException e) {
-            e.printStackTrace();
+            assertEquals(0, newsManager.getAllNews().size());
         }
     }
 
@@ -466,7 +462,7 @@ class NewsManagerTest {
         News fakeNews = new News(-100, new Date(12343212L), true,
                 "changedDescription", "newTitle", false, "content1", "slug9");
         newsManager.update(fakeNews);
-        assertEquals(newsManager.getAllNews().size(), previousSize);
+        assertEquals(previousSize, newsManager.getAllNews().size());
     }
 
     //Testing NewsManagerInterface: getNewsBySlug

@@ -221,9 +221,9 @@ class SiteManagerTest {
             siteManager.addSite(new Site(slug, "sameName"));
             fail();
         } catch (DuplicateKeysException e) {
-            e.printStackTrace();
+            assertEquals(sizeBefore+1, siteManager.getAllSites().size());
         }
-        assertEquals(sizeBefore+1, siteManager.getAllSites().size());
+
     }
 
     //Testing SiteManagerInterface: getByPrimaryKey
@@ -260,7 +260,6 @@ class SiteManagerTest {
             siteManager.getByPrimaryKey(null);
             fail();
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
             assertEquals(siteManager.getAllSites().size(), previousSize);
         }
     }
@@ -289,7 +288,6 @@ class SiteManagerTest {
             siteManager.delete(-1);
             fail();
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
             assertEquals(siteManager.getAllSites().size(), previousSize);
             // Check that nothing has been removed
         }
@@ -304,7 +302,6 @@ class SiteManagerTest {
             siteManager.delete(null);
             fail();
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
             assertEquals(siteManager.getAllSites().size(), previousSize);
             // Check that nothing has been removed
         }
@@ -356,7 +353,6 @@ class SiteManagerTest {
             siteManager.update(replacementSite);
             fail();
         } catch (DuplicateKeysException e) {
-            e.printStackTrace();
             assertEquals(siteManager.getAllSites().size(), previousSize);
         }
     }
@@ -374,7 +370,6 @@ class SiteManagerTest {
             siteManager.update(replacementSite);
             fail();
         } catch (InvalidFieldsException e) {
-            e.printStackTrace();
             assertEquals(siteManager.getAllSites().size(), previousSize);
         }
     }
@@ -401,7 +396,7 @@ class SiteManagerTest {
         try {
             siteManager.update(new Site());
         } catch (InvalidFieldsException e) {
-            e.printStackTrace();
+            assertEquals(0, siteManager.getAllSites().size());
         }
     }
 
@@ -414,7 +409,7 @@ class SiteManagerTest {
         assertNull(siteManager.getByPrimaryKey(-100));
         Site newSite = new Site("slug", "Spicy name!");
         siteManager.update(newSite);
-        assertEquals(siteManager.getAllSites().size(), previousSize);
+        assertEquals(previousSize, siteManager.getAllSites().size());
     }
     //Testing SiteManagerInterface: getSiteBySlug
 

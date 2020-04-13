@@ -190,7 +190,6 @@ class ResetLinkManagerTest {
             userManager.addUser("test@test.com","pass","name");
             userManager.addUser("test1@test.com","pass","name");
         } catch(EmailExistsException|InvalidEmailException|IncorrectNameException|InvalidPasswordException e){
-            e.printStackTrace();
             fail();
         }
     }
