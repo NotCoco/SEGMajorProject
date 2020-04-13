@@ -53,7 +53,7 @@ public class PageManager extends EntityManager implements PageManagerInterface {
      * @throws InvalidFieldsException If the object contains fields which cannot be added to the database e.g. nulls
      */
     public Page addPage(Page newPage) throws DuplicateKeysException, InvalidFieldsException {
-        if (!Page.checkValidity(newPage)) throw new InvalidFieldsException("Invalid fields");
+        if (!checkValidity(newPage)) throw new InvalidFieldsException("Invalid fields");
         else if (getPageBySiteAndSlug(newPage.getSite().getSlug(), newPage.getSlug()) != null)
             throw new DuplicateKeysException("Page with slug: " + newPage.getSlug() + " already exists in site." );
         else return (Page) super.insertTuple(newPage);
@@ -69,7 +69,7 @@ public class PageManager extends EntityManager implements PageManagerInterface {
     public Page update(Page updatedVersion) throws DuplicateKeysException, InvalidFieldsException {
 
         Page pageMatch = getPageBySiteAndSlug(updatedVersion.getSite().getSlug(), updatedVersion.getSlug());
-        if (!Page.checkValidity(updatedVersion)) throw new InvalidFieldsException("Invalid fields");
+        if (!checkValidity(updatedVersion)) throw new InvalidFieldsException("Invalid fields");
         else if (pageMatch != null && !pageMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey()))
             throw new DuplicateKeysException("Page with slug: " + updatedVersion.getSlug() + " already exists in site." );
         else return (Page) super.update(updatedVersion);
@@ -118,5 +118,15 @@ public class PageManager extends EntityManager implements PageManagerInterface {
         return (List<Page>) super.getAll();
     }
 
+    /**
+     * Check a page object to ensure all of the required fields are not null
+     * @param page The page object that will be checked
+     * @return Whether the object is valid or not.
+     */
+    static boolean checkValidity(Page page) {
+        return (page.getSite() != null &&
+                page.getSlug() != null &&
+                page.getIndex() != null);
+    }
 
 }

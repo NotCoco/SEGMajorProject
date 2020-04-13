@@ -63,16 +63,6 @@ public class Site implements TableEntity<Site> {
     }
 
     /**
-     * Checks if a given site has non null valid field attributes
-     * @param site The site to be checked
-     * @return Whether it is valid for addition or not.
-     */
-    static boolean checkValidity(Site site) {
-        return (site.getSlug() != null &&
-                site.getName() != null);
-    }
-
-    /**
      * Get the primary key ID of the Site
      * @return primary key
      */

@@ -105,17 +105,6 @@ public class Page implements TableEntity<Page> {
     }
 
     /**
-     * Check a page object to ensure all of the required fields are not null
-     * @param page The page object that will be checked
-     * @return Whether the object is valid or not.
-     */
-    static boolean checkValidity(Page page) {
-        return (page.getSite() != null &&
-                page.getSlug() != null &&
-                page.getIndex() != null);
-    }
-
-    /**
      * Get primary key ID for this object
      * @return primary key
      */
