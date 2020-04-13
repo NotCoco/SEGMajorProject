@@ -106,13 +106,6 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-   html, body {
-      height: 100%;
-      overflow: unset;
-    }
-  
-</style>
 
 <style lang="scss" media="print" scoped>
 /* Style the body */
