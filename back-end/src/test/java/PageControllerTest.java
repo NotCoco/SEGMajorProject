@@ -354,12 +354,12 @@ class PageControllerTest {
     @Test
     void updateWithNullPrimaryKey() {
         addSite("testSiteA", "name1",token);
-        assertNull(getPage("testSiteA", "set"));
         try {
             putPage(new PageUpdateCommand(null, "testSiteA", "set", 1, "set", "notnull"),token);
-            fail();
-        } catch (Exception e) {
-            assertNull(getPage("testSiteA", "set"));
+        } catch (NullPointerException e) {
+            assertThrows(HttpClientResponseException.class, () -> {
+                getPage("testSiteA", "set");
+            });
         }
     }
 
