@@ -37,7 +37,6 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
         else return siteManager;
     }
 
-
     /**
      * Insert a Site object into the database
      * @param newSite Site to add to the database
@@ -46,9 +45,8 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
      * @throws InvalidFieldsException If the object contains fields which cannot be added to the database e.g. nulls
      */
     public Site addSite(Site newSite) throws DuplicateKeysException, InvalidFieldsException {
-        checkValidity(newSite);
-        if (getSiteBySlug(newSite.getSlug()) != null) throw new DuplicateKeysException("Site with slug: " + newSite.getSlug() + " already exists.");
-        else return (Site) super.insertTuple(newSite);
+        checkAddValidity(newSite);
+        return (Site) super.insertTuple(newSite);
     }
 
     /**
@@ -59,12 +57,8 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
      * @throws InvalidFieldsException If the object contains fields which cannot be added to the database e.g. nulls
      */
     public Site update(Site updatedVersion) throws DuplicateKeysException, InvalidFieldsException {
-
-        Site foundSiteMatch = getSiteBySlug(updatedVersion.getSlug());
-        checkValidity(updatedVersion);
-        if (foundSiteMatch != null && !foundSiteMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey()))
-            throw new DuplicateKeysException("Site with slug: " + updatedVersion.getSlug() + " already exists.");
-        else return (Site) super.update(updatedVersion);
+        checkUpdateValidity(updatedVersion);
+        return (Site) super.update(updatedVersion);
     }
 
 
@@ -100,11 +94,35 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
      * Checks if a given site has non null valid field attributes
      * @param site The site to be checked
      * @return Whether it is valid for addition or not.
-     * @throws InvalidFieldsException if the site object isn't valid
+     * @throws InvalidFieldsException if the site object isn't valid i.e. has null fields
      */
     private static void checkValidity(Site site) throws InvalidFieldsException {
         if (!(site.getSlug() != null &&
                 site.getName() != null)) throw new InvalidFieldsException("Invalid fields");
     }
 
+    /**
+     * Checks whether a site is valid for updating
+     * @param site The site to be checked
+     * @throws InvalidFieldsException If the site object has null fields
+     * @throws DuplicateKeysException If the updating of this site will violate another site's unique keys
+     */
+    private void checkUpdateValidity(Site site) throws InvalidFieldsException, DuplicateKeysException {
+        checkValidity(site);
+        Site foundSiteMatch = getSiteBySlug(site.getSlug());
+        if (foundSiteMatch != null && !foundSiteMatch.getPrimaryKey().equals(site.getPrimaryKey()))
+            throw new DuplicateKeysException("Site with slug: " + site.getSlug() + " already exists.");
+    }
+
+    /**
+     * Checks whether a site is valid for addition
+     * @param site The site to be checked
+     * @throws InvalidFieldsException If the site object has null fields
+     * @throws DuplicateKeysException If the addition of this site will violate another site's unique keys
+     */
+    private void checkAddValidity(Site site) throws InvalidFieldsException, DuplicateKeysException {
+        checkValidity(site);
+        if (getSiteBySlug(site.getSlug()) != null)
+            throw new DuplicateKeysException("Site with slug: " + site.getSlug() + " already exists.");
+    }
 }
