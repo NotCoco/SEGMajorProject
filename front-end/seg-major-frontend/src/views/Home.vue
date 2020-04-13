@@ -10,7 +10,7 @@
       </div>
     </section>
 
-    <div class="section">
+    <div class="section full-height">
       <div class="container">
         <div class="columns">
           <div class="column">
@@ -44,11 +44,18 @@
         </div>  
       </div>
     </div>
-     <div class="footer">           
-            <p>{{ appInfo.contactDetails }}</p>
-            <p>Site editors can <a href="/admin">
-            log in here</a>.</p>
+    <div class="has-background-light">
+      <footer class="container">
+        <div class="columns">
+          <div class="column">
+            <p><router-link to="/admin">Admin</router-link></p>
           </div>
+          <div class="column">
+            <p class="contact-details">{{ appInfo.contactDetails }}</p>
+          </div>
+        </div>
+      </footer>
+    </div>
   </div>
 </template>
 
@@ -89,6 +96,16 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+#home {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.section.full-height {
+  flex-grow: 1
+}
+
 .hero {
   .title {
     min-height: 36px;
@@ -111,9 +128,13 @@ export default {
   }
 }
 
-.footer {
+footer {
   text-align: center;
   padding: 50px;
   width: 100%;
+
+  .contact-details {
+    white-space: pre-wrap;
+  }
 }
 </style>
