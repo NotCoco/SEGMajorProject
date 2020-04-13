@@ -42,9 +42,8 @@
     <div class="field">
       <label class="label">Contact Details</label>
       <div class="control">
-        <input
-          class="input"
-          type="text"
+        <textarea
+          class="textarea"
           v-model="newAppInfo.contactDetails"
           v-bind:disabled="!appInfo.contactDetails"
           v-on:change="$v.newAppInfo.contactDetails.$touch()"
@@ -52,7 +51,7 @@
           placeholder="Enter new contact details..."
         />
       </div>
-      <div v-if="$v.newAppInfo.departmentName.$dirty">
+      <div v-if="$v.newAppInfo.contactDetails.$dirty">
         <p
           class="help is-danger"
           v-if="!$v.newAppInfo.contactDetails.required"
@@ -111,6 +110,7 @@ export default {
 
       await AppInfoService.updateAppInfo(this.newAppInfo);
       this.$emit("appInfoChanged", this.newAppInfo);
+      this.appInfo = this.newAppInfo;
     }
   },
   watch: {
@@ -125,8 +125,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.field {
-    height:100%;
-    overflow:auto;
-}
 </style>
