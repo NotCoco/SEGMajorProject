@@ -141,9 +141,9 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
         // Concatenate all lists together to make sorted list
         List<News> sorted = Stream.concat(Stream.concat(Stream.concat(pinnedAndUrgent, urgentDates), pinnedDates), regular)
                 .collect(Collectors.toList());
-        //This method will stay as it is for speed and efficiency - many different varieties and two line stream options were tested
-        //On 500,000 randomly generated news objects and this method proved to be fastest for sorting out of them.
-        //Even faster than sorting the list once, it is faster to filter and cut up and then sort.
+
+        //This method should not be broken down due to efficiency concerns - other sort algorithms were raced
+        //Against it sorting lists of 500,000 randomly generated news objects and this was fastest.
         return sorted;
     }
 
