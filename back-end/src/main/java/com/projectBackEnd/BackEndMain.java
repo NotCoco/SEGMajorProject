@@ -1,8 +1,5 @@
 package main.java.com.projectBackEnd;
 import io.micronaut.runtime.Micronaut;
-import main.java.com.projectBackEnd.Services.User.Hibernate.UserManagerInterface;
-import main.java.com.projectBackEnd.Services.User.Hibernate.UserManager;
-import main.java.com.projectBackEnd.Services.User.Hibernate.Exceptions.*;
 
 /**
  * Main method : runs the server
