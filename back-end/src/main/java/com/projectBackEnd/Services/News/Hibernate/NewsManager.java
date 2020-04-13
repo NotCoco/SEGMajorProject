@@ -53,8 +53,8 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
      * @throws InvalidFieldsException If the object contains fields which cannot be added to the database e.g. nulls
      */
     public News addNews(News news) throws DuplicateKeysException, InvalidFieldsException {
-        if (!checkValidity(news)) throw new InvalidFieldsException("Fields invalid");
-        else if (getNewsBySlug(news.getSlug()) != null) throw new DuplicateKeysException("Slug already exists: " + news.getSlug());
+        checkValidity(news);
+        if (getNewsBySlug(news.getSlug()) != null) throw new DuplicateKeysException("Slug already exists: " + news.getSlug());
         else return (News) insertTuple(news);
     }
 
@@ -68,10 +68,9 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
      */
     public News update(News updatedVersion) throws DuplicateKeysException, InvalidFieldsException {
         News newsMatch = getNewsBySlug(updatedVersion.getSlug());
-        if (!checkValidity(updatedVersion)) throw new InvalidFieldsException("Fields invalid");
-        else if (newsMatch != null && !newsMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey()))
+        checkValidity(updatedVersion);
+        if (newsMatch != null && !newsMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey()))
             throw new DuplicateKeysException("Slug already exists: " + updatedVersion.getSlug());
-
         else return (News) super.update(updatedVersion);
     }
 
@@ -156,13 +155,14 @@ public class NewsManager extends EntityManager implements NewsManagerInterface {
      * Check a news object to ensure all of the required fields are not null
      * @param news The news object that will be checked
      * @return Whether the object is valid or not.
+     * @throws InvalidFieldsException if the site object isn't valid
      */
-    static boolean checkValidity(News news) {
-        return (news.getDate() != null &&
+    private static void checkValidity(News news) throws InvalidFieldsException {
+        if (!(news.getDate() != null &&
                 news.getDescription() != null &&
                 news.getTitle() != null &&
                 news.getContent() != null &&
-                news.getSlug() != null);
+                news.getSlug() != null)) throw new InvalidFieldsException("Invalid fields");
     }
 
 }

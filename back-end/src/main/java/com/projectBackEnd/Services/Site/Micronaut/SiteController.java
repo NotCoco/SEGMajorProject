@@ -60,7 +60,6 @@ public class SiteController {
         } catch (DuplicateKeysException | InvalidFieldsException e) {
             return HttpResponse.badRequest(e.getMessage());
         }
-        //if(siteManager.getByPrimaryKey(s.getPrimaryKey()) == null) return HttpResponse.serverError();
 
         return HttpResponse
                 .created(site)

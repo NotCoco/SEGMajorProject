@@ -96,22 +96,15 @@ public class SessionManager extends EntityManager implements SessionManagerInter
 
 
 	/**
-	 * Terminate the session corresponding to the given token
+	 * Terminate the sessions corresponding to the given token
 	 * @param token	Primary key 'Token'
 	 */
 	public void terminateSession(String token) {
-
 		List<Session> sessions = getAll();
 		try {
-			String email = getEmail(token);
-			deleteAllPast(email); // Delete the unused session for sake of performance
-		} catch(NoSessionException e) {
-			/*ignore*/
-		} // When there is no session to delete
-
-		// Delete current session
+			deleteAllPast(getEmail(token));
+		} catch(NoSessionException e) {	/*ignore*/	}
 		for (Session session: sessions) if(session.getToken().equals(token)) delete(session);
-
 	}
 
 	/**

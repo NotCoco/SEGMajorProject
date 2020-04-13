@@ -46,8 +46,8 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
      * @throws InvalidFieldsException If the object contains fields which cannot be added to the database e.g. nulls
      */
     public Site addSite(Site newSite) throws DuplicateKeysException, InvalidFieldsException {
-        if (!checkValidity(newSite)) throw new InvalidFieldsException("Invalid fields");
-        else if (getSiteBySlug(newSite.getSlug()) != null) throw new DuplicateKeysException("Site with slug: " + newSite.getSlug() + " already exists.");
+        checkValidity(newSite);
+        if (getSiteBySlug(newSite.getSlug()) != null) throw new DuplicateKeysException("Site with slug: " + newSite.getSlug() + " already exists.");
         else return (Site) super.insertTuple(newSite);
     }
 
@@ -61,8 +61,8 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
     public Site update(Site updatedVersion) throws DuplicateKeysException, InvalidFieldsException {
 
         Site foundSiteMatch = getSiteBySlug(updatedVersion.getSlug());
-        if (!checkValidity(updatedVersion)) throw new InvalidFieldsException("Invalid fields");
-        else if (foundSiteMatch != null && !foundSiteMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey()))
+        checkValidity(updatedVersion);
+        if (foundSiteMatch != null && !foundSiteMatch.getPrimaryKey().equals(updatedVersion.getPrimaryKey()))
             throw new DuplicateKeysException("Site with slug: " + updatedVersion.getSlug() + " already exists.");
         else return (Site) super.update(updatedVersion);
     }
@@ -100,10 +100,11 @@ public class SiteManager extends EntityManager implements SiteManagerInterface {
      * Checks if a given site has non null valid field attributes
      * @param site The site to be checked
      * @return Whether it is valid for addition or not.
+     * @throws InvalidFieldsException if the site object isn't valid
      */
-    static boolean checkValidity(Site site) {
-        return (site.getSlug() != null &&
-                site.getName() != null);
+    private static void checkValidity(Site site) throws InvalidFieldsException {
+        if (!(site.getSlug() != null &&
+                site.getName() != null)) throw new InvalidFieldsException("Invalid fields");
     }
 
 }
