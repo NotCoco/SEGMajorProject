@@ -15,7 +15,7 @@
     "axios": "^0.19.2",
     "bulma": "^0.8.0",
     "core-js": "^3.6.4",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "tiptap": "^1.26.6",
     "tiptap-extensions": "^1.28.6",
     "vue": "^2.6.11",
